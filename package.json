@@ -1,0 +1,42 @@
+{
+  "name": "extension_project_2122",
+  "version": "1.0.0",
+  "description": "A system for the Extension Office of PUPQC",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "db_create": "sequelize db:create",
+    "db_drop": "sequelize db:drop",
+    "db_migrate_up": "sequelize db:migrate:all",
+    "db_migrate_down": "sequelize db:migrate:undo:all",
+    "db_seed_up": "sequelize db:seed:all",
+    "db_seed_down": "sequelize db:seed:undo:all",
+    "db_migrate": "npm run db_migrate_down && npm run db_migrate_up",
+    "db_seed": "npm run db_seed_down && npm run db_seed_up",
+    "db_redo": "npm run db_drop && npm run db_create && npm run db_migrate_up && npm run db_seed_up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pupqc-extension-2223/pupqc-extension-2223.git"
+  },
+  "author": "PUPQC OJT - Extension Group",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pupqc-extension-2223/pupqc-extension-2223/issues"
+  },
+  "homepage": "https://github.com/pupqc-extension-2223/pupqc-extension-2223#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.7",
+    "express": "^4.17.3",
+    "express-ejs-layouts": "^2.5.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "sequelize-cli": "^6.4.1"
+  }
+}
