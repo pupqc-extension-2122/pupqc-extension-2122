@@ -1,5 +1,6 @@
 const express = require('express')
 const expressLayouts = require('express-ejs-layouts')
+const cookieParser = require('cookie-parser')
 const cors = require('cors')
 require('dotenv').config()
 
@@ -12,6 +13,7 @@ app.use('/static', express.static('./static'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cors())
+app.use(cookieParser(process.env.COOKIE_SECRET))
 
 
 //* View Engine 
