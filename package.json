@@ -8,7 +8,7 @@
     "dev": "nodemon index",
     "db_create": "sequelize db:create",
     "db_drop": "sequelize db:drop",
-    "db_migrate_up": "sequelize db:migrate:all",
+    "db_migrate_up": "sequelize db:migrate",
     "db_migrate_down": "sequelize db:migrate:undo:all",
     "db_seed_up": "sequelize db:seed:all",
     "db_seed_down": "sequelize db:seed:undo:all",
