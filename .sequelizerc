@@ -4,6 +4,5 @@ module.exports = {
   'config':          path.resolve('sequelize', 'config', 'config.js'),
   'migrations-path': path.resolve('sequelize', 'migrations'),
   'models-path':     path.resolve('sequelize', 'models'),
-  'seeders-path':    path.resolve('sequelize', 'seeders'),
-  'underscored':      true
+  'seeders-path':    path.resolve('sequelize', 'seeders')
 }
