@@ -9,18 +9,36 @@
   <!-- END META TAGS -->
   
   <!-- RENDER STYLESHEETS -->
+  <link rel="stylesheet" href="/static/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="/static/adminlte/css/adminlte.min.css">
   <%- style %>  
   <!-- END STYLESHEETS -->
 
   <title>Extension Project</title>
 </head>
-<body>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+  <div class="wrapper">
+    <%- include('../partials/topbar.ejs') %>
+    <%- include(`../partials/${sidebar}.ejs`) %>
+    
+  
+    <!-- RENDER PAGE CONTENT -->
+    <div class="content-wrapper">
+      <%- body %>
+    </div>
+    <!-- END PAGE CONTENT -->
 
-  <!-- RENDER PAGE CONTENT -->
-  <%- body %>
-  <!-- END PAGE CONTENT -->
+    <%- include('../partials/footer.ejs') %>
+
+  </div>
 
   <!-- RENDER SCRIPT FILES -->
+  <script src="/static/plugins/jquery/jquery.min.js"></script>
+  <script src="/static/plugins/jquery-ui/jquery-ui.min.js"></script>
+  <script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/plugins/moment/moment.min.js"></script>
+  <script src="/static/adminlte/js/adminlte.min.js"></script>
   <%- script %> 
   <!-- END SCRIPT FILES -->
 </body>

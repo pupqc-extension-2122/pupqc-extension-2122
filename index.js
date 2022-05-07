@@ -11,7 +11,7 @@ app.use('/static', express.static('./static'))
 
 //* Middlewares
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(cookieParser(process.env.COOKIE_SECRET))
 
@@ -24,10 +24,15 @@ app.set("layout extractScripts", true)
 app.set("layout extractStyles", true)
 app.set("layout extractMetas", true)
 
-app.get('/', (req,res)=>{
-    res.render('content/index')
+app.get('/sample', (req, res) => {
+    res.render('content/sample', {
+        page: 'dashboard',
+        sidebar: 'extensionist_sidebar',
+        name: 'Ssam Jan Doe',
+        role: 'Extensionist'
+    })
 })
 
 //* Port
 let PORT = process.env.PORT || 3000
-app.listen(PORT, ()=>console.log('App is running!'))
+app.listen(PORT, () => console.log('App is running!'))
