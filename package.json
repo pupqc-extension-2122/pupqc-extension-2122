@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "nodemon index",
+    "server": "nodemon index",
+    "compile-js": "gulp watch",
+    "dev": "concurrently --kill-others \"npm run server\" \"gulp watch\"",
     "db_create": "sequelize db:create",
     "db_drop": "sequelize db:drop",
     "db_migrate_up": "sequelize db:migrate",
@@ -41,6 +43,11 @@
     "sequelize-datatables": "^3.0.0"
   },
   "devDependencies": {
+    "concurrently": "^7.2.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-terser": "^2.1.0",
     "nodemon": "^2.0.15",
     "sequelize-cli": "^6.4.1"
   }

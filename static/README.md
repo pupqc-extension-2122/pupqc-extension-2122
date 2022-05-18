@@ -1,10 +1,21 @@
-Folder for STATIC FILES
+# Assets
 
-- dist
-    * js
-    * css
-    * img
+## Folder Structure
 
-- plugins
-    * js
-    * css
+```
+static
+├── build
+│   ├── js
+│   │   ├── jsfile_1.js
+│   │   ├── jsfile_2.js
+│   │   ├── ...
+│   │   └── jsfile_2.js
+├── dist
+│   ├── js
+│   │   └── ... same with build
+├── img
+├── plugins
+│   ├── adminlte
+│   └── ... other plugins
+└── readme.md
+```

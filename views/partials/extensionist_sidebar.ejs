@@ -51,7 +51,7 @@
         <!-- Core -->
         <li class="nav-header">CORE</li>
         <li class="nav-item">
-          <a href="#" class="nav-link <%= page == 'dashboard' && 'active' %> ">
+          <a href="#" class="nav-link <%= active_sidebar_tab == 'dashboard' && 'active' %> ">
             <i class="nav-icon fas fa-chart-bar"></i>
             <p class="text">Dashboard</p>
           </a>
@@ -60,19 +60,19 @@
         <!-- Projects -->
         <li class="nav-header">PROJECTS</li>
         <li class="nav-item">
-          <a href="#" class="nav-link <%= page == 'project_proposal' && 'active' %> ">
+          <a href="#" class="nav-link <%= active_sidebar_tab == 'project_proposal' && 'active' %> ">
             <i class="nav-icon fas fa-file-circle-plus"></i>
             <p class="text">Project Proposal</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link <%= page == 'project_monitoring' && 'active' %> ">
+          <a href="#" class="nav-link <%= active_sidebar_tab == 'project_monitoring' && 'active' %> ">
             <i class="nav-icon fas fa-file-circle-question"></i>
             <p class="text">Project Monitoring</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link <%= page == 'project_evaluation' && 'active' %> ">
+          <a href="#" class="nav-link <%= active_sidebar_tab == 'project_evaluation' && 'active' %> ">
             <i class="nav-icon fas fa-file-circle-exclamation"></i>
             <p class="text">Project Evaluation</p>
           </a>
@@ -81,7 +81,7 @@
         <!-- Reports -->
         <li class="nav-header">Reports</li>
         <li class="nav-item">
-          <a href="#" class="nav-link <%= page == 'project_reports' && 'active' %> ">
+          <a href="#" class="nav-link <%= active_sidebar_tab == 'project_reports' && 'active' %> ">
             <i class="nav-icon fas fa-file-contract"></i>
             <p class="text">Project Reports</p>
           </a>

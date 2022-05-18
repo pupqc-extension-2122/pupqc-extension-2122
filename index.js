@@ -1,38 +1,42 @@
-const express = require('express')
-const expressLayouts = require('express-ejs-layouts')
-const cookieParser = require('cookie-parser')
-const cors = require('cors')
-require('dotenv').config()
+const express = require('express');
+const expressLayouts = require('express-ejs-layouts');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+require('dotenv').config();
 
-let app = express()
+let app = express();
 
-//* Static Files
-app.use('/static', express.static('./static'))
+// * Static Files
+app.use('/plugins', express.static('./static/plugins'));
+app.use('/img', express.static('./static/img'));
+app.use('/js', express.static('./static/dist/js'));
 
-//* Middlewares
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(cors())
-app.use(cookieParser(process.env.COOKIE_SECRET))
+// * Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+// * View Engine 
+app.set('view engine', 'ejs');
+app.use(expressLayouts);
+app.set('layout', 'layouts/common');
+app.set("layout extractScripts", true);
+app.set("layout extractStyles", true);
+app.set("layout extractMetas", true);
 
 
-//* View Engine 
-app.set('view engine', 'ejs')
-app.use(expressLayouts)
-app.set('layout', 'layouts/common')
-app.set("layout extractScripts", true)
-app.set("layout extractStyles", true)
-app.set("layout extractMetas", true)
+/**
+ * * Routers
+ */
 
-app.get('/sample', (req, res) => {
-    res.render('content/sample', {
-        page: 'dashboard',
-        sidebar: 'extensionist_sidebar',
-        name: 'Ssam Jan Doe',
-        role: 'Extensionist'
-    })
-})
+// *** API Routers *** //
 
-//* Port
-let PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log('App is running!'))
+
+// *** Web Routers *** //
+app.use(`/`, require('./routers/web/auth.route'));
+app.use(`/`, require('./routers/web/monitoring.route'));
+
+// * Port
+let PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`App is running on port ${ PORT }!`));
