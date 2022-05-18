@@ -22,7 +22,7 @@ function mainJS() {
     .pipe(terser())
     .pipe(concat('main.js'))
     .pipe(sourcemaps.write('./jsmaps'))
-    .pipe(dest('./dist/js/'))
+    .pipe(dest(DIST_PATH + 'js/'))
 }
 
 function authJS() {

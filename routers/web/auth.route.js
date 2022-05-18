@@ -6,7 +6,7 @@ const PATH = 'auth/';
 router.get('/login', (req, res) => {
   res.render(PATH + 'login', {
       layout: './layouts/auth',
-      document_title: 'Project Proposals',
+      document_title: 'Login',
   });
 });
 
