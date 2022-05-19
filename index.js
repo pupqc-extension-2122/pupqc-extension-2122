@@ -6,6 +6,9 @@ require('dotenv').config();
 
 let app = express();
 
+// * Locals
+app.locals.BASE_URL = process.env.BASE_URL
+
 // * Static Files
 app.use('/plugins', express.static('./static/plugins'));
 app.use('/img', express.static('./static/img'));
