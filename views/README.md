@@ -1,5 +1,6 @@
 # Views
 
+- Use `content/sample.ejs` as template. Copy the file and paste it to the designated folder and change filename. DO NOT REMOVE THE SAMPLE.
 
 ## Folder Structure
 
