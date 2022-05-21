@@ -7,6 +7,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
+      memo_id:{
+        type: Sequelize.UUID,
+        references:{
+          model:{
+            tableName: 'Memos',
+          },
+          key: 'id'
+        }
+      },
       title: {
         type: Sequelize.STRING,
         allowNull: false

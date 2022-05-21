@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Projects extends Model {
+  class Memos extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,47 +11,58 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Users, { foreignKey: 'created_by', as: 'extensionist' })
-      this.belongsTo(models.Memos, { foreignKey: 'memo_id', as: 'memo' })
-      this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
-      this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
+      this.hasOne(models.Projects, {foreignKey: 'memo_id', as: 'project'})
     }
   }
-  Projects.init({
-    id: {
+  Memos.init({
+    id:{
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      primaryKey: true,
+      primaryKey: true
     },
-    memo_id: {
-      type: DataTypes.UUID,
+    type: {
+      type: DataTypes.STRING,
       allowNull: false,
+      validate:{
+        isIn: {
+          args: ['MOA', 'MOU'],
+          msg: 'Type must be either MOA or MOU'
+        }
+      }
     },
-    title: {
+    partner_name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    start_date: {
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    signed_date: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
-    end_date: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
-    },
-    status: {
+    signed_by_pup: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    created_by: {
-      type: DataTypes.UUID,
+    signed_by_partner: {
+      type: DataTypes.STRING,
       allowNull: false
-    }
+    },
+    notarized_by: {
+      type: DataTypes.STRING,
+    },
+    notarized_date: {
+      type: DataTypes.DATEONLY,
+    },
+    files: {
+      type: DataTypes.STRING
+    },
   }, {
     sequelize,
-    modelName: 'Projects',
+    modelName: 'Memos',
     underscored: true,
   });
-  return Projects;
+  return Memos;
 };
