@@ -12,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.Project, { foreignKey: 'created_by', as: 'projects' })
+      this.hasMany(models.Projects, { foreignKey: 'created_by', as: 'projects' })
+    }
+
+    verify(password) {
+      return bcrypt.compareSync(password, this.password)
     }
   }
   Users.init({
@@ -47,6 +51,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Users',
+    tableName: 'Users',
     underscored: true,
     hooks: {
       beforeCreate: async (user, options) => {

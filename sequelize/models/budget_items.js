@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Financial_Requirements, { foreignKey: 'budget_item_id', as: 'financial_requirements' })
+      this.belongsTo(models.Financial_Requirements, { foreignKey: 'budget_item_id', as: 'financial_requirements' })
     }
   }
   Budget_Items.init({
@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Budget_Items',
+    tableName: 'Budget_Items',
     underscored: true
   });
   return Budget_Items;
