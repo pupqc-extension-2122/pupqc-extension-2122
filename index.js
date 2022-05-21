@@ -37,7 +37,7 @@ app.set("layout extractMetas", true);
 
 
 // *** Web Routers *** //
-app.use(`/`, require('./routers/web/auth.route'));
+app.use('/auth', require('./modules/auth'));
 app.use(`/`, require('./routers/web/monitoring.route'));
 
 // * Port
