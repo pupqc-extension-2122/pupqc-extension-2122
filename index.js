@@ -34,10 +34,10 @@ app.set("layout extractMetas", true);
  */
 
 // *** API Routers *** //
-
+app.use('/auth', require('./modules/auth'));
 
 // *** Web Routers *** //
-app.use('/auth', require('./modules/auth'));
+app.use(`/`, require('./routers/web/auth.route'));
 app.use(`/`, require('./routers/web/monitoring.route'));
 
 // * Port
