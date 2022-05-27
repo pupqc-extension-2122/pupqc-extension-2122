@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken')
-const { Users } = require('../../sequelize/models')
+const { Users } = require('../sequelize/models')
 
 exports.register = async (req, res) => {
   const user = req.body
-  try{
+  try {
     let data = await Users.create(user)
-  
+
     if (data) {
       res.send({
         error: 'false',
@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
     })
   } else {
     let verified = data.verify(user.password)
-    if (verified){
+    if (verified) {
 
       let token = await jwt.sign(JSON.stringify(data), process.env.JWT_SECRET)
       res.cookie('token', token, { httpOnly: true })

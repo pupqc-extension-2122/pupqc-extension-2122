@@ -5,8 +5,8 @@ Please read the following standards:
 * Database (Soon)
 * API (Soon)
 
-For File/Folder Structures
-* [Controllers](../controllers/README.md)
-* [Routers](../routers/README.md) - Includes web and api routes
-* [Static/Asset Files](../static/README.md)
-* [Views](../views/README.md)
+For File/Folder Structures (Frontend)
+* [Controllers](../frontend/controllers/README.md)
+* [Routers](../frontend/routers/README.md)
+* [Static/Asset Files](../frontend/static/README.md)
+* [Views](../frontend/views/README.md)

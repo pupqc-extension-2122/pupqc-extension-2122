@@ -3,8 +3,8 @@ const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
 
-const BUILD_PATH = './static/build/';
-const DIST_PATH = './static/dist/';
+const BUILD_PATH = './frontend/static/build/';
+const DIST_PATH = './frontend/static/dist/';
 
 function mainJS() {
   return src([

@@ -5,7 +5,7 @@
 ## Folder Structure
 
 ```
-routers
+views
 ├── auth
 ├── content
 │   ├── module_1.js
@@ -24,4 +24,4 @@ routers
 
 
 ## Related Docs
-* For HTML components standards, click [here](../standards/html_components.md).
+* For HTML components standards, click [here](../../standards/html_components.md).

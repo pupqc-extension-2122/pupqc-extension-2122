@@ -5,17 +5,10 @@
 
 ```
 routers
-├── api
-│   ├── module_1.js
-│   ├── module_2.js
-│   ├── ...
-│   └── module_n.js
-├── web
-│   ├── module_1.js
-│   ├── module_2.js
-│   ├── ...
-│   └── module_n.js
-└── readme.md
+├── module_1.js
+├── module_2.js
+├── ...
+└── module_n.js
 ```
 
 

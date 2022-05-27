@@ -2,6 +2,7 @@ const express = require('express')
 
 let app = express()
 
-app.use('/', require('../routers/api/auth.router.js'))
+// API Routes
+app.use('/auth', require('./routers/auth.router'));
 
 module.exports = app
