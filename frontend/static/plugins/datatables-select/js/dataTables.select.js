@@ -1,4 +1,4 @@
-/*! Select for DataTables 1.3.4-dev
+/*! Select for DataTables 1.4.0-dev
  * 2015-2021 SpryMedia Ltd - datatables.net/license/mit
  */
 
@@ -6,7 +6,7 @@
  * @summary     Select for DataTables
  * @description A collection of API methods, events and buttons for DataTables
  *   that provides selection options of the items in a DataTable
- * @version     1.3.4-dev
+ * @version     1.4.0-dev
  * @file        dataTables.select.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     datatables.net/forums
@@ -54,7 +54,7 @@ var DataTable = $.fn.dataTable;
 // Version information for debugger
 DataTable.select = {};
 
-DataTable.select.version = '1.3.4-dev';
+DataTable.select.version = '1.4.0-dev';
 
 DataTable.select.init = function ( dt ) {
 	var ctx = dt.settings()[0];
@@ -69,14 +69,25 @@ DataTable.select.init = function ( dt ) {
 		if(data === null || data.select === undefined) {
 			return;
 		}
-		dt.rows().deselect();
-		dt.columns().deselect();
-		dt.cells().deselect();
+
+		// Clear any currently selected rows, before restoring state
+		// None will be selected on first initialisation
+		if (dt.rows({selected: true}).any()) {
+			dt.rows().deselect();
+		}
 		if (data.select.rows !== undefined) {
 			dt.rows(data.select.rows).select();
 		}
+
+		if (dt.columns({selected: true}).any()) {
+			dt.columns().deselect();
+		}
 		if (data.select.columns !== undefined) {
 			dt.columns(data.select.columns).select();
+		}
+
+		if (dt.cells({selected: true}).any()) {
+			dt.cells().deselect();
 		}
 		if (data.select.cells !== undefined) {
 			for(var i = 0; i < data.select.cells.length; i++) {
@@ -475,6 +486,13 @@ function enableMouseSelection ( dt )
 
 			// Don't blur in Editor form
 			if ( $(e.target).parents('div.DTE').length ) {
+				return;
+			}
+
+			var event = $.Event('select-blur.dt');
+			eventTrigger( dt, event, [ e.target, e ] );
+
+			if ( event.isDefaultPrevented() ) {
 				return;
 			}
 
@@ -980,6 +998,21 @@ apiRegisterPlural( 'rows().select()', 'row().select()', function ( select ) {
 	return this;
 } );
 
+apiRegister( 'row().selected()', function () {
+	var ctx = this.context[0];
+
+	if (
+		ctx &&
+		this.length &&
+		ctx.aoData[this[0]] &&
+		ctx.aoData[this[0]]._select_selected
+	) {
+		return true;
+	}
+
+	return false;
+} );
+
 apiRegisterPlural( 'columns().select()', 'column().select()', function ( select ) {
 	var api = this;
 
@@ -1005,6 +1038,21 @@ apiRegisterPlural( 'columns().select()', 'column().select()', function ( select 
 	} );
 
 	return this;
+} );
+
+apiRegister( 'column().selected()', function () {
+	var ctx = this.context[0];
+
+	if (
+		ctx &&
+		this.length &&
+		ctx.aoColumns[this[0]] &&
+		ctx.aoColumns[this[0]]._select_selected
+	) {
+		return true;
+	}
+
+	return false;
 } );
 
 apiRegisterPlural( 'cells().select()', 'cell().select()', function ( select ) {
@@ -1035,6 +1083,20 @@ apiRegisterPlural( 'cells().select()', 'cell().select()', function ( select ) {
 	} );
 
 	return this;
+} );
+
+apiRegister( 'cell().selected()', function () {
+	var ctx = this.context[0];
+
+	if (ctx && this.length) {
+		var row = ctx.aoData[this[0][0].row];
+
+		if (row && row._selected_cells && row._selected_cells[this[0][0].column]) {
+			return true;
+		}
+	}
+
+	return false;
 } );
 
 

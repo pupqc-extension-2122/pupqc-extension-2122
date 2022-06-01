@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.3.1
+/*! SearchBuilder 1.3.2
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 (function () {
@@ -6,10 +6,12 @@
 
     var $$2;
     var dataTable$2;
-    // eslint-disable-next-line no-extra-parens
-    var moment = window.moment;
-    // eslint-disable-next-line no-extra-parens
-    var luxon = window.luxon;
+    function moment() {
+        return window.moment;
+    }
+    function luxon() {
+        return window.luxon;
+    }
     /**
      * Sets the value of jQuery for use in the file
      *
@@ -23,10 +25,11 @@
      * The Criteria class is used within SearchBuilder to represent a search criteria
      */
     var Criteria = /** @class */ (function () {
-        function Criteria(table, opts, topGroup, index, depth) {
+        function Criteria(table, opts, topGroup, index, depth, serverData) {
             var _this = this;
             if (index === void 0) { index = 0; }
             if (depth === void 0) { depth = 1; }
+            if (serverData === void 0) { serverData = undefined; }
             // Check that the required version of DataTables is included
             if (!dataTable$2 || !dataTable$2.versionCheck || !dataTable$2.versionCheck('1.10.0')) {
                 throw new Error('SearchPane requires DataTables 1.10 or newer');
@@ -47,6 +50,8 @@
                 filled: false,
                 index: index,
                 origData: undefined,
+                preventRedraw: false,
+                serverData: serverData,
                 topGroup: topGroup,
                 type: '',
                 value: []
@@ -80,6 +85,8 @@
                     .addClass(this.classes.button)
                     .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle))
                     .attr('type', 'button'),
+                inputCont: $$2('<div/>')
+                    .addClass(this.classes.inputCont),
                 // eslint-disable-next-line no-useless-escape
                 left: $$2('<button/>')
                     .html(this.s.dt.i18n('searchBuilder.left', i18n.left))
@@ -114,15 +121,8 @@
                     val.addClass(this.classes.greyscale);
                 }
             }
-            // For responsive design, adjust the criterias properties on the following events
-            this.s.dt.on('draw.dtsb', function () {
-                _this._adjustCriteria();
-            });
-            this.s.dt.on('buttons-action.dtsb', function () {
-                _this._adjustCriteria();
-            });
             $$2(window).on('resize.dtsb', dataTable$2.util.throttle(function () {
-                _this._adjustCriteria();
+                _this.s.topGroup.trigger('dtsb-redrawLogic');
             }));
             this._buildCriteria();
             return this;
@@ -142,16 +142,27 @@
                 .replace(/&quot;/g, '"');
         };
         /**
+         * Parses formatted numbers down to a form where they can be compared
+         *
+         * @param val the value to convert
+         * @returns the converted value
+         */
+        Criteria.parseNumFmt = function (val) {
+            return +val.replace(/(?!^-)[^0-9.]/g, '');
+        };
+        /**
          * Adds the left button to the criteria
          */
-        Criteria.prototype.updateArrows = function (hasSiblings, redraw) {
+        Criteria.prototype.updateArrows = function (hasSiblings) {
             if (hasSiblings === void 0) { hasSiblings = false; }
-            if (redraw === void 0) { redraw = true; }
             // Empty the container and append all of the elements in the correct order
             this.dom.container.children().detach();
             this.dom.container
                 .append(this.dom.data)
                 .append(this.dom.condition)
+                .append(this.dom.inputCont);
+            this.dom.inputCont
+                .empty()
                 .append(this.dom.value[0]);
             this.setListeners();
             // Trigger the inserted events for the value elements as they are inserted
@@ -159,7 +170,7 @@
                 this.dom.value[0].trigger('dtsb-inserted');
             }
             for (var i = 1; i < this.dom.value.length; i++) {
-                this.dom.container.append(this.dom.value[i]);
+                this.dom.inputCont.append(this.dom.value[i]);
                 this.dom.value[i].trigger('dtsb-inserted');
             }
             // If this is a top level criteria then don't let it move left
@@ -175,10 +186,6 @@
             }
             this.dom.buttons.append(this.dom["delete"]);
             this.dom.container.append(this.dom.buttons);
-            if (redraw) {
-                // A different combination of arrows and selectors may lead to a need for responsive to be triggered
-                this._adjustCriteria();
-            }
         };
         /**
          * Destroys the criteria, removing listeners and container from the dom
@@ -287,12 +294,20 @@
                 }
                 else if (this.s.type.includes('moment')) {
                     for (var i = 0; i < this.s.value.length; i++) {
-                        this.s.value[i] = moment(this.s.value[i], this.s.dateFormat).toISOString();
+                        if (this.s.value[i] &&
+                            this.s.value[i].length > 0 &&
+                            moment()(this.s.value[i], this.s.dateFormat, true).isValid()) {
+                            this.s.value[i] = moment()(this.s.value[i], this.s.dateFormat).format('YYYY-MM-DD HH:mm:ss');
+                        }
                     }
                 }
                 else if (this.s.type.includes('luxon')) {
                     for (var i = 0; i < this.s.value.length; i++) {
-                        this.s.value[i] = luxon.DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toISO();
+                        if (this.s.value[i] &&
+                            this.s.value[i].length > 0 &&
+                            luxon().DateTime.fromFormat(this.s.value[i], this.s.dateFormat).invalid === null) {
+                            this.s.value[i] = luxon().DateTime.fromFormat(this.s.value[i], this.s.dateFormat).toFormat('yyyy-MM-dd HH:mm:ss');
+                        }
                     }
                 }
             }
@@ -306,7 +321,7 @@
                 data: this.s.data,
                 origData: this.s.origData,
                 type: this.s.type,
-                value: this.s.value.map(function (a) { return a.toString(); })
+                value: this.s.value.map(function (a) { return a !== null && a !== undefined ? a.toString() : a; })
             };
         };
         /**
@@ -473,7 +488,7 @@
                             var val = _c[_b];
                             // If this criteria was previously active in the search then remove
                             // it from the search and trigger a new search
-                            if (_this.s.filled && val !== undefined && _this.dom.container.has(val[0]).length !== 0) {
+                            if (_this.s.filled && val !== undefined && _this.dom.inputCont.has(val[0]).length !== 0) {
                                 _this.s.filled = false;
                                 _this.s.dt.draw();
                                 _this.setListeners();
@@ -490,52 +505,16 @@
                 }
             });
         };
-        /**
-         * Adjusts the criteria to make SearchBuilder responsive
-         */
-        Criteria.prototype._adjustCriteria = function () {
-            // If this criteria is not present then don't bother adjusting it
-            if ($$2(document).has(this.dom.container).length === 0) {
+        Criteria.prototype.setupButtons = function () {
+            if (window.innerWidth > 550) {
+                this.dom.container.removeClass(this.classes.vertical);
+                this.dom.buttons.css('left', null);
+                this.dom.buttons.css('top', null);
                 return;
             }
-            var valRight;
-            var valWidth;
-            var outmostval = this.dom.value[this.dom.value.length - 1];
-            // Calculate the width and right value of the outmost value element
-            if (outmostval !== undefined && this.dom.container.has(outmostval[0]).length !== 0) {
-                valWidth = outmostval.outerWidth(true);
-                valRight = outmostval.offset().left + valWidth;
-            }
-            else {
-                return;
-            }
-            var leftOffset = this.dom.left.offset();
-            var rightOffset = this.dom.right.offset();
-            var clearOffset = this.dom["delete"].offset();
-            var hasLeft = this.dom.container.has(this.dom.left[0]).length !== 0;
-            var hasRight = this.dom.container.has(this.dom.right[0]).length !== 0;
-            var buttonsLeft = hasLeft ?
-                leftOffset.left :
-                hasRight ?
-                    rightOffset.left :
-                    clearOffset.left;
-            // Perform the responsive calculations and redraw where necessary
-            if ((buttonsLeft - valRight < 15 ||
-                hasLeft && leftOffset.top !== clearOffset.top ||
-                hasRight && rightOffset.top !== clearOffset.top) &&
-                !this.dom.container.parent().hasClass(this.classes.vertical)) {
-                this.dom.container.parent().addClass(this.classes.vertical);
-                this.s.topGroup.trigger('dtsb-redrawContents');
-            }
-            else if (buttonsLeft -
-                (this.dom.data.offset().left +
-                    this.dom.data.outerWidth(true) +
-                    this.dom.condition.outerWidth(true) +
-                    valWidth) > 15
-                && this.dom.container.parent().hasClass(this.classes.vertical)) {
-                this.dom.container.parent().removeClass(this.classes.vertical);
-                this.s.topGroup.trigger('dtsb-redrawContents');
-            }
+            this.dom.container.addClass(this.classes.vertical);
+            this.dom.buttons.css('left', this.dom.data.innerWidth());
+            this.dom.buttons.css('top', this.dom.data.position().top);
         };
         /**
          * Builds the elements of the dom together
@@ -548,15 +527,17 @@
             this.dom.container
                 .append(this.dom.data)
                 .append(this.dom.condition);
+            this.dom.inputCont.empty();
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
                 val.append(this.dom.valueTitle);
-                this.dom.container.append(val);
+                this.dom.inputCont.append(val);
             }
             // Add buttons to container
-            this.dom.container
+            this.dom.buttons
                 .append(this.dom["delete"])
                 .append(this.dom.right);
+            this.dom.container.append(this.dom.inputCont).append(this.dom.buttons);
             this.setListeners();
         };
         /**
@@ -592,10 +573,15 @@
                 // Call the init function to get the value elements for this condition
                 this.dom.value = [].concat(this.s.conditions[this.s.condition].init(this, Criteria.updateListener));
                 if (this.dom.value.length > 0 && this.dom.value[0] !== undefined) {
-                    this.dom.value[0].insertAfter(this.dom.condition).trigger('dtsb-inserted');
+                    this.dom.inputCont
+                        .empty()
+                        .append(this.dom.value[0])
+                        .insertAfter(this.dom.condition);
+                    this.dom.value[0].trigger('dtsb-inserted');
                     // Insert all of the value elements
                     for (var i = 1; i < this.dom.value.length; i++) {
-                        this.dom.value[i].insertAfter(this.dom.value[i - 1]).trigger('dtsb-inserted');
+                        this.dom.inputCont.append(this.dom.value[i]);
+                        this.dom.value[i].trigger('dtsb-inserted');
                     }
                 }
             }
@@ -645,11 +631,11 @@
         Criteria.prototype._populateCondition = function () {
             var conditionOpts = [];
             var conditionsLength = Object.keys(this.s.conditions).length;
+            var colInits = this.s.dt.settings()[0].aoColumns;
+            var column = +this.dom.data.children('option:selected').val();
             // If there are no conditions stored then we need to get them from the appropriate type
             if (conditionsLength === 0) {
-                var column = +this.dom.data.children('option:selected').val();
                 this.s.type = this.s.dt.columns().type().toArray()[column];
-                var colInits = this.s.dt.settings()[0].aoColumns;
                 if (colInits !== undefined) {
                     var colInit = colInits[column];
                     if (colInit.searchBuilderType !== undefined && colInit.searchBuilderType !== null) {
@@ -704,9 +690,15 @@
                         // Serverside processing does not supply the options for the select elements
                         // Instead input elements need to be used for these instead
                         if (this.s.dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
-                            conditionObj[condition].init = Criteria.initInput;
-                            conditionObj[condition].inputValue = Criteria.inputValueInput;
-                            conditionObj[condition].isInputValid = Criteria.isInputValidInput;
+                            var col = colInits[column];
+                            if (this.s.serverData[col.data]) {
+                                conditionObj[condition].init = Criteria.initSelectSSP;
+                            }
+                            else {
+                                conditionObj[condition].init = Criteria.initInput;
+                            }
+                            conditionObj[condition].inputValue = Criteria.inputValueSelect;
+                            conditionObj[condition].isInputValid = Criteria.isInputValidSelect;
                         }
                         this.s.conditions[condition] = conditionObj[condition];
                         var condName = conditionObj[condition].conditionName;
@@ -754,7 +746,44 @@
                 var opt = conditionOpts_1[_d];
                 this.dom.condition.append(opt);
             }
-            this.dom.condition.prop('selectedIndex', 0);
+            // Selecting a default condition if one is set
+            if (colInits[column].searchBuilder && colInits[column].searchBuilder.defaultCondition) {
+                var defaultCondition = colInits[column].searchBuilder.defaultCondition;
+                // If it is a number just use it as an index
+                if (typeof defaultCondition === 'number') {
+                    this.dom.condition.prop('selectedIndex', defaultCondition);
+                    this.dom.condition.trigger('change');
+                }
+                // If it is a string then things get slightly more tricly
+                else if (typeof defaultCondition === 'string') {
+                    // We need to check each condition option to see if any will match
+                    for (var i = 0; i < conditionOpts.length; i++) {
+                        // Need to check against the stored conditions so we can match the token "cond" to the option
+                        for (var _e = 0, _f = Object.keys(this.s.conditions); _e < _f.length; _e++) {
+                            var cond = _f[_e];
+                            var condName = this.s.conditions[cond].conditionName;
+                            if (
+                            // If the conditionName matches the text of the option
+                            (typeof condName === 'string' ? condName : condName(this.s.dt, this.c.i18n)) ===
+                                conditionOpts[i].text() &&
+                                // and the tokens match
+                                cond === defaultCondition) {
+                                // Select that option
+                                this.dom.condition
+                                    .prop('selectedIndex', this.dom.condition.children().toArray().indexOf(conditionOpts[i][0]))
+                                    .removeClass(this.classes.italic);
+                                this.dom.condition.trigger('change');
+                                i = conditionOpts.length;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            // If not default set then default to 0, the title
+            else {
+                this.dom.condition.prop('selectedIndex', 0);
+            }
         };
         /**
          * Populates the data select element
@@ -861,9 +890,10 @@
                 var val = _a[_i];
                 _loop_4(val);
             }
-            var children = this.dom.container.children();
-            if (children.length > 3) {
-                for (var i = 2; i < children.length - 1; i++) {
+            var children = this.dom.inputCont.children();
+            if (children.length > 1) {
+                // eslint-disable-next-line @typescript-eslint/prefer-for-of
+                for (var i = 0; i < children.length; i++) {
                     $$2(children[i]).remove();
                 }
             }
@@ -880,10 +910,11 @@
             if (loadedCriteria !== undefined && loadedCriteria.value !== undefined) {
                 this.s.value = loadedCriteria.value;
             }
+            this.dom.inputCont.empty();
             // Insert value elements and trigger the inserted event
             if (this.dom.value[0] !== undefined) {
                 this.dom.value[0]
-                    .insertAfter(this.dom.condition)
+                    .appendTo(this.dom.inputCont)
                     .trigger('dtsb-inserted');
             }
             for (var i = 1; i < this.dom.value.length; i++) {
@@ -895,7 +926,7 @@
             this.s.filled = this.s.conditions[this.s.condition].isInputValid(this.dom.value, this);
             this.setListeners();
             // If it can and this is different to before then trigger a draw
-            if (prevFilled !== this.s.filled) {
+            if (!this.s.preventRedraw && prevFilled !== this.s.filled) {
                 // If using SSP we want to restrict the amount of server calls that take place
                 //  and this will already have taken place
                 if (!this.s.dt.page.info().serverSide) {
@@ -948,6 +979,7 @@
             dropDown: 'dtsb-dropDown',
             greyscale: 'dtsb-greyscale',
             input: 'dtsb-input',
+            inputCont: 'dtsb-inputCont',
             italic: 'dtsb-italic',
             joiner: 'dtsp-joiner',
             left: 'dtsb-left',
@@ -1094,6 +1126,64 @@
             return el;
         };
         /**
+         * Default initialisation function for select conditions
+         */
+        Criteria.initSelectSSP = function (that, fn, preDefined) {
+            if (preDefined === void 0) { preDefined = null; }
+            that.dom.valueTitle.prop('selected', true);
+            // Declare select element to be used with all of the default classes and listeners.
+            var el = $$2('<select/>')
+                .addClass(Criteria.classes.value)
+                .addClass(Criteria.classes.dropDown)
+                .addClass(Criteria.classes.italic)
+                .addClass(Criteria.classes.select)
+                .append(that.dom.valueTitle)
+                .on('change.dtsb', function () {
+                $$2(this).removeClass(Criteria.classes.italic);
+                fn(that, this);
+            });
+            if (that.c.greyscale) {
+                el.addClass(Criteria.classes.greyscale);
+            }
+            var options = [];
+            for (var _i = 0, _a = that.s.serverData[that.s.origData]; _i < _a.length; _i++) {
+                var option = _a[_i];
+                var value = option.value;
+                var label = option.label;
+                // Function to add an option to the select element
+                var addOption = function (filt, text) {
+                    if (that.s.type.includes('html') && filt !== null && typeof filt === 'string') {
+                        filt.replace(/(<([^>]+)>)/ig, '');
+                    }
+                    // Add text and value, stripping out any html if that is the column type
+                    var opt = $$2('<option>', {
+                        type: Array.isArray(filt) ? 'Array' : 'String',
+                        value: filt
+                    })
+                        .data('sbv', filt)
+                        .addClass(that.classes.option)
+                        .addClass(that.classes.notItalic)
+                        // Have to add the text this way so that special html characters are not escaped - &amp; etc.
+                        .html(typeof text === 'string' ?
+                        text.replace(/(<([^>]+)>)/ig, '') :
+                        text);
+                    options.push(opt);
+                    // If this value was previously selected as indicated by preDefined, then select it again
+                    if (preDefined !== null && opt.val() === preDefined[0]) {
+                        opt.prop('selected', true);
+                        el.removeClass(Criteria.classes.italic);
+                        that.dom.valueTitle.removeProp('selected');
+                    }
+                };
+                addOption(value, label);
+            }
+            for (var _b = 0, options_2 = options; _b < options_2.length; _b++) {
+                var opt = options_2[_b];
+                el.append(opt);
+            }
+            return el;
+        };
+        /**
          * Default initialisation function for select array conditions
          *
          * This exists because there needs to be different select functionality for contains/without and equals/not
@@ -1114,12 +1204,7 @@
                 .addClass(Criteria.classes.input)
                 .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
                 var code = e.keyCode || e.which;
-                if (!that.c.enterSearch &&
-                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                        that.s.dt.settings()[0].oInit.search["return"]) ||
-                    code === 13) {
-                    return fn(that, this);
-                }
+                return fn(that, this, code);
             }, searchDelay === null ? 100 : searchDelay));
             if (that.c.greyscale) {
                 el.addClass(Criteria.classes.greyscale);
@@ -1147,12 +1232,7 @@
                     .addClass(Criteria.classes.input)
                     .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
                     var code = e.keyCode || e.which;
-                    if (!that.c.enterSearch &&
-                        !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"]) ||
-                        code === 13) {
-                        return fn(that, this);
-                    }
+                    return fn(that, this, code);
                 }, searchDelay === null ? 100 : searchDelay)),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
@@ -1162,12 +1242,7 @@
                     .addClass(Criteria.classes.input)
                     .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
                     var code = e.keyCode || e.which;
-                    if (!that.c.enterSearch &&
-                        !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"]) ||
-                        code === 13) {
-                        return fn(that, this);
-                    }
+                    return fn(that, this, code);
                 }, searchDelay === null ? 100 : searchDelay))
             ];
             if (that.c.greyscale) {
@@ -1202,20 +1277,12 @@
                 .on('change.dtsb', that._throttle(function () {
                 return fn(that, this);
             }, searchDelay === null ? 100 : searchDelay))
-                .on('input.dtsb keypress.dtsb', that.c.enterSearch ||
-                that.s.dt.settings()[0].oInit.search !== undefined &&
-                    that.s.dt.settings()[0].oInit.search["return"] ?
-                function (e) {
-                    that._throttle(function () {
-                        var code = e.keyCode || e.which;
-                        if (code === 13) {
-                            return fn(that, this);
-                        }
-                    }, searchDelay === null ? 100 : searchDelay);
-                } :
+                .on('input.dtsb keypress.dtsb', function (e) {
                 that._throttle(function () {
-                    return fn(that, this);
-                }, searchDelay === null ? 100 : searchDelay));
+                    var code = e.keyCode || e.which;
+                    return fn(that, this, code);
+                }, searchDelay === null ? 100 : searchDelay);
+            });
             if (that.c.greyscale) {
                 el.addClass(Criteria.classes.greyscale);
             }
@@ -1255,25 +1322,12 @@
                     function () {
                         fn(that, _this);
                     })
-                    .on('input.dtsb keypress.dtsb', !that.c.enterSearch &&
-                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
-                        that.s.dt.settings()[0].oInit.search["return"]) &&
-                    searchDelay !== null ?
+                    .on('input.dtsb keypress.dtsb', function (e) {
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
-                        return fn(that, this);
-                    }, searchDelay) :
-                    that.c.enterSearch ||
-                        that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"] ?
-                        function (e) {
-                            var code = e.keyCode || e.which;
-                            if (code === 13) {
-                                fn(that, _this);
-                            }
-                        } :
-                        function () {
-                            fn(that, _this);
-                        }),
+                        var code = e.keyCode || e.which;
+                        return fn(that, this, code);
+                    }, searchDelay === null ? 0 : searchDelay);
+                }),
                 $$2('<span>')
                     .addClass(that.classes.joiner)
                     .html(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
@@ -1298,18 +1352,10 @@
                     that.s.dt.settings()[0].oApi._fnThrottle(function () {
                         return fn(that, this);
                     }, searchDelay) :
-                    that.c.enterSearch ||
-                        that.s.dt.settings()[0].oInit.search !== undefined &&
-                            that.s.dt.settings()[0].oInit.search["return"] ?
-                        function (e) {
-                            var code = e.keyCode || e.which;
-                            if (code === 13) {
-                                fn(that, _this);
-                            }
-                        } :
-                        function () {
-                            fn(that, _this);
-                        })
+                    function (e) {
+                        var code = e.keyCode || e.which;
+                        fn(that, _this, code);
+                    })
             ];
             if (that.c.greyscale) {
                 els[0].addClass(Criteria.classes.greyscale);
@@ -1389,14 +1435,19 @@
         /**
          * Function that is run on each element as a call back when a search should be triggered
          */
-        Criteria.updateListener = function (that, el) {
+        Criteria.updateListener = function (that, el, code) {
             // When the value is changed the criteria is now complete so can be included in searches
             // Get the condition from the map based on the key that has been selected for the condition
             var condition = that.s.conditions[that.s.condition];
             that.s.filled = condition.isInputValid(that.dom.value, that);
             that.s.value = condition.inputValue(that.dom.value, that);
             if (!that.s.filled) {
-                that.s.dt.draw();
+                if (!that.c.enterSearch &&
+                    !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                        that.s.dt.settings()[0].oInit.search["return"]) ||
+                    code === 13) {
+                    that.s.dt.draw();
+                }
                 return;
             }
             if (!Array.isArray(that.s.value)) {
@@ -1434,8 +1485,13 @@
                     }
                 }
             }
-            // Trigger a search
-            that.s.dt.draw();
+            if (!that.c.enterSearch &&
+                !(that.s.dt.settings()[0].oInit.search !== undefined &&
+                    that.s.dt.settings()[0].oInit.search["return"]) ||
+                code === 13) {
+                // Trigger a search
+                that.s.dt.draw();
+            }
             // Refocus the element and set the correct cursor position
             if (idx !== null) {
                 that.dom.value[idx].removeClass(that.classes.italic);
@@ -1579,8 +1635,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() ===
-                        moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() ===
+                        moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1592,8 +1648,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() !==
-                        moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() !==
+                        moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             '<': {
@@ -1604,7 +1660,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() < moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() < moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             '>': {
@@ -1615,7 +1671,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return moment(value, that.s.dateFormat).valueOf() > moment(comparison[0], that.s.dateFormat).valueOf();
+                    return moment()(value, that.s.dateFormat).valueOf() > moment()(comparison[0], that.s.dateFormat).valueOf();
                 }
             },
             'between': {
@@ -1626,9 +1682,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = moment(value, that.s.dateFormat).valueOf();
-                    var comp0 = moment(comparison[0], that.s.dateFormat).valueOf();
-                    var comp1 = moment(comparison[1], that.s.dateFormat).valueOf();
+                    var val = moment()(value, that.s.dateFormat).valueOf();
+                    var comp0 = moment()(comparison[0], that.s.dateFormat).valueOf();
+                    var comp1 = moment()(comparison[1], that.s.dateFormat).valueOf();
                     if (comp0 < comp1) {
                         return comp0 <= val && val <= comp1;
                     }
@@ -1646,9 +1702,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = moment(value, that.s.dateFormat).valueOf();
-                    var comp0 = moment(comparison[0], that.s.dateFormat).valueOf();
-                    var comp1 = moment(comparison[1], that.s.dateFormat).valueOf();
+                    var val = moment()(value, that.s.dateFormat).valueOf();
+                    var comp0 = moment()(comparison[0], that.s.dateFormat).valueOf();
+                    var comp1 = moment()(comparison[1], that.s.dateFormat).valueOf();
                     if (comp0 < comp1) {
                         return !(+comp0 <= +val && +val <= +comp1);
                     }
@@ -1702,8 +1758,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        === luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        === luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1715,8 +1771,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        !== luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        !== luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             '<': {
@@ -1727,8 +1783,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        < luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        < luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             '>': {
@@ -1739,8 +1795,8 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    return luxon.DateTime.fromFormat(value, that.s.dateFormat).ts
-                        > luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    return luxon().DateTime.fromFormat(value, that.s.dateFormat).ts
+                        > luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
                 }
             },
             'between': {
@@ -1751,9 +1807,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = luxon.DateTime.fromFormat(value, that.s.dateFormat).ts;
-                    var comp0 = luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
-                    var comp1 = luxon.DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
+                    var val = luxon().DateTime.fromFormat(value, that.s.dateFormat).ts;
+                    var comp0 = luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    var comp1 = luxon().DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
                     if (comp0 < comp1) {
                         return comp0 <= val && val <= comp1;
                     }
@@ -1771,9 +1827,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison, that) {
-                    var val = luxon.DateTime.fromFormat(value, that.s.dateFormat).ts;
-                    var comp0 = luxon.DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
-                    var comp1 = luxon.DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
+                    var val = luxon().DateTime.fromFormat(value, that.s.dateFormat).ts;
+                    var comp0 = luxon().DateTime.fromFormat(comparison[0], that.s.dateFormat).ts;
+                    var comp1 = luxon().DateTime.fromFormat(comparison[1], that.s.dateFormat).ts;
                     if (comp0 < comp1) {
                         return !(+comp0 <= +val && +val <= +comp1);
                     }
@@ -1965,13 +2021,7 @@
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val === +comp;
+                    return Criteria.parseNumFmt(value) === Criteria.parseNumFmt(comparison[0]);
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -1983,13 +2033,7 @@
                 inputValue: Criteria.inputValueSelect,
                 isInputValid: Criteria.isInputValidSelect,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val !== +comp;
+                    return Criteria.parseNumFmt(value) !== Criteria.parseNumFmt(comparison[0]);
                 }
             },
             '<': {
@@ -2000,13 +2044,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val < +comp;
+                    return Criteria.parseNumFmt(value) < Criteria.parseNumFmt(comparison[0]);
                 }
             },
             '<=': {
@@ -2017,13 +2055,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val <= +comp;
+                    return Criteria.parseNumFmt(value) <= Criteria.parseNumFmt(comparison[0]);
                 }
             },
             '>=': {
@@ -2034,13 +2066,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val >= +comp;
+                    return Criteria.parseNumFmt(value) >= Criteria.parseNumFmt(comparison[0]);
                 }
             },
             // eslint-disable-next-line sort-keys
@@ -2052,13 +2078,7 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    return +val > +comp;
+                    return Criteria.parseNumFmt(value) > Criteria.parseNumFmt(comparison[0]);
                 }
             },
             'between': {
@@ -2069,15 +2089,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp0 = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    var comp1 = comparison[1].indexOf('-') === 0 ?
-                        '-' + comparison[1].replace(/[^0-9.]/g, '') :
-                        comparison[1].replace(/[^0-9.]/g, '');
+                    var val = Criteria.parseNumFmt(value);
+                    var comp0 = Criteria.parseNumFmt(comparison[0]);
+                    var comp1 = Criteria.parseNumFmt(comparison[1]);
                     if (+comp0 < +comp1) {
                         return +comp0 <= +val && +val <= +comp1;
                     }
@@ -2095,15 +2109,9 @@
                 inputValue: Criteria.inputValueInput,
                 isInputValid: Criteria.isInputValidInput,
                 search: function (value, comparison) {
-                    var val = value.indexOf('-') === 0 ?
-                        '-' + value.replace(/[^0-9.]/g, '') :
-                        value.replace(/[^0-9.]/g, '');
-                    var comp0 = comparison[0].indexOf('-') === 0 ?
-                        '-' + comparison[0].replace(/[^0-9.]/g, '') :
-                        comparison[0].replace(/[^0-9.]/g, '');
-                    var comp1 = comparison[1].indexOf('-') === 0 ?
-                        '-' + comparison[1].replace(/[^0-9.]/g, '') :
-                        comparison[1].replace(/[^0-9.]/g, '');
+                    var val = Criteria.parseNumFmt(value);
+                    var comp0 = Criteria.parseNumFmt(comparison[0]);
+                    var comp1 = Criteria.parseNumFmt(comparison[1]);
                     if (+comp0 < +comp1) {
                         return !(+comp0 <= +val && +val <= +comp1);
                     }
@@ -2442,10 +2450,11 @@
      * The Group class is used within SearchBuilder to represent a group of criteria
      */
     var Group = /** @class */ (function () {
-        function Group(table, opts, topGroup, index, isChild, depth) {
+        function Group(table, opts, topGroup, index, isChild, depth, serverData) {
             if (index === void 0) { index = 0; }
             if (isChild === void 0) { isChild = false; }
             if (depth === void 0) { depth = 1; }
+            if (serverData === void 0) { serverData = undefined; }
             // Check that the required version of DataTables is included
             if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('1.10.0')) {
                 throw new Error('SearchBuilder requires DataTables 1.10 or newer');
@@ -2462,6 +2471,7 @@
                 logic: undefined,
                 opts: opts,
                 preventRedraw: false,
+                serverData: serverData,
                 toDrop: undefined,
                 topGroup: topGroup
             };
@@ -2564,7 +2574,7 @@
             for (var _b = 0, _c = this.s.criteria; _b < _c.length; _b++) {
                 var crit = _c[_b];
                 if (crit.criteria instanceof Criteria) {
-                    crit.criteria.updateArrows(this.s.criteria.length > 1, false);
+                    crit.criteria.updateArrows(this.s.criteria.length > 1);
                     this._setCriteriaListeners(crit.criteria);
                 }
             }
@@ -2602,7 +2612,9 @@
                     this.s.criteria[i].criteria.dom.container.insertBefore(this.dom.add);
                     // Set listeners for various points
                     this._setCriteriaListeners(crit);
+                    this.s.criteria[i].criteria.s.preventRedraw = this.s.preventRedraw;
                     this.s.criteria[i].criteria.rebuild(this.s.criteria[i].criteria.getDetails());
+                    this.s.criteria[i].criteria.s.preventRedraw = false;
                 }
                 else if (crit instanceof Group && crit.s.criteria.length > 0) {
                     // Reset the index to the new value
@@ -2611,7 +2623,9 @@
                     // Add the sub group to the group
                     this.s.criteria[i].criteria.dom.container.insertBefore(this.dom.add);
                     // Redraw the contents of the group
+                    crit.s.preventRedraw = this.s.preventRedraw;
                     crit.redrawContents();
+                    crit.s.preventRedraw = false;
                     this._setGroupListeners(crit);
                 }
                 else {
@@ -2628,8 +2642,8 @@
         Group.prototype.redrawLogic = function () {
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
                 var crit = _a[_i];
-                if (crit instanceof Group) {
-                    crit.redrawLogic();
+                if (crit.criteria instanceof Group) {
+                    crit.criteria.redrawLogic();
                 }
             }
             this.setupLogic();
@@ -2665,12 +2679,19 @@
                 }
                 return;
             }
-            // Set width, take 2 for the border
-            var height = this.dom.container.height() - 1;
             this.dom.clear.height('0px');
-            this.dom.logicContainer.append(this.dom.clear).width(height);
+            this.dom.logicContainer.append(this.dom.clear);
             // Prepend logic button
             this.dom.container.prepend(this.dom.logicContainer);
+            for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
+                var crit = _a[_i];
+                if (crit.criteria instanceof Criteria) {
+                    crit.criteria.setupButtons();
+                }
+            }
+            // Set width, take 2 for the border
+            var height = this.dom.container.outerHeight() - 1;
+            this.dom.logicContainer.width(height);
             this._setLogicListener();
             // Set criteria left margin
             this.dom.container.css('margin-left', this.dom.logicContainer.outerHeight(true));
@@ -2719,11 +2740,10 @@
          *
          * @param crit Instance of Criteria to be added to the group
          */
-        Group.prototype.addCriteria = function (crit, redraw) {
+        Group.prototype.addCriteria = function (crit) {
             if (crit === void 0) { crit = null; }
-            if (redraw === void 0) { redraw = true; }
             var index = crit === null ? this.s.criteria.length : crit.s.index;
-            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, index, this.s.depth);
+            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, index, this.s.depth, this.s.serverData);
             // If a Criteria has been passed in then set the values to continue that
             if (crit !== null) {
                 criteria.c = crit.c;
@@ -2759,7 +2779,7 @@
             for (var _i = 0, _a = this.s.criteria; _i < _a.length; _i++) {
                 var opt = _a[_i];
                 if (opt.criteria instanceof Criteria) {
-                    opt.criteria.updateArrows(this.s.criteria.length > 1, redraw);
+                    opt.criteria.updateArrows(this.s.criteria.length > 1);
                 }
             }
             this._setCriteriaListeners(criteria);
@@ -2802,7 +2822,7 @@
          */
         Group.prototype._addPrevGroup = function (loadedGroup) {
             var idx = this.s.criteria.length;
-            var group = new Group(this.s.dt, this.c, this.s.topGroup, idx, true, this.s.depth + 1);
+            var group = new Group(this.s.dt, this.c, this.s.topGroup, idx, true, this.s.depth + 1, this.s.serverData);
             // Add the new group to the criteria array
             this.s.criteria.push({
                 criteria: group,
@@ -2822,7 +2842,7 @@
          */
         Group.prototype._addPrevCriteria = function (loadedCriteria) {
             var idx = this.s.criteria.length;
-            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, idx, this.s.depth);
+            var criteria = new Criteria(this.s.dt, this.s.opts, this.s.topGroup, idx, this.s.depth, this.s.serverData);
             criteria.populate();
             // Add the new criteria to the criteria array
             this.s.criteria.push({
@@ -2830,9 +2850,13 @@
                 index: idx
             });
             // Rebuild it with the previous conditions for that criteria
+            criteria.s.preventRedraw = this.s.preventRedraw;
             criteria.rebuild(loadedCriteria);
+            criteria.s.preventRedraw = false;
             this.s.criteria[idx].criteria = criteria;
-            this.s.topGroup.trigger('dtsb-redrawContents');
+            if (!this.s.preventRedraw) {
+                this.s.topGroup.trigger('dtsb-redrawContents');
+            }
         };
         /**
          * Checks And the criteria using AND logic
@@ -2950,7 +2974,7 @@
                 .unbind('click')
                 .on('click.dtsb', function () {
                 var idx = criteria.s.index;
-                var group = new Group(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index, true, _this.s.depth + 1);
+                var group = new Group(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index, true, _this.s.depth + 1, _this.s.serverData);
                 // Add the criteria that is to be moved to the new group
                 group.addCriteria(criteria);
                 // Update the details in the current groups criteria array
@@ -2963,7 +2987,7 @@
             criteria.dom.left
                 .unbind('click')
                 .on('click.dtsb', function () {
-                _this.s.toDrop = new Criteria(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index);
+                _this.s.toDrop = new Criteria(_this.s.dt, _this.s.opts, _this.s.topGroup, criteria.s.index, undefined, _this.s.serverData);
                 _this.s.toDrop.s = criteria.s;
                 _this.s.toDrop.c = criteria.c;
                 _this.s.toDrop.classes = criteria.classes;
@@ -3032,8 +3056,8 @@
                 .on('dtsb-dropCriteria.dtsb', function () {
                 var toDrop = group.s.toDrop;
                 toDrop.s.index = group.s.index;
-                toDrop.updateArrows(_this.s.criteria.length > 1, false);
-                _this.addCriteria(toDrop, false);
+                toDrop.updateArrows(_this.s.criteria.length > 1);
+                _this.addCriteria(toDrop);
                 return false;
             });
             group.setListeners();
@@ -3193,6 +3217,7 @@
                 dt: table,
                 opts: opts,
                 search: undefined,
+                serverData: undefined,
                 topGroup: undefined
             };
             // If searchbuilder is already defined for this table then return
@@ -3206,6 +3231,11 @@
                     var loadedState = _this.s.dt.state.loaded();
                     if (loadedState && loadedState.searchBuilder) {
                         data.searchBuilder = _this._collapseArray(loadedState.searchBuilder);
+                    }
+                });
+                this.s.dt.on('xhr.dtsb', function (e, settings, json) {
+                    if (json && json.searchBuilder && json.searchBuilder.options) {
+                        _this.s.serverData = json.searchBuilder.options;
                     }
                 });
             }
@@ -3251,6 +3281,8 @@
             this.s.topGroup.s.preventRedraw = true;
             this.s.topGroup.rebuild(details);
             this.s.topGroup.s.preventRedraw = false;
+            this._checkClear();
+            this._updateTitle(this.s.topGroup.count());
             this.s.topGroup.redrawContents();
             this.s.dt.draw(false);
             this.s.topGroup.setListeners();
@@ -3332,11 +3364,16 @@
                     }
                 }
             }
-            this.s.topGroup = new Group(this.s.dt, this.c, undefined);
+            this.s.topGroup = new Group(this.s.dt, this.c, undefined, undefined, undefined, undefined, this.s.serverData);
             this._setClearListener();
             this.s.dt.on('stateSaveParams.dtsb', function (e, settings, data) {
                 data.searchBuilder = _this.getDetails();
-                data.page = _this.s.dt.page();
+                if (!data.scroller) {
+                    data.page = _this.s.dt.page();
+                }
+                else {
+                    data.start = _this.s.dt.state().start;
+                }
             });
             this.s.dt.on('stateLoadParams.dtsb', function (e, settings, data) {
                 _this.rebuild(data.searchBuilder);
@@ -3359,7 +3396,12 @@
                     // If using SSP we want to restrict the amount of server calls that take place
                     //  and this information will already have been processed
                     if (!this.s.dt.page.info().serverSide) {
-                        this.s.dt.page(loadedState.page).draw('page');
+                        if (loadedState.page) {
+                            this.s.dt.page(loadedState.page).draw('page');
+                        }
+                        else if (this.s.dt.scroller && loadedState.scroller) {
+                            this.s.dt.scroller().scrollToRow(loadedState.scroller.topRow);
+                        }
                     }
                     this.s.topGroup.setListeners();
                 }
@@ -3478,7 +3520,7 @@
             var _this = this;
             this.dom.clearAll.unbind('click');
             this.dom.clearAll.on('click.dtsb', function () {
-                _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined);
+                _this.s.topGroup = new Group(_this.s.dt, _this.c, undefined, undefined, undefined, undefined, _this.s.serverData);
                 _this._build();
                 _this.s.dt.draw();
                 _this.s.topGroup.setListeners();
@@ -3508,6 +3550,18 @@
                     _this.s.dt.draw();
                 }
                 _this.s.dt.state.save();
+            });
+            this.s.topGroup.dom.container.unbind('dtsb-redrawContents-noDraw');
+            this.s.topGroup.dom.container.on('dtsb-redrawContents-noDraw.dtsb', function () {
+                _this._checkClear();
+                _this.s.topGroup.s.preventRedraw = true;
+                _this.s.topGroup.redrawContents();
+                _this.s.topGroup.s.preventRedraw = false;
+                _this.s.topGroup.setupLogic();
+                _this._setEmptyListener();
+                var count = _this.s.topGroup.count();
+                _this._updateTitle(count);
+                _this._filterChanged(count);
             });
             this.s.topGroup.dom.container.unbind('dtsb-redrawLogic');
             this.s.topGroup.dom.container.on('dtsb-redrawLogic.dtsb', function () {
@@ -3544,7 +3598,7 @@
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.3.1';
+        SearchBuilder.version = '1.3.2';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3650,7 +3704,7 @@
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.3.1
+    /*! SearchBuilder 1.3.2
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     // DataTables extensions common UMD. Note that this allows for AMD, CommonJS
@@ -3710,12 +3764,13 @@
                     align: 'container',
                     span: 'container'
                 });
+                var topGroup = config._searchBuilder.s.topGroup;
                 // Need to redraw the contents to calculate the correct positions for the elements
-                if (config._searchBuilder.s.topGroup !== undefined) {
-                    config._searchBuilder.s.topGroup.dom.container.trigger('dtsb-redrawContents');
+                if (topGroup !== undefined) {
+                    topGroup.dom.container.trigger('dtsb-redrawContents-noDraw');
                 }
-                if (config._searchBuilder.s.topGroup.s.criteria.length === 0) {
-                    $('.' + $.fn.dataTable.Group.classes.add).click();
+                if (topGroup.s.criteria.length === 0) {
+                    $('.' + $.fn.dataTable.Group.classes.add.replace(/ /g, '.')).click();
                 }
             },
             config: {},

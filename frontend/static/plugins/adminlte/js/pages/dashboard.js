@@ -41,7 +41,8 @@ $(function () {
       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     },
     startDate: moment().subtract(29, 'days'),
-    endDate: moment()
+    endDate: moment(),
+    opens: 'right'
   }, function (start, end) {
     // eslint-disable-next-line no-alert
     alert('You chose: ' + start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
@@ -277,7 +278,8 @@ $(function () {
         'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
       },
       startDate: moment().subtract(29, 'days'),
-      endDate: moment()
+      endDate: moment(),
+      opens: 'right'
     },
     function (start, end) {
       $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))

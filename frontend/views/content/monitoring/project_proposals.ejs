@@ -1,0 +1,132 @@
+<%# Content Header (Page header) %>
+<div class="content-header">
+  <div class="container-fluid">
+
+    <!-- Breadcrumb -->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="#">Monitoring</a></li>
+      <li class="breadcrumb-item active">Project Proposals</li>
+    </ol>
+
+    <!-- Title (and subtitle) -->
+    <div class="d-sm-flex align-items-sm-center justify-content-between">
+      <div class="flex-wrap mb-2 mb-md-0">
+        <h1 class="m-0">Project Proposals</h1>
+        <div class="text-secondary">View reports and manage activities here</div>
+      </div>
+      <div>
+        <button type="button" class="btn btn-default" id="daterange-btn">
+          <i class="far fa-calendar-alt mr-1"></i>
+          <span>Filter by date</span>
+        </button>
+        <a href="./add-project.html" class="btn btn-primary">
+          <i class="fas fa-plus mr-1"></i>
+          <span>Create a proposal</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Main Content %>
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Info cards -->
+    <!-- <div class="row">
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">Messages</span>
+            <span class="info-box-number">1,410</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Bookmarks</span>
+            <span class="info-box-number">410</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Uploads</span>
+            <span class="info-box-number">13,648</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Likes</span>
+            <span class="info-box-number">93,139</span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Datatable Card -->
+    <div class="card card-outline card-primary">
+
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between">
+          <h3 class="card-title">List of Project Proposals</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse"
+              title="Collapse card">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-negative" data-card-widget="maximize"
+              title="Maximize/minimize card">
+              <i class="fas fa-expand"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-negative" title="Reload card content">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+
+        <table class="table w-100" id="projectProposals_dt">
+          <thead>
+            <th>Project Title</th>
+            <th>Target Group(s)</th>
+            <th>Date Started</th>
+            <th>Date Ended</th>
+            <th>Status</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6" class="text-center">
+                <div class="p-5 my-5">
+                  <div class="spinner-border text-primary mb-2"></div>
+                  <div>Loading ... Please wait.</div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<%# Scripts %>
+<script>
+  console.info('Check source code.')
+</script>

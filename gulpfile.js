@@ -15,6 +15,9 @@ function mainJS() {
     // Functions
     BUILD_PATH + 'js/main/functions.js',
 
+    // Classes
+    BUILD_PATH + 'js/main/classes.js',
+
     // Initializations
     BUILD_PATH + 'js/main/init.js',
   ])

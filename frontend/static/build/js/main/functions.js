@@ -16,10 +16,47 @@
  * @returns {string} Returns a uuid
  */
 const uuid = () => {
-    const id = () => ("000" + ((Math.random() * 46656) | 0).toString(36)).slice(-3);
-    return Date.now().toString(36) + id() + id(); 
+	const id = () => ("000" + ((Math.random() * 46656) | 0).toString(36)).slice(-3);
+	return Date.now().toString(36) + id() + id();
 }
 
+/**
+ * Set the html content
+ * @param {*} param1 
+ * @param {*} param2 
+ */
+const setHTMLContent = (param1, param2) => {
+	typeof param1 === 'object' && Object.entries(param1).forEach(([k, v]) => $(k).html(v));
+	typeof param1 === 'string' && $(param1).html(param2);
+}
+
+/**
+ * Format the value into peso
+ * @param {float} value 
+ * @returns 
+ */
+const formatToPeso = (value) => {
+	const formatter = new Intl.NumberFormat('fil-PH', {
+		style: 'currency',
+		currency: 'PHP',
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2
+	});
+	return formatter.format(value);
+}
+/**
+ * Set the value of input elements
+ * @param {*} param1 
+ * @param {*} param2 
+ */
+const setInputValue = (param1, param2) => {
+	if(typeof param1 === 'object') {
+		Object.entries(param1).forEach(([k, v]) => $(k).val(v));
+	} 
+	if(typeof param1 === 'string') {
+		$(param1).val(param2);
+	}
+}
 
 /** 
  * ? Moments Custom Functions 
@@ -55,8 +92,8 @@ const isAfterOrToday = (datetime) => moment(datetime).isSameOrAfter(moment());
  * @returns String of readable datetime format
  */
 const formatDateTime = (datetime, format = "") => format
-    ? moment(datetime).format(format in DATETIME_FORMATS ? DATETIME_FORMATS[format] : format)
-    : moment(datetime).format();
+	? moment(datetime).format(format in DATETIME_FORMATS ? DATETIME_FORMATS[format] : format)
+	: moment(datetime).format();
 
 /** 
  * ? jQuery Validation Methods 
@@ -64,7 +101,7 @@ const formatDateTime = (datetime, format = "") => format
  */
 
 // Set Custom Validations
-CUSTOM_VALIDATIONS?.forEach(({ ruleName, handler, defaultMessage }) => jQuery.validator.addMethod(ruleName, handler, defaultMessage));
+CUSTOM_VALIDATIONS?.forEach(({ ruleName, handler, defaultMessage }) => jQuery.validator?.addMethod(ruleName, handler, defaultMessage));
 
 
 /** 
@@ -74,209 +111,204 @@ CUSTOM_VALIDATIONS?.forEach(({ ruleName, handler, defaultMessage }) => jQuery.va
 
 const $app = (selector) => {
 
-    /**
-     * * App Object
-     */
-    let app = {}
+	/**
+	 * * App Object
+	 */
+	let app = {}
 
-    /**
-     * * Private Variables
-     */
+	/**
+	 * * Private Variables
+	 */
 
-    /**
-     * * App Properties
-     */
-    app.element = $(selector)
+	/**
+	 * * App Properties
+	 */
+	app.element = $(selector)
 
-    /**
-     * * App Methods
-     */
+	/**
+	 * * App Methods
+	 */
 
-    // Handle Form
-    app.handleForm = ({ validators, onSubmit }) => {
+	// Handle Form
+	app.handleForm = ({ validators, onSubmit }) => {
 
-        let validationRules = {}, validationMessages = {}
+		let validationRules = {}, validationMessages = {}
 
-        const booleanRuleKeys = [
-            'required',
-            'email'
-        ]
+		const booleanRuleKeys = [
+			'required',
+			'email'
+		]
 
-        const ruleObjects = ['rule', 'message']
+		const ruleObjects = ['rule', 'message']
 
-        Object.entries(validators).forEach(([name, objRules]) => {
-            let _rules = {}
-            let _messages = {}
+		Object.entries(validators).forEach(([name, objRules]) => {
+			let _rules = {}
+			let _messages = {}
 
-            const rules = Object.entries(objRules);
-            rules.forEach(([ruleKey, rule]) => {
-                if(booleanRuleKeys.includes(ruleKey) && typeof rule === "string") {
-                    _rules[ruleKey] = true;
-                    _messages[ruleKey] = rule
-                } else if(typeof rule === "object") {
-                    Object.keys(rule).forEach(key => {
-                        if(!ruleObjects.includes(key)) {
-                            console.error(`"${ key }" is an invalid validation parameter`)
-                        } else {
-                            _rules[ruleKey] = rule.rule;
-                            _messages[ruleKey] = rule.message
-                        }
-                    })
-                }
-            });
+			const rules = Object.entries(objRules);
+			rules.forEach(([ruleKey, rule]) => {
+				if (booleanRuleKeys.includes(ruleKey) && typeof rule === "string") {
+					_rules[ruleKey] = true;
+					_messages[ruleKey] = rule
+				} else if (typeof rule === "object") {
+					Object.keys(rule).forEach(key => {
+						if (!ruleObjects.includes(key)) {
+							console.error(`"${key}" is an invalid validation parameter`)
+						} else {
+							_rules[ruleKey] = rule.rule;
+							_messages[ruleKey] = rule.message
+						}
+					})
+				}
+			});
 
-            validationRules[name] = _rules;
-            validationMessages[name] = _messages;
-        });
+			validationRules[name] = _rules;
+			validationMessages[name] = _messages;
+		});
 
-        app.element.validate({
-            rules: validationRules,
-            messages: validationMessages,
-            errorElement: 'div',
-            errorPlacement: (error, element) => {
-                if (element.parent('.input-group').length) { // For checkbox/radio
-                    error
-                        .addClass('invalid-feedback')
-                        .insertAfter(element.parent());
-                } else if (element.hasClass('select2')) { // For select2
-                    error
-                        .addClass('invalid-feedback')
-                        .insertAfter(element.next('span'));
-                } else { // For Default   
-                    error.addClass('invalid-feedback')
-                    element.closest('.form-group').append(error)
-                }
-            },
-            highlight: (element, errorClass, validClass) => {
-                if($(element).hasClass('select2')) {
-                    $(element)
-                        .siblings('span.select2-container')
-                        .children('.selection')
-                        .children('.select2-selection')
-                        .addClass('is-invalid');
-                } else {
-                    $(element).addClass('is-invalid')
-                }
-            },
-            unhighlight: (element, errorClass, validClass) => {
-                if($(element).hasClass('select2')) {
-                    $(element)
-                        .siblings('span.select2-container')
-                        .children('.selection')
-                        .children('.select2-selection')
-                        .removeClass('is-invalid');
-                } else {
-                    $(element).removeClass('is-invalid')
-                }
-            },
-            submitHandler: () => {
-                onSubmit();
-                return false
-            }
-        });
-    }
+		app.element.validate({
+			rules: validationRules,
+			messages: validationMessages,
+			errorElement: 'div',
+			errorPlacement: (error, element) => {
+				if (element.parent('.input-group').length) { // For checkbox/radio
+					error
+						.addClass('invalid-feedback')
+						.insertAfter(element.parent());
+				} else if (element.hasClass('select2')) { // For select2
+					error
+						.addClass('invalid-feedback')
+						.insertAfter(element.next('span'));
+				} else { // For Default   
+					error.addClass('invalid-feedback')
+					element.closest('.form-group').append(error)
+				}
+			},
+			highlight: (element, errorClass, validClass) => {
+				if ($(element).hasClass('select2')) {
+					$(element)
+						.siblings('span.select2-container')
+						.children('.selection')
+						.children('.select2-selection')
+						.addClass('is-invalid');
+				} else {
+					$(element).addClass('is-invalid')
+				}
+			},
+			unhighlight: (element, errorClass, validClass) => {
+				if ($(element).hasClass('select2')) {
+					$(element)
+						.siblings('span.select2-container')
+						.children('.selection')
+						.children('.select2-selection')
+						.removeClass('is-invalid');
+				} else {
+					$(element).removeClass('is-invalid')
+				}
+			},
+			submitHandler: () => {
+				onSubmit();
+				return false
+			}
+		});
+	}
 
-    // Initialize Date Range Picker
-    app.initDateInput = ({
-        button = null,
-        mode = 'single',
-        daterangepicker = {},
-        inputmask = {},
-    }) => {
-    
-        /**
-         * For Date Range Picker
-         */
+	// Initialize Date Range Picker
+	app.initDateInput = ({
+		button = null,
+		mode = 'single',
+		daterangepicker = {},
+		inputmask = {},
+	}) => {
 
-        // Initialize default options
-        let _daterangepicker = {
-            singleDatePicker: true,
-            autoUpdateInput: false,
-            autoApply: true,
-            showDropdowns: true,
-            opens: 'left', 
-            drops: 'auto',
-            locale: {
-                cancelLabel: 'Clear',
-                applyLabel: 'Select'
-            }
-        }
-        
-        // Configure Single Date Picker
-        if(mode === 'single') _daterangepicker.singleDatePicker = true;
-        if(mode === 'range') _daterangepicker.singleDatePicker = false;
+		/**
+		 * For Date Range Picker
+		 */
 
-        // Reconfigure the options if set
-        Object.entries(daterangepicker)?.forEach(([key, value]) => _daterangepicker[key] = value)
+		// Initialize default options
+		let _daterangepicker = {
+			singleDatePicker: true,
+			autoUpdateInput: false,
+			autoApply: true,
+			showDropdowns: true,
+			opens: 'left',
+			drops: 'auto',
+			locale: {
+				cancelLabel: 'Clear',
+				applyLabel: 'Select'
+			}
+		}
 
-        /**
-         * For Input Mask
-         */
+		// Configure Single Date Picker
+		if (mode === 'single') _daterangepicker.singleDatePicker = true;
+		if (mode === 'range') _daterangepicker.singleDatePicker = false;
 
-        // Initialize default options
-        let _inputmask = { 
-            placeholder: 'mm/dd/yyyy',
-        }
+		// Reconfigure the options if set
+		Object.entries(daterangepicker)?.forEach(([key, value]) => _daterangepicker[key] = value)
 
-        // Reconfigure the options if set
-        Object.entries(inputmask)?.forEach(([key, value]) => _inputmask[key] = value)
+		/**
+		 * For Input Mask
+		 */
 
-        /**
-         * Overall Setup
-         */
+		// Initialize default options
+		let _inputmask = {
+			placeholder: 'mm/dd/yyyy',
+		}
 
-        if(button !== null) {
-            const btn = $(button), input = $(selector);
-            
-            // Initialize Date Range Picker
-            btn.daterangepicker(_daterangepicker);
+		// Reconfigure the options if set
+		Object.entries(inputmask)?.forEach(([key, value]) => _inputmask[key] = value)
 
-            // Initialize Input Mask
-            input.inputmask('mm/dd/yyyy', _inputmask);
+		/**
+		 * Overall Setup
+		 */
 
-            // On Button Apply
-            btn.on('apply.daterangepicker', (ev, { startDate }) => {
-                input.val(startDate.format('MM/DD/YYYY'));
-                input.trigger('change');
-                input.valid();
-            });
-            
-            // On Button Cancel
-            btn.on('cancel.daterangepicker', () => {
-                input.val('');
-                input.trigger('change');
-                input.valid();
-                const element = btn.data('daterangepicker');
-                const dateToday = moment().format('MM/DD/YYYY');
-                element.setStartDate(dateToday);
-                element.setEndDate(dateToday);
-            });
+		if (button !== null) {
+			const btn = $(button), input = $(selector);
 
-            // On Input Change
-            input.on('change', () => {
-                const value = input.val();
-                const element = btn.data('daterangepicker');
-                if(value) {
-                    element.setStartDate(value);
-                    element.setEndDate(value);
-                } else {
-                    const dateToday = moment().format('MM/DD/YYYY');
-                    element.setStartDate(dateToday);
-                    element.setEndDate(dateToday);
-                }
-            });
-        }
-    }
+			// Initialize Date Range Picker
+			btn.daterangepicker(_daterangepicker);
 
-    // DataTable
-    app.dataTable = () => {
-        
-    }
+			// Initialize Input Mask
+			input.inputmask('mm/dd/yyyy', _inputmask);
 
-    /**
-     * * Return the app object
-     */
-    return app;
+			// On Button Apply
+			btn.on('apply.daterangepicker', (ev, { startDate }) => {
+				input.val(startDate.format('MM/DD/YYYY'));
+				input.trigger('change');
+				input.valid();
+			});
+
+			// On Button Cancel
+			btn.on('cancel.daterangepicker', () => {
+				input.val('');
+				input.trigger('change');
+				input.valid();
+				const element = btn.data('daterangepicker');
+				const dateToday = moment().format('MM/DD/YYYY');
+				element.setStartDate(dateToday);
+				element.setEndDate(dateToday);
+			});
+
+			// On Input Change
+			input.on('change', () => {
+				const value = input.val();
+				const element = btn.data('daterangepicker');
+				if (value) {
+					element.setStartDate(value);
+					element.setEndDate(value);
+				} else {
+					const dateToday = moment().format('MM/DD/YYYY');
+					element.setStartDate(dateToday);
+					element.setEndDate(dateToday);
+				}
+			});
+		}
+	}
+
+	/**
+	 * * Return the app object
+	 */
+	return app;
 }
 
 /** 
@@ -285,44 +317,44 @@ const $app = (selector) => {
  */
 
 const $ajax = () => {
-    let ajax = {}
+	let ajax = {}
 
-    let ajaxOptions = {
-        url: '',
-        data: null,
-        onSuccess: (result) => {
-            console.log(result);
-        },
-        onError: () => {
-            console.error('AJAX Error');
-        }
-    }
+	let ajaxOptions = {
+		url: '',
+		data: null,
+		onSuccess: (result) => {
+			console.log(result);
+		},
+		onError: () => {
+			console.error('AJAX Error');
+		}
+	}
 
-    ajax.get = async (options = ajaxOptions) => {
-        console.log("Loading ....");
-        await $.ajax({
-            url: options.url,
-            type: 'GET',
-            success: options.onSuccess,
-            error: options.onError
-        });
-        console.log("Done!");
-    }
+	ajax.get = async (options = ajaxOptions) => {
+		console.log("Loading ....");
+		await $.ajax({
+			url: options.url,
+			type: 'GET',
+			success: options.onSuccess,
+			error: options.onError
+		});
+		console.log("Done!");
+	}
 
-    ajax.post = async (options = ajaxOptions) => {
-        console.log("Loading ....");
-        await $.ajax({
-            url: options.url,
-            type: 'POST',
-            data: ajaxOptions.data,
-            success: options.onSuccess,
-            error: options.onError
-        });
-        console.log("Done!");
-    }
+	ajax.post = async (options = ajaxOptions) => {
+		console.log("Loading ....");
+		await $.ajax({
+			url: options.url,
+			type: 'POST',
+			data: ajaxOptions.data,
+			success: options.onSuccess,
+			error: options.onError
+		});
+		console.log("Done!");
+	}
 
-    return ajax;
+	return ajax;
 }
 
 // We need that our library is globally accesible, then we save in the window
-if(typeof(window.ajax) === 'undefined') window.ajax = $ajax();
+if (typeof (window.ajax) === 'undefined') window.ajax = $ajax();

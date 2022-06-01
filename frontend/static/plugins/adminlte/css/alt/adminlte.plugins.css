@@ -424,8 +424,8 @@
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-  height: 31px;
-  right: 6px;
+  height: 30px;
+  right: 8px;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
@@ -962,14 +962,14 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 
 .select2-container--default .select2-light .select2-results__option--highlighted,
 .select2-light .select2-container--default .select2-results__option--highlighted {
-  background-color: #e5e5e5;
+  background-color: #e9ecef;
   color: #1f2d3d;
 }
 
 .select2-container--default .select2-light .select2-results__option--highlighted[aria-selected], .select2-container--default .select2-light .select2-results__option--highlighted[aria-selected]:hover,
 .select2-light .select2-container--default .select2-results__option--highlighted[aria-selected],
 .select2-light .select2-container--default .select2-results__option--highlighted[aria-selected]:hover {
-  background-color: #dddddd;
+  background-color: #e0e4e9;
   color: #1f2d3d;
 }
 
@@ -980,8 +980,8 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 
 .select2-container--default .select2-light .select2-selection--multiple .select2-selection__choice,
 .select2-light .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #e5e5e5;
-  border-color: #d8d8d8;
+  background-color: #e9ecef;
+  border-color: #dadfe4;
   color: #1f2d3d;
 }
 
@@ -3761,7 +3761,7 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .slider-light .slider .slider-selection {
-  background: #e5e5e5;
+  background: #e9ecef;
 }
 
 .slider-dark .slider .slider-selection {
@@ -4104,18 +4104,18 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 .icheck-light > input:first-child:not(:checked):not(:disabled):hover + label::before,
 .icheck-light > input:first-child:not(:checked):not(:disabled):hover + input[type="hidden"] + label::before {
   border-width: 1px;
-  border-color: #e5e5e5;
+  border-color: #e9ecef;
 }
 
 .icheck-light > input:first-child:not(:checked):not(:disabled):focus + label::before,
 .icheck-light > input:first-child:not(:checked):not(:disabled):focus + input[type="hidden"] + label::before {
-  border-color: #e5e5e5;
+  border-color: #e9ecef;
 }
 
 .icheck-light > input:first-child:checked + label::before,
 .icheck-light > input:first-child:checked + input[type="hidden"] + label::before {
-  background-color: #e5e5e5;
-  border-color: #e5e5e5;
+  background-color: #e9ecef;
+  border-color: #e9ecef;
 }
 
 .icheck-light > input:first-child + label::before,
@@ -5059,7 +5059,7 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .note-editor .note-btn.btn-light:hover, .note-editor .note-btn.btn-light:active, .note-editor .note-btn.btn-light.hover {
-  background-color: #e5e5e5;
+  background-color: #e9ecef;
   color: #44403c;
 }
 
@@ -5893,7 +5893,7 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .pace-light .pace .pace-progress {
-  background: #e5e5e5;
+  background: #e9ecef;
 }
 
 .pace-barber-shop-light .pace {
@@ -5901,7 +5901,7 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .pace-barber-shop-light .pace .pace-progress {
-  background: #e5e5e5;
+  background: #e9ecef;
 }
 
 .pace-barber-shop-light .pace .pace-activity {
@@ -5909,11 +5909,11 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .pace-big-counter-light .pace .pace-progress::after {
-  color: rgba(229, 229, 229, 0.2);
+  color: rgba(233, 236, 239, 0.2);
 }
 
 .pace-bounce-light .pace .pace-activity {
-  background: #e5e5e5;
+  background: #e9ecef;
 }
 
 .pace-center-atom-light .pace-progress {
@@ -5922,7 +5922,7 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .pace-center-atom-light .pace-progress::before {
-  background: #e5e5e5;
+  background: #e9ecef;
   color: #1f2d3d;
   font-size: .8rem;
   line-height: .7rem;
@@ -5930,41 +5930,41 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .pace-center-atom-light .pace-activity {
-  border-color: #e5e5e5;
+  border-color: #e9ecef;
 }
 
 .pace-center-atom-light .pace-activity::after, .pace-center-atom-light .pace-activity::before {
-  border-color: #e5e5e5;
+  border-color: #e9ecef;
 }
 
 .pace-center-circle-light .pace .pace-progress {
-  background: rgba(229, 229, 229, 0.8);
+  background: rgba(233, 236, 239, 0.8);
   color: #1f2d3d;
 }
 
 .pace-center-radar-light .pace .pace-activity {
-  border-color: #e5e5e5 transparent transparent;
+  border-color: #e9ecef transparent transparent;
 }
 
 .pace-center-radar-light .pace .pace-activity::before {
-  border-color: #e5e5e5 transparent transparent;
+  border-color: #e9ecef transparent transparent;
 }
 
 .pace-center-simple-light .pace {
   background: #1f2d3d;
-  border-color: #e5e5e5;
+  border-color: #e9ecef;
 }
 
 .pace-center-simple-light .pace .pace-progress {
-  background: #e5e5e5;
+  background: #e9ecef;
 }
 
 .pace-material-light .pace {
-  color: #e5e5e5;
+  color: #e9ecef;
 }
 
 .pace-corner-indicator-light .pace .pace-activity {
-  background: #e5e5e5;
+  background: #e9ecef;
 }
 
 .pace-corner-indicator-light .pace .pace-activity::after,
@@ -5973,45 +5973,45 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .pace-corner-indicator-light .pace .pace-activity::before {
-  border-right-color: rgba(229, 229, 229, 0.2);
-  border-left-color: rgba(229, 229, 229, 0.2);
+  border-right-color: rgba(233, 236, 239, 0.2);
+  border-left-color: rgba(233, 236, 239, 0.2);
 }
 
 .pace-corner-indicator-light .pace .pace-activity::after {
-  border-top-color: rgba(229, 229, 229, 0.2);
-  border-bottom-color: rgba(229, 229, 229, 0.2);
+  border-top-color: rgba(233, 236, 239, 0.2);
+  border-bottom-color: rgba(233, 236, 239, 0.2);
 }
 
 .pace-fill-left-light .pace .pace-progress {
-  background-color: rgba(229, 229, 229, 0.2);
+  background-color: rgba(233, 236, 239, 0.2);
 }
 
 .pace-flash-light .pace .pace-progress {
-  background: #e5e5e5;
+  background: #e9ecef;
 }
 
 .pace-flash-light .pace .pace-progress-inner {
-  box-shadow: 0 0 10px #e5e5e5, 0 0 5px #e5e5e5;
+  box-shadow: 0 0 10px #e9ecef, 0 0 5px #e9ecef;
 }
 
 .pace-flash-light .pace .pace-activity {
-  border-top-color: #e5e5e5;
-  border-left-color: #e5e5e5;
+  border-top-color: #e9ecef;
+  border-left-color: #e9ecef;
 }
 
 .pace-loading-bar-light .pace .pace-progress {
-  background: #e5e5e5;
-  color: #e5e5e5;
+  background: #e9ecef;
+  color: #e9ecef;
   box-shadow: 120px 0 #1f2d3d, 240px 0 #1f2d3d;
 }
 
 .pace-loading-bar-light .pace .pace-activity {
-  box-shadow: inset 0 0 0 2px #e5e5e5, inset 0 0 0 7px #1f2d3d;
+  box-shadow: inset 0 0 0 2px #e9ecef, inset 0 0 0 7px #1f2d3d;
 }
 
 .pace-mac-osx-light .pace .pace-progress {
-  background-color: #e5e5e5;
-  box-shadow: inset -1px 0 #e5e5e5, inset 0 -1px #e5e5e5, inset 0 2px rgba(31, 45, 61, 0.5), inset 0 6px rgba(31, 45, 61, 0.3);
+  background-color: #e9ecef;
+  box-shadow: inset -1px 0 #e9ecef, inset 0 -1px #e9ecef, inset 0 2px rgba(31, 45, 61, 0.5), inset 0 6px rgba(31, 45, 61, 0.3);
 }
 
 .pace-mac-osx-light .pace .pace-activity {
@@ -6020,7 +6020,7 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .pace-progress-color-light .pace-progress {
-  color: #e5e5e5;
+  color: #e9ecef;
 }
 
 .pace-dark .pace .pace-progress {
@@ -8643,489 +8643,16 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
   color: #343a40;
 }
 
-/**
-  * bootstrap-switch - Turn checkboxes and radio buttons into toggle switches.
-  *
-  * @version v3.4 (MODDED)
-  * @homepage https://bttstrp.github.io/bootstrap-switch
-  * @author Mattia Larentis <mattia@larentis.eu> (http://larentis.eu)
-  * @license MIT
-  */
-.bootstrap-switch {
-  border: 1px solid #ced4da;
-  border-radius: 0.2rem;
-  cursor: pointer;
-  direction: ltr;
-  display: inline-block;
-  line-height: .5rem;
-  overflow: hidden;
-  position: relative;
-  text-align: left;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  vertical-align: middle;
-  z-index: 0;
+.bs-stepper .step-trigger {
+  font-size: .95rem;
 }
 
-.bootstrap-switch .bootstrap-switch-container {
-  border-radius: 0.2rem;
-  display: inline-block;
-  top: 0;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
+.bs-stepper .active .bs-stepper-circle {
+  background-color: #880000 !important;
 }
 
-.bootstrap-switch:focus-within {
-  box-shadow: 0 0 0 0.2rem rgba(136, 0, 0, 0.25);
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on,
-.bootstrap-switch .bootstrap-switch-handle-off,
-.bootstrap-switch .bootstrap-switch-label {
-  box-sizing: border-box;
-  cursor: pointer;
-  display: table-cell;
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.2rem;
-  padding: .25rem .5rem;
-  vertical-align: middle;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on,
-.bootstrap-switch .bootstrap-switch-handle-off {
-  text-align: center;
-  z-index: 1;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default {
-  background: #e9ecef;
-  color: #1f2d3d;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
-  background: #880000;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-secondary,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-secondary {
-  background: #44403c;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-success,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-success {
-  background: #2F855A;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-info,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-info {
-  background: #2B6CB0;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-warning,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-warning {
-  background: #c2410c;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-danger,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-danger {
-  background: #b91c1c;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-light,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-light {
-  background: #e5e5e5;
-  color: #1f2d3d;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-dark,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-dark {
-  background: #343a40;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-lightblue,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-lightblue {
-  background: #0369a1;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-navy,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-navy {
-  background: #001f3f;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-olive,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-olive {
-  background: #3d9970;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-lime,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-lime {
-  background: #4d7c0f;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-fuchsia,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-fuchsia {
-  background: #f012be;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-maroon,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-maroon {
-  background: #d81b60;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-blue,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-blue {
-  background: #2B6CB0;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-indigo,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-indigo {
-  background: #4338ca;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-purple,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-purple {
-  background: #6b21a8;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-pink,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-pink {
-  background: #db2777;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-red,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-red {
-  background: #b91c1c;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-orange,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-orange {
-  background: #c2410c;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-yellow,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-yellow {
-  background: #ca8a04;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-green,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-green {
-  background: #2F855A;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-teal,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-teal {
-  background: #0d9488;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-cyan,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-cyan {
-  background: #0891b2;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-white,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-white {
-  background: #fff;
-  color: #1f2d3d;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-gray,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-gray {
-  background: #6c757d;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-gray-dark,
-.bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-gray-dark {
-  background: #343a40;
-  color: #fff;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-on {
-  border-bottom-left-radius: 0.1rem;
-  border-top-left-radius: 0.1rem;
-}
-
-.bootstrap-switch .bootstrap-switch-handle-off {
-  border-bottom-right-radius: 0.1rem;
-  border-top-right-radius: 0.1rem;
-}
-
-.bootstrap-switch input[type='radio'],
-.bootstrap-switch input[type='checkbox'] {
-  filter: alpha(opacity=0);
-  left: 0;
-  margin: 0;
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  visibility: hidden;
-  z-index: -1;
-}
-
-.bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-handle-on,
-.bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-handle-off,
-.bootstrap-switch.bootstrap-switch-mini .bootstrap-switch-label {
-  font-size: .875rem;
-  line-height: 1.5;
-  padding: .1rem .3rem;
-}
-
-.bootstrap-switch.bootstrap-switch-small .bootstrap-switch-handle-on,
-.bootstrap-switch.bootstrap-switch-small .bootstrap-switch-handle-off,
-.bootstrap-switch.bootstrap-switch-small .bootstrap-switch-label {
-  font-size: .875rem;
-  line-height: 1.5;
-  padding: .2rem .4rem;
-}
-
-.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-handle-on,
-.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-handle-off,
-.bootstrap-switch.bootstrap-switch-large .bootstrap-switch-label {
-  font-size: 1.25rem;
-  line-height: 1.3333333rem;
-  padding: .3rem .5rem;
-}
-
-.bootstrap-switch.bootstrap-switch-disabled, .bootstrap-switch.bootstrap-switch-readonly, .bootstrap-switch.bootstrap-switch-indeterminate {
-  cursor: default;
-}
-
-.bootstrap-switch.bootstrap-switch-disabled .bootstrap-switch-handle-on,
-.bootstrap-switch.bootstrap-switch-disabled .bootstrap-switch-handle-off,
-.bootstrap-switch.bootstrap-switch-disabled .bootstrap-switch-label, .bootstrap-switch.bootstrap-switch-readonly .bootstrap-switch-handle-on,
-.bootstrap-switch.bootstrap-switch-readonly .bootstrap-switch-handle-off,
-.bootstrap-switch.bootstrap-switch-readonly .bootstrap-switch-label, .bootstrap-switch.bootstrap-switch-indeterminate .bootstrap-switch-handle-on,
-.bootstrap-switch.bootstrap-switch-indeterminate .bootstrap-switch-handle-off,
-.bootstrap-switch.bootstrap-switch-indeterminate .bootstrap-switch-label {
-  cursor: default;
-  filter: alpha(opacity=50);
-  opacity: .5;
-}
-
-.bootstrap-switch.bootstrap-switch-animate .bootstrap-switch-container {
-  transition: margin-left .5s;
-}
-
-.bootstrap-switch.bootstrap-switch-inverse .bootstrap-switch-handle-on {
-  border-radius: 0 0.1rem 0.1rem 0;
-}
-
-.bootstrap-switch.bootstrap-switch-inverse .bootstrap-switch-handle-off {
-  border-radius: 0.1rem 0 0 0.1rem;
-}
-
-.bootstrap-switch.bootstrap-switch-on .bootstrap-switch-label,
-.bootstrap-switch.bootstrap-switch-inverse.bootstrap-switch-off .bootstrap-switch-label {
-  border-bottom-right-radius: 0.1rem;
-  border-top-right-radius: 0.1rem;
-}
-
-.bootstrap-switch.bootstrap-switch-off .bootstrap-switch-label,
-.bootstrap-switch.bootstrap-switch-inverse.bootstrap-switch-on .bootstrap-switch-label {
-  border-bottom-left-radius: 0.1rem;
-  border-top-left-radius: 0.1rem;
-}
-
-.dark-mode .bootstrap-switch {
-  border-color: #6c757d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-default {
-  background-color: #3a4047;
-  color: #fff;
-  border-color: #454d55;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
-  background: #3f6791;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-secondary,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-secondary {
-  background: #6c757d;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-success,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-success {
-  background: #00bc8c;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-info,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-info {
-  background: #3498db;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-warning,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-warning {
-  background: #f39c12;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-danger,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-danger {
-  background: #e74c3c;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-light,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-light {
-  background: #f8f9fa;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-dark,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-dark {
-  background: #343a40;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-lightblue,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-lightblue {
-  background: #86bad8;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-navy,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-navy {
-  background: #002c59;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-olive,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-olive {
-  background: #74c8a3;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-lime,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-lime {
-  background: #67ffa9;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-fuchsia,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-fuchsia {
-  background: #f672d8;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-maroon,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-maroon {
-  background: #ed6c9b;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-blue,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-blue {
-  background: #3f6791;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-indigo,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-indigo {
-  background: #6610f2;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-purple,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-purple {
-  background: #6f42c1;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-pink,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-pink {
-  background: #e83e8c;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-red,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-red {
-  background: #e74c3c;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-orange,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-orange {
-  background: #fd7e14;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-yellow,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-yellow {
-  background: #f39c12;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-green,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-green {
-  background: #00bc8c;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-teal,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-teal {
-  background: #20c997;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-cyan,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-cyan {
-  background: #3498db;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-white,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-white {
-  background: #fff;
-  color: #1f2d3d;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-gray,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-gray {
-  background: #6c757d;
-  color: #fff;
-}
-
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-gray-dark,
-.dark-mode .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-gray-dark {
-  background: #343a40;
-  color: #fff;
+.bs-stepper .active .bs-stepper-label {
+  color: #000;
 }
 
 .bootstrap-datetimepicker-widget .datepicker td.day.active,
@@ -9182,7 +8709,7 @@ select.form-control-sm ~ .select2-container--default .select2-selection--multipl
 }
 
 .daterangepicker .drp-buttons .btn.btn-default:hover, .daterangepicker .drp-buttons .btn.btn-default:active, .daterangepicker .drp-buttons .btn.btn-default.hover {
-  background-color: #e5e5e5;
+  background-color: #e9ecef;
   color: #44403c;
 }
 
