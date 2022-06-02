@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Memos, { foreignKey: 'memo_id', as: 'memo' })
       this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
       this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
+      this.belongsToMany(models.Partners, { through: models.Project_Partners })
     }
   }
   Projects.init({

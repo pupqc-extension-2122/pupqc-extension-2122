@@ -11,11 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasOne(models.Projects, {foreignKey: 'memo_id', as: 'project'})
+      this.hasOne(models.Projects, { foreignKey: 'memo_id', as: 'project' })
+      this.belongsTo(models.Partners, { 'foreignKey': 'partner_id', as: 'owner' })
     }
   }
   Memos.init({
-    id:{
+    id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
@@ -23,12 +24,16 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate:{
+      validate: {
         isIn: {
           args: ['MOA', 'MOU'],
           msg: 'Type must be either MOA or MOU'
         }
       }
+    },
+    partner_id: {
+      type: DataTypes.UUID,
+      allowNull: false
     },
     partner_name: {
       type: DataTypes.STRING,

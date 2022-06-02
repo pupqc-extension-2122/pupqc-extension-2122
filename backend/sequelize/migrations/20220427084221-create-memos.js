@@ -10,7 +10,15 @@ module.exports = {
       type: {
         type: Sequelize.STRING,
         allowNull: false,
-        
+      },
+      partner_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: {
+            tableName: 'Partners'
+          },
+          key: 'id'
+        }
       },
       partner_name: {
         type: Sequelize.STRING,
@@ -49,7 +57,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(()=>{
+    }).then(() => {
       queryInterface.addConstraint('Memos', ['type'], {
         type: 'check',
         where: {
