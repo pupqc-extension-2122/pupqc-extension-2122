@@ -1,6 +1,6 @@
-const expressjwt = require('express-jwt')
+const {expressjwt: jwt} = require('express-jwt')
 
-const jwtMiddleware = expressjwt({
+const jwtMiddleware = jwt({
     secret: process.env.JWT_SECRET,
     getToken: req => req.cookies.token,
     algorithms: ['HS256']

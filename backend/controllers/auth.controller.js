@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { Users } = require('../sequelize/models')
+const { Users, Roles } = require('../sequelize/models')
 
 exports.register = async (req, res) => {
   const user = req.body
@@ -17,23 +17,47 @@ exports.register = async (req, res) => {
   }
 }
 
-exports.login = async (req, res) => {
-  const user = req.body
+exports.test = (req, res) => {
+  res.json(req.auth)
+}
 
-  let data = await Users.findOne({
+exports.login = async (req, res) => {
+  const body = req.body
+
+  let user = await Users.findOne({
     where: {
-      email: user.email
+      email: body.email
+    },
+    attributes: [
+      'id',
+      'email',
+      'first_name',
+      'last_name',
+      'full_name',
+      'password'
+    ],
+    include: {
+      model: Roles,
+      attributes: ['name'],
+      through: {
+        attributes: []
+      }
     }
   })
 
-  if (!data) {
+  if (!user) {
     res.send({
       error: true,
       message: 'User not found!'
     })
   } else {
-    let verified = data.verify(user.password)
+    let verified = user.verify(body.password)
     if (verified) {
+
+      let {id, email, full_name} = user
+      let roles = user.Roles.map(el => el.name)
+      let data = {id, email, full_name, roles}
+
 
       let token = await jwt.sign(JSON.stringify(data), process.env.JWT_SECRET)
       res.cookie('token', token, { httpOnly: true })
