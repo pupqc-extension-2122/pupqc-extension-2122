@@ -54,9 +54,9 @@ exports.login = async (req, res) => {
     let verified = user.verify(body.password)
     if (verified) {
 
-      let {id, email, full_name} = user
+      let { id, email, full_name } = user
       let roles = user.Roles.map(el => el.name)
-      let data = {id, email, full_name, roles}
+      let data = { id, email, full_name, roles }
 
 
       let token = await jwt.sign(JSON.stringify(data), process.env.JWT_SECRET)
@@ -73,4 +73,12 @@ exports.login = async (req, res) => {
     }
   }
 
+}
+
+exports.logout = (req, res) => {
+  res.set_cookie('token', null, {expires: new Date()})
+  res.sent({
+    error: false,
+    message: 'You are now logged out.'
+  })
 }
