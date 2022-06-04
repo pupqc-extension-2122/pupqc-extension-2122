@@ -17,7 +17,8 @@
     "db_migrate": "npm run db_migrate_down && npm run db_migrate_up",
     "db_seed": "npm run db_seed_down && npm run db_seed_up",
     "db_redo": "npm run db_drop && npm run db_create && npm run db_migrate_up && npm run db_seed_up",
-    "watch-js": "gulp watch"
+    "watch-js": "gulp watch",
+    "heroku-postbuild": "npm run compile-js"
   },
   "repository": {
     "type": "git",
