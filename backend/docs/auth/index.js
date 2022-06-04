@@ -6,7 +6,7 @@ module.exports = {
     '/auth/login': {
       ...login
     },
-    'auth/logout': {
+    '/auth/logout': {
       ...logout
     }
   }
