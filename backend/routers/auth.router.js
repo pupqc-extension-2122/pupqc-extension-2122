@@ -1,6 +1,6 @@
 let router = require('express').Router()
 const {
-  register, login, test_auth
+  register, login, test
 } = require('../controllers/auth.controller')
 const jwtMiddleWare = require('../utils/jwtMiddleware')
 
