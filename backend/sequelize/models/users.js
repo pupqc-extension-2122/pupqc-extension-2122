@@ -37,18 +37,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    full_name: {
-      type: DataTypes.VIRTUAL,
-      get: function(){
-        const first_name = this.getDataValue('first_name')
-        const middle_name = this.getDataValue('middle_name') || null
-        const last_name = this.getDataValue('last_name')
-        if (this.getDataValue('middle_name') != null)
-          return `${first_name} ${middle_name} ${last_name}`
-        else
-          return `${first_name} ${last_name}`
-      }
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
