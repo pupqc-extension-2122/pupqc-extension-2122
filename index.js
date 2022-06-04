@@ -28,5 +28,5 @@ app.use('/api', require('./backend'));
 app.use('/', require('./frontend'))
 
 // * Port
-let PORT = process.env.PORT || 3030;
+let PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`App is running on port ${ PORT }!`));
