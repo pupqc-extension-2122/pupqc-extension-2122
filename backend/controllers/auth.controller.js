@@ -32,8 +32,9 @@ exports.login = async (req, res) => {
       'id',
       'email',
       'first_name',
+      'middle_name',
       'last_name',
-      'full_name',
+      'suffix_name',
       'password'
     ],
     include: {
@@ -54,9 +55,9 @@ exports.login = async (req, res) => {
     let verified = user.verify(body.password)
     if (verified) {
 
-      let { id, email, full_name } = user
+      let { id, email, first_name, middle_name, last_name, suffix_name } = user
       let roles = user.Roles.map(el => el.name)
-      let data = { id, email, full_name, roles }
+      let data = { id, email, first_name, middle_name, last_name, suffix_name, roles }
 
 
       let token = await jwt.sign(JSON.stringify(data), process.env.JWT_SECRET)
