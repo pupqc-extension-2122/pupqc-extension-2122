@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index",
     "server": "nodemon index",
-    "compile-js": "gulp watch",
-    "dev": "concurrently --kill-others \"npm run server\" \"gulp watch\"",
+    "compile-js": "gulp compile_js",
+    "dev": "concurrently --kill-others \"npm run server\" \"npm run watch-js\"",
     "db_create": "sequelize db:create",
     "db_drop": "sequelize db:drop",
     "db_migrate_up": "sequelize db:migrate",
@@ -16,7 +16,8 @@
     "db_seed_down": "sequelize db:seed:undo:all",
     "db_migrate": "npm run db_migrate_down && npm run db_migrate_up",
     "db_seed": "npm run db_seed_down && npm run db_seed_up",
-    "db_redo": "npm run db_drop && npm run db_create && npm run db_migrate_up && npm run db_seed_up"
+    "db_redo": "npm run db_drop && npm run db_create && npm run db_migrate_up && npm run db_seed_up",
+    "watch-js": "gulp watch"
   },
   "repository": {
     "type": "git",

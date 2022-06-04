@@ -6,7 +6,7 @@ const concat = require('gulp-concat');
 const BUILD_PATH = './frontend/static/build/';
 const DIST_PATH = './frontend/static/dist/';
 
-function mainJS() {
+const mainJS = () => {
   return src([
 
     // Constants
@@ -28,7 +28,7 @@ function mainJS() {
     .pipe(dest(DIST_PATH + 'js/'))
 }
 
-function authJS() {
+const authJS = () => {
   return src(BUILD_PATH + 'js/auth/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
@@ -36,7 +36,7 @@ function authJS() {
     .pipe(dest(DIST_PATH + 'js/auth/'))
 }
 
-function usersJS() {
+const usersJS = () => {
   return src(BUILD_PATH + 'js/users/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
@@ -44,8 +44,9 @@ function usersJS() {
     .pipe(dest(DIST_PATH + 'js/users/'))
 }
 
-function watchTask() {
+const watchTask = () => {
   watch(BUILD_PATH + 'js/**/*.js', series(mainJS, authJS, usersJS));
 }
 
 exports.watch = series(mainJS, authJS, usersJS, watchTask);
+exports.compile_js = series(mainJS, authJS, usersJS);

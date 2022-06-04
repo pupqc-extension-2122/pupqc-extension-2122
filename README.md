@@ -8,8 +8,8 @@
 |------|--------------------------|
 `start`|start server with nodejs 
 `server`|start server with nodemon 
-`compile-js`|compile js files in `/static/build` to `/static/dist` 
-`dev`|`npm run server` & `npm run compile-js`
+`compile-js`|compile js files in `/static/build` to `/static/dist` for production
+`dev`|`npm run server` & `gulp watch`
 `db_create`|create database from .env
 `db_drop`|drop database from .env
 `db_migrate_up`|run all unapplied migrations
