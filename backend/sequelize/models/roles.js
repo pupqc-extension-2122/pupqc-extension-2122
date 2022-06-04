@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsToMany(models.Users, { through: models.User_Roles, as: 'users' })
+      this.belongsToMany(models.Users, { through: 'User_Roles' })
     }
   }
   Roles.init({
@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Roles',
+    tableName: 'Roles',
     underscored: true
   });
   return Roles;
