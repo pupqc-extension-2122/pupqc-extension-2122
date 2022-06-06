@@ -17,15 +17,18 @@ module.exports = {
           key: 'id'
         }
       },
-      budget_item_id: {
+      category_id: {
         type: Sequelize.UUID,
-        allowNull: false,
         references: {
           model: {
-            tableName: 'Budget_Items'
+            tableName: 'Budget_Item_Categories'
           },
           key: 'id'
         }
+      },
+      budget_item: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       particulars: {
         type: Sequelize.STRING,

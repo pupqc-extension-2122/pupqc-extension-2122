@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Projects, { foreignKey: 'project_id', as: 'project' })
-      this.hasMany(models.Budget_Items, { foreignKey: 'budget_item_id', as: 'budget_items' })
+      this.belongsTo(models.Budget_Item_Categories, { foreignKey: 'cateogry_id', as: 'category' })
     }
   }
   Financial_Requirements.init({
@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     project_id: DataTypes.UUID,
-    budget_item_id: DataTypes.UUID,
+    category_id: DataTypes.UUID,
+    budget_item: DataTypes.STRING,
     particulars: DataTypes.STRING,
     quantity: DataTypes.INTEGER,
     estimated_cost: DataTypes.INTEGER

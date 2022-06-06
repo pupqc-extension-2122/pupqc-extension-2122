@@ -7,10 +7,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-      memo_id:{
+      memo_id: {
         type: Sequelize.UUID,
-        references:{
-          model:{
+        references: {
+          model: {
             tableName: 'Memos',
           },
           key: 'id'
@@ -19,6 +19,12 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      target_groups: {
+        type: Sequelize.STRING,
+      },
+      team_members: {
+        type: Sequelize.STRING
       },
       start_date: {
         type: Sequelize.DATEONLY,

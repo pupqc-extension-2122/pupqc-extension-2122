@@ -4,9 +4,8 @@ module.exports = {
     await queryInterface.createTable('Project_Activities', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       project_id: {
         type: Sequelize.UUID,
@@ -21,6 +20,9 @@ module.exports = {
       activity_name: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      outcomes: {
+        type: Sequelize.STRING,
       },
       start_date: {
         type: Sequelize.DATEONLY,

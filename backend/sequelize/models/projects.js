@@ -33,6 +33,24 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    target_groups: {
+      type: DataTypes.STRING,
+      set: function (val) {
+        this.setDataValue('target_groups', val.join(';'))
+      },
+      get: function () {
+        return this.getDataValue('team_members').split(';')
+      }
+    },
+    team_members: {
+      type: DataTypes.STRING,
+      set: function () {
+        this.setDataValue('team_members', val.join(';'))
+      },
+      get: function () {
+        return this.getDataValue('team_members').split(';')
+      }
+    },
     start_date: {
       type: DataTypes.DATEONLY,
       allowNull: false

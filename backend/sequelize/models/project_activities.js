@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Projects, { foreignKey: 'project_id', as: 'project' })
+      this.hasMany(models.Topics, { foreignKey: 'activity_id', as: 'topics' })
     }
   }
   Project_Activities.init({
@@ -28,6 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     activity_name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    outcomes: {
+      type: DataTypes.STRING
     },
     start_date: {
       type: DataTypes.DATEONLY,
