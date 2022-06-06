@@ -61,7 +61,9 @@ exports.login = async (req, res) => {
 
 
       let token = await jwt.sign(JSON.stringify(data), process.env.JWT_SECRET)
-      res.cookie('token', token, { httpOnly: true })
+      res.cookie('token', token, { httpOnly: true, signed: true })
+      res.cookie('user', data.id)
+      res.cookie('roles', JSON.stringify(roles))
 
       res.send({
         error: false,
@@ -77,8 +79,8 @@ exports.login = async (req, res) => {
 }
 
 exports.logout = (req, res) => {
-  res.set_cookie('token', null, {expires: new Date()})
-  res.sent({
+  res.cookie('token', null, { expires: new Date() })
+  res.send({
     error: false,
     message: 'You are now logged out.'
   })
