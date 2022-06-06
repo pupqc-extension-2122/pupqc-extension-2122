@@ -342,28 +342,34 @@ const ProjectDetails = (() => {
         id: 'View activities',
         category: 'Project Activities',
         template: `
-          <a 
+          <button
             class="btn btn-negative btn-block text-left" 
-            href="${ BASE_URL_WEB }/p/project-proposals/${ id }/activities"
+            onclick="location.replace('${ BASE_URL_WEB }/p/project-proposals/${ id }/activities')"
           >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View activities</span>
-          </a>
+          </button>
         `
       }, {
         id: 'View project details',
         category: 'Project Details',
         template: `
-          <a class="btn btn-negative btn-block text-left" href="./view-project-details.html">
+          <button
+            class="btn btn-negative btn-block text-left" 
+            onclick="location.replace('${ BASE_URL_WEB }/p/project-proposals/${ id }')"
+          >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View project details</span>
-          </a>
+          </button>
         `
       }, {
         id: 'Edit project details',
         category: 'Project Details',
         template: `
-          <a class="btn btn-negative btn-block text-left" href="./edit-project.html">
+          <a 
+            class="btn btn-negative btn-block text-left" 
+            href="${ BASE_URL_WEB }/p/edit-proposal/${ id }"
+          >
             <i class="fas fa-edit text-info fa-fw mr-1"></i>
             <span>Edit details</span>
           </a>

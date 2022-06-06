@@ -1,9 +1,9 @@
 <%# ***** Styles ***** %>
 
 <%# DataTables %>
-<link rel="stylesheet" href="../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="../../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
 
 
@@ -12,21 +12,35 @@
 <%# Content Header %>
 <div class="content-header">
   <div class="container-fluid">
-    
+
     <%# Breadcrumb %>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a href="<%=BASE_URL%>/p">Monitoring</a>
-      </li>
+      <li class="breadcrumb-item"><a href="#">Monitoring</a></li>
       <li class="breadcrumb-item active">Project Proposals</li>
     </ol>
-    
-    <%# Title %>
-    <div class="d-flex align-items-center justify-content-between">
-      <div>
+
+    <div class="d-sm-flex align-items-sm-center justify-content-between">
+
+      <%# Header & Subtitle %>
+      <div class="flex-wrap mb-2 mb-md-0">
         <h1 class="m-0">Project Proposals</h1>
-        <div class="text-secondary">Manage project proposals here</div>
+        <div class="text-secondary">View reports and manage activities here</div>
       </div>
+
+      <%# Buttons %>
+      <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+        <div>
+          <!-- <button type="button" class="btn btn-default" id="daterange-btn">
+            <i class="far fa-calendar-alt mr-1"></i>
+            <span>Filter by date</span>
+          </button> -->
+          <a href="<%=BASE_URL%>/p/create-proposal" class="btn btn-primary">
+            <i class="fas fa-plus mr-1"></i>
+            <span>Create a proposal</span>
+          </a>
+        </div>
+      <% } %>
+      
     </div>
   </div>
 </div>
@@ -45,11 +59,8 @@
             <span class="info-box-text">Messages</span>
             <span class="info-box-number">1,410</span>
           </div>
-          <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
       </div>
-      <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
           <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
@@ -58,11 +69,8 @@
             <span class="info-box-text">Bookmarks</span>
             <span class="info-box-number">410</span>
           </div>
-          <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
       </div>
-      <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
           <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
@@ -71,11 +79,8 @@
             <span class="info-box-text">Uploads</span>
             <span class="info-box-number">13,648</span>
           </div>
-          <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
       </div>
-      <!-- /.col -->
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
           <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
@@ -84,11 +89,8 @@
             <span class="info-box-text">Likes</span>
             <span class="info-box-number">93,139</span>
           </div>
-          <!-- /.info-box-content -->
         </div>
-        <!-- /.info-box -->
       </div>
-      <!-- /.col -->
     </div>
 
     <%# Datatable %>
