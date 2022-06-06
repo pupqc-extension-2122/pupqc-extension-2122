@@ -36,8 +36,6 @@ module.exports = {
         password: '$2a$10$pW828vH7NtyyzjLpBfTHAeJpMF9p.ev7.lnGF6lmccbn7Vu4DZUgi',
         created_at: new Date(),
         updated_at: new Date()
-      }, {
-        id: ''
       }
     ])
   },
