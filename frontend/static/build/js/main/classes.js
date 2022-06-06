@@ -76,6 +76,7 @@ class ProjectTeamForm {
             type="button" 
             class="btn btn-sm btn-negative text-danger"
             ${this.data.removeFormGroupBtn}="${formGroupId}"
+						data-toggle="tooltip"
             title="Remove team member field"
           >
             <i class="fas fa-times"></i>
@@ -297,9 +298,6 @@ class ProjectTeamForm {
 			else if (this.projectTeam.length === 1) toastr.warning('You must input at least one team member.');
 			else this.removeTeamMember(formGroupId);
 		});
-
-		// Initiate the tooltip of the remove form group button
-		removeFormGroupBtn.tooltip(TOOLTIP_OPTIONS);
 
 		// *** If has data *** //
 
@@ -569,6 +567,7 @@ class TargetGroupsForm {
             type="button" 
             class="btn btn-sm btn-negative text-danger"
             ${this.data.removeFormGroupBtn}="${formGroupId}"
+						data-toggle="tooltip"
             title="Remove target group field"
           >
             <i class="fas fa-times"></i>
@@ -640,9 +639,6 @@ class TargetGroupsForm {
 			else if (this.targetGroups.length === 1) toastr.warning('You must input at least one target group.');
 			else this.removeTargetGroup(formGroupId);
 		});
-
-		// Initiate the tooltip of the remove form group button
-		removeFormGroupBtn.tooltip(TOOLTIP_OPTIONS);
 	}
 
 	removeTargetGroup = formGroupId => {
@@ -918,6 +914,7 @@ class FinancialRequirementsForm {
             type="button" 
             class="btn btn-sm btn-negative text-danger" 
             ${this.data.removeLineItemBudgetBtn}="${lineItemBudget.id}"
+						data-toggle="tooltip"
             title="Remove line item budget rows"
         >
             <i class="fas fa-trash-alt"></i>
@@ -979,6 +976,7 @@ class FinancialRequirementsForm {
           type="button" 
           class="btn btn-sm btn-negative text-danger" 
           ${this.data.removeBudgetItemBtn}="${lineItemBudgetRowId}"
+					data-toggle="tooltip"
           title="Remove budget item row"
         >
           <i class="fas fa-times"></i>
@@ -1250,9 +1248,6 @@ class FinancialRequirementsForm {
 			addBudgetItemBtn.tooltip('hide');
 		});
 
-		// Initiate the tooltip of add budget item button
-		addBudgetItemBtn.tooltip(TOOLTIP_OPTIONS);
-
 		// *** Add an initial budget item row *** //
 
 		// Then add the budget item row after initiating the add button
@@ -1270,9 +1265,6 @@ class FinancialRequirementsForm {
 			// Show the modal for confirmation
 			$('#removeLineItemBudget_modal').modal('show');
 		});
-
-		// Initialize the tooltip of remove line item budget
-		removeLineItemBudgetBtn.tooltip(TOOLTIP_OPTIONS);
 
 		// Finally, scroll to the added rows for user experience
 		addInitialRow && $("html, body").animate({ scrollTop: $(document).height() - $(window).height() }, 0);
@@ -1407,9 +1399,6 @@ class FinancialRequirementsForm {
 				this.removeBudgetItemRow(budgetItemRowId);
 			}
 		});
-
-		// Initate the tooltip of the remove budget item button
-		removeBudgetItemBtn.tooltip(TOOLTIP_OPTIONS);
 
 		// *** If has data *** //
 		data.budget_item && nameInput.val(data.budget_item).trigger('change');
@@ -1880,5 +1869,329 @@ class EvaluationPlanForm {
 		});
 
 		return evaluationPlans;
+	}
+}
+
+
+class ProjectActivityForm {
+	constructor(params = {
+		topicsForm: {
+			formGroup: '',
+			buttons: {
+				add: '',
+				clear: ''
+			}
+		},
+		outcomesForm: {
+			formGroup: '',
+			buttons: {
+				add: '',
+				clear: ''
+			}
+		}
+	}) {
+		
+		this.topicsForm = params.topicsForm;
+		this.outcomesForm = params.outcomesForm;
+		
+		this.BUTTONS = {
+			topics: {
+				add: $(this.topicsForm.buttons.add),
+				clear: $(this.topicsForm.buttons.clear)
+			},
+			outcomes: {
+				add: $(this.outcomesForm.buttons.add),
+				clear: $(this.outcomesForm.buttons.clear)
+			}
+		}
+
+		this.FORM_GROUPS = {
+			topics: $(this.topicsForm.formGroup),
+			outcome: $(this.outcomesForm.formGroup),
+		}
+
+		this.topics = [];
+		this.outcomes = [];
+	
+		this.data = {
+			topics: {
+				formGroupId: 'data-activity-topic-form-group',
+				input: 'data-activity-topic-input',
+				removeBtn: 'data-activity-topic-remove-btn'
+			},
+			outcomes: {
+				formGroupId: 'data-activity-outcome-form-group',
+				input: 'data-activity-outcome-input',
+				removeBtn: 'data-activity-outcome-remove-btn'
+			}
+		}
+
+		this.#initializations();
+	}
+
+	/**
+	 * * Template Literals
+	 * o--/[=================>
+	 */
+
+	#topicFormGroup = formGroupId => {
+		const { formGroupId: fg, input, removeBtn } = this.data.topics;
+		return `
+			<div class="form-group mb-2" ${fg}="${formGroupId}">
+				<div class="d-flex align-items-center">
+					<div class="px-2 mr-2">●</div>
+					<div class="w-100 mr-2">
+						<input 
+							type="text" 
+							class="form-control" 
+							name="topic-${formGroupId}" 
+							${input}="${formGroupId}"
+							placeholder="Type the topic here ..."
+						/>
+					</div>
+					<div>
+						<button 
+							type="button" 
+							class="btn btn-sm btn-negative text-danger"
+							${removeBtn}="${formGroupId}"
+							title="Remove topic field"
+						>
+							<i class="fas fa-times"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		`
+	}
+
+	#outcomeFormGroup = formGroupId => {
+		const { formGroupId: fg, input, removeBtn } = this.data.outcomes;
+		return `
+			<div class="form-group mb-2" ${fg}="${formGroupId}">
+				<div class="d-flex align-items-center">
+					<div class="px-2 mr-2">●</div>
+					<div class="w-100 mr-2">
+						<input 
+							type="text" 
+							class="form-control" 
+							name="outcome-${formGroupId}" 
+							${input}="${formGroupId}"
+							placeholder="Type the outcome here ..."
+						/>
+					</div>
+					<div>
+						<button 
+							type="button" 
+							class="btn btn-sm btn-negative text-danger"
+							${removeBtn}="${formGroupId}"
+							title="Remove team member field"
+						>
+							<i class="fas fa-times"></i>
+						</button>
+					</div>
+				</div>
+			</div>
+		`
+	}
+	
+	/**
+	 * * Private Methods
+	 * o--/[=================>
+	 */
+
+	#dataElement = (obj, dataElem, value) => $(`[${ this.data[obj][dataElem] }="${ value }"]`);
+
+	#initializations = () => {
+
+		// *** Initialize Buttons *** //
+
+		const { topics: topicBtn, outcomes: outcomeBtn } = this.BUTTONS;
+
+		topicBtn.add.on('click', () => {
+			const emptyFields = [...this.topics].filter(x => !x.topic).length;
+			if(emptyFields < 10) {
+				this.addTopicFormGroup();
+			} else {
+				toastr.warning(emptyFields);
+			}
+		});
+
+		outcomeBtn.add.on('click', () => {
+			const emptyFields = [...this.outcomes].filter(x => !x.outcome).length;
+			if(emptyFields < 10) {
+				this.addOutcomeFormGroup();
+			} else {
+				toastr.warning(emptyFields);
+			}
+		});
+
+		// *** Default Settings *** //
+
+		this.addTopicFormGroup();
+		this.addOutcomeFormGroup();
+	}
+
+	/**
+	 * * Public Methods
+	 * o--/[=================>
+	 */
+
+	// *** ACTIVITY TOPICS *** //
+
+	addTopicFormGroup = (data = '') => {
+
+		// Create a uuid for the form group
+		const formGroupId = uuid();
+		
+		// Push a topic object
+		this.topics.push({
+			id: formGroupId,
+			topic: ''
+		});
+
+		// Create a form group
+		this.FORM_GROUPS.topics.children().last().before(this.#topicFormGroup(formGroupId));
+
+		// *** Initiate input *** //
+
+		const input = this.#dataElement('topics', 'input', formGroupId);
+
+		input.on('keyup change', () => {
+			this.topics = this.topics.map(t => 
+				t.id == formGroupId ? { ...t, topic: input.val() } : t
+			)
+		});
+
+		// Add validation to the input
+		input.rules('add', {
+			required: true,
+			messages: { required: 'A topic is required.' }
+		});
+
+		// *** Enable buttons *** //
+
+		const removeBtn = this.#dataElement('topics', 'removeBtn', formGroupId);
+
+		// When user has to remove field
+		removeBtn.on('click', () => {
+			if(input.val()) {
+				toastr.warning('Has value');
+			} else if (this.topics.length == 1) {
+				toastr.warning('You must input at least one topic.');
+			} else {
+				this.removeTopicFormGroup(formGroupId);
+			}
+		});
+
+		// *** If has data *** //
+		data && input.val(data).trigger('change');
+	}
+
+	removeTopicFormGroup = (formGroupId) => {
+		this.topics = this.topics.filter(t => t.id != formGroupId);
+		this.#dataElement('topics', 'formGroupId', formGroupId).remove();
+	}
+
+	resetTopicsForm = () => {
+		this.topics.forEach(t => this.removeTopicFormGroup(t.id));
+		this.addTopicFormGroup();
+	}
+
+	setTopics = (data) => {
+		this.topics.forEach(t => this.removeTopicFormGroup(t.id));
+		console.log(data);
+		data.forEach(d => this.addTopicFormGroup(d));
+	}
+
+	getTopics = () => {
+		let topics = [];
+		this.topics.forEach(t => topics.push(t.topic));
+		return topics;
+	}
+
+	// *** ACTIVITY OUTCOMES *** //
+
+	addOutcomeFormGroup = (data = '') => {
+
+		// Create a uuid for the form group
+		const formGroupId = uuid();
+		
+		// Push a topic object
+		this.outcomes.push({
+			id: formGroupId,
+			outcome: ''
+		});
+
+		// Create a form group
+		this.FORM_GROUPS.outcome.children().last().before(this.#outcomeFormGroup(formGroupId));
+
+		// *** Initiate input *** //
+
+		const input = this.#dataElement('outcomes', 'input', formGroupId);
+
+		input.on('keyup change', () => {
+			this.outcomes = this.outcomes.map(t => 
+				t.id == formGroupId ? { ...t, outcome: input.val() } : t
+			)
+		});
+
+		// Add validation to the input
+		input.rules('add', {
+			required: true,
+			messages: { required: 'An outcome statement is required.' }
+		});
+
+		// *** Enable buttons *** //
+
+		const removeBtn = this.#dataElement('outcomes', 'removeBtn', formGroupId);
+
+		// When user has to remove field
+		removeBtn.on('click', () => {
+			if(input.val()) {
+				toastr.warning('Has value');
+			} else if (this.outcomes.length == 1) {
+				toastr.warning('You must input at least one outcome.');
+			} else {
+				this.removeOutcomeFormGroup(formGroupId);
+			}
+		});
+
+		// *** If has data *** //
+		data && input.val(data).trigger('change');
+	}
+
+	removeOutcomeFormGroup = (formGroupId) => {
+		this.outcomes = this.outcomes.filter(t => t.id != formGroupId);
+		this.#dataElement('outcomes', 'formGroupId', formGroupId).remove();
+	}
+
+	resetOutcomesForm = () => {
+		this.outcomes.forEach(t => this.removeOutcomeFormGroup(t.id));
+		this.addOutcomeFormGroup();
+	}
+
+	setOutcomes = (data) => {
+		this.outcomes.forEach(t => this.removeOutcomeFormGroup(t.id));
+		data.forEach(d => this.addOutcomeFormGroup(d));
+	}
+
+	getOutcomes = () => {
+		let outcomes = [];
+		this.outcomes.forEach(o => outcomes.push(o.outcome));
+		return outcomes;
+	}
+
+	// *** GENERAL *** //
+
+	getActivityData = () => {
+		return {
+			topics: this.getTopics(),
+			outcomes: this.getOutcomes()
+		}
+	}
+
+	resetActivityForm = () => {
+		this.resetTopicsForm();
+		this.resetOutcomesForm();
 	}
 }

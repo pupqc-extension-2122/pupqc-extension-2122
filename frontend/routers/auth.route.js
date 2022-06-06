@@ -1,8 +1,13 @@
 const jwtMiddleware = require('../../utils/jwtMiddleware');
-
-// Import Router from express
 const router = require('express').Router();
 const PATH = 'auth/';
+
+
+// Redirect to login
+router.get('/', (req, res) => {
+  res.redirect('/login');
+});
+
 
 // Login
 router.get('/login', (req, res) => {
@@ -12,9 +17,6 @@ router.get('/login', (req, res) => {
   });
 });
 
-router.get('/', (req, res)=>{
-  res.redirect('/login')
-})
 
 // Export module
-module.exports = router; 
+module.exports = router;

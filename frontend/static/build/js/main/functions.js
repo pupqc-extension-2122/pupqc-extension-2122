@@ -58,6 +58,21 @@ const setInputValue = (param1, param2) => {
 	}
 }
 
+/**
+ * Get Cookie Value
+ */
+const getCookie = (cname) => {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1);
+    if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+  }
+  return "";
+}
+
 /** 
  * ? Moments Custom Functions 
  * =================================
@@ -94,14 +109,6 @@ const isAfterOrToday = (datetime) => moment(datetime).isSameOrAfter(moment());
 const formatDateTime = (datetime, format = "") => format
 	? moment(datetime).format(format in DATETIME_FORMATS ? DATETIME_FORMATS[format] : format)
 	: moment(datetime).format();
-
-/** 
- * ? jQuery Validation Methods 
- * =================================
- */
-
-// Set Custom Validations
-CUSTOM_VALIDATIONS?.forEach(({ ruleName, handler, defaultMessage }) => jQuery.validator?.addMethod(ruleName, handler, defaultMessage));
 
 
 /** 
@@ -166,21 +173,19 @@ const $app = (selector) => {
 			validationMessages[name] = _messages;
 		});
 
-		app.element.validate({
+		return app.element.validate({
 			rules: validationRules,
 			messages: validationMessages,
 			errorElement: 'div',
+			errorClass: 'invalid-feedback font-weight-bold font-italic',
 			errorPlacement: (error, element) => {
 				if (element.parent('.input-group').length) { // For checkbox/radio
 					error
-						.addClass('invalid-feedback')
 						.insertAfter(element.parent());
 				} else if (element.hasClass('select2')) { // For select2
 					error
-						.addClass('invalid-feedback')
 						.insertAfter(element.next('span'));
 				} else { // For Default   
-					error.addClass('invalid-feedback')
 					element.closest('.form-group').append(error)
 				}
 			},
@@ -230,7 +235,7 @@ const $app = (selector) => {
 			singleDatePicker: true,
 			autoUpdateInput: false,
 			autoApply: true,
-			showDropdowns: true,
+			showDropdowns: false,
 			opens: 'left',
 			drops: 'auto',
 			locale: {
@@ -310,51 +315,3 @@ const $app = (selector) => {
 	 */
 	return app;
 }
-
-/** 
- * ? Ajax Functions 
- * =================================
- */
-
-const $ajax = () => {
-	let ajax = {}
-
-	let ajaxOptions = {
-		url: '',
-		data: null,
-		onSuccess: (result) => {
-			console.log(result);
-		},
-		onError: () => {
-			console.error('AJAX Error');
-		}
-	}
-
-	ajax.get = async (options = ajaxOptions) => {
-		console.log("Loading ....");
-		await $.ajax({
-			url: options.url,
-			type: 'GET',
-			success: options.onSuccess,
-			error: options.onError
-		});
-		console.log("Done!");
-	}
-
-	ajax.post = async (options = ajaxOptions) => {
-		console.log("Loading ....");
-		await $.ajax({
-			url: options.url,
-			type: 'POST',
-			data: ajaxOptions.data,
-			success: options.onSuccess,
-			error: options.onError
-		});
-		console.log("Done!");
-	}
-
-	return ajax;
-}
-
-// We need that our library is globally accesible, then we save in the window
-if (typeof (window.ajax) === 'undefined') window.ajax = $ajax();

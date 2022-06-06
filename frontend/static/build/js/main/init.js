@@ -11,7 +11,7 @@
 	/**
 	 * * Resolve conflict in jquery tooltip and bootstrap tooltip
 	 */
-	$.widget.bridge('uibutton', $.ui.button);
+	$.widget?.bridge('uibutton', $.ui.button);
 
 	/**
 	 * * Initialize Select2's
@@ -34,7 +34,7 @@
 	 * * Enable bootstrap tooltips
 	 */
 
-	$('[data-toggle="tooltip"]').tooltip(TOOLTIP_OPTIONS)
+	$('.content-wrapper').tooltip(TOOLTIP_OPTIONS);
 
 	/**
 	 * * Configure toastr options
@@ -45,6 +45,13 @@
 		closeDuration: 250,
 	}
 
+	/** 
+	 * * jQuery Validation Methods
+	 */
+
+	// Set Custom Validations
+	CUSTOM_VALIDATIONS?.forEach(({ ruleName, handler, defaultMessage }) => jQuery.validator?.addMethod(ruleName, handler, defaultMessage));
+
 	/**
 	 * * Auto resize text area
 	 */
@@ -54,5 +61,10 @@
 		this.style.height = 'auto';
 		this.style.height = (this.scrollHeight) + 'px';
 	});
+
+	/**
+	 * * Go back 
+	 */
+	$('[data-card-widget="goback"]').on('click', () => history.back());
 
 })();

@@ -20,6 +20,24 @@ module.exports = {
         password: '$2a$10$pW828vH7NtyyzjLpBfTHAeJpMF9p.ev7.lnGF6lmccbn7Vu4DZUgi',
         created_at: new Date(),
         updated_at: new Date()
+      }, {
+        id: 'ea019730-7967-4297-a356-532a581e7c69',
+        first_name: 'Alma',
+        last_name: 'Fernandez',
+        email: 'extensionist@pupqc.com',
+        password: '$2a$10$pW828vH7NtyyzjLpBfTHAeJpMF9p.ev7.lnGF6lmccbn7Vu4DZUgi',
+        created_at: new Date(),
+        updated_at: new Date()
+      }, {
+        id: '3d545283-26db-461e-89cd-e6694b65144e',
+        first_name: 'Edgardo',
+        last_name: 'Delmo',
+        email: 'chief@pupqc.com',
+        password: '$2a$10$pW828vH7NtyyzjLpBfTHAeJpMF9p.ev7.lnGF6lmccbn7Vu4DZUgi',
+        created_at: new Date(),
+        updated_at: new Date()
+      }, {
+        id: ''
       }
     ])
   },

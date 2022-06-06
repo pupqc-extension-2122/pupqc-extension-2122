@@ -9,6 +9,11 @@
 // Developer Mode
 const DEV_MODE = true;
 
+// BASE URLs
+const ORIGIN = location.origin;
+const BASE_URL_WEB = ORIGIN;
+const BASE_URL_API = ORIGIN + '/api';
+
 // For DataTables
 const DT_LANGUAGE = {
 	emptyTable: `
@@ -19,7 +24,7 @@ const DT_LANGUAGE = {
 	`,
 	loadingRecords: `
 		<div class="text-center py-5 wait">
-			<div class="spinner-border text-primary mb-3" role="status">
+			<div class="spinner-grow text-primary mb-3" role="status">
 				<span class="sr-only">Loading ...</span>
 			</div>
 			<div class="text-secondary">Making it ready ...</div>
@@ -27,7 +32,7 @@ const DT_LANGUAGE = {
 	`,
 	processing: `
 		<div class="text-center p-5 wait">
-			<div class="spinner-border text-primary mb-3" role="status">
+			<div class="spinner-grow text-primary mb-3" role="status">
 				<span class="sr-only">Loading ...</span>
 			</div>
 			<div class="text-secondary">Processing, please wait ...</div>
@@ -111,7 +116,7 @@ const CUSTOM_VALIDATIONS = [
 		},
 		defaultMessage: 'Date and/or time must be later than today'
 	}, {
-		ruleName: "beforeTime",
+		ruleName: "beforeTimeSelector",
 		handler: (value, element, params) => {
 			if ($(params).length) {
 				const c = $(params).val();
@@ -121,7 +126,7 @@ const CUSTOM_VALIDATIONS = [
 		},
 		defaultMessage: 'It must before an indicated time'
 	}, {
-		ruleName: "afterTime",
+		ruleName: "afterTimeSelector",
 		handler: (value, element, params) => {
 			if ($(params).length) {
 				const c = $(params).val();
@@ -131,7 +136,7 @@ const CUSTOM_VALIDATIONS = [
 		},
 		defaultMessage: 'It must after an indicated time'
 	}, {
-		ruleName: "beforeDateTime",
+		ruleName: "beforeDateTimeSelector",
 		handler: (value, element, params) => {
 			if ($(params).length) {
 				const c = $(params).val();
@@ -143,7 +148,7 @@ const CUSTOM_VALIDATIONS = [
 		},
 		defaultMessage: 'It must before an indicated date and time'
 	}, {
-		ruleName: "afterDateTime",
+		ruleName: "afterDateTimeSelector",
 		handler: (value, element, params) => {
 			if ($(params).length) {
 				const c = $(params).val();
@@ -154,18 +159,78 @@ const CUSTOM_VALIDATIONS = [
 			return true;
 		},
 		defaultMessage: 'It must after an indicated date and time'
+	}, {
+		ruleName: "beforeDateTime",
+		handler: (value, element, params) => {
+			return !params
+				? true
+				: moment(value, 'MM/DD/YYYY HH:mm:ss').isBefore(moment(params, 'MM/DD/YYYY HH:mm:ss'));
+		},
+		defaultMessage: 'It must after an indicated date and time'
+	}, {
+		ruleName: "afterDateTime",
+		handler: (value, element, params) => {
+			return !params
+				? true
+				: moment(value, 'MM/DD/YYYY HH:mm:ss').isAfter(moment(params, 'MM/DD/YYYY HH:mm:ss'));
+		},
+		defaultMessage: 'It must after an indicated date and time'
 	}
 ]
 
+// Tooltip Options
 const TOOLTIP_OPTIONS = {
-	container: 'body',
+	container: '.content-wrapper',
 	delay: {
 		show: 500,
-		hide: 0
+		hide: 250
 	},
-	trigger: 'hover'
+	trigger: 'hover',
+	selector: '[data-toggle="tooltip"], [data-dt-btn="options"]'
 }
 
+// Maximum empty fields for adding fields
 const MAX_EMPTY_FIELDS = 10;
 
+// Max. Limit for currency values
 const MONEY_LIMIT = 999999999999;
+
+// Project Status Styles
+const PROJECT_STATUS_STYLES = {
+	'Created': {
+		icon: 'fas fa-pen',
+		theme: 'light'
+	},
+	'For review': {
+		icon: 'fas fa-file-circle-question',
+		theme: 'info'
+	},
+	'For evaluation': {
+		icon: 'fas fa-file-circle-exclamation',
+		theme: 'info'
+	},
+	'Pending': {
+		icon: 'fas fa-sync-alt',
+		theme: 'warning'
+	},
+	'Approved': {
+		icon: 'fas fa-check',
+		theme: 'success'
+	},
+	'Canceled': {
+		icon: 'fas fa-times',
+		theme: 'danger'
+	},
+}
+
+// Partner Status Styles
+const PARTNER_STATUS_STYLES = {
+	'Active': {
+		icon: 'fas fa-check',
+		theme: 'success'
+	},
+	'Inactive': {
+		icon: 'fas fa-ban',
+		theme: 'danger'
+	},
+}

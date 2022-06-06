@@ -36,17 +36,17 @@ const authJS = () => {
     .pipe(dest(DIST_PATH + 'js/auth/'))
 }
 
-const usersJS = () => {
-  return src(BUILD_PATH + 'js/users/**/*.js')
+const modulesJS = () => {
+  return src(BUILD_PATH + 'js/modules/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
     .pipe(sourcemaps.write('../jsmaps/'))
-    .pipe(dest(DIST_PATH + 'js/users/'))
+    .pipe(dest(DIST_PATH + 'js/modules/'))
 }
 
 const watchTask = () => {
-  watch(BUILD_PATH + 'js/**/*.js', series(mainJS, authJS, usersJS));
+  watch(BUILD_PATH + 'js/**/*.js', series(mainJS, authJS, modulesJS));
 }
 
-exports.watch = series(mainJS, authJS, usersJS, watchTask);
-exports.compile_js = series(mainJS, authJS, usersJS);
+exports.watch = series(mainJS, authJS, modulesJS, watchTask);
+exports.compile_js = series(mainJS, authJS, modulesJS);

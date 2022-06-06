@@ -32,6 +32,20 @@ module.exports = {
         role_id: 'ea53d71f-5df2-4af2-bc79-46ae03dab450',
         created_at: new Date(),
         updated_at: new Date()
+      },
+      {
+        id: '49a1f94c-98f6-4cfc-9838-fd5ef98c7bc6',
+        user_id: 'ea019730-7967-4297-a356-532a581e7c69',
+        role_id: 'a0105852-7486-4265-b83c-1e01e8be3f66',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        id: '8d9f7160-e660-4bff-9978-d488cae44f6f',
+        user_id: '3d545283-26db-461e-89cd-e6694b65144e',
+        role_id: '07e382e1-bb61-492f-acb1-8063a579dc09',
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ])
   },

@@ -2,20 +2,21 @@
 <aside class="main-sidebar main-sidebar-custom sidebar-light-primary">
 
   <%# Brand Logo %>
-  <a href="index3.html" class="brand-link">
+  <div class="brand-link">
     <img src="<%=BASE_URL%>/img/PUPLogo.png" alt="AdminLTE Logo" class="brand-image img-circle" style="opacity: .8">
     <span class="brand-text">PUPQC-EPMS</span>
-  </a>
+  </div>
 
   <%# Sidebar %>
-  <div class="sidebar">
+  <div class="sidebar border-right">
 
     <%# Sidebar user panel %>
     <div class="user-panel mt-3 pb-2 mb-3 d-flex">
 
       <%# User image %>
       <div class="image">
-        <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
+        <!-- <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"> -->
       </div>
 
       <%# User info %>
@@ -50,7 +51,7 @@
         <li class="nav-header">CORE</li>
         <li class="nav-item">
           <a 
-            href="<%=BASE_URL%>/p/dashboard" 
+            href="<%=BASE_URL%>/m/dashboard" 
             class="nav-link<% if (active_sidebar_tab == "Dashboard") { %> active<% } %>"
           >
             <i class="nav-icon fas fa-chart-bar"></i>
@@ -58,22 +59,34 @@
           </a>
         </li>
 
-        <%# Partnership %>
-        <li class="nav-header">Partnership</li>
+        <%# Partnerships %>
+        <li class="nav-header">PARTNERSHIPS</li>
         <li class="nav-item">
           <a 
-            href="<%=BASE_URL%>/p/project-proposals" 
-            class="nav-link<% if (active_sidebar_tab == "Cooperating Agencies") { %> active<% } %>"
+            href="<%=BASE_URL%>/m/memo" 
+            class="nav-link<% if (active_sidebar_tab == "MOA/MOU") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-copy"></i>
+            <p class="text">MOA/MOU</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/m/partners" 
+            class="nav-link<% if (active_sidebar_tab == "Partners") { %> active<% } %>"
           >
             <i class="nav-icon fas fa-users"></i>
-            <p class="text">Cooperating Agencies</p>
+            <p class="text">Partners</p>
           </a>
         </li>
 
         <%# Reports %>
         <li class="nav-header">Reports</li>
         <li class="nav-item">
-          <a href="./project-reports.html" class="nav-link">
+          <a 
+            href="<%=BASE_URL%>/m/reports" 
+            class="nav-link<% if (active_sidebar_tab == "Reports") { %> active<% } %>"
+          >
             <i class="nav-icon fas fa-file-contract"></i>
             <p class="text">Project Reports</p>
           </a>
@@ -87,9 +100,11 @@
   <%# Sidebar Custom/Footer %>
   <div class="sidebar-custom d-flex align-items-center justify-content-between">
     <a href="#" class="btn btn-sm btn-negative"><i class="fas fa-cogs"></i></a>
-    <button class="btn btn-sm btn-primary hide-on-collapse pos-right" data-toggle="modal" data-target="#logoutModal">
+    <button class="btn btn-sm btn-primary hide-on-collapse pos-right" data-toggle="modal"
+      data-target="#logoutModal">
       <span>Log out</span>
       <i class="fas fa-sign-out-alt ml-1"></i>
     </button>
   </div>
+
 </aside>

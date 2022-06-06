@@ -17,7 +17,8 @@ app.set("layout extractMetas", true);
 
 // Web Routes
 app.use(`/`, require('./routers/auth.route'));
+
 app.use(`/p/`, require('./routers/monitoring.route'));
-app.use(`/m/`, require('./routers/moa_mou.route'));
+app.use(`/m/`, require('./routers/memo.route'));
 
 module.exports = app
