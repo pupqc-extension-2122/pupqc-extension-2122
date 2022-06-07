@@ -32,6 +32,9 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
+      end_date: {
+        type: Sequelize.DATEONLY,
+      },
       signed_by_pup: {
         type: Sequelize.STRING,
         allowNull: false

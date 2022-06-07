@@ -1,4 +1,5 @@
 'use strict';
+const { get } = require('express/lib/response');
 const {
   Model
 } = require('sequelize');
@@ -12,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasOne(models.Projects, { foreignKey: 'memo_id', as: 'project' })
-      this.belongsTo(models.Partners, { 'foreignKey': 'partner_id', as: 'owner' })
+      this.belongsTo(models.Partners, { foreignKey: 'partner_id', as: 'owner' })
     }
   }
   Memos.init({
@@ -46,6 +47,13 @@ module.exports = (sequelize, DataTypes) => {
     signed_date: {
       type: DataTypes.DATEONLY,
       allowNull: false
+    },
+    end_date: {
+      type: DataTypes.DATEONLY,
+      set(value){
+        let base = new Date(this.getDataValue('signed_date'))
+        this.setDataValue('end_date', new Date(base.setDate(base.getDate() + (this.getDataValue('duration') * 365.25))))
+      }
     },
     signed_by_pup: {
       type: DataTypes.STRING,
