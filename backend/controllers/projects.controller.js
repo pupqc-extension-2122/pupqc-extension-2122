@@ -102,3 +102,25 @@ exports.cancelProposal = async (req, res) => {
   })
 }
 
+exports.viewProposal = async (req, res) => {
+  let id = req.params.id
+
+  let proposal = await Projects.findOne({
+    where: { id },
+    include: [
+      'financial_requirements',
+      'evaluation_plans',
+      'partners'
+    ]
+
+  })
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  res.send({
+    error: false,
+    data: proposal
+  })
+
+}
