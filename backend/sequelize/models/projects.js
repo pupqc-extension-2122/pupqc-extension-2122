@@ -27,10 +27,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
     },
-    memo_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
     title: {
       type: DataTypes.STRING,
       allowNull: false

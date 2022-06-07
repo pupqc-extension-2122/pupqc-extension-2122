@@ -1,5 +1,4 @@
 'use strict';
-const { get } = require('express/lib/response');
 const {
   Model
 } = require('sequelize');
