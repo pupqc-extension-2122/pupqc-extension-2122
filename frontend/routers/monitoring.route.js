@@ -119,5 +119,22 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, (req, res) => {
 });
 
 
+// Project Monitoring
+router.get('/project-monitoring/', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_monitoring', {
+      document_title: 'Project Monitoring',
+      active_sidebar_tab: 'Project Monitoring',
+      name: `${ first_name } ${ last_name }`,
+      role: 'Extensionist',
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
+
+
 
 module.exports = router;

@@ -71,13 +71,19 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="./project-monitoring.html" class="nav-link">
+          <a 
+            href="<%=BASE_URL%>/p/project-proposals" 
+            class="nav-link<% if (active_sidebar_tab == "Project Monitoring") { %> active<% } %>"
+          >
             <i class="nav-icon fas fa-file-circle-question"></i>
             <p class="text">Project Monitoring</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="./project-evaluation.html" class="nav-link">
+          <a 
+            href="<%=BASE_URL%>/p/project-evaluation" 
+            class="nav-link<% if (active_sidebar_tab == "Project Evaluation") { %> active<% } %>"
+          >
             <i class="nav-icon fas fa-file-circle-exclamation"></i>
             <p class="text">Project Evaluation</p>
           </a>
@@ -86,7 +92,10 @@
         <%# Reports %>
         <li class="nav-header">Reports</li>
         <li class="nav-item">
-          <a href="./project-reports.html" class="nav-link">
+          <a 
+            href="<%=BASE_URL%>/p/project-reports" 
+            class="nav-link<% if (active_sidebar_tab == "Project Reports") { %> active<% } %>"
+          >
             <i class="nav-icon fas fa-file-contract"></i>
             <p class="text">Project Reports</p>
           </a>
