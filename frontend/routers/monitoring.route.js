@@ -135,6 +135,52 @@ router.get('/project-monitoring/', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
+// Project Evaluation
+router.get('/project-evaluation/', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
 
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_evaluation', {
+      document_title: 'Project Evaluation',
+      active_sidebar_tab: 'Project Evaluation',
+      name: `${ first_name } ${ last_name }`,
+      role: 'Extensionist',
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
+
+// Project Evaluation Details
+router.get('/project-evaluation/:project_id', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_evaluation_details', {
+      document_title: 'Project Details',
+      active_sidebar_tab: 'Project Evaluation',
+      name: `${ first_name } ${ last_name }`,
+      role: 'Extensionist',
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
+
+// Project Activities
+router.get('/project-evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_evaluation_activities', {
+      document_title: 'Project Activities',
+      active_sidebar_tab: 'Project Evaluation',
+      name: `${ first_name } ${ last_name }`,
+      role: 'Extensionist',
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
 
 module.exports = router;

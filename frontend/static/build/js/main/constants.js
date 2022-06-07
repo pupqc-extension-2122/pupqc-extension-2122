@@ -234,3 +234,19 @@ const PARTNER_STATUS_STYLES = {
 		theme: 'danger'
 	},
 }
+
+// Project Evaluation Styles
+const PROJECT_EVALUATION_STATUS_STYLES = {
+	'Evaluated': {
+		icon: 'fas fa-check',
+		theme: 'success'
+	},
+	'In progress': {
+		icon: 'fas fa-sync-alt',
+		theme: 'warning'
+	},
+  'Not yet started': {
+		icon: 'fas fa-file-circle-exclamation',
+		theme: 'info'
+	},
+}

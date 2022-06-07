@@ -1,0 +1,454 @@
+<%# ***** Body ***** %>
+
+<%# Content Header (Page header) %>
+<div class="content-header">
+  <div class="container-fluid">
+
+    <%# Breadcrumb %>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="<%=BASE_URL%>/p">Monitoring</a>
+      </li>
+      <li class="breadcrumb-item active">Project Details</li>
+    </ol>
+    
+    <%# Title %>
+    <div class="d-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="m-0">Project Details</h1>
+      </div>
+      <div>
+        <button type="button" class="btn btn-default float-right" id="daterange-btn">
+          <i class="far fa-calendar-alt mr-1"></i>
+          <span>Date Range Picker</span>
+          <i class="fas fa-caret-down ml-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Main Content %>
+<main class="content">
+  <div class="container-fluid">
+  
+    <div class="row">
+
+      <div class="col-md-9">
+
+        <%# Project Details Header %>
+        <div class="card card-primary card-outline" id="projectDetails_header">
+          <div class="card-body">
+
+            <%# Title %>
+            <div class="row">
+              <div class="col-10">
+                <h3 id="projectDetails_header_title">
+                  <div class="skeleton h3"></div>
+                  <div class="skeleton h3"></div>
+                </h3>
+              </div>
+            </div>
+            
+            <%# Implementer %>
+            <div id="projectDetails_header_implementer">
+              <div class="skeleton text" style="width: 50%"></div>
+            </div>
+            
+            <%# Time Frame %>
+            <div id="projectDetails_header_timeframe">
+              <div class="skeleton text" style="width: 25%"></div>
+            </div>
+            
+            <%# Status %>
+            <div class="mt-1" id="projectDetails_header_status">
+              <div class="skeleton text" style="width: 5rem"></div>
+            </div>
+
+            <%# {# Navigation Tabs #} %>
+            <ul 
+              class="nav nav-pills mt-4" 
+              role="tablist" 
+              id="projectDetails_navTabs"
+              style="display: none"
+            >
+
+              <%# {# Summary Tab #} %>
+              <li class="nav-item">
+                <a class="nav-link active" id="custom-content-below-summary-tab" data-toggle="pill"
+                  href="#custom-content-below-summary" role="tab"
+                  aria-controls="custom-content-below-summary">Summary</a>
+              </li>
+
+              <div class="nav-item pl-1"></div>
+
+              <%# {# Financial Requirements Tab #} %>
+              <li class="nav-item">
+                <a class="nav-link" id="custom-content-below-financial-tab" data-toggle="pill"
+                  href="#custom-content-below-financial" role="tab"
+                  aria-controls="custom-content-below-financial">Financial Requirements</a>
+              </li>
+
+              <div class="nav-item pl-1"></div>
+
+              <%# {# Evaluation Plan Tab #} %>
+              <li class="nav-item">
+                <a class="nav-link" id="custom-content-below-evaluation-tab" data-toggle="pill"
+                  href="#custom-content-below-evaluation" role="tab"
+                  aria-controls="custom-content-below-evaluation">Evaluation Plan</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <%# Project Details Body Loader %>
+        <div class="card" id="projectDetails_body_loader">
+          <div class="card-body">
+            <div class="skeleton h4" style="width: 50%"></div>
+            <div class="skeleton text" style="width: 25%"></div>
+            <div class="py-3"></div>
+            <div class="skeleton text" style="width: 30%"></div>
+            <div class="skeleton text" style="width: 25%"></div>
+            <div class="skeleton p"></div>
+            <div class="py-3"></div>
+            <div class="skeleton text" style="width: 30%"></div>
+            <div class="skeleton text" style="width: 25%"></div>
+            <div class="skeleton p"></div>
+            <div class="my-5 py-5"></div>
+          </div>
+        </div>
+
+        <%# Project Details Body %>
+        <div class="card" id="projectDetails_body" style="display: none">
+          <div class="card-body">
+
+            <%# {# Tab Content #} %>
+            <div class="tab-content" id="custom-content-below-tabContent">
+
+              <%# {# Summary Pane #} %>
+              <div class="tab-pane fade show active" id="custom-content-below-summary" role="tabpanel"
+                aria-labelledby="custom-content-below-summary-tab">
+                <div class="tab-pane fade show active" id="summaryDetailsPane" role="tabpanel"
+                  aria-labelledby="summaryDetailsTab">
+                  <h4 class="mb-3">Project Summary</h4>
+
+                  <dl class="row">
+
+                    <div class="col-12">
+                      <hr class="mt-0 mb-2">
+                    </div>
+
+                    <%# Title %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Title</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_title"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+
+                    <%# Implementer %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Implementer</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_implementer"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+
+                    <%# Project Team %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Project Team</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_projectTeam"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+
+                    <%# Target Groups %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Target Group(s)</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_targetGroups"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+
+                    <%# Cooperating Agencies %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Cooperating Agency(ies)</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_cooperatingAgencies"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+
+                    <%# Time Frame %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Time Frame</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_timeFrame"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+
+                    <%# Impact Statement %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Impact Statement</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_impactStatement"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+
+                    <%# Summary %>
+                    <dt class="col-md-3">
+                      <div class="mx-2">Summary</div>
+                    </dt>
+                    <dd class="col-md-9">
+                      <div class="mx-2" id="projectDetails_body_summary"></div>
+                    </dd>
+
+                    <div class="col-12">
+                      <hr class="my-2">
+                    </div>
+                  </dl>
+                </div>
+              </div>
+
+              <%# {# Financial Requirements Pane #} %>
+              <div class="tab-pane fade show" id="custom-content-below-financial" role="tabpanel"
+                aria-labelledby="custom-content-below-financial-tab">
+
+                <h4 class="mb-3">Financial Requirements</h4>
+
+                <div class="table-responsive">
+                  <table id="financialRequirementsDT" class="table table-bordered w-100" width="100"
+                    cellspacing="0">
+                    <thead class="text-center">
+                      <tr>
+                        <th class="align-middle" style="width: 35%;">Budget Item</th>
+                        <th class="align-middle" style="width: 35%;">Particulars</th>
+                        <th class="align-middle" style="width: 10%;">Quantity/Pieces</th>
+                        <th class="align-middle" style="width: 10%;">Estimated Cost<span class="small"> (per qty/pcs)</span></th>
+                        <th class="align-middle" style="width: 10%;">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="projectDetails_body_financialRequirements"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <%# {# Evaluation Plan Pane #} %>
+              <div class="tab-pane fade" id="custom-content-below-evaluation" role="tabpanel"
+                aria-labelledby="custom-content-below-evaluation-tab">
+
+                <h4 class="mb-3">Evaluation Plan</h4>
+
+                <div class="table-responsive">
+                  <table id="evaluationPlanDT" class="table table-bordered w-100" width="100"
+                    cellspacing="0">
+                    <thead class="text-center">
+                      <tr>
+                        <th class="align-middle" style="width: 30%">Outcome</th>
+                        <th class="align-middle" style="width: 30%">Indicator</th>
+                        <th class="align-middle" style="width: 20%">Data Collection Method</th>
+                        <th class="align-middle" style="width: 20%">Frequency</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          Participants are educated in how preventing fire and prepared in such calamities like
+                          earthquke.
+                        </td>
+                        <td>
+                          The participants adopt the gained knowledge and apply in himself/herself.
+                        </td>
+                        <td>
+                          Assessment Test/Activity
+                        </td>
+                        <td>
+                          Once
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Generation of waste can be limited
+                        </td>
+                        <td>
+                          Measurement of Waste/Trash per week
+                        </td>
+                        <td>
+                          Assessment/Evaluation
+                        </td>
+                        <td>
+                          Thrice
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Comments %>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Comments</div>
+          </div>
+          <div class="card-body" id="projectComments_grp">
+            
+            <div class="d-flex mb-3" id="projectComment_addComment_grp">
+              <div class="user-block mr-3">
+                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
+              </div>
+              <div class="flex-grow-1">
+                <textarea 
+                  class="form-control" 
+                  name="" 
+                  id="" 
+                  cols="30" 
+                  rows="3" 
+                  placeholder="Add a comment here ..."
+                  data-autoresize
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <%# Options Loader %>
+        <div class="card" id="projectDetails_options_card_loader">
+          <div class="card-header">
+            <div class="skeleton text my-1" style="width: 5rem ;height: 1rem"></div>
+          </div>
+          <div class="card-body">
+            <div class="skeleton text" style="width: 5rem"></div>
+            <div class="skeleton btn btn-block"></div>
+            <div class="skeleton btn btn-block"></div>
+            <div class="py-5"></div>
+          </div>
+        </div>
+
+        <%# Options %>
+        <div class="card" id="projectDetails_options_card" style="display: none">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <h3 class="card-title">Options</h3>
+              <div class="card-tools">
+                <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-2" id="projectDetails_options"></div>
+        </div>
+
+        <%# Timeline %>
+        <div class="timeline">
+          <div class="time-label font-weight-light">
+            <span class="bg-primary">History Logs</span>
+          </div>
+          
+          <div>
+            <i class="fas fa-check bg-success"></i>
+            <div class="timeline-item">
+              <div class="timeline-body small">
+                <div class="font-weight-bold">Approved</div>
+                <div>September 24, 2022</div>
+                <div>By Alexander Pierce</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <i class="fas fa-sync-alt bg-warning"></i>
+            <div class="timeline-item">
+              <div class="timeline-body small">
+                <div class="font-weight-bold">Pending</div>
+                <div>September 24, 2022</div>
+                <div>By Alexander Pierce</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <i class="fas fa-file-circle-exclamation bg-info"></i>
+            <div class="timeline-item">
+              <div class="timeline-body small">
+                <div class="font-weight-bold">For evaluation</div>
+                <div>September 24, 2022</div>
+                <div>By Alexander Pierce</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <i class="fas fa-file-circle-question bg-info"></i>
+            <div class="timeline-item">
+              <div class="timeline-body small">
+                <div class="font-weight-bold">For review</div>
+                <div>September 24, 2022</div>
+                <div>By Alexander Pierce</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <i class="fas fa-file-pen bg-secondary"></i>
+            <div class="timeline-item">
+              <div class="timeline-body small">
+                <div class="font-weight-bold">Created</div>
+                <div>September 24, 2022</div>
+                <div>By Alexander Pierce</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <i class="fas fa-clock bg-gray"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+
+
+<%# ***** Scripts ***** %>
+
+<%# Main %> 
+<script src="<%=BASE_URL%>/js/main.js"></script>
+<script src="<%=BASE_URL%>/js/modules/monitoring/projectEvaluationDetails.js"></script>
