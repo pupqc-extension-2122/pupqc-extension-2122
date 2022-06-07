@@ -85,3 +85,50 @@ exports.createProject = async (req, res) => {
     res.send(err)
   }
 }
+
+exports.cancelProposal = async (req, res) => {
+  if (!req.auth.roles.includes('Extensionist'))
+    return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+  let id = req.params.id
+
+  let proposal = await Projects.findByPK(id)
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  if (proposal.status != 'Pending')
+    return res.status(400).send({ error: true, message: 'Bad Request' })
+
+  proposal.status = 'Cancel'
+
+  await proposal.save()
+
+  res.send({
+    error: false,
+    message: 'Proposal cancelled successfully!'
+  })
+}
+
+exports.viewProposal = async (req, res) => {
+  let id = req.params.id
+
+  let proposal = await Projects.findOne({
+    where: { id },
+    include: [
+      'financial_requirements',
+      'evaluation_plans',
+      'partners'
+    ]
+
+  })
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  res.send({
+    error: false,
+    data: proposal
+  })
+
+}
