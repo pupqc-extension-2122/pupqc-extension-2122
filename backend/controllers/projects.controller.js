@@ -1,5 +1,5 @@
 const {
-  Evaluation_Plans, Financial_Requirements, Projects, Project_Partners, Partners
+  Evaluation_Plans, Financial_Requirements, Projects, Partners
 } = require('../sequelize/models')
 
 
@@ -32,7 +32,7 @@ exports.createProject = async (req, res) => {
 
     active_memo = active_memo.filter(el => (
       new Date(el.end_date) > new Date(body.start_date) &&
-        new Date(el.signed_date) <= new Date(body.start_date)
+      new Date(el.signed_date) <= new Date(body.start_date)
     ))
 
     let data = await Projects.create({
@@ -47,7 +47,7 @@ exports.createProject = async (req, res) => {
       summary: body.summary,
       financial_requirements: body.financial_requirements,
       evaluation_plans: body.evaluation_plans,
-      project_partners: [{partner_id: body.partner_id}],  
+      project_partners: [{ partner_id: body.partner_id }],
       created_by: req.auth.id
     }, {
       include: [
@@ -77,3 +77,28 @@ exports.createProject = async (req, res) => {
     res.send(err)
   }
 }
+
+exports.cancelProposal = async (req, res) => {
+  if (!req.auth.roles.includes('Extensionist'))
+    return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+  let id = req.params.id
+
+  let proposal = await Projects.findByPK(id)
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  if (proposal.status != 'Pending')
+    return res.status(400).send({ error: true, message: 'Bad Request' })
+
+  proposal.status = 'Cancel'
+
+  await proposal.save()
+
+  res.send({
+    error: false,
+    message: 'Proposal cancelled successfully!'
+  })
+}
+
