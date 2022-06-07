@@ -1,5 +1,5 @@
 const {
-  Evaluation_Plans, Financial_Requirements, Projects, Partners
+  Evaluation_Plans, Financial_Requirements, Projects, Project_Partners, Partners
 } = require('../sequelize/models')
 
 
@@ -47,6 +47,7 @@ exports.createProject = async (req, res) => {
       summary: body.summary,
       financial_requirements: body.financial_requirements,
       evaluation_plans: body.evaluation_plans,
+      project_partners: [{partner_id: body.partner_id}],  
       created_by: req.auth.id
     }, {
       include: [
@@ -57,6 +58,10 @@ exports.createProject = async (req, res) => {
         {
           model: Evaluation_Plans,
           as: 'evaluation_plans'
+        },
+        {
+          model: Project_Partners,
+          as: 'project_partners'
         }
       ]
     })

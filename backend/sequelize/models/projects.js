@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
       this.hasMany(models.Financial_Requirements, {foreignKey: 'project_id', as: 'financial_requirements'})
       this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
-      this.belongsToMany(models.Partners, { through: models.Project_Partners })
+      this.hasMany(models.Project_Partners, {foreignKey: 'project_id', as: 'project_partners'})
+      this.belongsToMany(models.Partners, { through: models.Project_Partners, as: 'partners' })
     }
   }
   Projects.init({
