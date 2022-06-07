@@ -34,6 +34,14 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
+      impact_statement: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      summary: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
       status: {
         type: Sequelize.STRING,
         allowNull: false
