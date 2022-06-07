@@ -7,7 +7,10 @@
  */
 
 (() => {
-	const loginForm = '#login_form';
+  const loginForm = '#login_form';
+  const emailInput = $('#loginForm_email');
+  const passwordInput = $('#loginForm_password');
+  const submitBtn = $('#loginForm_submitBtn');
 
 	const handleForm = () => {
 		$app(loginForm).handleForm({
@@ -24,12 +27,20 @@
 		})
 	}
 
+  const disableElements = () => {
+    emailInput.attr('disabled', true);
+    passwordInput.attr('disabled', true);
+    submitBtn.attr('disabled', true);
+  }
+
+  const enableElements = () => {
+    emailInput.attr('disabled', false);
+    passwordInput.attr('disabled', false);
+    passwordInput.val('');
+    submitBtn.attr('disabled', false);
+  }
+
   const onLoginFormSubmit = () => {
-    
-    // Get the input and submit button elements
-    const emailInput = $('#loginForm_email');
-    const passwordInput = $('#loginForm_password');
-    const submitBtn = $('#loginForm_submitBtn');
 
     const formData = new FormData($(loginForm)[0]);
 
@@ -38,11 +49,8 @@
       password: formData.get('password'),
       // remember: formData.get('remember_me')
     }
-
-    // Disable elements
-    emailInput.attr('disabled', true);
-    passwordInput.attr('disabled', true);
-    submitBtn.attr('disabled', true);
+    
+    disableElements();
 
     $.ajax({
       url: `${ BASE_URL_API }/auth/login`,
@@ -51,25 +59,18 @@
       success: (res) => {
         if(res.error) {
           
+          enableElements();
+
           // Alert invalid user details
           toastr.warning('Invalid combination of email and password', null, {"positionClass": "toast-top-center mt-3"});
-          
-          // Enable the inputs
-          emailInput.attr('disabled', false);
-          passwordInput.attr('disabled', false);
-          
-          // Reset the password field
-          passwordInput.val('');
-
-          // Enable the button
-          submitBtn.attr('disabled', false);
         } else {        
           toastr.success('Success!', null, {"positionClass": "toast-top-center mt-3"});
           setTimeout(() => location.assign('/p'), 500);
         }
       },
       error: () => {
-        toastr.danger('Something went wrong.');
+        enableElements();
+        toastr.error('Something went wrong. Please reload the page.', null, {"positionClass": "toast-top-center mt-3"});
       }
     });
   }

@@ -51,8 +51,8 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/add-project</td>
-      <td>Project proposal page</td>
+      <td>{BASE_URL}/p/project-proposals</td>
+      <td>Project proposals page</td>
       <td>
         <ul>
           <li>Extenstionist</li>
@@ -61,8 +61,8 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-proposals</td>
-      <td>Add project proposal page</td>
+      <td>{BASE_URL}/p/create-proposal</td>
+      <td>Create project proposal page</td>
       <td>
         <ul>
           <li>Extenstionist</li>
@@ -80,7 +80,17 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-proposals/{project_id}/edit</td>
+      <td>{BASE_URL}/p/project-proposals/{project_id}/activities</td>
+      <td>List of activities of project proposal page</td>
+      <td>
+        <ul>
+          <li>Extenstionist</li>
+          <li>Chief</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/p/edit-proposal/{project_id}</td>
       <td>Edit project proposal page</td>
       <td>
         <ul>
@@ -109,6 +119,16 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
+      <td>{BASE_URL}/p/project-monitoring/{project_id}/activities</td>
+      <td>List of activities for project monitoring page</td>
+      <td>
+        <ul>
+          <li>Extenstionist</li>
+          <li>Chief</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
       <td>{BASE_URL}/p/project-evaluation</td>
       <td>Project Evaluation page</td>
       <td>
@@ -121,6 +141,16 @@ routers
     <tr style="vertical-align: top;">
       <td>{BASE_URL}/p/project-evaluation/{project_id}</td>
       <td>View project details for evaluation page</td>
+      <td>
+        <ul>
+          <li>Extenstionist</li>
+          <li>Chief</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/p/project-evaluation/{project_id}/activities</td>
+      <td>List of activities for project evaluation page</td>
       <td>
         <ul>
           <li>Extenstionist</li>
@@ -154,7 +184,37 @@ routers
     </tr>
     <tr style="vertical-align: top;">
       <td>{BASE_URL}/m/partners</td>
-      <td>List of Cooperating Agencies/Partners page"</td>
+      <td>List of Cooperating Agencies/Partners page</td>
+      <td>
+        <ul>
+          <li>Extenstionist</li>
+          <li>Chief</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/m/partners/{partner_id}</td>
+      <td>Partner Details</td>
+      <td>
+        <ul>
+          <li>Extenstionist</li>
+          <li>Chief</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/m/memo</td>
+      <td>List of MOA/MOU</td>
+      <td>
+        <ul>
+          <li>Extenstionist</li>
+          <li>Chief</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/m/reports</td>
+      <td>Reports</td>
       <td>
         <ul>
           <li>Extenstionist</li>
