@@ -1,6 +1,7 @@
 const {
-  Evaluation_Plans, Financial_Requirements, Projects, Project_Partners, Partners
+  Evaluation_Plans, Financial_Requirements, Memos, Projects, Project_Partners, Partners
 } = require('../sequelize/models')
+const { Op } = require('sequelize')
 
 
 exports.createProject = async (req, res) => {
@@ -11,32 +12,39 @@ exports.createProject = async (req, res) => {
 
     let body = req.body
 
-    let partner = await Partners.findOne({
+    let partners = await Partners.findAll({
       where: {
-        id: body.partner_id
+        id: [...body.partner_id]
       },
-      include: ['memos']
+      include: [
+        {
+          model: Memos,
+          as: 'memos',
+          where: {
+            [Op.and]: {
+              end_date: {
+                [Op.gt]: new Date(body.start_date)
+              },
+              signed_date: {
+                [Op.lte]: new Date(body.start_date)
+              }
+            }
+          }
+        }
+      ]
     })
 
-    if (!partner)
+    if (!partners.length)
       return res.status(400).send({ error: true, message: 'Partnership not found' })
 
-
-    let active_memo = partner.memos.map(el => (
+    let project_partners = partners.map(el => (
       {
-        id: el.id,
-        signed_date: el.signed_date,
-        end_date: el.end_date
+        partner_id: el.id,
+        memo_id: el.memos[0].id
       }
     ))
 
-    active_memo = active_memo.filter(el => (
-      new Date(el.end_date) > new Date(body.start_date) &&
-        new Date(el.signed_date) <= new Date(body.start_date)
-    ))
-
     let data = await Projects.create({
-      memo_id: active_memo[0].id,
       title: body.title,
       target_groups: body.target_groups,
       team_members: body.team_members,
@@ -47,7 +55,7 @@ exports.createProject = async (req, res) => {
       summary: body.summary,
       financial_requirements: body.financial_requirements,
       evaluation_plans: body.evaluation_plans,
-      project_partners: [{partner_id: body.partner_id}],  
+      project_partners: project_partners,
       created_by: req.auth.id
     }, {
       include: [
