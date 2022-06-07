@@ -12,12 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Users, { foreignKey: 'created_by', as: 'extensionist' })
-      this.belongsTo(models.Memos, { foreignKey: 'memo_id', as: 'memo' })
       this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
       this.hasMany(models.Financial_Requirements, {foreignKey: 'project_id', as: 'financial_requirements'})
       this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
       this.hasMany(models.Project_Partners, {foreignKey: 'project_id', as: 'project_partners'})
       this.belongsToMany(models.Partners, { through: models.Project_Partners, as: 'partners' })
+      this.belongsToMany(models.Memos, {through: models.Project_Partners, as: 'memos'})
     }
   }
   Projects.init({
