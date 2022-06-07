@@ -37,7 +37,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
 router.get('/project-proposals', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist')
+  roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_proposals', {
       document_title: 'Project Proposals',
       active_sidebar_tab: 'Project Proposals',
@@ -54,7 +54,7 @@ router.get('/project-proposals', jwtMiddleware, (req, res) => {
 router.get('/create-proposal', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') 
     ? res.render(PATH + 'create_proposal', {
       document_title: 'Create Project Proposal',
       active_sidebar_tab: 'Project Proposals',
