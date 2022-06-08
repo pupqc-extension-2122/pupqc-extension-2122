@@ -322,6 +322,134 @@
   </div>
 </section>
 
+<%# Modals %>
+<!-- Edit Partner Details -->
+<div class="modal fade" id="editPartnership_modal">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Partnership Details</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form Card -->
+        <form id="editPartnership_form">
+          <!-- Partnership Name -->
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editPartneship_partnershipName">
+                <span>Name of Partner</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="editPartnership_partnershipName" name="name"
+                placeholder="Insert partnership name here ..." value="Grain Foundation for PWDs Inc.">
+            </div>
+          </div>
+
+          <!-- Partner Address -->
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editPartneship_partnerAddress">
+                <span>Partner Address</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="editPartnership_partnerAddress" name="address"
+                placeholder="Insert partner address here ..." value="21 Don Fabian St., Commonwealth, Quezon City">
+            </div>
+          </div>
+
+          <!-- Organization -->
+          <div class="col-12">
+            <div class="form-group" id="editPartnership_organization_grp">
+              <label for="editProject_cooperatingAgencies">
+                <span>Organization</span>
+                <span class="text-danger">*</span>
+              </label>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-md-8">
+                    <select 
+                      name="organization" 
+                      id="editPartnership_organization_select" 
+                      class="form-control select2"
+                      style="width: 100%;"
+                    >
+                      <option selected>Polytechnic University of the Philippines, Quezon City Branch</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 text-right">
+                    <button class="btn btn-primary btn-sm" type="button">
+                      <i class="fas fa-plus mr-1"></i>
+                      <span>Add organization</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitPartnership_btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Document Modal -->
+<div class="modal fade" id="uploadDocument_modal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <form class="modal-content" id="uploadDocument_form">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>Upload Document</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="form-group">
+          <label for="document">
+              <span>Upload document here</span>
+              <span class="text-danger">*</span>
+          </label>
+          <div class="input-group">
+              <div class="custom-file">
+                  <input 
+                      type="file" 
+                      class="custom-file-input" 
+                      id="uploadDocument"
+                      name="uploadDocument"
+                  >
+                  <label class="custom-file-label" for="uploadDocument">Choose file</label>
+              </div>
+          </div>
+        
+      </div>
+
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-negative" 
+          data-dismiss="modal"
+        >Cancel</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          id="uploadDocument_btn"
+        >
+          <span>Upload</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 
 <%# ***** Scripts ***** %>

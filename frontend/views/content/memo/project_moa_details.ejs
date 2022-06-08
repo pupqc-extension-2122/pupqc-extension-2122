@@ -20,7 +20,7 @@
 <div class="content-header">
   <div class="container-fluid">
 
-    <!-- Breadcrumb -->
+    <%# Breadcrumb %>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="#">MOA/MOU</a></li>
       <li class="breadcrumb-item active">Grain Foundation for ...</li>
@@ -28,7 +28,7 @@
 
     <div class="d-sm-flex align-items-sm-center justify-content-between">
 
-      <!-- Header & Subtitle -->
+      <%# Header & Subtitle %>
       <div class="flex-wrap mb-2 mb-md-0">
         <h1 class="m-0">MOA/MOU Details</h1>
       </div>
@@ -49,46 +49,35 @@
     <div class="row">
       <div class="col-md-9">
         
-        <!-- Summary Card -->
+        <%# Summary Card %>
         <div class="card card-primary card-outline" id="moaDetailsCard">
-          <!-- <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="card-title">Project Details</div>
-
-              <div class="card-tools">
-                <button type="button" class="btn btn-sm btn-default" data-card-widget="maximize">
-                  <i class="fas fa-expand"></i>
-                </button>
-              </div>
-            </div>
-          </div> -->
 
           <div class="card-body">
             <div>
 
-              <!-- Partnership Name -->
+              <%# Partnership Name %>
               <div class="row">
                 <div class="col-10">
                   <h3>Grain Foundation for PWDs Inc.</h3>
                 </div>
               </div>
               
-              <!-- Address -->
+              <%# Address %>
               <div>21 Don Fabian St., Commonwealth, Quezon City</div>
 
-              <!-- Organization -->
+              <%# Organization %>
               <div>Polytechnic University of the Philippines, Quezon City Branch</div>
 
-              <!-- Partnership Representative Name -->
+              <%# Partnership Representative Name %>
               <div>Executive Director Byung Min Lee</div>
 
-              <!-- PUP REPD Representative -->
+              <%# PUP REPD Representative %>
               <div>Dr. Anna Ruby P. Gapasin</div>
               
-              <!-- Notary Signed Date - Validity Date -->
+              <%# Notary Signed Date - Validity Date %>
               <div>May 14, 2022 - March 14, 2025</div>
               
-              <!-- Status -->
+              <%# Status %>
               <div class="mt-1">
                 <div class="badge badge-subtle-success py-1 px-2">
                   <i class="fas fa-check fa-fw mr-1"></i>
@@ -99,7 +88,7 @@
           </div>
         </div>
 
-        <!-- Datatable Card -->
+        <%# Datatable Card %>
         <div class="card">
 
           <div class="card-header">
@@ -162,7 +151,7 @@
           </div>
         </div>
 
-        <!-- Comments -->
+        <%# Comments %>
         <div class="card">
           <div class="card-header">
             <div class="card-title">Comments</div>
@@ -223,7 +212,7 @@
       
       <div class="col-md-3">
         
-        <!-- Options -->
+        <%# Options %>
         <div class="card">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -235,7 +224,7 @@
               </div>
             </div>
           </div>
-          <!-- /.card-header -->
+          
           <div class="card-body p-2">
                 <div class="dropdown-header">MOA/MOU details</div>
                 <a class="btn btn-negative btn-block text-left" href=""	data-toggle="modal"
@@ -256,10 +245,10 @@
                 </button>
             </ul>
           </div>
-          <!-- /.card-body -->
+          
         </div>
 
-        <!-- Timeline -->
+        <%# Timeline %>
         <div class="timeline">
           <div class="time-label font-weight-light">
             <span class="bg-primary">History Logs</span>
@@ -312,7 +301,7 @@
 		<div class="modal-dialog modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Edit MOA Details</h4>
+					<h4 class="modal-title">Edit MOA/MOU Details</h4>
 					<button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
 						<i class="fas fa-times"></i>
 					</button>
@@ -332,15 +321,15 @@
 							</div>
 						</div>
 	
-						<%# Partnership Address %>
+						<%# Partner Address %>
 						<div class="col-12">
 							<div class="form-group">
 								<label for="editMOA_partnershipAddress">
-									<span>Location</span>
+									<span>Partner Address</span>
 									<span class="text-danger">*</span>
 								</label>
 								<input type="text" class="form-control" id="editMOA_partnershipAddress" name="address"
-									placeholder="Insert partnership address here ..." value="21 Don Fabian St., Commonwealth, Quezon City">
+									placeholder="Insert partner address here ..." value="21 Don Fabian St., Commonwealth, Quezon City">
 							</div>
 						</div>
 	
@@ -409,7 +398,7 @@
 								<div class="input-group date">
 									<input type="text" class="form-control" id="editMOA_notarySignedDate" name="notary_date"
 										placeholder="Please select notary signed date" data-inputmask-alias="datetime"
-										data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2022"/>
+										data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2023"/>
 									<div class="input-group-append">
 										<button type="button" class="btn btn-primary" id="editMOA_notarySignedDate_pickerBtn"
 											data-toggle="tooltip" title="Select notary signed date">
@@ -420,7 +409,7 @@
 							</div>
 						</div>
 	
-						<!-- Validity Date --><%# Upload Document Modal %>
+						<%# Validity Date %>
 						<div class="col-12">
 							<div class="form-group">
 								<label for="editMOA_validityDate">
@@ -430,7 +419,7 @@
 								<div class="input-group date">
 									<input type="text" class="form-control" id="editMOA_validityDate" name="validity_date"
 										placeholder="Please select validity date" data-inputmask-alias="datetime"
-										data-inputmask-inputformat="mm/dd/yyyy" data-mask value="03/14/2025"/>
+										data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2026"/>
 									<div class="input-group-append">
 										<button type="button" class="btn btn-primary" id="editMOA_validityDate_pickerBtn"
 											data-toggle="tooltip" title="Select validity date">
@@ -440,14 +429,12 @@
 								</div>
 							</div>
 						</div>
-	
-					</form>
-				</div>
-	
-				<div class="modal-footer">
-					<button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-primary" id="submitPartnership_btn">Save</button>
-				</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="submitPartnership_btn">Save</button>
+          </div>
+        </form>
 			</div>
 		</div>
 	</div>

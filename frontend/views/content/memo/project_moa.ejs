@@ -20,14 +20,14 @@
 <div class="content-header">
   <div class="container-fluid">
 
-    <!-- Breadcrumb -->
+    <%# Breadcrumb %>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="#">MOA/MOU</a></li>
     </ol>
 
     <div class="d-sm-flex align-items-sm-center justify-content-between">
 
-      <!-- Header & Subtitle -->
+      <%# Header & Subtitle %>
       <div class="flex-wrap mb-2 mb-md-0">
         <h1 class="m-0">List of MOA/MOU</h1>
         <div class="text-secondary">View reports and manage activities here</div>
@@ -51,7 +51,7 @@
 <section class="content">
   <div class="container-fluid">
 
-    <!-- Info cards -->
+    <%# Info cards %>
     <div class="row">
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
@@ -61,11 +61,11 @@
             <span class="info-box-text">Messages</span>
             <span class="info-box-number">1,410</span>
           </div>
-          <!-- /.info-box-content -->
+          
         </div>
-        <!-- /.info-box -->
+        
       </div>
-      <!-- /.col -->
+      
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
           <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
@@ -74,11 +74,11 @@
             <span class="info-box-text">Bookmarks</span>
             <span class="info-box-number">410</span>
           </div>
-          <!-- /.info-box-content -->
+          
         </div>
-        <!-- /.info-box -->
+        
       </div>
-      <!-- /.col -->
+      
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
           <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
@@ -87,11 +87,11 @@
             <span class="info-box-text">Uploads</span>
             <span class="info-box-number">13,648</span>
           </div>
-          <!-- /.info-box-content -->
+          
         </div>
-        <!-- /.info-box -->
+        
       </div>
-      <!-- /.col -->
+      
       <div class="col-md-3 col-sm-6 col-12">
         <div class="info-box">
           <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
@@ -100,14 +100,14 @@
             <span class="info-box-text">Likes</span>
             <span class="info-box-number">93,139</span>
           </div>
-          <!-- /.info-box-content -->
+          
         </div>
-        <!-- /.info-box -->
+        
       </div>
-      <!-- /.col -->
+      
     </div>
 
-    <!-- Datatable Card -->
+    <%# Datatable Card %>
     <div class="card card-outline card-primary">
 
       <div class="card-header">
@@ -169,9 +169,9 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<!-- Form Card -->
+				<%# Form Card %>
 				<form id="addMOA_form">
-					<!-- Partnership Name -->
+					<%# Partnership Name %>
 					<div class="col-12">
 						<div class="form-group">
 							<label for="addMOA_partnershipName">
@@ -183,7 +183,7 @@
 						</div>
 					</div>
 
-					<!-- Partnership Address -->
+					<%# Partner Address %>
 					<div class="col-12">
 						<div class="form-group">
 							<label for="addMOA_partnerAddress">
@@ -195,7 +195,7 @@
 						</div>
 					</div>
 
-					<!-- Partnership Representative Name -->
+					<%# Partnership Representative Name %>
 					<div class="col-12">
 						<div class="form-group">
 							<label for="addMOA_partnershipRepresentative">
@@ -207,11 +207,11 @@
 						</div>
 					</div>
 
-					<!-- PUP REPD Representative -->
+					<%# PUP REPD Representative %>
 					<div class="col-12">
 						<div class="form-group">
 							<label for="addMOA_pupREPD">
-								<span>PUP REPD Representative</span>
+								<span>Name of PUP REPD Representative</span>
 								<span class="text-danger">*</span>
 							</label>
 							<input type="text" class="form-control" id="addMOA_pupREPD" name="pup_REPD"
@@ -219,7 +219,7 @@
 						</div>
 					</div>
 
-					<!-- Organization -->
+					<%# Organization %>
 					<div class="col-12">
 						<div class="form-group" id="addMOA_organization_grp">
 							<label for="addMOA_organization">
@@ -250,7 +250,7 @@
 						</div>
 					</div>
 
-					<!-- Notary Signed Date -->
+					<%# Notary Signed Date %>
 					<div class="col-12">
 						<div class="form-group">
 							<label for="addMOA_notarySignedDate">
@@ -271,7 +271,7 @@
 						</div>
 					</div>
 
-					<!-- Validity Date -->
+					<%# Validity Date %>
 					<div class="col-12">
 						<div class="form-group">
 							<label for="addMOA_validityDate">
@@ -292,7 +292,7 @@
 						</div>
 					</div>
 
-					<!-- Upload Document -->
+					<%# Upload Document %>
 					<div class="col-12">
 						<div class="form-group">
 							<label for="document">
@@ -312,14 +312,12 @@
 							</div>
 						</div>
 					</div>
-
-				</form>
-			</div>
-
-			<div class="modal-footer">
-				<button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-				<button type="button" class="btn btn-primary" id="submitMOA_btn">Submit</button>
-			</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitMOA_btn">Submit</button>
+        </div>
+      </form>
 		</div>
 	</div>
 </div>

@@ -11,6 +11,7 @@ const ProjectMoa = (() => {
   /**
    * * Local Variables
    */
+  const formSelector = '#addMOA_form';
 
   let initialized = 0;
 
@@ -30,6 +31,48 @@ const ProjectMoa = (() => {
     // Initialize Validity Date
     $app('#addMOA_validityDate').initDateInput({
       button: '#addMOA_validityDate_pickerBtn'
+    });
+  }
+
+  const handleForm = () => {
+    $app(formSelector).handleForm({
+      validators: {
+        name: {
+          required: "The partner name is required.",
+        },
+        address: {
+          required: "The partner address is required.",
+        },
+        representative: {
+          required: "The name of representative is required.",
+        },
+        organization:  {
+          required: "The organization is required.",
+        },
+        pup_REPD: {
+          required: "The name of PUP REPD Representative is required.",
+        },
+        notary_date: {
+          required: "Please select the notary signed date.",
+          afterDateTime: {
+						rule: moment().subtract(1, 'days'),
+						message: 'Notary Signed date must be current or onwards.'
+					}
+        },
+        validity_date: {
+          required: "Please select the validity date.",
+          afterDateTime: {
+						rule: moment().subtract(1, 'days'),
+						message: 'Validity date must be current or onwards.'
+					}
+        },
+        uploadDocument: {
+          required: "MOA/MOU attachment is required.",
+        }
+      },
+      onSubmit: () => {
+        toastr.success("MOA/MOU has been added successfully!");
+      }
     });
   }
 
@@ -134,6 +177,7 @@ const ProjectMoa = (() => {
       initialized = 1;
       initializations();
       initDataTable();
+      handleForm();
     }
   }
 

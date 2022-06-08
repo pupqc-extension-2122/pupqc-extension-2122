@@ -12,6 +12,8 @@ const PartnershipDetails = (() => {
    * * Local Variables
    */
   
+  const formSelector = '#editPartnership_form';
+
   let initialized = 0;
 
    // ! Simulation
@@ -20,6 +22,25 @@ const PartnershipDetails = (() => {
   /**
    * * Private Methods
    */
+
+  const handleForm = () => {
+    $app(formSelector).handleForm({
+      validators: {
+        name: {
+          required: "The partner name is required.",
+        },
+        address: {
+          required: "The partner address is required.",
+        },
+        organization:  {
+          required: "The organization is required.",
+        }
+      },
+      onSubmit: () => {
+        toastr.success("Partnership details has been updated successfully!");
+      }
+    });
+  }
 
   const initDataTable = async () => {
     await new Promise((resolve, reject) => {
@@ -115,6 +136,7 @@ const PartnershipDetails = (() => {
     if (!initialized) {
       initialized = 1;
       initDataTable();
+      handleForm();
     }
   }
 
