@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     partner_id: {
       type: DataTypes.UUID,
       allowNull: false
+    },
+    memo_id: {
+      type: DataTypes.UUID,
+      allowNull: false
     }
   }, {
     sequelize,

@@ -51,7 +51,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-proposals</td>
+      <td>{BASE_URL}/p/proposals</td>
       <td>Project proposals page</td>
       <td>
         <ul>
@@ -70,7 +70,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-proposals/{project_id}</td>
+      <td>{BASE_URL}/p/proposals/{project_id}</td>
       <td>View project proposal details page</td>
       <td>
         <ul>
@@ -80,7 +80,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-proposals/{project_id}/activities</td>
+      <td>{BASE_URL}/p/proposals/{project_id}/activities</td>
       <td>List of activities of project proposal page</td>
       <td>
         <ul>
@@ -99,7 +99,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-monitoring</td>
+      <td>{BASE_URL}/p/monitoring</td>
       <td>Project monitoring page</td>
       <td>
         <ul>
@@ -109,7 +109,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-monitoring/{project_id}</td>
+      <td>{BASE_URL}/p/monitoring/{project_id}</td>
       <td>View project details for monitoring page</td>
       <td>
         <ul>
@@ -119,7 +119,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-monitoring/{project_id}/activities</td>
+      <td>{BASE_URL}/p/monitoring/{project_id}/activities</td>
       <td>List of activities for project monitoring page</td>
       <td>
         <ul>
@@ -129,7 +129,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-evaluation</td>
+      <td>{BASE_URL}/p/evaluation</td>
       <td>Project Evaluation page</td>
       <td>
         <ul>
@@ -139,7 +139,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-evaluation/{project_id}</td>
+      <td>{BASE_URL}/p/evaluation/{project_id}</td>
       <td>View project details for evaluation page</td>
       <td>
         <ul>
@@ -149,7 +149,7 @@ routers
       </td>
     </tr>
     <tr style="vertical-align: top;">
-      <td>{BASE_URL}/p/project-evaluation/{project_id}/activities</td>
+      <td>{BASE_URL}/p/evaluation/{project_id}/activities</td>
       <td>List of activities for project evaluation page</td>
       <td>
         <ul>

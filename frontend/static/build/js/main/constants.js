@@ -235,7 +235,23 @@ const PARTNER_STATUS_STYLES = {
 	},
 }
 
-//Project Monitoring Styles
+// Project Evaluation Styles
+const PROJECT_EVALUATION_STATUS_STYLES = {
+	'Evaluated': {
+		icon: 'fas fa-check',
+		theme: 'success'
+	},
+	'In progress': {
+		icon: 'fas fa-sync-alt',
+		theme: 'warning'
+	},
+  'Not yet graded': {
+		icon: 'fas fa-file-circle-exclamation',
+		theme: 'info'
+	},
+}
+
+// Project Monitoring Styles
 const PROJECT_MONITORING_STATUS_STYLES = {
   'Completed': {
     icon: 'fas fa-check',
@@ -249,5 +265,4 @@ const PROJECT_MONITORING_STATUS_STYLES = {
     icon: 'fas fa-file-circle-exclamation',
     theme: 'info'
   },
-
 }

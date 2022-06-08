@@ -1,10 +1,10 @@
-'use strict';
-
 /**
  * ==============================================
  * * LOGIN
  * ==============================================
  */
+
+'use strict';
 
 (() => {
   const loginForm = '#login_form';
@@ -56,7 +56,7 @@
       url: `${ BASE_URL_API }/auth/login`,
       type: 'POST',
       data: data,
-      success: (res) => {
+      success: res => {
         if(res.error) {
           
           enableElements();

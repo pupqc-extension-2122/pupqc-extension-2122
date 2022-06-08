@@ -1,6 +1,6 @@
 /**
  * ==============================================
- * * PROJECT ACTIVITIES
+ * * PROJECT DETAILS
  * ==============================================
  */
 
@@ -67,31 +67,46 @@ const ProjectDetails = (() => {
           ],
           financial_requirements: [
             {
-              line_item_budget_id: 1,
+              budget_item_category: {
+                id: '1',
+                name: 'Operational Cost'
+              },
               budget_item: "test",
               particulars: "test",
               quantity: 10,
               estimated_cost: 20
             }, {
-              line_item_budget_id: 2,
+              budget_item_category: {
+                id: '2',
+                name: 'Travel Cost'
+              },
               budget_item: "test",
               particulars: "test",
               quantity: 5,
               estimated_cost: 2
             }, {
-              line_item_budget_id: 1,
+              budget_item_category: {
+                id: '1',
+                name: 'Operational Cost'
+              },
               budget_item: "test",
               particulars: "test",
               quantity: 20,
               estimated_cost: 5
             }, {
-              line_item_budget_id: 1,
+              budget_item_category: {
+                id: '1',
+                name: 'Operational Cost'
+              },
               budget_item: "test",
               particulars: "test",
               quantity: 20,
               estimated_cost: 5
             }, {
-              line_item_budget_id: 3,
+              budget_item_category: {
+                id: '3',
+                name: 'Supplies Cost'
+              },
               budget_item: "test",
               particulars: "test",
               quantity: 20,
@@ -230,71 +245,75 @@ const ProjectDetails = (() => {
         },
         '#projectDetails_body_financialRequirements': () => {
 
-          // // Create a new object that holds financial requirements grouped by line item budget
-          // let frObj = {};
+          // Create a new object that holds financial requirements grouped by line item budget
+          let frObj = {};
+          let budgetItemCategoryList = [];
 
-          // // Group the requirements according to line item budget
-          // fr.forEach(r => {
+          // Group the requirements according to line item budget
+          fr.forEach(r => {
 
-          //   // Create a copy of object
-          //   let requirement = {...r};
+            // Create a copy of object
+            let requirement = { ...r };
 
-          //   // Get the line item budget id
-          //   const id = requirement.line_item_budget_id;
+            // Get the budget item category id
+            const bic_id = requirement.budget_item_category.id;
 
-          //   // Create a key with empty array if line item budget key not yet exist
-          //   if (!(id in frObj)) frObj[id] = [];
+            // Create a key with empty array if line item budget key not yet exist
+            if (!(frObj[bic_id])) {
+              frObj[bic_id] = [];
+              budgetItemCategoryList.push(requirement.budget_item_category);
+            }
 
-          //   // Remove the line_item_budget_id key in object
-          //   delete requirement.line_item_budget_id;
+            // Remove the budget_item_category in object
+            delete requirement.budget_item_category;
 
-          //   // Push the object according to key
-          //   frObj[id].push(requirement);
-          // });
+            // Push the object according to key
+            frObj[bic_id].push(requirement);
+          });
 
-          // let financialRequirementRows = '';
-          // let overallAmount = 0;
+          let financialRequirementRows = '';
+          let overallAmount = 0;
 
-          // // Read the object for rendering in the DOM
-          // Object.keys(frObj).forEach(key => {
+          // Read the object for rendering in the DOM
+          Object.keys(frObj).forEach(key => {
 
-          //   // Create the line item budget row
-          //   financialRequirementRows += `
-          //     <tr style="background-color: #f6f6f6">
-          //       <td 
-          //         class="font-weight-bold"
-          //         colspan="5"
-          //       >${ lineItemBudget_list.find(x => x.id == key).name }</td>
-          //     </tr>
-          //   `;
+            // Create the line item budget row
+            financialRequirementRows += `
+              <tr style="background-color: #f6f6f6">
+                <td 
+                  class="font-weight-bold"
+                  colspan="5"
+                >${budgetItemCategoryList.find(x => x.id == key).name}</td>
+              </tr>
+            `;
 
-          //   // Create the budget item rows
-          //   frObj[key].forEach(r => {
-          //     const { budget_item, particulars, quantity, estimated_cost } = r;
-          //     const totalAmount = quantity * estimated_cost;
+            // Create the budget item rows
+            frObj[key].forEach(r => {
+              const { budget_item, particulars, quantity, estimated_cost } = r;
+              const totalAmount = quantity * estimated_cost;
 
-          //     overallAmount += totalAmount;
+              overallAmount += totalAmount;
 
-          //     financialRequirementRows += `
-          //       <tr>
-          //         <td>${ budget_item }</td>
-          //         <td>${ particulars }</td>
-          //         <td class="text-right">${ quantity }</td>
-          //         <td class="text-right">${ formatToPeso(estimated_cost) }</td>
-          //         <td class="text-right">${ formatToPeso(totalAmount) }</td>
-          //       </tr>
-          //     `
-          //   });
-          // });
+              financialRequirementRows += `
+                <tr>
+                  <td>${budget_item}</td>
+                  <td>${particulars}</td>
+                  <td class="text-right">${quantity}</td>
+                  <td class="text-right">${formatToPeso(estimated_cost)}</td>
+                  <td class="text-right">${formatToPeso(totalAmount)}</td>
+                </tr>
+              `
+            });
+          });
 
-          // financialRequirementRows += `
-          //   <tr class="font-weight-bold">
-          //     <td colspan="4" class="text-right">Overall Amount</td>
-          //     <td class="text-right">${ formatToPeso(overallAmount) }</td>
-          //   </tr>
-          // `;
+          financialRequirementRows += `
+            <tr class="font-weight-bold">
+              <td colspan="4" class="text-right">Overall Amount</td>
+              <td class="text-right">${formatToPeso(overallAmount)}</td>
+            </tr>
+          `;
 
-          return 'Test';
+          return financialRequirementRows;
         }
       });
 
@@ -342,37 +361,39 @@ const ProjectDetails = (() => {
         id: 'View activities',
         category: 'Project Activities',
         template: `
-          <button
+          <div
+            role="button"
             class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${ BASE_URL_WEB }/p/project-proposals/${ id }/activities')"
+            onclick="location.replace('${BASE_URL_WEB}/p/project-proposals/${id}/activities')"
           >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View activities</span>
-          </button>
+          </div>
         `
       }, {
         id: 'View project details',
         category: 'Project Details',
         template: `
-          <button
+          <div
+            role="button"
             class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${ BASE_URL_WEB }/p/project-proposals/${ id }')"
+            onclick="location.replace('${BASE_URL_WEB}/p/project-proposals/${id}')"
           >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View project details</span>
-          </button>
+          </div>
         `
       }, {
         id: 'Edit project details',
         category: 'Project Details',
         template: `
-          <a 
+          <div
             class="btn btn-negative btn-block text-left" 
-            href="${ BASE_URL_WEB }/p/edit-proposal/${ id }"
+            href="${BASE_URL_WEB}/p/edit-proposal/${id}"
           >
             <i class="fas fa-edit text-info fa-fw mr-1"></i>
             <span>Edit details</span>
-          </a>
+          </div>
         `
       }, {
         id: 'Submit for approval',
@@ -429,7 +450,7 @@ const ProjectDetails = (() => {
         const [key, optionsArr] = s;
         optionList += optionCategories.find(oc => oc.id == key).header;
         optionsArr.forEach(o => optionList += optionsDict.find(od => od.id == o).template);
-        if (i < entries.length-1) optionList += `<div class="dropdown-divider"></div>`
+        if (i < entries.length - 1) optionList += `<div class="dropdown-divider"></div>`
       });
       return optionList;
     }
@@ -442,7 +463,7 @@ const ProjectDetails = (() => {
             'Edit project details',
             'Submit for approval'
           ]));
-        } 
+        }
         if (activitiesDT.length) {
           setHTMLContent(options, getOptionList([
             'Add project activity',
@@ -509,26 +530,26 @@ const ProjectDetails = (() => {
     const optionFunc = {
       'submitForApproval': () => {
         data.status = 'For evaluation';
-        setOptions(); 
+        setOptions();
         loadHeaderDetails();
         // loadDetails();
       },
       'submitEvaluationGrade': () => {
         data.status = 'Pending';
-        setOptions(); 
+        setOptions();
         loadHeaderDetails();
         // loadDetails();
       },
       'cancelTheProposal': () => {
         data.status = 'Canceled';
-        setOptions(); 
+        setOptions();
         loadHeaderDetails();
         // loadDetails();
       }
     }
 
-    optionFunc[option] !== "undefined" 
-      ? optionFunc[option]() 
+    optionFunc[option] !== "undefined"
+      ? optionFunc[option]()
       : console.error('No key with the same status for optionsFunc');
   };
 

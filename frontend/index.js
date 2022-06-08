@@ -15,10 +15,15 @@ app.set("layout extractScripts", true);
 app.set("layout extractStyles", true);
 app.set("layout extractMetas", true);
 
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  next();
+});
+
 // Web Routes
 app.use(`/`, require('./routers/auth.route'));
 
-app.use(`/p/`, require('./routers/monitoring.route'));
+app.use(`/p/`, require('./routers/projects.route'));
 app.use(`/m/`, require('./routers/memo.route'));
 
 module.exports = app

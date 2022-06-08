@@ -11,8 +11,8 @@
     <li class="nav-item d-none d-sm-inline-block">
       <a 
         href="<%=BASE_URL%>/p" 
-        class="nav-link<% if (active_topbar_tab == "Monitoring") { %> active<% } %>"
-      >Monitoring</a>
+        class="nav-link<% if (active_topbar_tab == "Projects") { %> active<% } %>"
+      >Projects</a>
     </li>
     <li class="nav-item d-none d-sm-inline-block">
       <a 
@@ -269,8 +269,11 @@
 
         <div class="dropdown-header">Session</div>
 
-        <a href="" role="button" class="dropdown-item d-flex align-items-center" data-toggle="modal"
-          data-target="#logoutModal">
+        <div 
+          role="button" 
+          class="dropdown-item d-flex align-items-center" 
+          data-auth="logout"
+        >
           <div class="nav-icon">
             <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
               style="height: 2.5rem; width: 2.5rem">

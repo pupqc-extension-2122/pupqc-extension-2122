@@ -2,10 +2,10 @@ const router = require('express').Router();
 const jwtMiddleware = require('../../utils/jwtMiddleware');
 
 // Constants
-const PATH = 'content/monitoring/';
+const PATH = 'content/projects/';
 const RENDER_OPTION_DEFAULTS = {
-  active_topbar_tab: 'Monitoring',
-  sidebar: 'monitoring_sidebar',
+  active_topbar_tab: 'Projects',
+  sidebar: 'projects_sidebar',
 }
 
 
@@ -34,10 +34,10 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
 
 
 // Project Proposals
-router.get('/project-proposals', jwtMiddleware, (req, res) => {
+router.get('/proposals', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist')
+  roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_proposals', {
       document_title: 'Project Proposals',
       active_sidebar_tab: 'Project Proposals',
@@ -54,7 +54,7 @@ router.get('/project-proposals', jwtMiddleware, (req, res) => {
 router.get('/create-proposal', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') 
     ? res.render(PATH + 'create_proposal', {
       document_title: 'Create Project Proposal',
       active_sidebar_tab: 'Project Proposals',
@@ -68,7 +68,7 @@ router.get('/create-proposal', jwtMiddleware, (req, res) => {
 
 
 // Project Details
-router.get('/project-proposals/:project_id', jwtMiddleware, (req, res) => {
+router.get('/proposals/:project_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -85,7 +85,7 @@ router.get('/project-proposals/:project_id', jwtMiddleware, (req, res) => {
 
 
 // Project Activities
-router.get('/project-proposals/:project_id/activities', jwtMiddleware, (req, res) => {
+router.get('/proposals/:project_id/activities', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -120,7 +120,7 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, (req, res) => {
 
 
 // Project Monitoring
-router.get('/project-monitoring/', jwtMiddleware, (req, res) => {
+router.get('/monitoring/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -135,10 +135,56 @@ router.get('/project-monitoring/', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
+// Project Evaluation
+router.get('/evaluation/', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
 
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_evaluation', {
+      document_title: 'Project Evaluation',
+      active_sidebar_tab: 'Project Evaluation',
+      name: `${ first_name } ${ last_name }`,
+      role: 'Extensionist',
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
+
+// Project Evaluation Details
+router.get('/evaluation/:project_id', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_evaluation_details', {
+      document_title: 'Project Details',
+      active_sidebar_tab: 'Project Evaluation',
+      name: `${ first_name } ${ last_name }`,
+      role: 'Extensionist',
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
+
+// Project Activities
+router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_evaluation_activities', {
+      document_title: 'Project Activities',
+      active_sidebar_tab: 'Project Evaluation',
+      name: `${ first_name } ${ last_name }`,
+      role: 'Extensionist',
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
 
 // Project Monitoring Details
-router.get('/project-monitoring/:project_id', jwtMiddleware, (req, res) => {
+router.get('/monitoring/:project_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -155,7 +201,7 @@ router.get('/project-monitoring/:project_id', jwtMiddleware, (req, res) => {
 
 /* NOT YET FINISHED, NO EJS, JS, ETC.
 // Project Monitoring Activities
-router.get('/project-monitoring/:project_id/activities', jwtMiddleware, (req, res) => {
+router.get('/monitoring/:project_id/activities', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
