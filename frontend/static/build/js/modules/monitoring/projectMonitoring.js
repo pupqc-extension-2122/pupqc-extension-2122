@@ -185,15 +185,15 @@
                  <div class="dropdown-menu dropdown-menu-right">
                    <div class="dropdown-header">Options</div>
                    <a 
-                     class="dropdown-item"
-                     href="./view-project-monitoring.html" 
-                   >
+                   class="dropdown-item"
+                   href="${ BASE_URL_WEB }/p/project-monitoring/${ data.id }" 
+                 >
                      <span>View details</span>
                    </a>
                    <a 
-                     class="dropdown-item"A
-                     href="./view-project-monitoring.html" 
-                   >
+                   class="dropdown-item"
+                   href="${ BASE_URL_WEB }/p/project-monitoring/${ data.id }/activities" 
+                  >
                      <span>Manage activities</span>
                    </a>
                  </div>
