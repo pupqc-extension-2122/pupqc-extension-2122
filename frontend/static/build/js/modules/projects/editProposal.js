@@ -361,33 +361,77 @@
 			},
 			'#projectDetailsConfirm_financialRequirements': () => {
 
-				// Create a new object that holds financial requirements grouped by line item budget
-				let frObj = {};
+				// // Create a new object that holds financial requirements grouped by line item budget
+				// let frObj = {};
 				
-				// Group the requirements according to line item budget
-				fr.forEach(r => {
+				// // Group the requirements according to line item budget
+				// fr.forEach(r => {
 
-					// Create a copy of object
-					let requirement = {...r};
+				// 	// Create a copy of object
+				// 	let requirement = {...r};
 
-					// Get the line item budget id
-					const id = requirement.line_item_budget_id;
+				// 	// Get the line item budget id
+				// 	const id = requirement.line_item_budget_id;
 					
-					// Create a key with empty array if line item budget key not yet exist
-					if (!(id in frObj)) frObj[id] = [];
+				// 	// Create a key with empty array if line item budget key not yet exist
+				// 	if (!(id in frObj)) frObj[id] = [];
 					
-					// Remove the line_item_budget_id key in object
-					delete requirement.line_item_budget_id;
+				// 	// Remove the line_item_budget_id key in object
+				// 	delete requirement.line_item_budget_id;
 
-					// Push the object according to key
-					frObj[id].push(requirement);
-				});
+				// 	// Push the object according to key
+				// 	frObj[id].push(requirement);
+				// });
 
+				// let financialRequirementRows = '';
+				// let overallAmount = 0;
+
+				// // Read the object for rendering in the DOM
+				// Object.keys(frObj).forEach(key => {
+
+				// 	// Create the line item budget row
+				// 	financialRequirementRows += `
+				// 		<tr style="background-color: #f6f6f6">
+				// 			<td 
+				// 				class="font-weight-bold"
+				// 				colspan="5"
+				// 			>${ lineItemBudget_list.find(x => x.id == key).name }</td>
+				// 		</tr>
+				// 	`;
+
+				// 	// Create the budget item rows
+				// 	frObj[key].forEach(r => {
+				// 		const { budget_item, particulars, quantity, estimated_cost } = r;
+				// 		const totalAmount = quantity * estimated_cost;
+
+				// 		overallAmount += totalAmount;
+
+				// 		financialRequirementRows += `
+				// 			<tr>
+				// 				<td>${ budget_item }</td>
+				// 				<td>${ particulars }</td>
+				// 				<td class="text-right">${ quantity }</td>
+				// 				<td class="text-right">${ formatToPeso(estimated_cost) }</td>
+				// 				<td class="text-right">${ formatToPeso(totalAmount) }</td>
+				// 			</tr>
+				// 		`
+				// 	});
+				// });
+
+				// financialRequirementRows += `
+				// 	<tr class="font-weight-bold">
+				// 		<td colspan="4" class="text-right">Overall Amount</td>
+				// 		<td class="text-right">${ formatToPeso(overallAmount) }</td>
+				// 	</tr>
+				// `;
+
+				// return financialRequirementRows;
+        
 				let financialRequirementRows = '';
 				let overallAmount = 0;
 
 				// Read the object for rendering in the DOM
-				Object.keys(frObj).forEach(key => {
+				fr.forEach(category => {
 
 					// Create the line item budget row
 					financialRequirementRows += `
@@ -395,12 +439,12 @@
 							<td 
 								class="font-weight-bold"
 								colspan="5"
-							>${ lineItemBudget_list.find(x => x.id == key).name }</td>
+							>${ category.name }</td>
 						</tr>
 					`;
 
 					// Create the budget item rows
-					frObj[key].forEach(r => {
+					category.items.forEach(r => {
 						const { budget_item, particulars, quantity, estimated_cost } = r;
 						const totalAmount = quantity * estimated_cost;
 

@@ -1,6 +1,6 @@
 /**
  * ==============================================
- * * PROJECT ACTIVITIES
+ * * PROJECT EVALUATION DETAILS
  * ==============================================
  */
 
@@ -68,50 +68,48 @@ const ProjectDetails = (() => {
           ],
           financial_requirements: [
             {
-              budget_item_category: {
-                id: '1',
-                name: 'Operational Cost'
-              },
-              budget_item: "test",
-              particulars: "test",
-              quantity: 10,
-              estimated_cost: 20
+              id: '1',
+              name: 'Operational Cost',
+              items: [
+                {
+                  budget_item: "test",
+                  particulars: "test",
+                  quantity: 10,
+                  estimated_cost: 20
+                }, {
+                  budget_item: "test",
+                  particulars: "test",
+                  quantity: 20,
+                  estimated_cost: 5
+                }, {
+                  budget_item: "test",
+                  particulars: "test",
+                  quantity: 20,
+                  estimated_cost: 5
+                }, 
+              ]
             }, {
-              budget_item_category: {
                 id: '2',
-                name: 'Travel Cost'
-              },
-              budget_item: "test",
-              particulars: "test",
-              quantity: 5,
-              estimated_cost: 2
+                name: 'Travel Cost',
+                items: [
+                  {
+                    budget_item: "test",
+                    particulars: "test",
+                    quantity: 5,
+                    estimated_cost: 2
+                  }
+                ]
             }, {
-              budget_item_category: {
-                id: '1',
-                name: 'Operational Cost'
-              },
-              budget_item: "test",
-              particulars: "test",
-              quantity: 20,
-              estimated_cost: 5
-            }, {
-              budget_item_category: {
-                id: '1',
-                name: 'Operational Cost'
-              },
-              budget_item: "test",
-              particulars: "test",
-              quantity: 20,
-              estimated_cost: 5
-            }, {
-              budget_item_category: {
-                id: '3',
-                name: 'Supplies Cost'
-              },
-              budget_item: "test",
-              particulars: "test",
-              quantity: 20,
-              estimated_cost: 5
+              id: '3',
+              name: 'Supplies Cost',
+              items: [
+                {
+                  budget_item: "test",
+                  particulars: "test",
+                  quantity: 20,
+                  estimated_cost: 5
+                }
+              ]
             },
           ],
           evaluation_plans: [
@@ -252,37 +250,81 @@ const ProjectDetails = (() => {
         },
         '#projectDetails_body_financialRequirements': () => {
 
-          // Create a new object that holds financial requirements grouped by line item budget
-          let frObj = {};
-          let budgetItemCategoryList = [];
+          // // Create a new object that holds financial requirements grouped by line item budget
+          // let frObj = {};
+          // let budgetItemCategoryList = [];
 
-          // Group the requirements according to line item budget
-          fr.forEach(r => {
+          // // Group the requirements according to line item budget
+          // fr.forEach(r => {
 
-            // Create a copy of object
-            let requirement = { ...r };
+          //   // Create a copy of object
+          //   let requirement = { ...r };
 
-            // Get the budget item category id
-            const bic_id = requirement.budget_item_category.id;
+          //   // Get the budget item category id
+          //   const bic_id = requirement.budget_item_category.id;
 
-            // Create a key with empty array if line item budget key not yet exist
-            if (!(frObj[bic_id])) {
-              frObj[bic_id] = [];
-              budgetItemCategoryList.push(requirement.budget_item_category);
-            }
+          //   // Create a key with empty array if line item budget key not yet exist
+          //   if (!(frObj[bic_id])) {
+          //     frObj[bic_id] = [];
+          //     budgetItemCategoryList.push(requirement.budget_item_category);
+          //   }
 
-            // Remove the budget_item_category in object
-            delete requirement.budget_item_category;
+          //   // Remove the budget_item_category in object
+          //   delete requirement.budget_item_category;
 
-            // Push the object according to key
-            frObj[bic_id].push(requirement);
-          });
+          //   // Push the object according to key
+          //   frObj[bic_id].push(requirement);
+          // });
 
+          // let financialRequirementRows = '';
+          // let overallAmount = 0;
+
+          // // Read the object for rendering in the DOM
+          // Object.keys(frObj).forEach(key => {
+
+          //   // Create the line item budget row
+          //   financialRequirementRows += `
+          //     <tr style="background-color: #f6f6f6">
+          //       <td 
+          //         class="font-weight-bold"
+          //         colspan="5"
+          //       >${budgetItemCategoryList.find(x => x.id == key).name}</td>
+          //     </tr>
+          //   `;
+
+          //   // Create the budget item rows
+          //   frObj[key].forEach(r => {
+          //     const { budget_item, particulars, quantity, estimated_cost } = r;
+          //     const totalAmount = quantity * estimated_cost;
+
+          //     overallAmount += totalAmount;
+
+          //     financialRequirementRows += `
+          //       <tr>
+          //         <td>${budget_item}</td>
+          //         <td>${particulars}</td>
+          //         <td class="text-right">${quantity}</td>
+          //         <td class="text-right">${formatToPeso(estimated_cost)}</td>
+          //         <td class="text-right">${formatToPeso(totalAmount)}</td>
+          //       </tr>
+          //     `
+          //   });
+          // });
+
+          // financialRequirementRows += `
+          //   <tr class="font-weight-bold">
+          //     <td colspan="4" class="text-right">Overall Amount</td>
+          //     <td class="text-right">${formatToPeso(overallAmount)}</td>
+          //   </tr>
+          // `;
+
+          // return financialRequirementRows;
+          
           let financialRequirementRows = '';
           let overallAmount = 0;
 
           // Read the object for rendering in the DOM
-          Object.keys(frObj).forEach(key => {
+          fr.forEach(category => {
 
             // Create the line item budget row
             financialRequirementRows += `
@@ -290,12 +332,12 @@ const ProjectDetails = (() => {
                 <td 
                   class="font-weight-bold"
                   colspan="5"
-                >${budgetItemCategoryList.find(x => x.id == key).name}</td>
+                >${ category.name }</td>
               </tr>
             `;
 
             // Create the budget item rows
-            frObj[key].forEach(r => {
+            category.items.forEach(r => {
               const { budget_item, particulars, quantity, estimated_cost } = r;
               const totalAmount = quantity * estimated_cost;
 
@@ -303,11 +345,11 @@ const ProjectDetails = (() => {
 
               financialRequirementRows += `
                 <tr>
-                  <td>${budget_item}</td>
-                  <td>${particulars}</td>
-                  <td class="text-right">${quantity}</td>
-                  <td class="text-right">${formatToPeso(estimated_cost)}</td>
-                  <td class="text-right">${formatToPeso(totalAmount)}</td>
+                  <td>${ budget_item }</td>
+                  <td>${ particulars }</td>
+                  <td class="text-right">${ quantity }</td>
+                  <td class="text-right">${ formatToPeso(estimated_cost) }</td>
+                  <td class="text-right">${ formatToPeso(totalAmount) }</td>
                 </tr>
               `
             });
@@ -316,7 +358,7 @@ const ProjectDetails = (() => {
           financialRequirementRows += `
             <tr class="font-weight-bold">
               <td colspan="4" class="text-right">Overall Amount</td>
-              <td class="text-right">${formatToPeso(overallAmount)}</td>
+              <td class="text-right">${ formatToPeso(overallAmount) }</td>
             </tr>
           `;
 

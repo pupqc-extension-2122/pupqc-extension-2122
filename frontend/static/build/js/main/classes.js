@@ -355,7 +355,7 @@ class ProjectTeamForm {
 		} else console.error('No data has been fetched');
 	}
 
-	getTeamMembers = () => [...this.projectTeam].map(x => x = {team_member: x.team_member});
+	getTeamMembers = () => [...this.projectTeam].map(x => x.team_member);
 }
 
 
@@ -691,7 +691,7 @@ class TargetGroupsForm {
 		} else console.error('No data has been fetched');
 	}
 
-	getTargetGroups = () => [...this.targetGroups].map(x => x = {name: x.target_group});
+	getTargetGroups = () => [...this.targetGroups].map(x => x.target_group);
 }
 
 
@@ -1472,26 +1472,49 @@ class FinancialRequirementsForm {
 		});
 	}
 
-	getFinancialRequirements() {
-		let requirements = [];
-		this.requirements.forEach(r => {
+	// getFinancialRequirements() {
+	// 	let requirements = [];
+	// 	this.requirements.forEach(r => {
 
-			// Create a copy of requirement
-			// This prevent the modification of the original object
-			let requirement = { ...r };
+	// 		// Create a copy of requirement
+	// 		// This prevent the modification of the original object
+	// 		let requirement = { ...r };
 
-			// Delete the row_id key
-			delete requirement.row_id;
+	// 		// Delete the row_id key
+	// 		delete requirement.row_id;
 
-			// Push the requirement to the requirements
-			requirements.push(requirement);
-		});
+	// 		// Push the requirement to the requirements
+	// 		requirements.push(requirement);
+	// 	});
 
-		return {
-			requirements: requirements,
-			overallAmount: this.#getOverallAmount()
-		};
-	}
+	// 	return {
+	// 		requirements: requirements,
+	// 		overallAmount: this.#getOverallAmount()
+	// 	};
+	// }
+
+  getFinancialRequirements() {
+    let requirements = [];
+    this.requirements.forEach(r => {
+      const category = this.lineItemBudgetList.find(x => x.id == r.line_item_budget_id);
+      const r_category = requirements.find(x => x.id == category.id);
+      if (!r_category) {
+        requirements.push({
+          id: category.id,
+          name: category.name,
+          items: []
+        });
+      }
+      let item = {...r};
+      delete item.row_id;
+      delete item.line_item_budget_id;
+      requirements.find(x => x.id == category.id).items.push(item);
+    });
+    return {
+      requirements: requirements,
+      overallAmount: this.#getOverallAmount()
+    };
+  }
 }
 
 
