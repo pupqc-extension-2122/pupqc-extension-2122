@@ -1,6 +1,23 @@
-const { Partners, Memos, Sequelize } = require('../sequelize/models')
+const datatables = require('sequelize-datatables')
+const { Partners, Memos } = require('../sequelize/models')
 
-exports.createMemo = async (req, res) => {
+exports.datatablePartners = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Chief')) {
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+    }
+    
+    let data = await datatables(Partners, req.query, {})
+
+    res.send(data)
+
+  } catch (err) {
+    res.send(err)
+  }
+}
+
+exports.createPartner = async (req, res) => {
   try {
 
     if (!req.auth.roles.includes('Chief')) {
