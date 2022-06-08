@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Users, { foreignKey: 'created_by', as: 'extensionist' })
-      this.belongsTo(models.Memos, { foreignKey: 'memo_id', as: 'memo' })
       this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
+      this.hasMany(models.Financial_Requirements, {foreignKey: 'project_id', as: 'financial_requirements'})
       this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
-      this.belongsToMany(models.Partners, { through: models.Project_Partners })
+      this.hasMany(models.Project_Partners, {foreignKey: 'project_id', as: 'project_partners'})
+      this.belongsToMany(models.Partners, { through: models.Project_Partners, as: 'partners' })
+      this.belongsToMany(models.Memos, {through: models.Project_Partners, as: 'memos'})
     }
   }
   Projects.init({
@@ -25,29 +27,25 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
     },
-    memo_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
     title: {
       type: DataTypes.STRING,
       allowNull: false
     },
     target_groups: {
       type: DataTypes.STRING,
-      set: function (val) {
+      set (val) {
         this.setDataValue('target_groups', val.join(';'))
       },
-      get: function () {
+      get () {
         return this.getDataValue('team_members').split(';')
       }
     },
     team_members: {
       type: DataTypes.STRING,
-      set: function () {
+      set (val) {
         this.setDataValue('team_members', val.join(';'))
       },
-      get: function () {
+      get () {
         return this.getDataValue('team_members').split(';')
       }
     },
@@ -61,6 +59,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.STRING,
+      allowNull: false
+    },
+    impact_statement: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    summary: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
     created_by: {

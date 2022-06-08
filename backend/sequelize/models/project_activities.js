@@ -31,7 +31,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     outcomes: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      set(val){
+        this.setDataValue('outcomes', val.join(';'))
+      },
+      get(){
+        return this.getDataValue('outcomes').split(';')
+      }
     },
     start_date: {
       type: DataTypes.DATEONLY,

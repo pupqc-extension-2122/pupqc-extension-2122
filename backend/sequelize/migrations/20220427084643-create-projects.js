@@ -7,15 +7,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-      memo_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: {
-            tableName: 'Memos',
-          },
-          key: 'id'
-        }
-      },
       title: {
         type: Sequelize.STRING,
         allowNull: false
@@ -32,6 +23,14 @@ module.exports = {
       },
       end_date: {
         type: Sequelize.DATEONLY,
+        allowNull: false
+      },
+      impact_statement: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      summary: {
+        type: Sequelize.TEXT,
         allowNull: false
       },
       status: {

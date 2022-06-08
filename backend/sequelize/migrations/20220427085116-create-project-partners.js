@@ -25,6 +25,15 @@ module.exports = {
           key: 'id'
         }
       },
+      memo_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: {
+            tableName: 'Memos'
+          },
+          key: 'id'
+        }
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

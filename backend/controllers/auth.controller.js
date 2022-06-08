@@ -80,6 +80,8 @@ exports.login = async (req, res) => {
 
 exports.logout = (req, res) => {
   res.cookie('token', null, { expires: new Date() })
+  res.cookie('user', null)
+  res.cookie('roles', null)
   res.send({
     error: false,
     message: 'You are now logged out.'
