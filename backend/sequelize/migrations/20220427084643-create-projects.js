@@ -33,6 +33,14 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
+      financial_requirements: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      evaluation_plans: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       status: {
         type: Sequelize.STRING,
         allowNull: false

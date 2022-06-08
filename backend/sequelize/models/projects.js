@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.Users, { foreignKey: 'created_by', as: 'extensionist' })
       this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
-      this.hasMany(models.Financial_Requirements, {foreignKey: 'project_id', as: 'financial_requirements'})
-      this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
+      // this.hasMany(models.Financial_Requirements, {foreignKey: 'project_id', as: 'financial_requirements'})
+      // this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
       this.hasMany(models.Project_Partners, {foreignKey: 'project_id', as: 'project_partners'})
       this.belongsToMany(models.Partners, { through: models.Project_Partners, as: 'partners' })
       this.belongsToMany(models.Memos, {through: models.Project_Partners, as: 'memos'})
@@ -68,6 +68,28 @@ module.exports = (sequelize, DataTypes) => {
     summary: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    financial_requirements: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      set(val){
+        let data = JSON.stringify(val)
+        this.setDataValue('financial_requirements', data)
+      },
+      get(){
+        return JSON.parse(this.getDataValue('financial_requirements'))
+      }
+    },
+    evaluation_plans: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      set(val){
+        let data = JSON.stringify(val)
+        this.setDataValue('evaluation_plans', data)
+      },
+      get(){
+        return JSON.parse(this.getDataValue('evaluation_plans'))
+      }
     },
     created_by: {
       type: DataTypes.UUID,

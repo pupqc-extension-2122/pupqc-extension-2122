@@ -1,5 +1,5 @@
 const {
-  Evaluation_Plans, Financial_Requirements, Memos, Projects, Project_Partners, Partners
+  Memos, Projects, Project_Partners, Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
 
@@ -60,14 +60,6 @@ exports.createProject = async (req, res) => {
     }, {
       include: [
         {
-          model: Financial_Requirements,
-          as: 'financial_requirements'
-        },
-        {
-          model: Evaluation_Plans,
-          as: 'evaluation_plans'
-        },
-        {
           model: Project_Partners,
           as: 'project_partners'
         }
@@ -116,9 +108,13 @@ exports.viewProposal = async (req, res) => {
   let proposal = await Projects.findOne({
     where: { id },
     include: [
-      'financial_requirements',
-      'evaluation_plans',
-      'partners'
+      {
+        model: Partners,
+        as: 'partners',
+        through: {
+          attributes: []
+        }
+      }
     ]
 
   })
