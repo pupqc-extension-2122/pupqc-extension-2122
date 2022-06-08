@@ -37,10 +37,7 @@ exports.dataTableMemo = async (req, res) => {
 
     let data = await datatables(Memos, req.query, { where: { partner_id } })
 
-    res.send({
-      error: false,
-      data
-    })
+    res.send(data)
 
   } catch (err) {
     console.log(err)
