@@ -16,6 +16,7 @@ const ProjectDetails = (() => {
   const body = $('#projectDetails_body');
   const activitiesDT = $('#activities_dt');
   const options = '#projectDetails_options';
+  const user_roles = JSON.parse(getCookie('roles'));
   let initialized = 0;
   let id;
 
@@ -369,22 +370,6 @@ const ProjectDetails = (() => {
     // Get the status
     const { status } = data;
 
-    const optionCategories = [
-      {
-        id: 'Project Activities',
-        header: `<div class="dropdown-header">Project Activities</div>`
-      }, {
-        id: 'Project Details',
-        header: `<div class="dropdown-header">Project Details</div>`
-      }, {
-        id: 'For Submission',
-        header: `<div class="dropdown-header">For Submission</div>`
-      }, {
-        id: 'Others',
-        header: `<div class="dropdown-header">Others</div>`
-      }
-    ]
-
     const optionsDict = [
       {
         id: 'Add project activity',
@@ -478,123 +463,170 @@ const ProjectDetails = (() => {
             <span>Cancel the proposal</span>
           </button>
         `
+      }, {
+        id: 'Approve the proposal',
+        category: 'For Submission',
+        template: `
+          <button 
+            type="button"
+            class="btn btn-outline-success btn-block text-left" 
+            onclick="ProjectDetails.triggerOption('approveTheProposal')"
+          >
+            <i class="fas fa-check fa-fw mr-1"></i>
+            <span>Approve the proposal</span>
+          </button>
+        `
+      }, {
+        id: 'Reject the proposal',
+        category: 'For Submission',
+        template: `
+          <button 
+            type="button"
+            class="btn btn-outline-danger btn-block text-left" 
+            onclick="ProjectDetails.triggerOption('rejectTheProposal')"
+          >
+            <i class="fas fa-times fa-fw mr-1"></i>
+            <span>Reject the proposal</span>
+          </button>
+        `
+      }, {
+        id: 'Approve the project',
+        category: 'For Submission',
+        template: `
+          <button 
+            type="button"
+            class="btn btn-outline-success btn-block text-left" 
+            onclick="ProjectDetails.triggerOption('approveTheProject')"
+          >
+            <i class="fas fa-check fa-fw mr-1"></i>
+            <span>Approve the project</span>
+          </button>
+        `
       }
     ];
 
     const getOptionList = (optionArr = []) => {
-      let optionList = '';
-      let selectedOptions = {};
-      optionArr.forEach(o => {
-        const { id, category } = optionsDict.find(od => od.id == o);
-        if (!selectedOptions.hasOwnProperty(category)) selectedOptions[category] = [];
-        selectedOptions[category].push(id);
-      });
-      const entries = Object.entries(selectedOptions);
-      entries.forEach((s, i) => {
-        const [key, optionsArr] = s;
-        optionList += optionCategories.find(oc => oc.id == key).header;
-        optionsArr.forEach(o => optionList += optionsDict.find(od => od.id == o).template);
-        if (i < entries.length - 1) optionList += `<div class="dropdown-divider"></div>`
-      });
-      return optionList;
-    }
-
-    const optionsTemplate = {
-      'Created': () => {
-        if (body.length) {
-          setHTMLContent(options, getOptionList([
-            'View activities',
-            'Edit project details',
-            'Submit for approval'
-          ]));
-        }
-        if (activitiesDT.length) {
-          setHTMLContent(options, getOptionList([
-            'Add project activity',
-            'View project details',
-            'Edit project details',
-            'Submit for approval'
-          ]));
-        }
-      },
-      'For review': () => {
-        setHTMLContent(options, getOptionList([
-          'View activities',
-        ]));
-      },
-      'For evaluation': () => {
-        if (body.length) {
-          setHTMLContent(options, getOptionList([
-            'View activities',
-            'Submit evaluation grade',
-          ]));
-        }
-        if (activitiesDT.length) {
-          setHTMLContent(options, getOptionList([
-            'View project details',
-            'Submit evaluation grade',
-          ]));
-        }
-      },
-      'Pending': () => {
-        if (body.length) {
-          setHTMLContent(options, getOptionList([
-            'View activities',
-            'Cancel the proposal'
-          ]));
-        }
-        if (activitiesDT.length) {
-          setHTMLContent(options, getOptionList([
-            'View project details',
-            'Cancel the proposal'
-          ]));
-        }
-      },
-      'Canceled': () => {
-        if (body.length) {
-          setHTMLContent(options, getOptionList([
-            'View activities',
-          ]));
-        }
-        if (activitiesDT.length) {
-          setHTMLContent(options, getOptionList([
-            'View project details',
-          ]));
-        }
+      if(optionArr.length) {
+        let optionList = '';
+        let selectedOptions = {};
+        optionArr.forEach(o => {
+          const { id, category } = optionsDict.find(od => od.id == o);
+          if (!selectedOptions.hasOwnProperty(category)) selectedOptions[category] = [];
+          selectedOptions[category].push(id);
+        });
+        const entries = Object.entries(selectedOptions);
+        entries.forEach((s, i) => {
+          const [key, optionsArr] = s;
+          optionList += `<div class="dropdown-header">${ key }</div>`;
+          optionsArr.forEach(o => optionList += optionsDict.find(od => od.id == o).template);
+          if (i < entries.length - 1) optionList += `<div class="dropdown-divider"></div>`
+        });
+        return optionList;
       }
     }
 
+    let optionsTemplate;
+    let optionList = [];
+
+    if (body.length) {
+      optionList.push('View activities');
+    } else if (activitiesDT.length) {
+      optionList.push('View project details');
+    }
+
+    if (user_roles.includes('Extensionist')) {
+      optionsTemplate = {
+        'Created': () => {
+          if (body.length) {
+            optionList.push('Edit project details');
+            optionList.push('Submit for approval');
+          }
+          if (activitiesDT.length) {
+            optionList.unshift('Add project activity');
+            optionList.push('Edit project details');
+            optionList.push('Submit for approval');
+          }
+          console.log(optionList);
+        },
+        'For evaluation': () => {
+          optionList.push('Submit evaluation grade');
+        },
+        'Pending': () => {
+          optionList.push('Cancel the proposal');
+        },
+      }
+      if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
+    }
+
+    if (user_roles.includes('Chief')) {
+      optionsTemplate = {
+        'For review': () => {
+          optionList.push('Approve the proposal');
+          optionList.push('Reject the proposal');
+        },
+        'Pending': () => {
+          optionList.push('Approve the project');
+        }
+      }
+      if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
+    }
+
+
     // Set the options based on status
-    optionsTemplate[status] !== "undefined"
-      ? optionsTemplate[status]()
-      : console.error('No key with the same status for optionsTemplate');
+    setHTMLContent(options, getOptionList(optionList));
   }
 
   const triggerOption = (option) => {
-    const optionFunc = {
-      'submitForApproval': () => {
-        data.status = 'For evaluation';
-        setOptions();
-        loadHeaderDetails();
-        // loadDetails();
-      },
-      'submitEvaluationGrade': () => {
-        data.status = 'Pending';
-        setOptions();
-        loadHeaderDetails();
-        // loadDetails();
-      },
-      'cancelTheProposal': () => {
-        data.status = 'Canceled';
-        setOptions();
-        loadHeaderDetails();
-        // loadDetails();
+    let optionFunc;
+    
+    if (user_roles.includes('Extensionist')) {
+      optionFunc = {
+        'submitForApproval': () => {
+          data.status = 'For review';
+          setOptions();
+          loadHeaderDetails();
+          // loadDetails();
+        },
+        'submitEvaluationGrade': () => {
+          data.status = 'Pending';
+          setOptions();
+          loadHeaderDetails();
+          // loadDetails();
+        },
+        'cancelTheProposal': () => {
+          data.status = 'Canceled';
+          setOptions();
+          loadHeaderDetails();
+          // loadDetails();
+        }
       }
+      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
     }
 
-    optionFunc[option] !== "undefined"
-      ? optionFunc[option]()
-      : console.error('No key with the same status for optionsFunc');
+    if (user_roles.includes('Extensionist')) {
+      optionFunc = {
+        'approveTheProposal': () => {
+          data.status = 'For evaluation';
+          setOptions();
+          loadHeaderDetails();
+          // loadDetails();
+        },
+        'rejectTheProposal': () => {
+          data.status = 'Created';
+          setOptions();
+          loadHeaderDetails();
+          // loadDetails();
+        },
+        'approveTheProject': () => {
+          data.status = 'Approved';
+          setOptions();
+          loadHeaderDetails();
+          // loadDetails();
+        }
+      }
+      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
+    }
+
   };
 
   const removeLoaders = () => {
