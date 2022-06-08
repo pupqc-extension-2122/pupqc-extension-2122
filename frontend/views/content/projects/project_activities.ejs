@@ -132,35 +132,7 @@
           </div>
         </div>
 
-        <!-- Comments -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Comments</div>
-          </div>
-          <div class="card-body" id="projectComments_grp">
-
-            <div class="d-flex mb-3" id="projectComment_addComment_grp">
-              <div class="user-block mr-3">
-                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
-              </div>
-              <div class="flex-grow-1">
-                <textarea class="form-control" name="" id="" cols="30" rows="3"
-                  placeholder="Add a comment here ..." data-autoresize></textarea>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3" id="projectComment_loader">
-              <div class="user-block mr-3">
-                <div class="skeleton avatar"></div>
-              </div>
-              <div class="flex-grow-1">
-                <div class="skeleton text" style="width: 8rem"></div>
-                <div class="skeleton text" style="width: 5rem"></div>
-                <div class="skeleton p mt-2"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <%- include('../../partials/projects/comments') %>
 
       </div>
 
@@ -265,6 +237,244 @@
   </div>
 </section>
 
+
+<%# *** Modals *** %>
+
+<!-- Project Activity Details Modal -->
+<div class="modal fade" id="projectActivityDetails_modal">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fas fa-list fa-fw mr-1"></i>
+          <span>Project Activity Details</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Activity Details Loader -->
+        <div id="projectActivityDetails_loader">
+          <div class="skeleton h4" style="width: 50%"></div>
+          <div class="skeleton h4" style="width: 30%"></div>
+          <div class="skeleton text mt-3" style="width: 25%"></div>
+          <div class="skeleton p"></div>
+          <div class="p-3 my-5"></div>
+        </div>
+
+        <!-- Activity Details -->
+        <div id="projectActivityDetails" style="display: none;">
+          <h4 id="projectActivityDetails_title">Health Awareness and Office Productivity Tools</h4>
+
+          <div class="row">
+
+            <div class="col-12">
+              <hr class="my-2">
+            </div>
+
+            <!-- Project Team -->
+            <dt class="col-md-2">
+              <div class="mx-2">Topics</div>
+            </dt>
+            <dd class="col-md-10">
+              <div class="mx-2" id="projectActivityDetails_topics"></div>
+            </dd>
+
+            <div class="col-12">
+              <hr class="my-2">
+            </div>
+
+            <!-- Project Team -->
+            <dt class="col-md-2">
+              <div class="mx-2">Outcomes</div>
+            </dt>
+            <dd class="col-md-10">
+              <div class="mx-2" id="projectActivityDetails_outcomes"></div>
+            </dd>
+
+            <div class="col-12">
+              <hr class="my-2">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Project Activity Modal -->
+<div class="modal fade" id="addProjectActivity_modal">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content" id="addProjectActivity_form">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fas fa-list fa-fw mr-1"></i>
+          <span>Add Project Activity</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label for="addProjectActivity_title">
+            <span>Activity Title</span>
+            <span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="addProjectActivity_title" name="title"
+            placeholder="Type the title of activity here ..." />
+        </div>
+
+        <div class="form-group" id="addProjectActivity_topics_grp">
+          <label for="addProjectActivity_title">
+            <span>Topics</span>
+            <span class="text-danger">*</span>
+          </label>
+
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-sm btn-success" id="addTopic_btn">
+              <i class="fas fa-plus mr-1"></i>
+              <span>Add topic</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-warning" id="clearTopicEmptyFields_btn">
+              <i class="fas fa-eraser mr-1"></i>
+              <span>Remove empty fields</span>
+            </button>
+          </div>
+        </div>
+
+
+        <div class="form-group" id="addProjectActivity_outcomes_grp">
+          <label for="addProjectActivity_title">
+            <span>Outcomes</span>
+            <span class="text-danger">*</span>
+          </label>
+
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-sm btn-success" id="addOutcome_btn">
+              <i class="fas fa-plus mr-1"></i>
+              <span>Add outcome statement</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-warning" id="clearOutcomeEmptyFields_btn">
+              <i class="fas fa-eraser mr-1"></i>
+              <span>Remove empty fields</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-danger" id="confirmRemoveLineItemBudget_btn">
+          <i class="fas fa-check mr-1"></i>
+          <span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Project Activity Modal -->
+<div class="modal fade" id="editProjectActivity_modal">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content" id="editProjectActivity_form">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fas fa-list fa-fw mr-1"></i>
+          <span>Edit Project Activity</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Form groups loader -->
+        <div id="editProjectActivity_formGroups_loader">
+          <div class="form-group">
+            <div class="skeleton text" style="width: 8rem"></div>
+            <div class="skeleton input"></div>
+          </div>
+          <div class="form-group">
+            <div class="skeleton text" style="width: 8rem"></div>
+            <div class="skeleton input"></div>
+            <div class="skeleton input"></div>
+          </div>
+          <div class="form-group">
+            <div class="p-3 my-5"></div>
+          </div>
+        </div>
+
+        <!-- Form groups -->
+        <div id="editProjectActivity_formGroups" style="display: none">
+
+          <!-- Title -->
+          <div class="form-group">
+            <label for="editProjectActivity_title">
+              <span>Activity Title</span>
+              <span class="text-danger">*</span>
+            </label>
+            <input type="text" class="form-control" id="editProjectActivity_title" name="title"
+              placeholder="Type the title of activity here ..." />
+          </div>
+
+          <!-- Topics Form Group -->
+          <div class="form-group" id="editProjectActivity_topics_grp">
+            <label>
+              <span>Topics</span>
+              <span class="text-danger">*</span>
+            </label>
+
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-sm btn-success" id="editTopic_btn">
+                <i class="fas fa-plus mr-1"></i>
+                <span>Add topic</span>
+              </button>
+              <button type="button" class="btn btn-sm btn-warning" id="clearEditTopicEmptyFields_btn">
+                <i class="fas fa-eraser mr-1"></i>
+                <span>Remove empty fields</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Outcomes Form Group -->
+          <div class="form-group" id="editProjectActivity_outcomes_grp">
+            <label>
+              <span>Outcomes</span>
+              <span class="text-danger">*</span>
+            </label>
+
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-sm btn-success" id="editOutcome_btn">
+                <i class="fas fa-plus mr-1"></i>
+                <span>Add outcome statement</span>
+              </button>
+              <button type="button" class="btn btn-sm btn-warning" id="clearEditOutcomeEmptyFields_btn">
+                <i class="fas fa-eraser mr-1"></i>
+                <span>Remove empty fields</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-danger" id="editProjectActivity_form_saveBtn">
+          <i class="fas fa-check mr-1"></i>
+          <span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
 
 <%# ***** Scripts ***** %>

@@ -461,6 +461,20 @@
         { id: 4, cooperating_agency: 'cooperating_agencies 4' },
         { id: 5, cooperating_agency: 'cooperating_agencies 5' },
       ],
+      // financialRequirements: [
+      //   {
+      //     id: 1,
+      //     name: 'Operation Cost',
+      //     items: [
+      //       {
+      //         budget_item: "test",
+      //         particulars: "test",
+      //         quantity: 10,
+      //         estimated_cost: 20
+      //       },
+      //     ]
+      //   },
+      // ],
       financial_requirements: [
         {
           line_item_budget_id: 1,

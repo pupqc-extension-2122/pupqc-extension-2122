@@ -354,7 +354,7 @@ const ProjectDetails = (() => {
         template: `
           <button
             class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${ BASE_URL_WEB }/p/project-evaluation/${ id }/activities')"
+            onclick="location.replace('${ BASE_URL_WEB }/p/evaluation/${ id }/activities')"
           >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View activities</span>
@@ -366,7 +366,7 @@ const ProjectDetails = (() => {
         template: `
           <button
             class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${ BASE_URL_WEB }/p/project-evaluation/${ id }')"
+            onclick="location.replace('${ BASE_URL_WEB }/p/evaluation/${ id }')"
           >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View project details</span>

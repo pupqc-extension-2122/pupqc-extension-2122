@@ -31,7 +31,6 @@ const ProjectDetails = (() => {
   }
 
   const getData = async () => {
-
     // ! Simulation
     await new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -140,6 +139,8 @@ const ProjectDetails = (() => {
         resolve();
       }, 1250);
     });
+
+    return data;
   }
 
   const loadHeaderDetails = () => {
@@ -364,7 +365,7 @@ const ProjectDetails = (() => {
           <div
             role="button"
             class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${BASE_URL_WEB}/p/project-proposals/${id}/activities')"
+            onclick="location.replace('${BASE_URL_WEB}/p/proposals/${id}/activities')"
           >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View activities</span>
@@ -377,7 +378,7 @@ const ProjectDetails = (() => {
           <div
             role="button"
             class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${BASE_URL_WEB}/p/project-proposals/${id}')"
+            onclick="location.replace('${BASE_URL_WEB}/p/proposals/${id}')"
           >
             <i class="fas fa-list text-primary fa-fw mr-1"></i>
             <span>View project details</span>
@@ -388,8 +389,9 @@ const ProjectDetails = (() => {
         category: 'Project Details',
         template: `
           <div
+            role="button"
             class="btn btn-negative btn-block text-left" 
-            href="${BASE_URL_WEB}/p/edit-proposal/${id}"
+            onclick="location.assign('${BASE_URL_WEB}/p/edit-proposal/${id}')"
           >
             <i class="fas fa-edit text-info fa-fw mr-1"></i>
             <span>Edit details</span>
@@ -568,8 +570,6 @@ const ProjectDetails = (() => {
    * * Public Functions
    */
 
-  const getId = () => id;
-
   const loadDetails = async () => {
     await getData();
     loadHeaderDetails();
@@ -596,9 +596,9 @@ const ProjectDetails = (() => {
 
   return {
     init,
-    getId,
     loadDetails,
-    triggerOption
+    triggerOption,
+    getData,
   }
 })();
 

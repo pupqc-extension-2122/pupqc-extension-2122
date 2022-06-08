@@ -4,7 +4,109 @@
  * ==============================================
  */
 
+
 'use strict';
+
+
+const AddProjectActivity = (() => {
+
+  /**
+   * * Local Variables
+   */
+  const addActivityModal = $('#addProjectActivity_modal');
+  let project_details;
+  let validator;
+  let PA_form;
+  let initiated = 0;
+
+  /**
+   * * Private Functions
+   */
+
+  const getProjectDetails = async () => {
+    project_details = await ProjectDetails.getData();
+  }
+
+  const initProjectActivityForm = () => {
+    PA_form = new ProjectActivityForm({
+      topicsForm: {
+        formGroup: '#addProjectActivity_topics_grp',
+        buttons: {
+          add: '#addTopic_btn',
+          clear: '#clearTopicEmptyFields_btn'
+        }
+      },
+      outcomesForm: {
+        formGroup: '#addProjectActivity_outcomes_grp',
+        buttons: {
+          add: '#addOutcome_btn',
+          clear: '#clearOutcomeEmptyFields_btn'
+        }
+      }
+    });
+
+    // On modal hide
+    addActivityModal.on('hidden.bs.modal', () => {
+      PA_form.resetActivityForm();
+      validator.resetForm();
+    });
+  }
+
+  const handleForm = () => {
+    validator = $app('#addProjectActivity_form').handleForm({
+      validators: {
+        title: {
+          required: 'The title of the activity is required.'
+        }
+      },
+      onSubmit: () => onFormSubmit()
+    });
+  }
+  
+  const onFormSubmit = () => {
+    const data = {
+      title: 'Test',
+      ...PA_form.getActivityData()
+    }
+
+    console.log(data);
+
+    toastr.success('Submitted successfully!');
+    
+    addActivityModal.modal('hide');
+  }
+
+  /**
+   * * Init
+   * o--/[=================>
+   */
+
+  const init = async () => {
+    if(!initiated) {
+      initiated = 1;
+      await getProjectDetails();
+      if(project_details.status == 'Created') {
+        handleForm();
+        initProjectActivityForm();
+      } else {
+
+        // Remove Modals from the DOM
+        $('#addProjectActivity_modal').remove();
+        $('#editProjectActivity_modal').remove();
+      }
+    }
+  }
+  
+  /**
+   * * Return Public Functions
+   * o--/[=================>
+   */
+
+  return {
+    init,
+  }
+})();
+
 
 const ProjectActivities = (() => {
 
@@ -113,7 +215,7 @@ const ProjectActivities = (() => {
   const initDataTable = async () => {
     await new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (ProjectDetails.getId()) {
+        if (1) {
           dt = dtElem.DataTable({
             data: activities,
             responsive: true,
@@ -278,4 +380,6 @@ const ProjectActivities = (() => {
   }
 })();
 
+
+AddProjectActivity.init();
 ProjectActivities.init();

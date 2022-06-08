@@ -126,10 +126,10 @@ const ProjectEvaluation = (() => {
                 
                   <div class="dropdown-menu dropdown-menu-right">
                     <div class="dropdown-header">Options</div>
-                    <a href="${ BASE_URL_WEB }/p/project-evaluation/${ data.id }" class="dropdown-item">
+                    <a href="${ BASE_URL_WEB }/p/evaluation/${ data.id }" class="dropdown-item">
                         <span>View details</span>
                     </a>
-                    <a href="${ BASE_URL_WEB }/p/project-evaluation/${ data.id }/activities" class="dropdown-item">
+                    <a href="${ BASE_URL_WEB }/p/evaluation/${ data.id }/activities" class="dropdown-item">
                         <span>Manage activities</span>
                     </a>
                 </div>
