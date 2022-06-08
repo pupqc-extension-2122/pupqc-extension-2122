@@ -29,8 +29,9 @@
 <div class="content-header" style="display: none" id="contentHeader">
   <div class="container-fluid">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">Home</a></li>
-      <li class="breadcrumb-item active">Project Evaluation</li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p/proposals">Project Proposals</a></li>
+      <li class="breadcrumb-item active">Project Activities</li>
     </ol>
     <div class="d-flex align-items-center justify-content-between">
       <div>
@@ -38,11 +39,11 @@
         <!-- <div class="text-secondary">Evaluate projects here</div> -->
       </div>
       <div>
-        <button type="button" class="btn btn-default float-right" id="daterange-btn">
+        <!-- <button type="button" class="btn btn-default float-right" id="daterange-btn">
           <i class="far fa-calendar-alt mr-1"></i>
           <span>Date Range Picker</span>
           <i class="fas fa-caret-down ml-1"></i>
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -284,5 +285,5 @@
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
-<script src="<%=BASE_URL%>/js/modules/monitoring/projectEvaluationDetails.js"></script>
-<script src="<%=BASE_URL%>/js/modules/monitoring/projectActivities.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/projectDetails.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/projectActivities.js"></script>

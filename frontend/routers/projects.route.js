@@ -2,10 +2,10 @@ const router = require('express').Router();
 const jwtMiddleware = require('../../utils/jwtMiddleware');
 
 // Constants
-const PATH = 'content/monitoring/';
+const PATH = 'content/projects/';
 const RENDER_OPTION_DEFAULTS = {
-  active_topbar_tab: 'Monitoring',
-  sidebar: 'monitoring_sidebar',
+  active_topbar_tab: 'Projects',
+  sidebar: 'projects_sidebar',
 }
 
 
@@ -34,7 +34,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
 
 
 // Project Proposals
-router.get('/project-proposals', jwtMiddleware, (req, res) => {
+router.get('/proposals', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -68,7 +68,7 @@ router.get('/create-proposal', jwtMiddleware, (req, res) => {
 
 
 // Project Details
-router.get('/project-proposals/:project_id', jwtMiddleware, (req, res) => {
+router.get('/proposals/:project_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -85,7 +85,7 @@ router.get('/project-proposals/:project_id', jwtMiddleware, (req, res) => {
 
 
 // Project Activities
-router.get('/project-proposals/:project_id/activities', jwtMiddleware, (req, res) => {
+router.get('/proposals/:project_id/activities', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -120,7 +120,7 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, (req, res) => {
 
 
 // Project Monitoring
-router.get('/project-monitoring/', jwtMiddleware, (req, res) => {
+router.get('/monitoring/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -136,7 +136,7 @@ router.get('/project-monitoring/', jwtMiddleware, (req, res) => {
 });
 
 // Project Evaluation
-router.get('/project-evaluation/', jwtMiddleware, (req, res) => {
+router.get('/evaluation/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -152,7 +152,7 @@ router.get('/project-evaluation/', jwtMiddleware, (req, res) => {
 });
 
 // Project Evaluation Details
-router.get('/project-evaluation/:project_id', jwtMiddleware, (req, res) => {
+router.get('/evaluation/:project_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -168,7 +168,7 @@ router.get('/project-evaluation/:project_id', jwtMiddleware, (req, res) => {
 });
 
 // Project Activities
-router.get('/project-evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
+router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -184,7 +184,7 @@ router.get('/project-evaluation/:project_id/activities', jwtMiddleware, (req, re
 });
 
 // Project Monitoring Details
-router.get('/project-monitoring/:project_id', jwtMiddleware, (req, res) => {
+router.get('/monitoring/:project_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -201,7 +201,7 @@ router.get('/project-monitoring/:project_id', jwtMiddleware, (req, res) => {
 
 /* NOT YET FINISHED, NO EJS, JS, ETC.
 // Project Monitoring Activities
-router.get('/project-monitoring/:project_id/activities', jwtMiddleware, (req, res) => {
+router.get('/monitoring/:project_id/activities', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')

@@ -245,7 +245,7 @@ const PROJECT_EVALUATION_STATUS_STYLES = {
 		icon: 'fas fa-sync-alt',
 		theme: 'warning'
 	},
-  'Not yet started': {
+  'Not yet graded': {
 		icon: 'fas fa-file-circle-exclamation',
 		theme: 'info'
 	},
@@ -265,5 +265,4 @@ const PROJECT_MONITORING_STATUS_STYLES = {
     icon: 'fas fa-file-circle-exclamation',
     theme: 'info'
   },
-
 }

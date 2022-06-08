@@ -22,6 +22,7 @@ const ProjectEvaluation = (() => {
         // Sample Data
         data = [
           {
+            id: '1',
             title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
             target_groups: [
               { id: 1, name: "target group 1" },
@@ -38,6 +39,7 @@ const ProjectEvaluation = (() => {
             date_ended: '05/14/2022',
             status: 'Evaluated'
           }, {
+            id: '2',
             title: 'Health Awareness and Office Productivity Tools',
             target_groups: [
               { id: 1, name: "target group 1" },
@@ -48,6 +50,7 @@ const ProjectEvaluation = (() => {
             date_ended: '05/14/2022',
             status: 'In progress'
           },{
+            id: '3',
             title: 'Covid-19 & Vaccine Education Drive',
             target_groups: [
               { id: 1, name: "target group 1" },
@@ -56,7 +59,7 @@ const ProjectEvaluation = (() => {
             ],
             date_started: '05/13/2022',
             date_ended: '05/14/2022',
-            status: 'Not yet started'
+            status: 'Not yet graded'
           },
         ];
         resolve();

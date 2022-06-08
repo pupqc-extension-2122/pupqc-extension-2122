@@ -176,13 +176,13 @@ const ProjectProposals = (() => {
 									<div class="dropdown-header">Options</div>
 									<a 
 										class="dropdown-item"
-										href="${ BASE_URL_WEB }/p/project-proposals/${ data.id }" 
+										href="${ BASE_URL_WEB }/p/proposals/${ data.id }" 
 									>
 										<span>View details</span>
 									</a>
 									<a 
 										class="dropdown-item"
-										href="${ BASE_URL_WEB }/p/project-proposals/${ data.id }/activities" 
+										href="${ BASE_URL_WEB }/p/proposals/${ data.id }/activities" 
 									>
 										<span>Manage activities</span>
 									</a>

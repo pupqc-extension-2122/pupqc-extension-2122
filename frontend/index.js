@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 // Web Routes
 app.use(`/`, require('./routers/auth.route'));
 
-app.use(`/p/`, require('./routers/monitoring.route'));
+app.use(`/p/`, require('./routers/projects.route'));
 app.use(`/m/`, require('./routers/memo.route'));
 
 module.exports = app
