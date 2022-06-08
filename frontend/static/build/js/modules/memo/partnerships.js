@@ -79,7 +79,7 @@ const Partnerships = (() => {
                   
                     <div class="dropdown-menu dropdown-menu-right">
                       <div class="dropdown-header">Options</div>
-                      <a href="./view-partnership-details.html" class="dropdown-item">
+                      <a href="${ BASE_URL_WEB }/m/partners/${ data.id }" class="dropdown-item">
                           <span>View details</span>
                       </a>
                   </div>
