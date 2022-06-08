@@ -1,0 +1,362 @@
+<%# ***** Styles ***** %>
+
+<%# Select2 %>
+<link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+<%# Daterange Picker %>
+<link rel="stylesheet" href="../../plugins/daterangepicker/daterangepicker.css">
+<%# iCheck %>
+<link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<%# DataTables %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<%# summernote %>
+<link rel="stylesheet" href="../../plugins/summernote/summernote-bs4.min.css">
+<%# BS Stepper %>
+<link rel="stylesheet" href="../../plugins/bs-stepper/css/bs-stepper.min.css">
+<%# Placeholder Loading %>
+<link rel="stylesheet" href="../../plugins/placeholder-loading/dist/css/placeholder-loading.min.css">
+
+
+<%# ***** Body ***** %>
+
+<%# Content Header (Page header) %>
+<div class="content-header">
+        <div class="container-fluid">
+
+          <!-- Breadcrumb -->
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">MOA/MOU</a></li>
+            <li class="breadcrumb-item">List of Partners</li>
+            <li class="breadcrumb-item active">Grain Foundation for ...</li>
+          </ol>
+
+          <div class="d-sm-flex align-items-sm-center justify-content-between">
+
+            <!-- Header & Subtitle -->
+            <div class="flex-wrap mb-2 mb-md-0">
+              <h1 class="m-0">Partnership Details</h1>
+            </div>
+            <div>
+              <button type="button" class="btn btn-default" id="daterange-btn">
+                <i class="far fa-calendar-alt mr-1"></i>
+                <span>Filter by date</span>
+              </button>
+            </div>
+          </div>
+        </div>
+</div>
+
+<%# Main Content %>
+<section class="content">
+        <div class="container-fluid">
+
+          <div class="row">
+            <div class="col-md-9">
+              
+              <!-- Summary Card -->
+              <div class="card card-primary card-outline" id="partnershipDetailsCard">
+                <!-- <div class="card-header">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="card-title">Project Details</div>
+    
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-sm btn-default" data-card-widget="maximize">
+                        <i class="fas fa-expand"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div> -->
+    
+                <div class="card-body">
+                  <div>
+
+                    <!-- Partnership Name -->
+                    <div class="row">
+                      <div class="col-10">
+                        <h3>Grain Foundation for PWDs Inc.</h3>
+                      </div>
+                    </div>
+                    
+                    <!-- Address -->
+                    <div>21 Don Fabian St., Commonwealth, Quezon City</div>
+
+                    <!-- Organization -->
+                    <div>Polytechnic University of the Philippines, Quezon City Branch</div>
+
+                    <!-- Status -->
+                    <div class="mt-1">
+                      <div class="badge badge-subtle-success py-1 px-2">
+                        <i class="fas fa-check fa-fw mr-1"></i>
+                        <span>Active</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+              <!-- Datatable Card -->
+              <div class="card">
+    
+                <div class="card-header">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <h3 class="card-title">List of Documents</h3>
+                    <div class="card-tools">
+                      <button 
+                        type="button" 
+                        class="btn btn-sm btn-negative" 
+                        data-card-widget="collapse"
+                        data-toggle="tooltip"
+                        title="Collapse card"
+                      >
+                        <i class="fas fa-minus"></i>
+                      </button>
+                      <button 
+                        type="button" 
+                        class="btn btn-sm btn-negative" 
+                        data-card-widget="maximize"
+                        data-toggle="tooltip"
+                        title="Maximize/minimize card"
+                      >
+                        <i class="fas fa-expand"></i>
+                      </button>
+                      <button 
+                        type="button" 
+                        class="btn btn-sm btn-negative" 
+                        data-toggle="tooltip"
+                        title="Reload table"
+                      >
+                        <i class="fas fa-sync-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+    
+                <div class="card-body">
+    
+                  <table class="table table-hover w-100" id="documents_dt">
+                    <thead>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Date</th>
+                      <th>File Size</th>
+                      <th>Status</th>
+                      <th></th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="6" class="text-center">
+                          <div class="p-5 my-5">
+                            <div class="spinner-grow text-primary mb-2"></div>
+                            <div>Loading ... Please wait.</div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+    
+                </div>
+              </div>
+
+              <!-- Comments -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Comments</div>
+                </div>
+                <div class="card-body">
+                  
+                  <div class="d-flex mb-3">
+                    <div class="user-block mr-3">
+                      <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                    </div>
+                    <div class="flex-grow-1">
+                      <textarea 
+                        class="form-control" 
+                        name="" 
+                        id="" 
+                        cols="30" 
+                        rows="3" 
+                        placeholder="Add a comment here ..."
+                        data-autoresize
+                      ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="d-flex mb-3">
+                    <div class="user-block mr-3">
+                      <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                    </div>
+                    <div class="flex-grow-1">
+                      <a href="#" class="font-weight-bold text-black">Juan Dela Cruz</a>
+                      <div class="small text-muted">2 days ago</div>
+                      <div class="mt-2">
+                        <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque obcaecati ipsa distinctio, corporis cumque deserunt beatae nesciunt. Deleniti corporis ex odio perferendis illo quisquam tempore voluptates fugit blanditiis quaerat. Omnis?</div>
+                        <div class="mt-1">
+                          <div class="btn btn-light btn-sm py-0">Edit</div>
+                          <div class="btn btn-light btn-sm py-0">Delete</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-flex mb-3">
+                    <div class="user-block mr-3">
+                      <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
+                    </div>
+                    <div class="flex-grow-1">
+                      <a href="#" class="font-weight-bold text-black">Juan Dela Cruz</a>
+                      <div class="small text-muted">2 days ago</div>
+                      <div class="mt-2">
+                        <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque obcaecati ipsa distinctio, corporis cumque deserunt beatae nesciunt. Deleniti corporis ex odio perferendis illo quisquam tempore voluptates fugit blanditiis quaerat. Omnis?</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            
+            <div class="col-md-3">
+              
+              <!-- Options -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="card-title">Options</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-2">
+                      <div class="dropdown-header">Partner details</div>
+                      <a class="btn btn-negative btn-block text-left" href="" data-toggle="modal"
+                      data-target="#editPartnership_modal">
+                        <i class="fas fa-edit text-info fa-fw mr-1"></i>
+                        <span>Edit details</span>
+                      </a>
+                      <hr class="my-2">
+                      <div class="dropdown-header">Documentation</div>
+                      <button 
+                        type="button"
+                        class="btn btn-negative btn-block text-left" 
+                        data-toggle="modal"
+                        data-target="#uploadDocument_modal"
+                      >
+                        <i class="fas fa-file-upload text-primary fa-fw mr-1"></i>
+                        <span>Upload Document</span>
+                      </button>
+                  </ul>
+                </div>
+                <!-- /.card-body -->
+              </div>
+
+              <!-- Timeline -->
+              <div class="timeline">
+                <div class="time-label font-weight-light">
+                  <span class="bg-primary">History Logs</span>
+                </div>
+                
+                <div>
+                  <i class="fas fa-check bg-success"></i>
+                  <div class="timeline-item">
+                    <div class="timeline-body small">
+                      <div class="font-weight-bold">Approved</div>
+                      <div>September 24, 2022</div>
+                      <div>By Alexander Pierce</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <i class="fas fa-sync-alt bg-warning"></i>
+                  <div class="timeline-item">
+                    <div class="timeline-body small">
+                      <div class="font-weight-bold">Pending</div>
+                      <div>September 24, 2022</div>
+                      <div>By Alexander Pierce</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <i class="fas fa-file-circle-exclamation bg-info"></i>
+                  <div class="timeline-item">
+                    <div class="timeline-body small">
+                      <div class="font-weight-bold">For evaluation</div>
+                      <div>September 24, 2022</div>
+                      <div>By Alexander Pierce</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <i class="fas fa-file-circle-question bg-info"></i>
+                  <div class="timeline-item">
+                    <div class="timeline-body small">
+                      <div class="font-weight-bold">For review</div>
+                      <div>September 24, 2022</div>
+                      <div>By Alexander Pierce</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <i class="fas fa-file-pen bg-secondary"></i>
+                  <div class="timeline-item">
+                    <div class="timeline-body small">
+                      <div class="font-weight-bold">Created</div>
+                      <div>September 24, 2022</div>
+                      <div>By Alexander Pierce</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <i class="fas fa-clock bg-gray"></i>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+</section>
+
+
+
+<%# ***** Scripts ***** %>
+<%# Resolve conflict in jQuery UI tooltip with Bootstrap tooltip %>
+  <script>
+    $.widget.bridge('uibutton', $.ui.button)
+  </script>
+<%# Select2 %>
+<script src="../../plugins/select2/js/select2.full.min.js"></script>
+<%# Summernote %>
+<script src="../../plugins/summernote/summernote-bs4.min.js"></script>
+<%# InputMask  %>
+<script src="../../plugins/inputmask/jquery.inputmask.min.js"></script>
+<%# daterangepicker  %>
+<script src="../../plugins/daterangepicker/daterangepicker.js"></script>
+<%# BS-Stepper  %>
+  <script src="../../plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<%# Datatable and Plugins %>
+<script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/jszip/jszip.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<%# Main %> 
+<script src="<%=BASE_URL%>/js/main.js"></script>
+<script src="<%=BASE_URL%>/js/modules/memo/partnershipDetails.js"></script>
