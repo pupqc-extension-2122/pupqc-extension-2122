@@ -1,0 +1,405 @@
+<%# ***** NOT YET FINALIZED AND NOT WORKING ****** %>
+
+<%# ***** Styles ****** %>
+
+<%# DataTables %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
+
+
+<%# ***** Body ****** %>
+
+
+<%# Content Header %>
+  <div class="content-header">
+    <div class="container-fluid">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active">Project Monitoring</li>
+      </ol>
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h1 class="m-0">Project Monitoring Details</h1>
+          <!-- <div class="text-secondary">Evaluate projects here</div> -->
+        </div>
+        <div>
+          <button type="button" class="btn btn-default float-right" id="daterange-btn">
+            <i class="far fa-calendar-alt mr-1"></i>
+            <span>Date Range Picker</span>
+            <i class="fas fa-caret-down ml-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Main Content %>
+  <section class="content">
+    <div class="container-fluid">
+
+      <div class="row">
+
+        <div class="col-md-9">
+          <div class="card card-primary card-outline" id="projectDetailsCard">
+            <!-- <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="card-title">Project Details</div>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-sm btn-default" data-card-widget="maximize">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                </div>
+              </div>
+            </div> -->
+
+            <div class="card-body">
+
+              <div class="mb-4">
+                <h3>Strengthening Resillence To Disasters and Be a Solution to Changing Environment</h3>
+                <div>Polytechnic University of the Philippines, Quezon City Branch</div>
+                <div>May 3, 2022 - May 4, 2022</div>
+                <div class="mt-1">
+                  <div class="badge badge-subtle-warning py-1 px-2">
+                    <i class="fas fa-sync-alt fa-fw mr-1"></i>
+                    <span>For approval</span>
+                  </div>
+                </div>
+              </div>
+
+              
+              <ul class="nav nav-pills" id="custom-content-below-tab" role="tablist">
+
+                
+                <li class="nav-item">
+                  <a class="nav-link active" id="custom-content-below-summary-tab" data-toggle="pill"
+                    href="#custom-content-below-summary" role="tab"
+                    aria-controls="custom-content-below-summary">Summary</a>
+                </li>
+
+                
+                <li class="nav-item">
+                  <a class="nav-link" id="custom-content-below-financial-tab" data-toggle="pill"
+                    href="#custom-content-below-financial" role="tab"
+                    aria-controls="custom-content-below-financial">Financial Requirements</a>
+                </li>
+
+                
+                <li class="nav-item">
+                  <a class="nav-link" id="custom-content-below-evaluation-tab" data-toggle="pill"
+                    href="#custom-content-below-evaluation" role="tab"
+                    aria-controls="custom-content-below-evaluation">Evaluation Plan</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              
+             
+              <div class="tab-content" id="custom-content-below-tabContent">
+
+                <div class="tab-pane fade show active" id="custom-content-below-summary" role="tabpanel"
+                  aria-labelledby="custom-content-below-summary-tab">
+                  <div class="tab-pane fade show active" id="summaryDetailsPane" role="tabpanel"
+                    aria-labelledby="summaryDetailsTab"
+                  >
+                    <h4 class="mb-3">Project Summary</h4>
+
+                    <dl class="row">
+
+                      <div class="col-12"><hr class="mt-0 mb-2"></div>
+
+                      <%# Title %>
+                      <dt class="col-md-3">
+                        <div class="mx-2">Title</div>
+                      </dt>
+                      <dd class="col-md-9">
+                        <div class="mx-2" id="projectDetailsConfirm_title">Strengthening Resilience To Disasters and Be a Solution to Changing Environment</div>
+                      </dd>
+
+                      <div class="col-12"><hr class="my-2"></div>
+
+                      <%# Implementer %>
+                      <dt class="col-md-3">
+                        <div class="mx-2">Implementer</div>
+                      </dt>
+                      <dd class="col-md-9">
+                        <div class="mx-2" id="projectDetailsConfirm_implementer">Polytechnic University of the Philippines, Quezon City Branch</div>
+                      </dd>
+
+                      <div class="col-12"><hr class="my-2"></div>
+
+                      <%# Target Groups %>
+                      <dt class="col-md-3">
+                        <div class="mx-2">Target Group(s)</div>
+                      </dt>
+                      <dd class="col-md-9">
+                        <div class="mx-2" id="projectDetailsConfirm_targetGroups"><ul class="mb-0"><li>Staffs of Grain Foundation for PWDs Inc.</li></ul></div>
+                      </dd>
+
+                      <div class="col-12"><hr class="my-2"></div>
+
+                      <%# Cooperating Agency %>
+                      <dt class="col-md-3">
+                        <div class="mx-2">Cooperating Agency(ies)</div>
+                      </dt>
+                      <dd class="col-md-9">
+                        <div class="mx-2" id="projectDetailsConfirm_cooperatingAgencies"><ul class="mb-0"><li>Grain Foundation for PWDs Inc.</li></ul></div>
+                      </dd>
+
+                      <div class="col-12"><hr class="my-2"></div>
+
+                      <%# Time Frame %>
+                      <dt class="col-md-3">
+                        <div class="mx-2">Time Frame</div>
+                      </dt>
+                      <dd class="col-md-9">
+                        <div class="mx-2" id="projectDetailsConfirm_timeFrame">
+                          <div>May 3, 2022 - May 4, 2022</div>
+                          <div class="small">Approximately a day.</div>
+                        </div>
+                      </dd>
+                      
+                      <div class="col-12"><hr class="my-2"></div>
+
+                      <%# Impact Statement %>
+                      <dt class="col-md-3">
+                        <div class="mx-2">Impact Statement</div>
+                      </dt>
+                      <dd class="col-md-9">
+                        <div class="mx-2" id="projectDetailsConfirm_impactStatement">Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.</div>
+                      </dd>
+                      
+                      <div class="col-12"><hr class="my-2"></div>
+
+                      <%# Summary %>
+                      <dt class="col-md-3">
+                        <div class="mx-2">Summary</div>
+                      </dt>
+                      <dd class="col-md-9">
+                        <div class="mx-2" id="projectDetailsConfirm_summary">Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.</div>
+                      </dd>
+
+                      <div class="col-12"><hr class="my-2"></div>
+                    </dl>
+                  </div>
+                </div>
+
+                
+                <div class="tab-pane fade show" id="custom-content-below-financial" role="tabpanel"
+                  aria-labelledby="custom-content-below-financial-tab">
+                  
+                  <h4 class="mb-3">Financial Requirements</h4>
+                  
+                  <table id="financialRequirementsDT" class="table table-bordered table-hover w-100" width="100"
+                    cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Budget Item</th>
+                        <th>Particulars</th>
+                        <th>Quantity/Pieces</th>
+                        <th>Estimated Cost<span class="small"> (per qty/pcs)</span></th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="font-weight-bold" colspan="12">Operating Cost</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Tarpaulin
+                        </td>
+                        <td>
+                          Size: 5 x 8 meters
+                        </td>
+                        <td>
+                          2
+                        </td>
+                        <td>
+                          900.00
+                        </td>
+                        <td>
+                          900.00
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Certifcates Paper
+                        </td>
+                        <td>
+                          10 packs
+                        </td>
+                        <td>
+                          10
+                        </td>
+                        <td>
+                          25.00
+                        </td>
+                        <td>
+                          250.00
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="font-weight-bold" colspan="12">Travel Costs and Food Expense</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Fare
+                        </td>
+                        <td>
+                          PUP Sta. Mesa to PUPQC
+                        </td>
+                        <td>
+                          1
+                        </td>
+                        <td>
+                          500.00
+                        </td>
+                        <td>
+                          500.00
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Food Expense
+                        </td>
+                        <td>
+                          AM (40 pax - 2 days), Lunch (40 pax - 2 days), and PM Snacks (40 pax - 2 days)
+                        </td>
+                        <td>
+                          120 pax
+                        </td>
+                        <td>
+                          290 x 40 x 2
+                        </td>
+                        <td>
+                          23,200.00
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="dropdown-divider"></div>
+                  <h5>Total Budget: <span id="totalBudget">24,850.00</span></h5>
+                </div>
+
+                
+                <div class="tab-pane fade" id="custom-content-below-evaluation" role="tabpanel"
+                  aria-labelledby="custom-content-below-evaluation-tab">
+                  
+                  <h4 class="mb-3">Evaluation Plan</h4>
+                  
+                  <table id="evaluationPlanDT" class="table table-bordered table-hover w-100" width="100"
+                    cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Outcome</th>
+                        <th>Indicator</th>
+                        <th>Data Collection Method</th>
+                        <th>Frequency</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          Participants are educated in how preventing fire and prepared in such calamities like
+                          earthquke.
+                        </td>
+                        <td>
+                          The participants adopt the gained knowledge and apply in himself/herself.
+                        </td>
+                        <td>
+                          Assessment Test/Activity
+                        </td>
+                        <td>
+                          Once
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          Generation of waste can be limited
+                        </td>
+                        <td>
+                          Measurement of Waste/Trash per week
+                        </td>
+                        <td>
+                          Assessment/Evaluation
+                        </td>
+                        <td>
+                          Thrice
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+
+         
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">Options</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body p-2">
+                  <div class="dropdown-header">Project details</div>
+                  <a class="btn btn-negative btn-block text-left" href="./view-project-activities.html">
+                    <i class="fas fa-list text-primary fa-fw mr-1"></i>
+                    <span>View activities</span>
+                  </a>
+                  <hr class="my-2">
+                  <div class="dropdown-header">Approval</div>
+                  <a class="btn btn-negative btn-block text-left" href="#" data-toggle="modal"
+                  data-target="#approveProjectModal">
+                    <i class="fas fa-check text-success fa-fw mr-1"></i>
+                    <span>Approve this project</span>
+                  </a>
+              </ul>
+            </div>
+            
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+
+<%# ***** Script ****** %>
+
+<%# Datatable %>
+<script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/jszip/jszip.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<%# Main %> 
+<script src="<%=BASE_URL%>/js/main.js"></script>
+<script src="<%=BASE_URL%>/js/modules/monitoring/projectMonitoringDetails.js"></script>

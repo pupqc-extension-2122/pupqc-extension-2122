@@ -250,3 +250,20 @@ const PROJECT_EVALUATION_STATUS_STYLES = {
 		theme: 'info'
 	},
 }
+
+// Project Monitoring Styles
+const PROJECT_MONITORING_STATUS_STYLES = {
+  'Completed': {
+    icon: 'fas fa-check',
+    theme: 'success'
+  },
+  'On going': {
+    icon: 'fas fa-sync-alt',
+    theme: 'warning'
+  },
+  'Not yet started': {
+    icon: 'fas fa-file-circle-exclamation',
+    theme: 'info'
+  },
+
+}
