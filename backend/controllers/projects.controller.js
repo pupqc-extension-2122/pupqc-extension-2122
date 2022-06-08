@@ -84,7 +84,7 @@ exports.cancelProposal = async (req, res) => {
 
   let id = req.params.id
 
-  let proposal = await Projects.findByPK(id)
+  let proposal = await Projects.findByPk(id)
 
   if (!proposal)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
@@ -92,7 +92,7 @@ exports.cancelProposal = async (req, res) => {
   if (proposal.status != 'Pending')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
-  proposal.status = 'Cancel'
+  proposal.status = 'Cancelled'
 
   await proposal.save()
 
