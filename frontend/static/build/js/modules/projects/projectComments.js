@@ -12,7 +12,6 @@ const ProjectComments = (() => {
   
   /**
 	 * * Local Variables
-	 * o--/[=================>
 	 */
 
   const container = $('#projectComments_grp');
@@ -47,10 +46,9 @@ const ProjectComments = (() => {
   
   /**
 	 * * Public Functions
-	 * o--/[=================>
 	 */
 
-  const load = (projectID) => {
+  const init = (projectID) => {
     setTimeout(() => {
       data.forEach((c, i) => {
         const isCommentedByUser = () => {
@@ -67,7 +65,8 @@ const ProjectComments = (() => {
         const comment = `
           <div class="d-flex mb-3">
             <div class="user-block mr-3">
-              <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
+              <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
+              <!-- <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image"> -->
             </div>
             <div class="flex-grow-1">
               <a href="#" class="font-weight-bold text-black">${ c.commentor.name }</a>
@@ -87,26 +86,12 @@ const ProjectComments = (() => {
 
   /**
 	 * * On DOM Load
-	 * o--/[=================>
 	 */
 
   return {
-    load,
+    init,
   }
 
 })();
 
-
-(() => {
-  
-  /**
-	 * * On DOM Load
-	 * o--/[=================>
-	 */
-
-  return {
-    load: () => {
-      ProjectComments.load();
-    }
-  }
-})().load();
+ProjectComments.init();

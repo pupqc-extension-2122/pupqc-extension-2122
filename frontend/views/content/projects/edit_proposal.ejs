@@ -11,8 +11,10 @@
 
 <%# ***** Body ***** %>
 
-<%# Content Header (Page header) %>
-<div class="content-header">
+<%- include('../../partials/loaders/content_header') %>
+
+<%# Content Header %>
+<div class="content-header" id="contentHeader" style="display: none">
   <div class="container-fluid">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
@@ -33,9 +35,11 @@
 <%# Main content %>
 <section class="content">
   <div class="container-fluid">
+    
+    <%- include('../../partials/loaders/content'); %>
 
-    <!-- Form Card -->
-    <form class="card card-outline card-primary" id="editProject_form">
+    <%# Edit Proposal Card %>
+    <form class="card card-outline card-primary" id="editProject_form" style="display: none">
 
       <div class="card-header">
         <div class="d-flex align-items-center justify-content-between">

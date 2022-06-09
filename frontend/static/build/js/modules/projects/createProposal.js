@@ -10,7 +10,6 @@
 
   /**
    * * Local Variables
-   * o--/[=================>
    */
   const formSelector = '#addProject_form';
   let stepper;
@@ -476,8 +475,11 @@
   }
 
   const removeLoaders = () => {
-    $('#addProject_stepper_loader').remove();
-    $('#addProject_stepper').show();
+    $('#contentHeader_loader').remove();
+    $('#contentHeader').show();
+
+    $('#content_loader').remove();
+    $('#addProject_form').show();
   }
 
   /**

@@ -9,24 +9,10 @@
 
 <%# ***** Body ***** %>
 
-<%# Main Header Loader %>
-<div class="content-header" id="contentHeader_loader">
-  <div class="container-fluid">
-    <div class="skeleton text my-2" style="width: 15rem"></div>
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="flex-grow-1">
-        <div class="skeleton h1 d-block" style="width: 8rem"></div>
-        <!-- <div class="text-secondary">Evaluate projects here</div> -->
-      </div>
-      <div>
-        <div class="skeleton btn" style="width: 8rem"></div>
-      </div>
-    </div>
-  </div>
-</div>
+<%- include('../../partials/loaders/content_header') %>
 
-<%# Main Header %>
-<div class="content-header" style="display: none" id="contentHeader">
+<%# Content Header %>
+<div class="content-header" id="contentHeader" style="display: none">
   <div class="container-fluid">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
@@ -238,9 +224,9 @@
 </section>
 
 
-<%# *** Modals *** %>
+<%# === Modals === %>
 
-<!-- Project Activity Details Modal -->
+<%# Project Activity Details Modal %>
 <div class="modal fade" id="projectActivityDetails_modal">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
@@ -308,7 +294,7 @@
   </div>
 </div>
 
-<!-- Add Project Activity Modal -->
+<%# Add Project Activity Modal %>
 <div class="modal fade" id="addProjectActivity_modal">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <form class="modal-content" id="addProjectActivity_form">
@@ -381,7 +367,7 @@
   </div>
 </div>
 
-<!-- Edit Project Activity Modal -->
+<%# Edit Project Activity Modal %>
 <div class="modal fade" id="editProjectActivity_modal">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <form class="modal-content" id="editProjectActivity_form">
@@ -475,6 +461,9 @@
     </form>
   </div>
 </div>
+
+<%- include('../../partials/projects/modals/confirm_submit_for_approval') %>
+
 
 
 <%# ***** Scripts ***** %>

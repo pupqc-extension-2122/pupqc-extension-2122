@@ -11,8 +11,10 @@
 
 <%# ***** Body ***** %>
 
-<%# Content Header (Page header) %>
-<div class="content-header">
+<%- include('../../partials/loaders/content_header') %>
+
+<%# Content Header %>
+<div class="content-header" id="contentHeader" style="display: none">
   <div class="container-fluid">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
@@ -34,8 +36,10 @@
 <section class="content">
   <div class="container-fluid">
 
+    <%- include('../../partials/loaders/content'); %>
+
     <%# Form Card %>
-    <form class="card card-outline card-primary" id="addProject_form">
+    <form class="card card-outline card-primary" id="addProject_form" style="display: none">
 
       <div class="card-header">
         <div class="d-flex align-items-center justify-content-between">
@@ -65,14 +69,8 @@
 
       <div class="card-body">
 
-        <%# Loader %>
-        <div class="p-5 my-5 text-center" id="addProject_stepper_loader">
-          <div class="spinner-grow text-primary"></div>
-          <div class="mt-2">Loading... Please wait.</div>
-        </div>
-
         <%# Stepper %>
-        <div class="bs-stepper" id="addProject_stepper" style="display: none">
+        <div class="bs-stepper" id="addProject_stepper">
 
           <%# Stepper Header %>
           <div class="table-responsive mb-3">
@@ -126,8 +124,7 @@
           <div class="bs-stepper-content">
 
             <%# Project Details %>
-            <div id="projectDetails_stepperPane" class="content" role="tabpanel"
-              aria-labelledby="financialRequirements_stepperHeaderBtn">
+            <div id="projectDetails_stepperPane" class="content" role="tabpanel" aria-labelledby="financialRequirements_stepperHeaderBtn">
               <div class="form-row">
 
                 <%# Project Title %>
@@ -230,17 +227,19 @@
                       </div>
                     </div>
 
-                    <%# <div class="d-flex justify-content-between">
-                      <button type="button" class="btn btn-sm btn-success" id="addCooperatingAgency_btn">
-                        <i class="fas fa-plus mr-1"></i>
-                        <span>Add cooperating agency</span>
-                      </button>
-                      <button type="button" class="btn btn-sm btn-warning"
-                        id="clearCooperatingAgenciesEmptyFields_btn">
-                        <i class="fas fa-eraser mr-1"></i>
-                        <span>Clear empty fields</span>
-                      </button>
-                    </div> %>
+                    <%# 
+                      <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-sm btn-success" id="addCooperatingAgency_btn">
+                          <i class="fas fa-plus mr-1"></i>
+                          <span>Add cooperating agency</span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-warning"
+                          id="clearCooperatingAgenciesEmptyFields_btn">
+                          <i class="fas fa-eraser mr-1"></i>
+                          <span>Clear empty fields</span>
+                        </button>
+                      <!-- </div>  -->
+                    %>
                   </div>
                 </div>
 

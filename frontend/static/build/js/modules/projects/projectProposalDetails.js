@@ -516,7 +516,8 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Extensionist')) {
       optionFunc = {
         'submitForApproval': () => {
-          updateStatus('For review')
+          $('#confirmSubmitForApproval_modal').modal('show');
+          // updateStatus('For review');
         },
         'submitEvaluationGrade': () => {
           updateStatus('Pending');

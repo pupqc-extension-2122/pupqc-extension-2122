@@ -11,18 +11,14 @@ $('[data-auth="logout"]').on('click', () => {
     url: `${ BASE_URL_API }/auth/logout`,
     success: res => {
       if(res.error) {
-        toastr.error('Something went wrong. Please reload the page.', null, {
-          "positionClass": "toast-top-right mt-5"
-        });
-        console.error(`[ERR]: ${ res.error }`);
+        toastr.error('Something went wrong. Please reload the page.');
+        console.error(`[ERR]: ${ res.message }`);
       } else {
         location.replace(`${ BASE_URL_WEB }/login`)
       }
     },
     error: () => {
-      toastr.error('Something went wrong. Please reload the page.', null, {
-        "positionClass": "toast-top-right mt-5"
-      });
+      toastr.error('Something went wrong. Please reload the page.');
       console.error(`[ERR]: Failed to call ajax.`);
     }
   })

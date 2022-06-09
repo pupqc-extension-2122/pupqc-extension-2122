@@ -62,7 +62,10 @@
           enableElements();
 
           // Alert invalid user details
-          toastr.warning('Invalid combination of email and password', null, {"positionClass": "toast-top-center mt-3"});
+          toastr.warning('Invalid combination of email and password', null, {
+            "positionClass": "toast-top-center mt-3"
+          });
+          console.error(`[ERR]: ${ res.message }`)
         } else {        
           toastr.success('Success!', null, {"positionClass": "toast-top-center mt-3"});
           setTimeout(() => location.assign('/p'), 500);
@@ -70,7 +73,10 @@
       },
       error: () => {
         enableElements();
-        toastr.error('Something went wrong. Please reload the page.', null, {"positionClass": "toast-top-center mt-3"});
+        toastr.error('Something went wrong. Please reload the page.', null, {
+          "positionClass": "toast-top-center mt-3"
+        });
+        console.error(`[ERR]: Failed to call ajax.`);
       }
     });
   }
