@@ -1,5 +1,5 @@
 const {
-  Evaluation_Plans, Financial_Requirements, Memos, Projects, Project_Partners, Partners
+  Memos, Projects, Project_Partners, Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
 
@@ -60,14 +60,6 @@ exports.createProject = async (req, res) => {
     }, {
       include: [
         {
-          model: Financial_Requirements,
-          as: 'financial_requirements'
-        },
-        {
-          model: Evaluation_Plans,
-          as: 'evaluation_plans'
-        },
-        {
           model: Project_Partners,
           as: 'project_partners'
         }
@@ -92,7 +84,7 @@ exports.cancelProposal = async (req, res) => {
 
   let id = req.params.id
 
-  let proposal = await Projects.findByPK(id)
+  let proposal = await Projects.findByPk(id)
 
   if (!proposal)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
@@ -100,7 +92,7 @@ exports.cancelProposal = async (req, res) => {
   if (proposal.status != 'Pending')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
-  proposal.status = 'Cancel'
+  proposal.status = 'Cancelled'
 
   await proposal.save()
 
@@ -116,9 +108,13 @@ exports.viewProposal = async (req, res) => {
   let proposal = await Projects.findOne({
     where: { id },
     include: [
-      'financial_requirements',
-      'evaluation_plans',
-      'partners'
+      {
+        model: Partners,
+        as: 'partners',
+        through: {
+          attributes: []
+        }
+      }
     ]
 
   })
