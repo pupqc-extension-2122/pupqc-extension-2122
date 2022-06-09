@@ -14,18 +14,14 @@ const AddProjectActivity = (() => {
    * * Local Variables
    */
   const addActivityModal = $('#addProjectActivity_modal');
-  let project_details;
   let validator;
   let PA_form;
   let initiated = 0;
+  let project_details;
 
   /**
    * * Private Functions
    */
-
-  const getProjectDetails = async () => {
-    project_details = await ProjectDetails.getData();
-  }
 
   const initProjectActivityForm = () => {
     PA_form = new ProjectActivityForm({
@@ -81,11 +77,11 @@ const AddProjectActivity = (() => {
    * o--/[=================>
    */
 
-  const init = async () => {
-    if(!initiated) {
+  const init = (project_details_data) => {
+    if (!initiated) {
       initiated = 1;
-      await getProjectDetails();
-      if(project_details.status == 'Created') {
+      project_details = project_details_data;
+      if (JSON.parse(getCookie('roles')).includes('Extensionist') && project_details.status == 'Created') {
         handleForm();
         initProjectActivityForm();
       } else {
@@ -118,6 +114,7 @@ const ProjectActivities = (() => {
   const dtElem = $('#activities_dt');
   const viewModal = $('#projectActivityDetails_modal');
   const editModal = $('#editProjectActivity_modal');
+  let project_details;
   let dt;
   let editValidator;
   let PA_form;
@@ -256,13 +253,20 @@ const ProjectActivities = (() => {
                         >
                           <span>View details</span>
                         </button>
-                        <button
-                          type="button"
-                          class="dropdown-item"
-                          onclick="ProjectActivities.initEditMode('${ data.id }')"
-                        >
-                          <span>Edit details</span>
-                        </button>
+                        ${
+                          project_details.status == 'Created'
+                              ? `
+                                <button
+                                  type="button"
+                                  class="dropdown-item"
+                                  onclick="ProjectActivities.initEditMode('${ data.id }')"
+                                >
+                                  <span>Edit details</span>
+                                </button>
+                              `
+                            : ''
+                          }
+                        }
                       </div>
                     </div>
                   `;
@@ -359,9 +363,10 @@ const ProjectActivities = (() => {
 	 * * Init
 	 */
 
-  const init = () => {
+  const init = (data) => {
     if(!initialized) {
       initialized = 1;
+      project_details = data;
       handleEditForm();
       preInitializations();
       initDataTable();
@@ -379,7 +384,3 @@ const ProjectActivities = (() => {
     initEditMode,
   }
 })();
-
-
-AddProjectActivity.init();
-ProjectActivities.init();

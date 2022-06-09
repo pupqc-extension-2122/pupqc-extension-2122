@@ -232,16 +232,17 @@ const $app = (selector) => {
 
 		// Initialize default options
 		let _daterangepicker = {
+      parentEl: 'body',
 			singleDatePicker: true,
 			autoUpdateInput: false,
 			autoApply: true,
 			showDropdowns: false,
 			opens: 'left',
 			drops: 'auto',
-			locale: {
-				cancelLabel: 'Clear',
-				applyLabel: 'Select'
-			}
+			// locale: {
+			// 	cancelLabel: 'Clear',
+			// 	applyLabel: 'Select'
+			// }
 		}
 
 		// Configure Single Date Picker
@@ -249,7 +250,7 @@ const $app = (selector) => {
 		if (mode === 'range') _daterangepicker.singleDatePicker = false;
 
 		// Reconfigure the options if set
-		Object.entries(daterangepicker)?.forEach(([key, value]) => _daterangepicker[key] = value)
+		Object.entries(daterangepicker)?.forEach(([key, value]) => _daterangepicker[key] = value);
 
 		/**
 		 * For Input Mask
@@ -261,7 +262,7 @@ const $app = (selector) => {
 		}
 
 		// Reconfigure the options if set
-		Object.entries(inputmask)?.forEach(([key, value]) => _inputmask[key] = value)
+		Object.entries(inputmask)?.forEach(([key, value]) => _inputmask[key] = value);
 
 		/**
 		 * Overall Setup
