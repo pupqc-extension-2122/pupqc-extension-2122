@@ -42,6 +42,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
+
 // Partners
 router.get('/partners', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
@@ -57,6 +58,7 @@ router.get('/partners', jwtMiddleware, (req, res) => {
     })
     : console.log('404')
 });
+
 
 // Partnership Details
 router.get('/partners/:partner_id', jwtMiddleware, (req, res) => {
@@ -74,6 +76,7 @@ router.get('/partners/:partner_id', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
+
 // MOA/MOU
 router.get('/memo/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
@@ -90,6 +93,7 @@ router.get('/memo/', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
+
 // MOA/MOU Details
 router.get('/memo/:memo_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
@@ -105,5 +109,6 @@ router.get('/memo/:memo_id', jwtMiddleware, (req, res) => {
     })
     : console.log('404')
 });
+
 
 module.exports = router;

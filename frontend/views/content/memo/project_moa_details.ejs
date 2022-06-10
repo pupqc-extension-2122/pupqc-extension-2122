@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="<%=BASE_URL%>/plugins/bs-stepper/css/bs-stepper.min.css">
 
 
+
 <%# ***** Body ***** %>
 
 <%# Content Header (Page header) %>
@@ -22,7 +23,7 @@
 
     <%# Breadcrumb %>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">MOA/MOU</a></li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/m/dashboard">MOA/MOU</a></li>
       <li class="breadcrumb-item active">Grain Foundation for ...</li>
     </ol>
 
@@ -33,10 +34,10 @@
         <h1 class="m-0">MOA/MOU Details</h1>
       </div>
       <div>
-        <button type="button" class="btn btn-default" id="daterange-btn">
+        <!-- <button type="button" class="btn btn-default" id="daterange-btn">
           <i class="far fa-calendar-alt mr-1"></i>
           <span>Filter by date</span>
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -127,7 +128,7 @@
 
           <div class="card-body">
 
-            <table class="table table-hover w-100" id="documents_dt">
+            <table class="table w-100" id="documents_dt">
               <thead>
                 <th>Name</th>
                 <th>Type</th>
@@ -151,63 +152,6 @@
           </div>
         </div>
 
-        <%# Comments %>
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Comments</div>
-          </div>
-          <div class="card-body">
-            
-            <div class="d-flex mb-3">
-              <div class="user-block mr-3">
-                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
-              </div>
-              <div class="flex-grow-1">
-                <textarea 
-                  class="form-control" 
-                  name="" 
-                  id="" 
-                  cols="30" 
-                  rows="3" 
-                  placeholder="Add a comment here ..."
-                  data-autoresize
-                ></textarea>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3">
-              <div class="user-block mr-3">
-                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
-              </div>
-              <div class="flex-grow-1">
-                <a href="#" class="font-weight-bold text-black">Juan Dela Cruz</a>
-                <div class="small text-muted">2 days ago</div>
-                <div class="mt-2">
-                  <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque obcaecati ipsa distinctio, corporis cumque deserunt beatae nesciunt. Deleniti corporis ex odio perferendis illo quisquam tempore voluptates fugit blanditiis quaerat. Omnis?</div>
-                  <div class="mt-1">
-                    <div class="btn btn-light btn-sm py-0">Edit</div>
-                    <div class="btn btn-light btn-sm py-0">Delete</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3">
-              <div class="user-block mr-3">
-                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
-              </div>
-              <div class="flex-grow-1">
-                <a href="#" class="font-weight-bold text-black">Juan Dela Cruz</a>
-                <div class="small text-muted">2 days ago</div>
-                <div class="mt-2">
-                  <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque obcaecati ipsa distinctio, corporis cumque deserunt beatae nesciunt. Deleniti corporis ex odio perferendis illo quisquam tempore voluptates fugit blanditiis quaerat. Omnis?</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
       </div>
       
       <div class="col-md-3">
@@ -226,24 +170,23 @@
           </div>
           
           <div class="card-body p-2">
-                <div class="dropdown-header">MOA/MOU details</div>
-                <a class="btn btn-negative btn-block text-left" href=""	data-toggle="modal"
-                data-target="#editMOA_modal">
-                  <i class="fas fa-edit text-info fa-fw mr-1"></i>
-                  <span>Edit details</span>
-                </a>
-                <hr class="my-2">
-                <div class="dropdown-header">Renewal</div>
-                <button 
-                  type="button"
-                  class="btn btn-negative btn-block text-left" 
-                  data-toggle="modal"
-                  data-target="#uploadDocumentRenewal_modal"
-                >
-                  <i class="fas fa-file-upload text-primary fa-fw mr-1"></i>
-                  <span>Upload Document</span>
-                </button>
-            </ul>
+            <div class="dropdown-header">MOA/MOU details</div>
+            <a class="btn btn-negative btn-block text-left" href=""	data-toggle="modal"
+            data-target="#editMOA_modal">
+              <i class="fas fa-edit text-info fa-fw mr-1"></i>
+              <span>Edit details</span>
+            </a>
+            <hr class="my-2">
+            <div class="dropdown-header">Renewal</div>
+            <button 
+              type="button"
+              class="btn btn-negative btn-block text-left" 
+              data-toggle="modal"
+              data-target="#uploadDocumentRenewal_modal"
+            >
+              <i class="fas fa-file-upload text-primary fa-fw mr-1"></i>
+              <span>Upload Document</span>
+            </button>
           </div>
           
         </div>
@@ -291,204 +234,209 @@
 
       </div>
     </div>
+
   </div>
 </section>
 
 <%# Modals %>
 
-  <%# Edit MOA/MOU Details %>
-	<div class="modal fade" id="editMOA_modal">
-		<div class="modal-dialog modal-dialog-scrollable">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Edit MOA/MOU Details</h4>
-					<button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-						<i class="fas fa-times"></i>
-					</button>
-				</div>
-				<div class="modal-body">
-					<%# Form Card %>
-					<form id="editMOA_form">
-						<%# Partnership Name %>
-						<div class="col-12">
-							<div class="form-group">
-								<label for="editMOA_partnershipName">
-									<span>Name of Partner</span>
-									<span class="text-danger">*</span>
-								</label>
-								<input type="text" class="form-control" id="editMOA_partnershipName" name="name"
-									placeholder="Insert partnership name here ..." value="Grain Foundation for PWDs Inc.">
-							</div>
-						</div>
-	
-						<%# Partner Address %>
-						<div class="col-12">
-							<div class="form-group">
-								<label for="editMOA_partnershipAddress">
-									<span>Partner Address</span>
-									<span class="text-danger">*</span>
-								</label>
-								<input type="text" class="form-control" id="editMOA_partnershipAddress" name="address"
-									placeholder="Insert partner address here ..." value="21 Don Fabian St., Commonwealth, Quezon City">
-							</div>
-						</div>
-	
-						<%# Partnership Representative Name %>
-						<div class="col-12">
-							<div class="form-group">
-								<label for="editMOA_partnershipRepresentative">
-									<span>Name of Representative</span>
-									<span class="text-danger">*</span>
-								</label>
-								<input type="text" class="form-control" id="editMOA_partnershipRepresentative" name="representative"
-									placeholder="Insert partnership representative name here ..." value="Executive Director Byung Min Lee">
-							</div>
-						</div>
-	
-						<%# PUP REPD Representative %>
-						<div class="col-12">
-							<div class="form-group">
-								<label for="editMOA_pupREPD">
-									<span>PUP REPD Representative</span>
-									<span class="text-danger">*</span>
-								</label>
-								<input type="text" class="form-control" id="editMOA_pupREPD" name="pup_REPD"
-									placeholder="Insert PUP REPD representative here ..." value="Dr. Anna Ruby P. Gapasin">
-							</div>
-						</div>
-
-						<%# Organization %>
-						<div class="col-12">
-							<div class="form-group" id="editMOA_organization_grp">
-								<label for="editMOA_organization">
-									<span>Organization</span>
-									<span class="text-danger">*</span>
-								</label>
-
-								<div class="form-group">
-									<div class="form-row">
-										<div class="col-md-8">
-											<select 
-												name="organization" 
-												id="editMOA_organization_select" 
-												class="form-control select2"
-												style="width: 100%;"
-											>
-												<option selected>Polytechnic University of the Philippines, Quezon City Branch</option>
-											</select>
-										</div>
-										<div class="col-md-4 text-right">
-											<button class="btn btn-primary btn-sm" type="button">
-												<i class="fas fa-plus mr-1"></i>
-												<span>Add organization</span>
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-	
-						<%# Notary Signed Date %>
-						<div class="col-12">
-							<div class="form-group">
-								<label for="editMOA_notarySignedDate">
-									<span>Notary Signed Date</span>
-									<span class="text-danger">*</span>
-								</label>
-								<div class="input-group date">
-									<input type="text" class="form-control" id="editMOA_notarySignedDate" name="notary_date"
-										placeholder="Please select notary signed date" data-inputmask-alias="datetime"
-										data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2023"/>
-									<div class="input-group-append">
-										<button type="button" class="btn btn-primary" id="editMOA_notarySignedDate_pickerBtn"
-											data-toggle="tooltip" title="Select notary signed date">
-											<i class="fa fa-calendar-day fa-fw"></i>
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-	
-						<%# Validity Date %>
-						<div class="col-12">
-							<div class="form-group">
-								<label for="editMOA_validityDate">
-									<span>Validity Date</span>
-									<span class="text-danger">*</span>
-								</label>
-								<div class="input-group date">
-									<input type="text" class="form-control" id="editMOA_validityDate" name="validity_date"
-										placeholder="Please select validity date" data-inputmask-alias="datetime"
-										data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2026"/>
-									<div class="input-group-append">
-										<button type="button" class="btn btn-primary" id="editMOA_validityDate_pickerBtn"
-											data-toggle="tooltip" title="Select validity date">
-											<i class="fa fa-calendar-day fa-fw"></i>
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
+<%# Edit MOA/MOU Details %>
+<div class="modal fade" id="editMOA_modal">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit MOA/MOU Details</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%# Form Card %>
+        <form id="editMOA_form">
+          <%# Partnership Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editMOA_partnershipName">
+                <span>Name of Partner</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="editMOA_partnershipName" name="name"
+                placeholder="Insert partnership name here ..." value="Grain Foundation for PWDs Inc.">
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="submitPartnership_btn">Save</button>
+
+          <%# Partner Address %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editMOA_partnershipAddress">
+                <span>Partner Address</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="editMOA_partnershipAddress" name="address"
+                placeholder="Insert partner address here ..." value="21 Don Fabian St., Commonwealth, Quezon City">
+            </div>
           </div>
-        </form>
-			</div>
-		</div>
-	</div>
 
-	<%# Upload Document Modal %>
-	<div class="modal fade" id="uploadDocumentRenewal_modal">
-		<div class="modal-dialog modal-lg modal-dialog-centered">
-			<form class="modal-content" id="uploadDocumentRenewal_form">
-				<div class="modal-header">
-					<h4 class="modal-title">
-						<span>Upload Document</span>
-					</h4>
-					<button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-						<i class="fas fa-times"></i>
-					</button>
-				</div>
-				<div class="modal-body">
-					
-					<div class="form-group">
-						<label for="document">
-								<span>Upload document here</span>
-								<span class="text-danger">*</span>
-						</label>
-						<div class="input-group">
-								<div class="custom-file">
-										<input 
-												type="file" 
-												class="custom-file-input" 
-												id="uploadDocumentRenewal"
-												name="uploadDocumentRenewal"
-										>
-										<label class="custom-file-label" for="uploadDocument">Choose file</label>
-								</div>
-						</div>
-					
-				</div>
+          <%# Partnership Representative Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editMOA_partnershipRepresentative">
+                <span>Name of Representative</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="editMOA_partnershipRepresentative" name="representative"
+                placeholder="Insert partnership representative name here ..." value="Executive Director Byung Min Lee">
+            </div>
+          </div>
 
-				<div class="modal-footer">
-					<button 
-						type="button" 
-						class="btn btn-negative" 
-						data-dismiss="modal"
-					>Cancel</button>
-					<button 
-						type="submit" 
-						class="btn btn-primary" 
-						id="uploadDocument_btn"
-					>
-						<span>Upload</span>
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
+          <%# PUP REPD Representative %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editMOA_pupREPD">
+                <span>PUP REPD Representative</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" id="editMOA_pupREPD" name="pup_REPD"
+                placeholder="Insert PUP REPD representative here ..." value="Dr. Anna Ruby P. Gapasin">
+            </div>
+          </div>
+
+          <%# Organization %>
+          <div class="col-12">
+            <div class="form-group" id="editMOA_organization_grp">
+              <label for="editMOA_organization">
+                <span>Organization</span>
+                <span class="text-danger">*</span>
+              </label>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-md-8">
+                    <select 
+                      name="organization" 
+                      id="editMOA_organization_select" 
+                      class="form-control select2"
+                      style="width: 100%;"
+                    >
+                      <option selected>Polytechnic University of the Philippines, Quezon City Branch</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 text-right">
+                    <button class="btn btn-primary btn-sm" type="button">
+                      <i class="fas fa-plus mr-1"></i>
+                      <span>Add organization</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Notary Signed Date %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editMOA_notarySignedDate">
+                <span>Notary Signed Date</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="input-group date">
+                <input type="text" class="form-control" id="editMOA_notarySignedDate" name="notary_date"
+                  placeholder="Please select notary signed date" data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2023"/>
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-primary" id="editMOA_notarySignedDate_pickerBtn"
+                    data-toggle="tooltip" title="Select notary signed date">
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Validity Date %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editMOA_validityDate">
+                <span>Validity Date</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="input-group date">
+                <input type="text" class="form-control" id="editMOA_validityDate" name="validity_date"
+                  placeholder="Please select validity date" data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2026"/>
+                <div class="input-group-append">
+                  <button type="button" class="btn btn-primary" id="editMOA_validityDate_pickerBtn"
+                    data-toggle="tooltip" title="Select validity date">
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitPartnership_btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%# Upload Document Modal %>
+<div class="modal fade" id="uploadDocumentRenewal_modal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <form class="modal-content" id="uploadDocumentRenewal_form">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <span>Upload Document</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Upload document -->
+        <div class="form-group">
+          <label for="document">
+            <span>Upload document here</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group">
+            <div class="custom-file">
+                <input 
+                    type="file" 
+                    class="custom-file-input" 
+                    id="uploadDocumentRenewal"
+                    name="uploadDocumentRenewal"
+                >
+                <label class="custom-file-label" for="uploadDocument">Choose file</label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-negative" 
+          data-dismiss="modal"
+        >Cancel</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          id="uploadDocument_btn"
+        >
+          <span>Upload</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 
 <%# ***** Scripts ***** %>
 

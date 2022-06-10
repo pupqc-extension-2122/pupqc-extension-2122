@@ -22,8 +22,8 @@
 
     <!-- Breadcrumb -->
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">MOA/MOU</a></li>
-      <li class="breadcrumb-item">List of Partners</li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/m">MOA/MOU</a></li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/m/partners">List of Partners</a></li>
       <li class="breadcrumb-item active">Grain Foundation for ...</li>
     </ol>
 
@@ -34,10 +34,10 @@
         <h1 class="m-0">Partnership Details</h1>
       </div>
       <div>
-        <button type="button" class="btn btn-default" id="daterange-btn">
+        <!-- <button type="button" class="btn btn-default" id="daterange-btn">
           <i class="far fa-calendar-alt mr-1"></i>
           <span>Filter by date</span>
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
@@ -150,63 +150,6 @@
                 </tr>
               </tbody>
             </table>
-
-          </div>
-        </div>
-
-        <!-- Comments -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Comments</div>
-          </div>
-          <div class="card-body">
-            
-            <div class="d-flex mb-3">
-              <div class="user-block mr-3">
-                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
-              </div>
-              <div class="flex-grow-1">
-                <textarea 
-                  class="form-control" 
-                  name="" 
-                  id="" 
-                  cols="30" 
-                  rows="3" 
-                  placeholder="Add a comment here ..."
-                  data-autoresize
-                ></textarea>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3">
-              <div class="user-block mr-3">
-                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
-              </div>
-              <div class="flex-grow-1">
-                <a href="#" class="font-weight-bold text-black">Juan Dela Cruz</a>
-                <div class="small text-muted">2 days ago</div>
-                <div class="mt-2">
-                  <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque obcaecati ipsa distinctio, corporis cumque deserunt beatae nesciunt. Deleniti corporis ex odio perferendis illo quisquam tempore voluptates fugit blanditiis quaerat. Omnis?</div>
-                  <div class="mt-1">
-                    <div class="btn btn-light btn-sm py-0">Edit</div>
-                    <div class="btn btn-light btn-sm py-0">Delete</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex mb-3">
-              <div class="user-block mr-3">
-                <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image">
-              </div>
-              <div class="flex-grow-1">
-                <a href="#" class="font-weight-bold text-black">Juan Dela Cruz</a>
-                <div class="small text-muted">2 days ago</div>
-                <div class="mt-2">
-                  <div>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Neque obcaecati ipsa distinctio, corporis cumque deserunt beatae nesciunt. Deleniti corporis ex odio perferendis illo quisquam tempore voluptates fugit blanditiis quaerat. Omnis?</div>
-                </div>
-              </div>
-            </div>
 
           </div>
         </div>
@@ -324,7 +267,7 @@
 
 <%# Modals %>
 
-<% if (JSON.parse(roles).includes('Extensionist')) { %>
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
   
   <%# Edit Partner Details %>
   <div class="modal fade" id="editPartnership_modal">
