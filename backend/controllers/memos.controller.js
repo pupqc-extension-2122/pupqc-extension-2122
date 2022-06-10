@@ -10,7 +10,9 @@ exports.viewMemo = async (req, res) => {
 
     let id = req.params.id
 
-    let data = await Memos.findByPk(id)
+    let data = await Memos.findByPk(id, {
+      include: ['organization', 'partner']
+    })
 
     if (!data)
       return res.status(404).send({ error: true, message: 'Memo not found' })

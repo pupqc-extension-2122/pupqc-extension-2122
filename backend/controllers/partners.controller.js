@@ -29,12 +29,15 @@ exports.createPartner = async (req, res) => {
       where: {
         name: body.name.toUpperCase()
       },
+      defaults:{
+        address: body.address
+      },
       include: {
         model: Memos,
         as: 'memos',
         attributes: { exclude: ['id'] },
         limit: 1,
-        order: [['signed_date', 'DESC']]
+        order: [['validity_date', 'DESC']]
       }
     })
 
@@ -47,15 +50,14 @@ exports.createPartner = async (req, res) => {
     }
 
     let memo = await Memos.create({
-      type: body.type,
       partner_id: partner.id,
       partner_name: partner.name,
+      organization_id: body.organization_id,
       duration: body.duration,
-      signed_date: body.signed_date,
+      validity_date: body.validity_date,
       end_date: null,
-      signed_by_pup: body.signed_by_pup,
-      signed_by_partner: body.signed_by_partner,
-      notarized_by: body.notarized_by,
+      representative_pup: body.representative_pup,
+      representative_partner: body.representative_partner,
       notarized_date: body.notarized_date,
     })
 

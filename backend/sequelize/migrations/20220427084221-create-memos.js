@@ -7,10 +7,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
-      type: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       partner_id: {
         type: Sequelize.UUID,
         references: {
@@ -24,27 +20,33 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      organization_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: {
+            tableName: 'Organizations'
+          },
+          key: 'id'
+        }
+      },
       duration: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      signed_date: {
+      validity_date: {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
       end_date: {
         type: Sequelize.DATEONLY,
       },
-      signed_by_pup: {
+      representative_pup: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      signed_by_partner: {
+      representative_partner: {
         type: Sequelize.STRING,
         allowNull: false
-      },
-      notarized_by: {
-        type: Sequelize.STRING
       },
       notarized_date: {
         type: Sequelize.DATEONLY

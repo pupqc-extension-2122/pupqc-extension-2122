@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsToMany(models.Projects, { through: models.Project_Partners, as: 'projects' })
-      this.belongsTo(models.Partners, { foreignKey: 'partner_id', as: 'owner' })
+      this.belongsTo(models.Partners, { foreignKey: 'partner_id', as: 'partner' })
+      this.hasOne(models.Organizations, { foreignKey: 'organization_id', as: 'organization' })
     }
   }
   Memos.init({
@@ -20,16 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
-    },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        isIn: {
-          args: ['MOA', 'MOU'],
-          msg: 'Type must be either MOA or MOU'
-        }
-      }
     },
     partner_id: {
       type: DataTypes.UUID,
@@ -39,31 +30,32 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    organization_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     duration: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    signed_date: {
+    validity_date: {
       type: DataTypes.DATEONLY,
       allowNull: false
     },
     end_date: {
       type: DataTypes.DATEONLY,
-      set(value){
-        let base = new Date(this.getDataValue('signed_date'))
+      set(value) {
+        let base = new Date(this.getDataValue('validity_date'))
         this.setDataValue('end_date', new Date(base.setDate(base.getDate() + (this.getDataValue('duration') * 365.25))))
       }
     },
-    signed_by_pup: {
+    representative_pup: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    signed_by_partner: {
+    representative_partner: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    notarized_by: {
-      type: DataTypes.STRING,
     },
     notarized_date: {
       type: DataTypes.DATEONLY,
