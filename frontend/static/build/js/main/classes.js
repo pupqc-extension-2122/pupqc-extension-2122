@@ -406,6 +406,78 @@ class TargetGroupsForm {
 	}
 
 	/**
+	 * * Template Literals
+	 * o--/[=================>
+	 */
+
+  #removeTargetGroupFieldModal = `
+    <div class="modal" id="removeTargetGroupField_modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex">
+              <h1 class="mr-3 display-4">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+              </h1>
+              <div>
+                <div class="font-weight-bold mb-2">Remove target group field</div>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this target group
+                  field?<br>Your inputs can not be saved.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+            <button 
+              type="button" 
+              class="btn btn-danger" 
+              id="confirmRemoveTargetGroupField_btn"
+              data-remove-target-group-field-id=""
+            >Yes, I'm sure.</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+
+  #addTargetGroupFieldModal = `
+    <div class="modal" id="addTargetGroupField_modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex">
+              <h1 class="mr-3 display-4">
+                <i class="fas fa-exclamation-circle text-info"></i>
+              </h1>
+              <div>
+                <div class="font-weight-bold mb-2">Add target group field</div>
+                <p>You've already added <span id="targetGroupFields_count">0</span> empty fields.<br>Do you want to add another
+                  one?</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="confirmAddTargetGroupField_btn">Yes, please!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+
+	/**
 	 * * Private Methods
 	 * o--/[=================>
 	 */
@@ -435,41 +507,7 @@ class TargetGroupsForm {
 		if (!$('#removeTargetGroupField_modal').length) {
 
 			// Append the Remove Target Group Field Modal to the DOM
-			$('body').append(`
-        <div class="modal" id="removeTargetGroupField_modal">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title">Confirmation</h4>
-                <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="d-flex">
-                  <h1 class="mr-3 display-4">
-                    <i class="fas fa-exclamation-triangle text-warning"></i>
-                  </h1>
-                  <div>
-                    <div class="font-weight-bold mb-2">Remove target group field</div>
-                    <p>You've already entered some data here!<br>Are you sure you want to remove this target group
-                      field?<br>Your inputs can not be saved.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-                <button 
-                  type="button" 
-                  class="btn btn-light" 
-                  id="confirmRemoveTargetGroupField_btn"
-                  data-remove-target-group-field-id=""
-                >Yes, I'm sure.</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `);
+			$('body').append(this.#removeTargetGroupFieldModal);
 
 			const confirmRemoveModal = $('#removeTargetGroupField_modal');
 			const confirmRemoveBtn = $('#confirmRemoveTargetGroupField_btn');
@@ -492,36 +530,7 @@ class TargetGroupsForm {
 
 		// Append the Add target group field modal to the DOM
 		if (!$('#addTargetGroupField_modal').length) {
-			$('body').append(`
-				<div class="modal" id="addTargetGroupField_modal">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-header">
-                <h4 class="modal-title">Confirmation</h4>
-                <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="d-flex">
-                  <h1 class="mr-3 display-4">
-                    <i class="fas fa-exclamation-circle text-info"></i>
-                  </h1>
-                  <div>
-                    <div class="font-weight-bold mb-2">Add target group field</div>
-                    <p>You've already added <span id="targetGroupFields_count">0</span> empty fields.<br>Do you want to add another
-                      one?</p>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirmAddTargetGroupField_btn">Yes, please!</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `);
+			$('body').append(this.#addTargetGroupFieldModal);
 
 			const addTargetGroupFieldModal = $('#addTargetGroupField_modal');
 			const confirmAddTargetGroupFieldBtn = $('#confirmAddTargetGroupField_btn');

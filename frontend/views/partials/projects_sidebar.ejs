@@ -10,37 +10,8 @@
   <%# Sidebar %>
   <div class="sidebar border-right">
 
-    <%# Sidebar user panel %>
-    <div class="user-panel mt-3 pb-2 mb-3 d-flex">
-
-      <%# User image %>
-      <div class="image">
-        <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
-        <!-- <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"> -->
-      </div>
-
-      <%# User info %>
-      <div class="info">
-        <a href="./profile" class="d-block font-weight-bold"><%= name %></a>
-        <div>
-          <span class="text-success">&#9679;</span>
-          <span class="text-secondary small"><%= role %></span>
-        </div>
-      </div>
-    </div>
-
-    <%# Sidebar Search %>
-    <div class="form-inline">
-      <div class="input-group" data-widget="sidebar-search">
-        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-sidebar">
-            <i class="fas fa-search fa-fw"></i>
-          </button>
-        </div>
-      </div>
-      <div class="sidebar-search-results"></div>
-    </div>
+    <%- include('./user_panel') %>
+    <%- include('./sidebar_search') %>
 
     <%# Sidebar Menu %>
     <nav class="mt-2">

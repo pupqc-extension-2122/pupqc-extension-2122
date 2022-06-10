@@ -14,7 +14,8 @@ $('[data-auth="logout"]').on('click', () => {
         toastr.error('Something went wrong. Please reload the page.');
         console.error(`[ERR]: ${ res.message }`);
       } else {
-        location.replace(`${ BASE_URL_WEB }/login`)
+        toastr.info('Logging out.');
+        setTimeout(() => location.replace(`${ BASE_URL_WEB }/login`), 750);
       }
     },
     error: () => {

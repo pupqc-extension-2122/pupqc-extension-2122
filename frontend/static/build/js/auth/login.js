@@ -31,6 +31,11 @@
     emailInput.attr('disabled', true);
     passwordInput.attr('disabled', true);
     submitBtn.attr('disabled', true);
+    submitBtn.html(`
+      <span class="spinner-grow spinner-grow-sm m-0" role="status">
+        <span class="sr-only">Loading...</span>
+      </span>
+    `);
   }
 
   const enableElements = () => {
@@ -38,6 +43,10 @@
     passwordInput.attr('disabled', false);
     passwordInput.val('');
     submitBtn.attr('disabled', false);
+    submitBtn.html(`
+      <span>Log in</span>
+      <i class="fas fa-sign-in-alt ml-1"></i>
+    `);
   }
 
   const onLoginFormSubmit = () => {
@@ -65,10 +74,11 @@
           toastr.warning('Invalid combination of email and password', null, {
             "positionClass": "toast-top-center mt-3"
           });
-          console.error(`[ERR]: ${ res.message }`)
         } else {        
           toastr.success('Success!', null, {"positionClass": "toast-top-center mt-3"});
-          setTimeout(() => location.assign('/p'), 500);
+          submitBtn.html(`<i class="fas fa-check"></i>`);
+          submitBtn.removeClass('btn-primary').addClass('btn-success');
+          setTimeout(() => location.assign('/p'), 750);
         }
       },
       error: () => {

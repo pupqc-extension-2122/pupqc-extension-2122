@@ -1,0 +1,67 @@
+<%# Project Activity Details Modal %>
+<div class="modal fade" id="projectActivityDetails_modal">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fas fa-list fa-fw mr-1"></i>
+          <span>Project Activity Details</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Activity Details Loader -->
+        <div id="projectActivityDetails_loader">
+          <div class="skeleton h4" style="width: 50%"></div>
+          <div class="skeleton h4" style="width: 30%"></div>
+          <div class="skeleton text mt-3" style="width: 25%"></div>
+          <div class="skeleton p"></div>
+          <div class="p-3 my-5"></div>
+        </div>
+
+        <!-- Activity Details -->
+        <div id="projectActivityDetails" style="display: none;">
+          <h4 id="projectActivityDetails_title">Health Awareness and Office Productivity Tools</h4>
+
+          <div class="row">
+
+            <div class="col-12">
+              <hr class="my-2">
+            </div>
+
+            <!-- Project Team -->
+            <dt class="col-md-2">
+              <div class="mx-2">Topics</div>
+            </dt>
+            <dd class="col-md-10">
+              <div class="mx-2" id="projectActivityDetails_topics"></div>
+            </dd>
+
+            <div class="col-12">
+              <hr class="my-2">
+            </div>
+
+            <!-- Project Team -->
+            <dt class="col-md-2">
+              <div class="mx-2">Outcomes</div>
+            </dt>
+            <dd class="col-md-10">
+              <div class="mx-2" id="projectActivityDetails_outcomes"></div>
+            </dd>
+
+            <div class="col-12">
+              <hr class="my-2">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

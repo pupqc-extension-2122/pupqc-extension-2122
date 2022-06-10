@@ -143,7 +143,15 @@
 
 
 <%# === Modals === %>
-<%- include('../../partials/projects/modals/confirm_submit_for_approval') %>
+
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+  <%- include('../../partials/projects/modals/confirm_submit_for_approval') %>
+<% } %>
+
+<% if (JSON.parse(JSON.stringify(roles)).includes('Chief')) { %>
+  <%- include('../../partials/projects/modals/confirm_approve_for_evaluation') %>
+  <%- include('../../partials/projects/modals/confirm_approve_the_project') %>
+<% } %>
 
 
 <%# ***** Scripts ***** %>

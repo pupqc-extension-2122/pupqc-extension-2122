@@ -9,6 +9,16 @@ const RENDER_OPTION_DEFAULTS = {
 }
 
 
+const renderRoles = (roles) => {
+  let roleTemplate = '';
+  roles.forEach((role, index) => {
+    roleTemplate += role;
+    if (index < roles.length - 1) roleTemplate += ', ';
+  });
+  return roleTemplate;
+}
+
+
 // *** ROUTES *** //
 
 
@@ -25,7 +35,8 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
       document_title: 'Dashboard',
       active_sidebar_tab: 'Dashboard',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
+      roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
     : console.log('404')
@@ -40,7 +51,8 @@ router.get('/partners', jwtMiddleware, (req, res) => {
       document_title: 'Partnerships',
       active_sidebar_tab: 'Partners',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
+      roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
     : console.log('404')
@@ -55,7 +67,8 @@ router.get('/partners/:partner_id', jwtMiddleware, (req, res) => {
       document_title: 'Partnership Details',
       active_sidebar_tab: 'Partners',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
+      roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
     : console.log('404')
@@ -70,7 +83,8 @@ router.get('/memo/', jwtMiddleware, (req, res) => {
       document_title: 'MOA/MOU',
       active_sidebar_tab: 'MOA/MOU',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
+      roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
     : console.log('404')
@@ -85,7 +99,8 @@ router.get('/memo/:memo_id', jwtMiddleware, (req, res) => {
       document_title: 'MOA/MOU Details',
       active_sidebar_tab: 'MOA/MOU',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
+      roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
     : console.log('404')

@@ -293,11 +293,20 @@ const ProjectDetails = (() => {
 
 
 const ProjectOptions = (() => {
+
+  /**
+   * * Local Variables
+   */
+
   const body = $('#projectDetails_body');
   const activitiesDT = $('#activities_dt');
   const options = '#projectDetails_options';
   const user_roles = JSON.parse(getCookie('roles'));
   let project_details;
+
+  /**
+   * * Public Methods
+   */
 
   const setOptions = (data) => {
 
@@ -532,13 +541,14 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Chief')) {
       optionFunc = {
         'approveTheProposal': () => {
-          updateStatus('For evaluation');
+          $('#confirmApproveForEvaluation_modal').modal('show');
         },
         'rejectTheProposal': () => {
           updateStatus('Created');
         },
         'approveTheProject': () => {
-          updateStatus('Approved');
+          $('#confirmApproveTheProject_modal').modal('show');
+          // updateStatus('Approved');
         }
       }
       if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
@@ -1049,3 +1059,15 @@ const updateStatus = (status) => {
     ProjectActivities.init(data);
   }
 }
+
+$('#confirmSubmitForApproval_btn').on('click', () => {
+  updateStatus('For review');
+  $('#confirmSubmitForApproval_modal').modal('hide');
+  toastr.success('The proposal has been submitted successfully.');
+});
+
+$('#confirmApproveForEvaluation_btn').on('click', () => {
+  updateStatus('For evaluation');
+  $('#confirmApproveForEvaluation_modal').modal('hide');
+  toastr.success('The proposal has been approved successfully.');
+});

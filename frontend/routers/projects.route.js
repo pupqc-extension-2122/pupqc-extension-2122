@@ -9,6 +9,17 @@ const RENDER_OPTION_DEFAULTS = {
 }
 
 
+const renderRoles = (roles) => {
+  let roleTemplate = '';
+  roles.forEach((role, index) => {
+    roleTemplate += role;
+    if (index < roles.length - 1) roleTemplate += ', ';
+  });
+  return roleTemplate;
+}
+
+
+
 // *** ROUTES *** //
 
 
@@ -25,7 +36,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
       document_title: 'Dashboard',
       active_sidebar_tab: 'Dashboard',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -42,7 +53,7 @@ router.get('/proposals', jwtMiddleware, (req, res) => {
       document_title: 'Project Proposals',
       active_sidebar_tab: 'Project Proposals',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -59,7 +70,7 @@ router.get('/create-proposal', jwtMiddleware, (req, res) => {
       document_title: 'Create Project Proposal',
       active_sidebar_tab: 'Project Proposals',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -76,7 +87,7 @@ router.get('/proposals/:project_id', jwtMiddleware, (req, res) => {
       document_title: 'Project Details',
       active_sidebar_tab: 'Project Proposals',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -93,7 +104,7 @@ router.get('/proposals/:project_id/activities', jwtMiddleware, (req, res) => {
       document_title: 'Project Activities',
       active_sidebar_tab: 'Project Proposals',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -111,7 +122,7 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, (req, res) => {
       document_title: 'Edit Project Proposal',
       active_sidebar_tab: 'Project Proposals',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -128,7 +139,7 @@ router.get('/monitoring/', jwtMiddleware, (req, res) => {
       document_title: 'Project Monitoring',
       active_sidebar_tab: 'Project Monitoring',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -144,7 +155,7 @@ router.get('/evaluation/', jwtMiddleware, (req, res) => {
       document_title: 'Project Evaluation',
       active_sidebar_tab: 'Project Evaluation',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -160,7 +171,7 @@ router.get('/evaluation/:project_id', jwtMiddleware, (req, res) => {
       document_title: 'Project Details',
       active_sidebar_tab: 'Project Evaluation',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -176,7 +187,7 @@ router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
       document_title: 'Project Activities',
       active_sidebar_tab: 'Project Evaluation',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -192,7 +203,7 @@ router.get('/monitoring/:project_id', jwtMiddleware, (req, res) => {
       document_title: 'Project Monitoring Details',
       active_sidebar_tab: 'Project Monitoring',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
@@ -209,7 +220,7 @@ router.get('/monitoring/:project_id/activities', jwtMiddleware, (req, res) => {
       document_title: 'Project Monitoring Activities',
       active_sidebar_tab: 'Project Monitoring',
       name: `${ first_name } ${ last_name }`,
-      role: 'Extensionist',
+      role: renderRoles(roles),
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
