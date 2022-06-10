@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
       // this.hasMany(models.Financial_Requirements, {foreignKey: 'project_id', as: 'financial_requirements'})
       // this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
-      this.hasMany(models.Project_Partners, {foreignKey: 'project_id', as: 'project_partners'})
+      this.hasMany(models.Project_Partners, { foreignKey: 'project_id', as: 'project_partners' })
       this.belongsToMany(models.Partners, { through: models.Project_Partners, as: 'partners' })
-      this.belongsToMany(models.Memos, {through: models.Project_Partners, as: 'memos'})
+      this.belongsToMany(models.Memos, { through: models.Project_Partners, as: 'memos' })
     }
   }
   Projects.init({
@@ -33,19 +33,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     target_groups: {
       type: DataTypes.STRING,
-      set (val) {
+      set(val) {
         this.setDataValue('target_groups', val.join(';'))
       },
-      get () {
+      get() {
         return this.getDataValue('team_members').split(';')
       }
     },
     team_members: {
       type: DataTypes.STRING,
-      set (val) {
+      set(val) {
         this.setDataValue('team_members', val.join(';'))
       },
-      get () {
+      get() {
         return this.getDataValue('team_members').split(';')
       }
     },
@@ -59,7 +59,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isIn: {
+          args: [
+            'Created',
+            'For Approval',
+            'For Evaluation',
+            'Pending',
+            'Approved',
+            'Rejected',
+            'Cancelled'
+          ],
+          msg: 'Invalid Status'
+        }
+      }
     },
     impact_statement: {
       type: DataTypes.TEXT,
@@ -72,22 +86,22 @@ module.exports = (sequelize, DataTypes) => {
     financial_requirements: {
       type: DataTypes.TEXT,
       allowNull: false,
-      set(val){
+      set(val) {
         let data = JSON.stringify(val)
         this.setDataValue('financial_requirements', data)
       },
-      get(){
+      get() {
         return JSON.parse(this.getDataValue('financial_requirements'))
       }
     },
     evaluation_plans: {
       type: DataTypes.TEXT,
       allowNull: false,
-      set(val){
+      set(val) {
         let data = JSON.stringify(val)
         this.setDataValue('evaluation_plans', data)
       },
-      get(){
+      get() {
         return JSON.parse(this.getDataValue('evaluation_plans'))
       }
     },

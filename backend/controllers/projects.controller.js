@@ -50,7 +50,7 @@ exports.createProject = async (req, res) => {
       team_members: body.team_members,
       start_date: body.start_date,
       end_date: body.end_date,
-      status: 'Pending',
+      status: 'Created',
       impact_statement: body.impact_statement,
       summary: body.summary,
       financial_requirements: body.financial_requirements,
