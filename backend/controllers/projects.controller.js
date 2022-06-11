@@ -128,3 +128,55 @@ exports.viewProposal = async (req, res) => {
   })
 
 }
+
+
+exports.createProjectActivities = async (req, res) => {
+  if (!req.auth.roles.includes('Extensionist')) {
+    return res.status(403).send({ error: true, message: 'Forbidden Action' })
+  }
+  const body = req.body
+
+  let id = req.params.id
+
+  let [project_activites, created] = await Project.findByPK({
+    where: {
+      name: body.name.toUpperCase()
+    },
+    defaults: {
+      address: body.address
+    },
+    include: {
+      model: Project_Activities,
+      as: 'project_activities',
+      attributes: { exclude: ['id'] },
+      limit: 1,
+      order: [['validity_date', 'DESC']]
+    }
+  })
+
+  if (project.project_activities) {
+    if (new Date(project.project_activities[0].end_date) > new Date()) {
+      return res
+        .status(400)
+        .send({ error: true, message: 'There is an existing activity for this Project' })
+    }
+  }
+
+  let project_activities = await Project_Activities.create({
+    project_id: project.id,
+    project_name: project.name,
+    organization_id: body.organization_id,
+    duration: body.duration,
+    validity_date: body.validity_date,
+    end_date: null,
+    representative_pup: body.representative_pup,
+    representative_partner: body.representative_partner,
+    notarized_date: body.notarized_date,
+  })
+
+  if (project_activity) {
+    res
+      .status(200)
+      .send({ error: false, message: 'Project Actvity Created!' })
+  }
+}
