@@ -25,7 +25,7 @@ exports.createProject = async (req, res) => {
               end_date: {
                 [Op.gt]: new Date(body.start_date)
               },
-              signed_date: {
+              validity_date: {
                 [Op.lte]: new Date(body.start_date)
               }
             }
@@ -72,6 +72,99 @@ exports.createProject = async (req, res) => {
         message: 'Project Created!'
       })
     }
+  } catch (err) {
+    console.log(err)
+    res.send(err)
+  }
+}
+
+exports.updateProject = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Extensionist'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const id = req.params.id
+    const body = req.body
+
+    let partners = body.partner_id
+
+    let current_project = await Projects.findByPk(id, {
+      include: ['project_partners']
+    })
+
+    let current_partners = current_project.project_partners.map(el => {
+      return ({ id: el.id, partner_id: el.partner_id })
+    })
+
+    let retained_partners = []
+
+    current_partners.forEach(el => {
+      if (!partners.includes(el.partner_id)) {
+        Project_Partners.findOne({ where: { id: el.id } })
+          .then(async (result) => await result.destroy())
+      } else
+        retained_partners.push(el.partner_id)
+    })
+
+    partners = partners.filter(el => !retained_partners.includes(el))
+
+    if (partners.length) {
+      let new_partners = await Partners.findAll({
+        where: {
+          id: [...partners]
+        },
+        include: [
+          {
+            model: Memos,
+            as: 'memos',
+            where: {
+              [Op.and]: {
+                end_date: {
+                  [Op.gt]: new Date(body.start_date)
+                },
+                validity_date: {
+                  [Op.lte]: new Date(body.start_date)
+                }
+              }
+            }
+          }
+        ]
+      })
+
+      if (!new_partners.length)
+        return res.status(400).send({ error: true, message: 'One or more partnerships are not registered.' })
+
+      let project_partners = new_partners.map(el => (
+        {
+          project_id: id,
+          partner_id: el.id,
+          memo_id: el.memos[0].id
+        }
+      ))
+
+      await Project_Partners.bulkCreate(project_partners)
+    }
+
+    
+    let updated_project = current_project
+    updated_project.title = body.title
+    updated_project.target_groups = body.target_groups
+    updated_project.team_members = body.team_members
+    updated_project.start_date = body.start_date
+    updated_project.end_date = body.end_date
+    updated_project.impact_statement = body.impact_statement
+    updated_project.summary = body.summary
+    updated_project.financial_requirements = body.financial_requirements
+    updated_project.evaluation_plans = body.evaluation_plans
+
+    await updated_project.save()
+
+    res.send({
+      error: false,
+      message: 'Project Details Updated'
+    })
+
   } catch (err) {
     console.log(err)
     res.send(err)
