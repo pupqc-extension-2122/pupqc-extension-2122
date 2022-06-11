@@ -21,6 +21,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      topics: {
+        type: Sequelize.STRING,
+      },
       outcomes: {
         type: Sequelize.STRING,
       },

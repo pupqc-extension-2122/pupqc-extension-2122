@@ -30,6 +30,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    topics: {
+      type: DataTypes.STRING,
+      set(val){
+        this.setDataValue('topics', val.join(';'))
+      },
+      get(){
+        return this.getDataValue('topics').split(';')
+      }
+    },
     outcomes: {
       type: DataTypes.STRING,
       set(val){
