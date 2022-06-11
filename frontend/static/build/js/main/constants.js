@@ -14,40 +14,86 @@ const ORIGIN = location.origin;
 const BASE_URL_WEB = ORIGIN;
 const BASE_URL_API = ORIGIN + '/api';
 
-// For DataTables
+// DataTable Language
 const DT_LANGUAGE = {
-	emptyTable: `
-		<div class="text-center p-5">
-			<h3>No records yet</h3>
-			<div class="text-secondary">Hey! We found no records here yet.</div>
-		</div>
-	`,
-	loadingRecords: `
-		<div class="text-center py-5 wait">
-			<div class="spinner-grow text-primary mb-3" role="status">
-				<span class="sr-only">Loading ...</span>
-			</div>
-			<div class="text-secondary">Making it ready ...</div>
-		</div>
-	`,
-	processing: `
-		<div class="text-center p-5 wait">
-			<div class="spinner-grow text-primary mb-3" role="status">
-				<span class="sr-only">Loading ...</span>
-			</div>
-			<div class="text-secondary">Processing, please wait ...</div>
-		</div>
-	`,
-	zeroRecords: `
-		<div class="text-center p-5">
-			<h3>No match found</h3>
-			<div class="text-secondary">No records was found that matched to your request. Please check if the spelling is correct or try other keywords.</div>
-		</div>
-	`,
-	paginate: {
-		previous: `<i class="fas fa-caret-left mr-1"></i><span>Previous</span>`,
-		next: `<span>Next</span><i class="fas fa-caret-right ml-1"></i>`,
-	}
+  emptyTable: `
+    <div class="text-center p-5">
+      <h3>No records yet</h3>
+      <div class="text-secondary">Hey! We found no records here yet.</div>
+    </div>
+  `,
+  loadingRecords: `
+    <div class="text-center py-5 wait">
+      <div class="spinner-grow text-primary mb-3" role="status">
+        <span class="sr-only">Loading ...</span>
+      </div>
+      <div class="text-secondary">Making it ready ...</div>
+    </div>
+  `,
+  processing: `
+    <div class="text-center p-5 wait">
+      <div class="spinner-grow text-primary mb-3" role="status">
+        <span class="sr-only">Loading ...</span>
+      </div>
+      <div class="text-secondary">Processing, please wait ...</div>
+    </div>
+  `,
+  zeroRecords: `
+    <div class="text-center p-5">
+      <h3>No match found</h3>
+      <div class="text-secondary">No records was found that matched to your request. Please check if the spelling is correct or try other keywords.</div>
+    </div>
+  `,
+  paginate: {
+    previous: `<i class="fas fa-caret-left mr-1"></i><span>Previous</span>`,
+    next: `<span>Next</span><i class="fas fa-caret-right ml-1"></i>`,
+  }
+}
+
+// DataTable Default Configuration
+const DT_CONFIG_DEFAULTS = {
+  serverSide: true,
+  responsive: true,
+  language: {
+    emptyTable: `
+      <div class="text-center p-5">
+        <h3>No records yet</h3>
+        <div class="text-secondary">Hey! We found no records here yet.</div>
+      </div>
+    `,
+    loadingRecords: `
+      <div class="text-center py-5 wait">
+        <div class="spinner-grow text-primary mb-3" role="status">
+          <span class="sr-only">Loading ...</span>
+        </div>
+        <div class="text-secondary">Making it ready ...</div>
+      </div>
+    `,
+    processing: `
+      <div class="text-center p-5 wait">
+        <div class="spinner-grow text-primary mb-3" role="status">
+          <span class="sr-only">Loading ...</span>
+        </div>
+        <div class="text-secondary">Processing, please wait ...</div>
+      </div>
+    `,
+    zeroRecords: `
+      <div class="text-center p-5">
+        <h3>No match found</h3>
+        <div class="text-secondary">No records was found that matched to your request. Please check if the spelling is correct or try other keywords.</div>
+      </div>
+    `,
+    paginate: {
+      previous: `<i class="fas fa-caret-left mr-1"></i><span>Previous</span>`,
+      next: `<span>Next</span><i class="fas fa-caret-right ml-1"></i>`,
+    }
+  },
+  columnDefs: [
+    {
+      targets: [-1],
+      orderable: false
+    }
+  ]
 }
 
 // DateTime Formats
@@ -253,16 +299,20 @@ const PROJECT_EVALUATION_STATUS_STYLES = {
 
 // Project Monitoring Styles
 const PROJECT_MONITORING_STATUS_STYLES = {
-  'Completed': {
+  'Finished': {
     icon: 'fas fa-check',
     theme: 'success'
   },
   'On going': {
-    icon: 'fas fa-sync-alt',
+    icon: 'fas fa-hourglass',
     theme: 'warning'
   },
   'Not yet started': {
-    icon: 'fas fa-file-circle-exclamation',
+    icon: 'fas fa-calendar-day',
     theme: 'info'
   },
+  'No data': {
+    icon: 'fas fa-question',
+    theme: 'light'
+  }
 }
