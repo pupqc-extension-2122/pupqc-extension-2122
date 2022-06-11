@@ -41,54 +41,53 @@ const Partnerships = (() => {
       }, 2500);
     });
 
-      // Data Table
-      $('#partnerships_dt').DataTable({
-        data: data,
-        responsive: true,
-        language: DT_LANGUAGE,
-        columns: [
-          { 
-            data: 'partnership_name' 
-          },
-          {
-            data: 'organization'
-            
-          },
-          {
-            data: null, 
-            render: ({ status }) => {
-              const { theme, icon } = PARTNER_STATUS_STYLES[status];
-              return `
-                <div class="text-center">
-                  <div class="badge badge-subtle-${ theme } px-2 py-1">
-                    <i class="${ icon } fa-fw mr-1"></i>
-                    <span>${ status }</span>
-                  </div>
+    // Data Table
+    $('#partnerships_dt').DataTable({
+      ...DT_CONFIG_DEFAULTS,
+      ajax: `${ BASE_URL_API }/partners/datatables`,
+      columns: [
+        { 
+          data: 'partnership_name' 
+        },
+        {
+          data: 'organization'
+          
+        },
+        {
+          data: null, 
+          render: ({ status }) => {
+            const { theme, icon } = PARTNER_STATUS_STYLES[status];
+            return `
+              <div class="text-center">
+                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                  <i class="${ icon } fa-fw mr-1"></i>
+                  <span>${ status }</span>
                 </div>
-              `;
-            }
-          }, {
-            data: null,
-            render: data => {
-              return `
-                <div class="dropdown text-center">
-                  
-                  <div class="btn btn-sm btn-negative" data-toggle="dropdown">
-                      <i class="fas fa-ellipsis-h"></i>
-                  </div>
-                  
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <div class="dropdown-header">Options</div>
-                      <a href="${ BASE_URL_WEB }/m/partners/${ data.id }" class="dropdown-item">
-                          <span>View details</span>
-                      </a>
-                  </div>
-                </div>
-              `
-            }
+              </div>
+            `;
           }
-        ]
-      });
+        }, {
+          data: null,
+          render: data => {
+            return `
+              <div class="dropdown text-center">
+                
+                <div class="btn btn-sm btn-negative" data-toggle="dropdown">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+                
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-header">Options</div>
+                    <a href="${ BASE_URL_WEB }/m/partners/${ data.id }" class="dropdown-item">
+                        <span>View details</span>
+                    </a>
+                </div>
+              </div>
+            `
+          }
+        }
+      ]
+    });
   }
   /**
    * * Public Methods

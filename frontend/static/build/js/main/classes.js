@@ -244,7 +244,7 @@ class ProjectTeamForm {
 	 * o--/[=================>
 	 */
 
-	addTeamMember = (data = { team_member: '' }) => {
+	addTeamMember = (data = '') => {
 
 		// *** Create and insert the row into the DOM *** //
 
@@ -254,7 +254,7 @@ class ProjectTeamForm {
 		// Push a target group object
 		this.projectTeam.push({
 			id: formGroupId,
-			team_member: data.team_member
+			team_member: data
 		});
 
 		// Append the form group before the last child (or add button)
@@ -302,7 +302,7 @@ class ProjectTeamForm {
 		// *** If has data *** //
 
 		// Set the initial value of the input if it has
-		data.team_member && input.val(data.team_member) && input.trigger('change');
+		data && input.val(data).trigger('change');
 	}
 
 	removeTeamMember = formGroupId => {
@@ -591,7 +591,7 @@ class TargetGroupsForm {
 	 * o--/[=================>
 	 */
 
-	addTargetGroup = (data = { target_group: '' }) => {
+	addTargetGroup = (data = '') => {
 
 		// *** Create and insert the row into the DOM *** //
 
@@ -601,7 +601,7 @@ class TargetGroupsForm {
 		// Push a target group object
 		this.targetGroups.push({
 			id: formGroupId,
-			target_group: data.target_group
+			target_group: data
 		});
 
 		// Append the form group before the last child (or add button)
@@ -627,9 +627,6 @@ class TargetGroupsForm {
 			)
 		);
 
-		// Set the initial value of the input if it has
-		data.target_group && input.val(data.target_group);
-
 		// *** Initiate the buttons *** //
 
 		const removeFormGroupBtn = this.#dataElement('removeFormGroupBtn', formGroupId);
@@ -648,6 +645,10 @@ class TargetGroupsForm {
 			else if (this.targetGroups.length === 1) toastr.warning('You must input at least one target group.');
 			else this.removeTargetGroup(formGroupId);
 		});
+
+		// Set the initial value of the input if it has data
+		data && input.val(data).trigger('change');
+
 	}
 
 	removeTargetGroup = formGroupId => {

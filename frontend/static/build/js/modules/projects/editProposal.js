@@ -300,7 +300,7 @@
 			'#projectDetailsConfirm_projectTeam': () => {
 				if (pt.length) {
 					let list = '<ul class="mb-0">';
-					pt.forEach(p => list += `<li>${p.team_member}</li>`);
+					pt.forEach(p => list += `<li>${p}</li>`);
 					list += '</ul>';
 					return list;
 				}
@@ -309,7 +309,7 @@
 			'#projectDetailsConfirm_targetGroups': () => {
 				if (tg.length) {
 					let list = '<ul class="mb-0">';
-					tg.forEach(t => list += `<li>${t.name}</li>`);
+					tg.forEach(t => list += `<li>${t}</li>`);
 					list += '</ul>';
 					return list;
 				}
@@ -474,7 +474,6 @@
 	}
 
   const setInputValues = async () => {
-
     await new Promise((resolve, reject) => {
       setTimeout(() => {
         // Sample Data
@@ -486,18 +485,18 @@
           impact_statement: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
           summary: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
           project_team: [
-            { id: 1, team_member: 'team_member 1' },
-            { id: 2, team_member: 'team_member 2' },
-            { id: 3, team_member: 'team_member 3' },
-            { id: 4, team_member: 'team_member 4' },
-            { id: 5, team_member: 'team_member 5' },
+            'team_member 1',
+            'team_member 2',
+            'team_member 3',
+            'team_member 4',
+            'team_member 5',
           ],
           target_groups: [
-            { id: 1, target_group: 'target_group 1' },
-            { id: 2, target_group: 'target_group 2' },
-            { id: 3, target_group: 'target_group 3' },
-            { id: 4, target_group: 'target_group 4' },
-            { id: 5, target_group: 'target_group 5' },
+            'target_group 1',
+            'target_group 2',
+            'target_group 3',
+            'target_group 4',
+            'target_group 5',
           ],
           cooperating_agencies: [
             { id: 1, cooperating_agency: 'cooperating_agencies 1' },

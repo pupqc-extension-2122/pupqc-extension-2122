@@ -62,13 +62,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }).then(() => {
-      queryInterface.addConstraint('Memos', ['type'], {
-        type: 'check',
-        where: {
-          type: ['MOA', 'MOU']
-        }
-      })
     })
   },
   async down(queryInterface, Sequelize) {

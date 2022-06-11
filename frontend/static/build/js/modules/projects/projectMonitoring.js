@@ -31,9 +31,25 @@ const ProjectMonitoring = (() => {
             id: 1,
             title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
             implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '05/03/2022',
-            end_date: '05/04/2022',
-            status: 'For evaluation',
+            start_date: '07/01/2022',
+            end_date: '07/15/2022',
+            status: 'Approved',
+            target_groups: [
+              {
+                id: 1,
+                name: 'Staffs of Grain Foundation for PWDs Inc.'
+              }, {
+                id: 2,
+                name: 'Staffs of Grain Foundation for PWDs Inc.'
+              },
+            ]
+          }, {
+            id: 1,
+            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
+            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
+            start_date: '06/01/2022',
+            end_date: '06/30/2022',
+            status: 'Approved',
             target_groups: [
               {
                 id: 1,
@@ -49,71 +65,7 @@ const ProjectMonitoring = (() => {
             implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
             start_date: '05/03/2022',
             end_date: '05/04/2022',
-            status: 'For evaluation',
-            target_groups: [
-              {
-                id: 1,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              }, {
-                id: 2,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              },
-            ]
-          }, {
-            id: 1,
-            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '05/03/2022',
-            end_date: '05/04/2022',
-            status: 'Canceled',
-            target_groups: [
-              {
-                id: 1,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              }, {
-                id: 2,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              },
-            ]
-          }, {
-            id: 1,
-            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '05/03/2022',
-            end_date: '05/04/2022',
-            status: 'Pending',
-            target_groups: [
-              {
-                id: 1,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              }, {
-                id: 2,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              },
-            ]
-          }, {
-            id: 1,
-            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '05/03/2022',
-            end_date: '05/04/2022',
-            status: 'Pending',
-            target_groups: [
-              {
-                id: 1,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              }, {
-                id: 2,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              },
-            ]
-          }, {
-            id: 1,
-            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '05/03/2022',
-            end_date: '05/04/2022',
-            status: 'Canceled',
+            status: 'Approved',
             target_groups: [
               {
                 id: 1,
@@ -143,7 +95,7 @@ const ProjectMonitoring = (() => {
             if(target_groups.length > 1) {
               return `
                 <div>${ target_groups[0].name }</div> 
-                <div class="small">and ${ target_groups.length - 1 } more.</div>
+                <div class="small text-muted">and ${ target_groups.length - 1 } more.</div>
               `
             } else if(target_groups.length === 1) {
               return target_groups[0].name;
@@ -154,17 +106,35 @@ const ProjectMonitoring = (() => {
         }, {
           data: null,
           render: ({ start_date }) => {
-            return formatDateTime(start_date, 'Date');
+            return `
+              <div>${ formatDateTime(start_date, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(start_date) }</div>
+            `
           }
         }, {
           data: null,
           render: ({ end_date }) => {
-            return formatDateTime(end_date, 'Date');
+            return `
+              <div>${ formatDateTime(end_date, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(end_date) }</div>
+            `
           }
         }, {
           data: null,
-          render: ({ status }) => {
-            const { theme, icon } = PROJECT_STATUS_STYLES[status];
+          render: data => {
+            const { start_date, end_date } = data;
+            const today = moment();
+            let status;
+            if (today.isBefore(start_date) && today.isBefore(end_date)) {
+              status = 'Not yet started';
+            } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
+              status = 'Finished';
+            } else if (today.isBetween(start_date, end_date)) {
+              status = 'On going';
+            } else {
+              status = 'No data';
+            }
+            const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
             return `
               <div class="text-center">
                 <div class="badge badge-subtle-${ theme } px-2 py-1">
