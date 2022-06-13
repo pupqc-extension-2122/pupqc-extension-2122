@@ -1,5 +1,5 @@
 const {
-  Memos, Projects, Project_Partners, Partners
+  Memos, Projects, Project_Partners, Project_Activities, Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
 
@@ -222,54 +222,35 @@ exports.viewProposal = async (req, res) => {
 
 }
 
-
+// ? Acitivities
 exports.createProjectActivities = async (req, res) => {
-  if (!req.auth.roles.includes('Extensionist')) {
-    return res.status(403).send({ error: true, message: 'Forbidden Action' })
-  }
-  const body = req.body
 
-  let id = req.params.id
-
-  let [project_activites, created] = await Project.findByPK({
-    where: {
-      name: body.name.toUpperCase()
-    },
-    defaults: {
-      address: body.address
-    },
-    include: {
-      model: Project_Activities,
-      as: 'project_activities',
-      attributes: { exclude: ['id'] },
-      limit: 1,
-      order: [['validity_date', 'DESC']]
+  try {
+    
+    if (!req.auth.roles.includes('Extensionist')) {
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
     }
-  })
 
-  if (project.project_activities) {
-    if (new Date(project.project_activities[0].end_date) > new Date()) {
-      return res
-        .status(400)
-        .send({ error: true, message: 'There is an existing activity for this Project' })
+    const id = req.params.id
+    const body = req.body
+
+    let project = await Projects.findByPk(id)
+
+    if (!project)
+      return res.status(404).send({error: true, message: 'Project not found'})
+
+    let data = await Project_Activities.create(body)
+
+    if(data){
+      res.send({
+        error:false,
+        message: 'Activity added successfully'
+      })
     }
-  }
+  
 
-  let project_activities = await Project_Activities.create({
-    project_id: project.id,
-    project_name: project.name,
-    organization_id: body.organization_id,
-    duration: body.duration,
-    validity_date: body.validity_date,
-    end_date: null,
-    representative_pup: body.representative_pup,
-    representative_partner: body.representative_partner,
-    notarized_date: body.notarized_date,
-  })
-
-  if (project_activity) {
-    res
-      .status(200)
-      .send({ error: false, message: 'Project Actvity Created!' })
+  } catch (error) {
+    console.log(error)
+    res.send(error)
   }
 }
