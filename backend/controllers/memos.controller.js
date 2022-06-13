@@ -28,6 +28,39 @@ exports.viewMemo = async (req, res) => {
   }
 }
 
+exports.updateMemo = async (req, res) => {
+
+  try {
+    
+      const id = req.params.id
+      const body = req.body
+    
+      let memo = await Memos.findOne({ where: { id } })
+    
+      if (!memo)
+        return res.status(404).send({error: true, message: 'Memo not found'})
+    
+      memo.duration = body.duration
+      memo.validity_date = body.validity_date
+      memo.end_date = new Date(base.setDate(base.getDate() + (body.duration* 365.25)))
+      memo.representative_pup = body.representative_pup
+      memo.representative_partner = body.representative_partner
+      memo.notarized_date = body.notarized_date
+      
+      await memo.save()
+    
+      req.send({
+        error: false,
+        message: 'Memo Updated Successfully!'
+      })
+    
+  } catch (err) {
+    console.log(err)
+    res.send(err)
+  }
+
+}
+
 exports.dataTableMemo = async (req, res) => {
   try {
 
