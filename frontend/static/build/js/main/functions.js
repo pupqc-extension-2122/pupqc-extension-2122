@@ -73,6 +73,16 @@ const getCookie = (cname) => {
   return "";
 }
 
+
+const ajaxErrorHandler = (errMsg = '') => {
+  toastr.error('Something went wrong. Please reload the page.', {
+    "timeOut": "0",
+    "extendedTimeOut": "0",
+  });
+  console.error(`[ERR]: ${ errMsg || 'Failed to called ajax.' }`);
+}
+
+
 /** 
  * ? Moments Custom Functions 
  * =================================

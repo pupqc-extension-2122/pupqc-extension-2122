@@ -50,10 +50,20 @@ const DT_LANGUAGE = {
   }
 }
 
+const TEMPLATE = {
+  LABEL_ICON: (label, icon, iconType="s") => {
+    return `
+      <span>${label}<span>
+      <i class="fa${iconType} fa-${icon} ml-1"></i>
+    `
+  },
+}
+
 // DataTable Default Configuration
 const DT_CONFIG_DEFAULTS = {
   serverSide: true,
   responsive: true,
+  order: [[0, 'desc']],
   language: {
     emptyTable: `
       <div class="text-center p-5">
@@ -93,7 +103,53 @@ const DT_CONFIG_DEFAULTS = {
       targets: [-1],
       orderable: false
     }
-  ]
+  ],
+  autoWidth: false,
+  dom: `
+			<"row w-100"
+				<"col-md-2" l>
+				<"col-md-6" B>
+				<"col-md-4" f>
+			>
+			<t>
+			<"row"
+				<"col-md-6" i>
+				<"col-md-6" p>
+			>
+  `,
+  buttons: [
+    {
+      extend: "copy",
+      text: TEMPLATE.LABEL_ICON("Copy", "copy"),
+      className: "btn-sm btn-negative",
+      // exportOptions: { columns: visibleCols }
+    }, {
+      extend: "csv",
+      text: TEMPLATE.LABEL_ICON("CSV", "file-csv"),
+      className: "btn-sm btn-negative",
+      // exportOptions: { columns: visibleCols }
+    }, {
+      extend: "excel",
+      text: TEMPLATE.LABEL_ICON("Excel", "file-excel"),
+      className: "btn-sm btn-negative",
+      // exportOptions: { columns: visibleCols }
+    }, {
+      extend: "pdf",
+      text: TEMPLATE.LABEL_ICON("PDF", "file-pdf"),
+      className: "btn-sm btn-negative",
+      // exportOptions: { columns: visibleCols }
+    }, {
+      extend: "print",
+      text: TEMPLATE.LABEL_ICON("Print", "print"),
+      className: "btn-sm btn-negative",
+      // exportOptions: { columns: visibleCols }
+    }, {
+      extend: "colvis",
+      text: TEMPLATE.LABEL_ICON("Columns", "eye"),
+      className: "btn-sm btn-negative",
+      // columns: columnOpts
+    }
+  ],
 }
 
 // DateTime Formats

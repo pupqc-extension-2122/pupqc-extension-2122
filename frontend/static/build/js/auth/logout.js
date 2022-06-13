@@ -19,7 +19,10 @@ $('[data-auth="logout"]').on('click', () => {
       }
     },
     error: () => {
-      toastr.error('Something went wrong. Please reload the page.');
+      toastr.error('Something went wrong. Please reload the page.', {
+        "timeOut": "0",
+        "extendedTimeOut": "0",
+      });
       console.error(`[ERR]: Failed to call ajax.`);
     }
   })

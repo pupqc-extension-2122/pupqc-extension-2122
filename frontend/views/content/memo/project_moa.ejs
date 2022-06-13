@@ -33,15 +33,21 @@
         <div class="text-secondary">View reports and manage activities here</div>
       </div>
       <div>
-        <button type="button" class="btn btn-default" id="daterange-btn">
+        <!-- <button type="button" class="btn btn-default" id="daterange-btn">
           <i class="far fa-calendar-alt mr-1"></i>
           <span>Filter by date</span>
-        </button>
-        <a href="" class="btn btn-primary" data-toggle="modal"
-        data-target="#addMOAModal">
-          <i class="fas fa-plus mr-1"></i>
-          <span>Add MOA/MOU</span>
-        </a>
+        </button> -->
+        <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+          <button 
+            type="button" 
+            class="btn btn-primary" 
+            data-toggle="modal"
+            data-target="#addMemo_modal"
+          >
+            <i class="fas fa-plus mr-1"></i>
+            <span>Add MOA/MOU</span>
+          </>
+        <% } %>
       </div>
     </div>
   </div>
@@ -159,168 +165,226 @@
 </section>
 
 <%# Modals %>
-<div class="modal fade" id="addMOAModal">
-	<div class="modal-dialog modal-dialog-scrollable">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">Add MOA/MOU</h4>
-				<button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-					<i class="fas fa-times"></i>
-				</button>
-			</div>
-			<div class="modal-body">
-				<%# Form Card %>
-				<form id="addMOA_form">
-					<%# Partnership Name %>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="addMOA_partnershipName">
-								<span>Name of Partner</span>
-								<span class="text-danger">*</span>
-							</label>
-							<input type="text" class="form-control" id="addMOA_partnershipName" name="name"
-								placeholder="Insert partnership name here ...">
-						</div>
-					</div>
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
 
-					<%# Partner Address %>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="addMOA_partnerAddress">
-								<span>Partner Address</span>
-								<span class="text-danger">*</span>
-							</label>
-							<input type="text" class="form-control" id="addMOA_partnerAddress" name="address"
-								placeholder="Insert partner address here ...">
-						</div>
-					</div>
+  <%# Add Memo Modal %>
+  <div class="modal fade" id="addMemo_modal">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <form class="modal-content" id="addMemo_form">
+        <div class="modal-header">
+          <h4 class="modal-title">Add MOA/MOU</h4>
+          <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+            
+          <%# Form Group Loader %>
+          <div id="addMemo_formGroups_loader">
+            <div class="form-group">
+              <div class="skeleton text" style="width: 8rem"></div>
+              <div class="skeleton input"></div>
+            </div>
+            <div class="form-group">
+              <div class="skeleton text" style="width: 8rem"></div>
+              <div class="skeleton input"></div>
+              <div class="skeleton input"></div>
+            </div>
+            <div class="form-group">
+              <div class="p-3 my-5"></div>
+            </div>
+          </div>
 
-					<%# Partnership Representative Name %>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="addMOA_partnershipRepresentative">
-								<span>Name of Representative</span>
-								<span class="text-danger">*</span>
-							</label>
-							<input type="text" class="form-control" id="addMOA_partnershipRepresentative" name="representative"
-								placeholder="Insert partnership representative name here ...">
-						</div>
-					</div>
+          <%# Form Groups %>
+          <div id="addMemo_formGroups" style="display: none">
 
-					<%# PUP REPD Representative %>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="addMOA_pupREPD">
-								<span>Name of PUP REPD Representative</span>
-								<span class="text-danger">*</span>
-							</label>
-							<input type="text" class="form-control" id="addMOA_pupREPD" name="pup_REPD"
-								placeholder="Insert PUP REPD representative here ...">
-						</div>
-					</div>
+            <%# Partnership Name %>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="addMOA_partnershipName">
+                  <span>Name of Partner</span>
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="addMOA_partnershipName" 
+                  name="name"
+                  placeholder="Insert partnership name here ..."
+                />
+              </div>
+            </div>
+    
+            <%# Partner Address %>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="addMOA_partnerAddress">
+                  <span>Partner Address</span>
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="addMOA_partnerAddress" 
+                  name="address"
+                  placeholder="Insert partner address here ..."
+                />
+              </div>
+            </div>
+    
+            <%# Partnership Representative Name %>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="addMOA_partnershipRepresentative">
+                  <span>Name of Representative</span>
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="addMOA_partnershipRepresentative" 
+                  name="representative"
+                  placeholder="Insert partnership representative name here ..."
+                />
+              </div>
+            </div>
+    
+            <%# PUP REPD Representative %>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="addMOA_pupREPD">
+                  <span>Name of PUP REPD Representative</span>
+                  <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="addMOA_pupREPD" 
+                  name="pup_REPD"
+                  placeholder="Insert PUP REPD representative here ..."
+                />
+              </div>
+            </div>
+    
+            <%# Organization %>
+            <div class="col-12">
+              <div class="form-group" id="addMOA_organization_grp">
+                <label for="addMOA_organization">
+                  <span>Organization</span>
+                  <span class="text-danger">*</span>
+                </label>
+    
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="col-md-8">
+                      <select 
+                        name="organization" 
+                        id="addMemo_organization_select" 
+                        class="form-control select2"
+                        style="width: 100%;"
+                      >
+                        <option disabled>No organizations yet.</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <button class="btn btn-primary btn-sm" type="button">
+                        <i class="fas fa-plus mr-1"></i>
+                        <span>Add organization</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <%# Notary Signed Date %>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="addMOA_notarySignedDate">
+                  <span>Notary Signed Date</span>
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group date">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="addMOA_notarySignedDate" 
+                    name="notary_date"
+                    placeholder="Please select notary signed date" 
+                    data-inputmask-alias="datetime"
+                    data-inputmask-inputformat="mm/dd/yyyy" 
+                    data-mask 
+                  />
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" id="addMOA_notarySignedDate_pickerBtn"
+                      data-toggle="tooltip" title="Select notary signed date">
+                      <i class="fa fa-calendar-day fa-fw"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <%# Validity Date %>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="addMOA_validityDate">
+                  <span>Validity Date</span>
+                  <span class="text-danger">*</span>
+                </label>
+                <div class="input-group date">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    id="addMOA_validityDate" 
+                    name="validity_date"
+                    placeholder="Please select validity date" 
+                    data-inputmask-alias="datetime"
+                    data-inputmask-inputformat="mm/dd/yyyy" 
+                    data-mask 
+                  />
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-primary" id="addMOA_validityDate_pickerBtn"
+                      data-toggle="tooltip" title="Select validity date">
+                      <i class="fa fa-calendar-day fa-fw"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            <%# Upload Document %>
+            <div class="col-12">
+              <div class="form-group">
+                <label for="document">
+                    <span>Upload document here</span>
+                    <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input 
+                            type="file" 
+                            class="custom-file-input" 
+                            id="uploadDocument"
+                            name="uploadDocument"
+                        >
+                        <label class="custom-file-label" for="uploadDocument">Choose file</label>
+                    </div>
+                </div>
+              </div>
+            </div>
 
-					<%# Organization %>
-					<div class="col-12">
-						<div class="form-group" id="addMOA_organization_grp">
-							<label for="addMOA_organization">
-								<span>Organization</span>
-								<span class="text-danger">*</span>
-							</label>
-
-							<div class="form-group">
-								<div class="form-row">
-									<div class="col-md-8">
-										<select 
-											name="organization" 
-											id="addMOA_organization_select" 
-											class="form-control select2"
-											style="width: 100%;"
-										>
-											<option disabled>No organizations yet.</option>
-										</select>
-									</div>
-									<div class="col-md-4 text-right">
-										<button class="btn btn-primary btn-sm" type="button">
-											<i class="fas fa-plus mr-1"></i>
-											<span>Add organization</span>
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<%# Notary Signed Date %>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="addMOA_notarySignedDate">
-								<span>Notary Signed Date</span>
-								<span class="text-danger">*</span>
-							</label>
-							<div class="input-group date">
-								<input type="text" class="form-control" id="addMOA_notarySignedDate" name="notary_date"
-									placeholder="Please select notary signed date" data-inputmask-alias="datetime"
-									data-inputmask-inputformat="mm/dd/yyyy" data-mask />
-								<div class="input-group-append">
-									<button type="button" class="btn btn-primary" id="addMOA_notarySignedDate_pickerBtn"
-										data-toggle="tooltip" title="Select notary signed date">
-										<i class="fa fa-calendar-day fa-fw"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<%# Validity Date %>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="addMOA_validityDate">
-								<span>Validity Date</span>
-								<span class="text-danger">*</span>
-							</label>
-							<div class="input-group date">
-								<input type="text" class="form-control" id="addMOA_validityDate" name="validity_date"
-									placeholder="Please select validity date" data-inputmask-alias="datetime"
-									data-inputmask-inputformat="mm/dd/yyyy" data-mask />
-								<div class="input-group-append">
-									<button type="button" class="btn btn-primary" id="addMOA_validityDate_pickerBtn"
-										data-toggle="tooltip" title="Select validity date">
-										<i class="fa fa-calendar-day fa-fw"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<%# Upload Document %>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="document">
-									<span>Upload document here</span>
-									<span class="text-danger">*</span>
-							</label>
-							<div class="input-group">
-									<div class="custom-file">
-											<input 
-													type="file" 
-													class="custom-file-input" 
-													id="uploadDocument"
-													name="uploadDocument"
-											>
-											<label class="custom-file-label" for="uploadDocument">Choose file</label>
-									</div>
-							</div>
-						</div>
-					</div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="submitMOA_btn">Submit</button>
+          <button type="submit" class="btn btn-primary" id="submitMemo_btn">Submit</button>
         </div>
       </form>
-		</div>
-	</div>
-</div>
+    </div>
+  </div>
+
+<% } %>
 
 
 <%# ***** Scripts ***** %>

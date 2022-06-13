@@ -121,42 +121,21 @@
     });
   }
 
-  const initCooperatingAgenciesGroupForm = () => {
-    const cooperating_agencies_list = [
-      {
-        id: 1,
-        name: 'coop_agency 1'
-      }, {
-        id: 2,
-        name: 'coop_agency 2'
-      }, {
-        id: 3,
-        name: 'coop_agency 3'
-      }, {
-        id: 4,
-        name: 'coop_agency 4'
-      }, {
-        id: 5,
-        name: 'coop_agency 5'
-      }, {
-        id: 6,
-        name: 'coop_agency 6'
-      }, {
-        id: 7,
-        name: 'coop_agency 7'
-      }, {
-        id: 8,
-        name: 'coop_agency 8'
-      }, {
-        id: 9,
-        name: 'coop_agency 9'
-      }, {
-        id: 10,
-        name: 'coop_agency test 10'
+  const initCooperatingAgenciesGroupForm = async () => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/partners`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          cooperatingAgencies_list = result.data;
+        }
       },
-    ];
-
-    cooperatingAgencies_list = [...cooperating_agencies_list];
+      error: () => {
+        ajaxErrorHandler();
+      }
+    });
 
     CA_form = new CooperatingAgenciesForm(
       '#addProject_cooperatingAgencies_grp',
@@ -253,7 +232,48 @@
         }
       },
       onSubmit: () => {
-        const data = getProjectDetailsData();
+        const submitBtn = $('#submitBtn');
+        const prevBtn = $('#prevBtn');
+
+        // Set elements to loading state
+        prevBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <span class="spinner-grow spinner-grow-sm m-0" role="status">
+              <span class="sr-only">Loading...</span>
+            </span>
+          </span>
+        `);
+
+        const enableElements = () => {
+          prevBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html('Submit');
+        }
+
+        let data = getProjectDetailsData();
+        data.partner_id = data.cooperating_agencies.map(p => p.id);
+        delete data.cooperating_agencies;
+
+        $.ajax({
+          url: `${ BASE_URL_API }/projects/create`,
+          type: 'POST',
+          data: data,
+          success: result => {
+            if (result.error) {
+              ajaxErrorHandler(result.message);
+              enableElements();
+            } else {
+              toastr.success('A new proposal has been successfully created.');
+            }
+          },
+          error: () => {
+            ajaxErrorHandler();
+            enableElements();
+          }
+        })
+
         console.log(data);
 
         toastr.success("Submitted successfully!");
@@ -262,17 +282,17 @@
   }
 
   const getProjectDetailsData = () => {
-    const formData = new FormData($(formSelector)[0]);
+    const fd = new FormData($(formSelector)[0]);
     return {
-      title: formData.get('title'),
-      implementer: formData.get('implementer'),
-      project_team: PT_form.getTeamMembers(),
+      title: fd.get('title'),
+      implementer: fd.get('implementer'),
+      team_members: PT_form.getTeamMembers(),
       target_groups: TG_form.getTargetGroups(),
       cooperating_agencies: CA_form.getSelectedCooperatingAgencies(),
-      start_date: '' || new Date(formData.get('start_date')),
-      end_date: '' || new Date(formData.get('end_date')),
-      impact_statement: formData.get('impact_statement'),
-      summary: formData.get('summary'),
+      start_date: '' || moment(fd.get('start_date')).toISOString(),
+      end_date: '' || moment(fd.get('end_date')).toISOString(),
+      impact_statement: fd.get('impact_statement'),
+      summary: fd.get('summary'),
       financial_requirements: FR_form.getFinancialRequirements().requirements,
       evaluation_plans: EP_form.getEvaluationPlans()
     }
@@ -282,7 +302,7 @@
     const {
       title,
       implementer,
-      project_team: pt,
+      team_members: pt,
       target_groups: tg,
       cooperating_agencies: ca,
       start_date,
@@ -301,7 +321,7 @@
       '#projectDetailsConfirm_projectTeam': () => {
         if (pt.length) {
           let list = '<ul class="mb-0">';
-          pt.forEach(p => list += `<li>${p.team_member}</li>`);
+          pt.forEach(p => list += `<li>${p}</li>`);
           list += '</ul>';
           return list;
         }
@@ -310,7 +330,7 @@
       '#projectDetailsConfirm_targetGroups': () => {
         if (tg.length) {
           let list = '<ul class="mb-0">';
-          tg.forEach(t => list += `<li>${t.name}</li>`);
+          tg.forEach(t => list += `<li>${t}</li>`);
           list += '</ul>';
           return list;
         }
@@ -487,14 +507,14 @@
    */
 
   return {
-    init: () => {
+    init: async () => {
       if ($(formSelector).length) {
         initializations();
         handleStepper();
         handleForm();
         initProjectTeamForm();
         initTargetGroupForm();
-        initCooperatingAgenciesGroupForm();
+        await initCooperatingAgenciesGroupForm();
         initFinancialRequirementsForm();
         initEvaluationPlanForm();
         removeLoaders();

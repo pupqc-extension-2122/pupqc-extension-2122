@@ -84,7 +84,9 @@
       error: () => {
         enableElements();
         toastr.error('Something went wrong. Please reload the page.', null, {
-          "positionClass": "toast-top-center mt-3"
+          "positionClass": "toast-top-center mt-3",
+          "timeOut": "0",
+          "extendedTimeOut": "0",
         });
         console.error(`[ERR]: Failed to call ajax.`);
       }

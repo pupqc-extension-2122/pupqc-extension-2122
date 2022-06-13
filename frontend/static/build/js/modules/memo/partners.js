@@ -11,51 +11,37 @@ const Partnerships = (() => {
   /**
    * * Local Variables
    */
-
+  let dt;
   let initialized = 0;
-
-   // ! Simulation
-  let data;
 
   /**
    * * Private Methods
    */
 
-  const initDataTable = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-
-        // Sample Data
-        data = [
-          {
-            partnership_name: 'Grain Foundation for PWDs Inc.',
-            organization: 'Polytechnic University of the Philippines, Quezon City Branch',
-            status: 'Active'
-          }, {
-            partnership_name: 'Kalinga Foundation',
-            organization: 'IT Department',
-            status: 'Inactive'
-          },
-        ];
-        resolve();
-      }, 2500);
-    });
-
-    // Data Table
-    $('#partnerships_dt').DataTable({
+  const initDataTable = () => {
+    dt = $('#partnerships_dt').DataTable({
       ...DT_CONFIG_DEFAULTS,
-      ajax: `${ BASE_URL_API }/partners/datatables`,
+      ajax: {
+        url: `${ BASE_URL_API }/partners/datatables`,
+        // success: result => {
+        //   console.log(result);
+        // }
+      },
       columns: [
+        {
+          data: 'createdAt', visible: false
+        },
         { 
-          data: 'partnership_name' 
+          data: 'name' 
         },
         {
-          data: 'organization'
-          
+          data: null,
+          render: () => `[ERR]: No organization`
         },
         {
           data: null, 
-          render: ({ status }) => {
+          render: data => {
+            const status = 'Active';
             const { theme, icon } = PARTNER_STATUS_STYLES[status];
             return `
               <div class="text-center">
@@ -76,11 +62,11 @@ const Partnerships = (() => {
                     <i class="fas fa-ellipsis-h"></i>
                 </div>
                 
-                  <div class="dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-header">Options</div>
-                    <a href="${ BASE_URL_WEB }/m/partners/${ data.id }" class="dropdown-item">
-                        <span>View details</span>
-                    </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-header">Options</div>
+                  <a href="${ BASE_URL_WEB }/m/partners/${ data.id }" class="dropdown-item">
+                      <span>View details</span>
+                  </a>
                 </div>
               </div>
             `
@@ -89,9 +75,12 @@ const Partnerships = (() => {
       ]
     });
   }
+
   /**
    * * Public Methods
    */
+
+  const reloadDataTable = () => dt.ajax.reload();
 
   /**
    * * Init
@@ -109,7 +98,8 @@ const Partnerships = (() => {
    */
 
   return {
-    init
+    init,
+    reloadDataTable
   }
 
 })();

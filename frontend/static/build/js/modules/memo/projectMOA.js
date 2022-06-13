@@ -11,7 +11,6 @@ const ProjectMoa = (() => {
   /**
    * * Local Variables
    */
-  const formSelector = '#addMOA_form';
 
   let initialized = 0;
 
@@ -23,6 +22,9 @@ const ProjectMoa = (() => {
    */
 
   const initializations = () => {
+    
+    // *** For Date Inputs *** //
+
     // Initialize Notary Signed Date
     $app('#addMOA_notarySignedDate').initDateInput({
       button: '#addMOA_notarySignedDate_pickerBtn'
@@ -32,10 +34,49 @@ const ProjectMoa = (() => {
     $app('#addMOA_validityDate').initDateInput({
       button: '#addMOA_validityDate_pickerBtn'
     });
+
+    // *** For Add Memo Modal *** //
+    
+    $('#addMemo_modal').on('show.bs.modal', () => {
+      $.ajax({
+        url: `${ BASE_URL_API }/organizations`,
+        type: 'GET',
+        success: result => {
+          if(result.error) {
+            ajaxErrorHandler(result.message)
+          } else {
+            const { data } = result;
+            const select = $('#addMemo_organization_select');
+
+            select.empty();
+
+            if (data.length) {
+              select.append('<option value=""></option>');
+              data.forEach(d => {
+                select.append(`
+                  <option value="${ d.id }">${ d.name } | ${ d.type }</option>
+                `);
+
+                $('#addMemo_formGroups_loader').hide();
+                $('#addMemo_formGroups').show();
+              });
+            } else {
+              select.append('<option disabled>No organizations yet.</option>');
+            }
+          }
+        },
+        error: () => ajaxErrorHandler()
+      });
+    });
+
+    $('#addMemo_modal').on('hidden.bs.modal', () => {
+      $('#addMemo_formGroups_loader').show();
+      $('#addMemo_formGroups').hide();
+    });
   }
 
   const handleForm = () => {
-    $app(formSelector).handleForm({
+    $app('#addMemo_form').handleForm({
       validators: {
         name: {
           required: "The partner name is required.",
@@ -71,7 +112,56 @@ const ProjectMoa = (() => {
         }
       },
       onSubmit: () => {
-        toastr.success("MOA/MOU has been added successfully!");
+        const fd = new FormData($('#addMemo_form')[0]);
+        const submitBtn = $('#submitMemo_btn'); 
+
+        // Set elements to loading state
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <span class="spinner-grow spinner-grow-sm m-0" role="status">
+              <span class="sr-only">Loading...</span>
+            </span>
+          </span>
+        `);
+
+        const enableElements = async () => {
+          submitBtn.attr('disabled', false);
+          submitBtn.html('Submit');
+        }
+        
+        const data = {
+          name: fd.get('name'),
+          address: fd.get('address'),
+          representative_partner: fd.get('representative'),
+          representative_pup: fd.get('pup_REPD'),
+          organization_id: fd.get('organization'),
+          notarized_date: moment(fd.get('notary_date')).toISOString(),
+          validity_date: moment(fd.get('validity_date')).toISOString(),
+          duration: 3
+        }
+
+        console.log(data);
+
+        $.ajax({
+          url: `${ BASE_URL_API }/partners/create`,
+          type: 'POST',
+          data: data,
+          success: result => {
+            if (result.error) {
+              ajaxErrorHandler(result.message);
+              enableElements();
+            } else {
+              enableElements();
+              $('#addMemo_modal').modal('hide');
+              toastr.success('A new MOA/MOU has been successfully added.');
+            }
+          },
+          error: () => {
+            ajaxErrorHandler();
+            enableElements();
+          }
+        });
       }
     });
   }

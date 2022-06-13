@@ -48,7 +48,7 @@ router.get('/partners', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
-    ? res.render(PATH + 'partnerships', {
+    ? res.render(PATH + 'partners', {
       document_title: 'Partnerships',
       active_sidebar_tab: 'Partners',
       name: `${ first_name } ${ last_name }`,
@@ -65,8 +65,8 @@ router.get('/partners/:partner_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
-    ? res.render(PATH + 'partnership_details', {
-      document_title: 'Partnership Details',
+    ? res.render(PATH + 'partner_details', {
+      document_title: 'Partner Details',
       active_sidebar_tab: 'Partners',
       name: `${ first_name } ${ last_name }`,
       role: renderRoles(roles),

@@ -1511,7 +1511,7 @@ class FinancialRequirementsForm {
       if (!r_category) {
         requirements.push({
           id: category.id,
-          name: category.name,
+          category: category.name,
           items: []
         });
       }
@@ -1521,7 +1521,11 @@ class FinancialRequirementsForm {
       requirements.find(x => x.id == category.id).items.push(item);
     });
     return {
-      requirements: requirements,
+      requirements: requirements.map(x => {
+        let y = {...x};
+        delete y.id;
+        return y;
+      }),
       overallAmount: this.#getOverallAmount()
     };
   }
