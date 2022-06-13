@@ -146,7 +146,7 @@ exports.updateProject = async (req, res) => {
       await Project_Partners.bulkCreate(project_partners)
     }
 
-    
+
     let updated_project = current_project
     updated_project.title = body.title
     updated_project.target_groups = body.target_groups
@@ -223,10 +223,28 @@ exports.viewProposal = async (req, res) => {
 }
 
 // ? Acitivities
+exports.listProjectActivities = async (req, res) => {
+  try {
+
+    const id = req.params.id
+
+    let data = await Project_Activities.findAll({ where: { project_id: id } })
+
+    res.send({
+      error: false,
+      data
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.createProjectActivities = async (req, res) => {
 
   try {
-    
+
     if (!req.auth.roles.includes('Extensionist')) {
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
     }
@@ -237,17 +255,17 @@ exports.createProjectActivities = async (req, res) => {
     let project = await Projects.findByPk(id)
 
     if (!project)
-      return res.status(404).send({error: true, message: 'Project not found'})
+      return res.status(404).send({ error: true, message: 'Project not found' })
 
-    let data = await Project_Activities.create(body)
+    let data = await Project_Activities.create({ ...body, project_id: id })
 
-    if(data){
+    if (data) {
       res.send({
-        error:false,
+        error: false,
         message: 'Activity added successfully'
       })
     }
-  
+
 
   } catch (error) {
     console.log(error)
