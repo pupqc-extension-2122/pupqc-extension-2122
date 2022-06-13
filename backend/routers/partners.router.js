@@ -1,6 +1,6 @@
 let router = require('express').Router()
 const {
-  createPartner, datatablePartners
+  createPartner, datatablePartners, listPartners
 } = require('../controllers/partners.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
@@ -8,6 +8,7 @@ const jwtMiddleWare = require('../../utils/jwtMiddleware')
 router.use(jwtMiddleWare)
 
 // Routes
+router.get('/', listPartners)
 router.get('/datatables', datatablePartners)
 router.post('/create', createPartner)
 

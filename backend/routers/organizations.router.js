@@ -4,7 +4,7 @@ const {
 } = require('../controllers/organizations.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
-// router.use(jwtMiddleWare)
+router.use(jwtMiddleWare)
 
 router.get('/', listOrganizations)
 

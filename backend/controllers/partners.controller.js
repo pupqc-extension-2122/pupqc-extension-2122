@@ -1,13 +1,28 @@
 const datatables = require('sequelize-datatables')
 const { Partners, Memos } = require('../sequelize/models')
 
+exports.listPartners = async (req, res) => {
+  try {
+    
+    let data = await Partners.findAll()
+
+    res.send({
+      error: false,
+      data
+    })
+
+  } catch (error) {
+    
+  }
+}
+
 exports.datatablePartners = async (req, res) => {
   try {
 
     if (!req.auth.roles.includes('Chief')) {
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
     }
-    
+
     let data = await datatables(Partners, req.query, {})
 
     res.send(data)
@@ -29,7 +44,7 @@ exports.createPartner = async (req, res) => {
       where: {
         name: body.name.toUpperCase()
       },
-      defaults:{
+      defaults: {
         address: body.address
       },
       include: {
