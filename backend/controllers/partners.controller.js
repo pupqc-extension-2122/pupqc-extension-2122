@@ -3,7 +3,7 @@ const { Partners, Memos } = require('../sequelize/models')
 
 exports.listPartners = async (req, res) => {
   try {
-    
+
     let data = await Partners.findAll()
 
     res.send({
@@ -12,7 +12,26 @@ exports.listPartners = async (req, res) => {
     })
 
   } catch (error) {
-    
+    console.log(error)
+    res.send(error)
+  }
+}
+
+exports.datatableMemos = async (req, res) => {
+  try {
+
+    const id = req.params.id
+
+    const data = await datatables(Memos, req.query, {
+      where: { partner_id: id },
+      include: ['projects']
+    })
+
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
   }
 }
 
