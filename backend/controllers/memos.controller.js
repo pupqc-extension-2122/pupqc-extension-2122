@@ -42,14 +42,14 @@ exports.updateMemo = async (req, res) => {
     
       memo.duration = body.duration
       memo.validity_date = body.validity_date
-      memo.end_date = new Date(base.setDate(base.getDate() + (body.duration* 365.25)))
+      memo.end_date = new Date(new Date(body.validity_date).setDate(new Date(body.validity_date).getDate() + (body.duration* 365.25)))
       memo.representative_pup = body.representative_pup
       memo.representative_partner = body.representative_partner
       memo.notarized_date = body.notarized_date
       
       await memo.save()
     
-      req.send({
+      res.send({
         error: false,
         message: 'Memo Updated Successfully!'
       })
