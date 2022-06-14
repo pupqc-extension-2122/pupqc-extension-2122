@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    implementer: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     target_groups: {
       type: DataTypes.STRING,
       set(val) {
