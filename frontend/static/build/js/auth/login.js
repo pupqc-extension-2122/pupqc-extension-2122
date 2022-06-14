@@ -51,12 +51,12 @@
 
   const onLoginFormSubmit = () => {
 
-    const formData = new FormData($(loginForm)[0]);
+    const fd = new FormData($(loginForm)[0]);
 
     const data = {
-      email: formData.get('email'),
-      password: formData.get('password'),
-      // remember: formData.get('remember_me')
+      email: fd.get('email'),
+      password: fd.get('password'),
+      remember: $('#loginForm_rememberMe').is(":checked")
     }
     
     disableElements();

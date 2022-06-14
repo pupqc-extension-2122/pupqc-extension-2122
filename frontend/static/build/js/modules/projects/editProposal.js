@@ -474,127 +474,38 @@
 	}
 
   const setInputValues = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Sample Data
-        const data = {
-          title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-          implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-          start_date: "Tue May 03 2022 00:00:00 GMT+0800 (Taipei Standard Time)",
-          end_date: "Tue May 04 2022 00:00:00 GMT+0800 (Taipei Standard Time)",
-          impact_statement: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
-          summary: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
-          project_team: [
-            'team_member 1',
-            'team_member 2',
-            'team_member 3',
-            'team_member 4',
-            'team_member 5',
-          ],
-          target_groups: [
-            'target_group 1',
-            'target_group 2',
-            'target_group 3',
-            'target_group 4',
-            'target_group 5',
-          ],
-          cooperating_agencies: [
-            { id: 1, cooperating_agency: 'cooperating_agencies 1' },
-            { id: 2, cooperating_agency: 'cooperating_agencies 2' },
-            { id: 3, cooperating_agency: 'cooperating_agencies 3' },
-            { id: 4, cooperating_agency: 'cooperating_agencies 4' },
-            { id: 5, cooperating_agency: 'cooperating_agencies 5' },
-          ],
-          // financialRequirements: [
-          //   {
-          //     id: 1,
-          //     name: 'Operation Cost',
-          //     items: [
-          //       {
-          //         budget_item: "test",
-          //         particulars: "test",
-          //         quantity: 10,
-          //         estimated_cost: 20
-          //       },
-          //     ]
-          //   },
-          // ],
-          financial_requirements: [
-            {
-              line_item_budget_id: 1,
-              budget_item: "test",
-              particulars: "test",
-              quantity: 10,
-              estimated_cost: 20
-            }, {
-              line_item_budget_id: 2,
-              budget_item: "test",
-              particulars: "test",
-              quantity: 5,
-              estimated_cost: 2
-            }, {
-              line_item_budget_id: 1,
-              budget_item: "test",
-              particulars: "test",
-              quantity: 20,
-              estimated_cost: 5
-            }, {
-              line_item_budget_id: 1,
-              budget_item: "test",
-              particulars: "test",
-              quantity: 20,
-              estimated_cost: 5
-            }, {
-              line_item_budget_id: 3,
-              budget_item: "test",
-              particulars: "test",
-              quantity: 20,
-              estimated_cost: 5
-            },
-          ],
-          evaluation_plans: [
-            {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }, {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }, {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }, {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }
-          ]
+    const project_id = location.pathname.split('/')[3];
+
+    $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_id }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          const data = result.data;
+              
+          setInputValue({
+            '#editProject_projectTitle': data.title,
+            '#editProject_implementer': data.implementer,
+            '#editProject_startDate': new Date(data.start_date),
+            '#editProject_endDate': new Date(data.end_date),
+            '#editProject_impactStatement': data.impact_statement,
+            '#editProject_summary': data.summary,
+          });
+
+          ['#editProject_startDate', '#editProject_endDate'].forEach(s => $(s).trigger('change'));
+
+          PT_form.setTeamMembers(data.project_team);
+          TG_form.setTargetGroups(data.target_groups);
+          CA_form.setSelectedCooperatingAgencies(data.cooperating_agencies);
+          FR_form.setFinancialRequirements(data.financial_requirements);
+          EP_form.setEvaluationPlans(data.evaluation_plans);
         }
-    
-        setInputValue({
-          '#editProject_projectTitle': data.title,
-          '#editProject_implementer': data.implementer,
-          '#editProject_startDate': new Date(data.start_date),
-          '#editProject_endDate': new Date(data.end_date),
-          '#editProject_impactStatement': data.impact_statement,
-          '#editProject_summary': data.summary,
-        });
-    
-        ['#editProject_startDate', '#editProject_endDate'].forEach(s => $(s).trigger('change'));
-    
-        PT_form.setTeamMembers(data.project_team);
-        TG_form.setTargetGroups(data.target_groups);
-        CA_form.setSelectedCooperatingAgencies(data.cooperating_agencies);
-        FR_form.setFinancialRequirements(data.financial_requirements);
-        EP_form.setEvaluationPlans(data.evaluation_plans);
-        resolve();
-      }, 1250);
+      },
+      error: () => {
+        ajaxErrorHandler();
+      }
     });
   }
 

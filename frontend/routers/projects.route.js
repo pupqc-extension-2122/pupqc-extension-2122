@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const jwtMiddleware = require('../../utils/jwtMiddleware');
+const { Projects } = require('../../backend/sequelize/models');
 
 // Constants
 const PATH = 'content/projects/';
@@ -79,8 +80,17 @@ router.get('/create-proposal', jwtMiddleware, (req, res) => {
 
 
 // Project Details
-router.get('/proposals/:project_id', jwtMiddleware, (req, res) => {
+router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
   const { roles, first_name, last_name } = req.auth;
+  const { project_id } = req.params;
+
+  const project = await Projects.findOne({
+    where: { id: project_id }
+  });
+
+  if(!project) {
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
+  }
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_details', {
@@ -96,8 +106,17 @@ router.get('/proposals/:project_id', jwtMiddleware, (req, res) => {
 
 
 // Project Activities
-router.get('/proposals/:project_id/activities', jwtMiddleware, (req, res) => {
+router.get('/proposals/:project_id/activities', jwtMiddleware, async (req, res) => {
   const { roles, first_name, last_name } = req.auth;
+  const { project_id } = req.params;
+
+  const project = await Projects.findOne({
+    where: { id: project_id }
+  });
+
+  if(!project) {
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
+  }
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_activities', {
@@ -112,10 +131,18 @@ router.get('/proposals/:project_id/activities', jwtMiddleware, (req, res) => {
 });
 
 
-
 // Edit Project Proposal
-router.get('/edit-proposal/:project_id', jwtMiddleware, (req, res) => {
+router.get('/edit-proposal/:project_id', jwtMiddleware, async (req, res) => {
   const { roles, first_name, last_name } = req.auth;
+  const { project_id } = req.params;
+
+  const project = await Projects.findOne({
+    where: { id: project_id }
+  });
+
+  if(!project) {
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
+  }
 
   roles.includes('Extensionist')
     ? res.render(PATH + 'edit_proposal', {

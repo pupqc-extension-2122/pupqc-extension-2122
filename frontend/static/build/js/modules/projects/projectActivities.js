@@ -108,7 +108,6 @@ const ProjectActivities = (() => {
 
   /**
 	 * * Local Variables
-	 * o--/[=================>
 	 */
 
   const dtElem = $('#activities_dt');
@@ -210,73 +209,70 @@ const ProjectActivities = (() => {
   }
 
   const initDataTable = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (1) {
-          dt = dtElem.DataTable({
-            data: activities,
-            responsive: true,
-            language: DT_LANGUAGE,
-            columns: [
-              {
-                data: 'name'
-              }, {
-                data: null,
-                render: data => {
-                  const topics = data.topics;
-                  const length = topics.length;
-                  if (length > 1) {
-                    return `
-                      <div>${ topics[0]}</div>
-                      <div class="small">and ${ length - 1 } more.</div>
-                    `
-                  } else if (length == 1) {
-                    return topics[0]
-                  } else {
-                    return `<div class="text-muted font-italic">No topics.</div>`
-                  }
-                }
-              }, {
-                data: null,
-                render: data => {
-                  return `
-                    <div class="dropdown text-center">
-                      <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
-                        <i class="fas fa-ellipsis-h"></i>
-                      </div>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <div class="dropdown-header">Options</div>
-                        <button
-                          type="button"
-                          class="dropdown-item"
-                          onclick="ProjectActivities.initViewMode('${ data.id }')"
-                        >
-                          <span>View details</span>
-                        </button>
-                        ${
-                          project_details.status == 'Created'
-                              ? `
-                                <button
-                                  type="button"
-                                  class="dropdown-item"
-                                  onclick="ProjectActivities.initEditMode('${ data.id }')"
-                                >
-                                  <span>Edit details</span>
-                                </button>
-                              `
-                            : ''
-                          }
-                        }
-                      </div>
-                    </div>
-                  `;
-                }
-              }
-            ]
-          });
-          resolve();
+    dt = dtElem.DataTable({
+      ajax: {
+        url: `${ BASE_URL }/projects/${ project_details.id }/activities`,
+        success: result => {
+          console.log(result);
         }
-      }, 1500);
+      },
+      serverSide: true,
+      columns: [
+        {
+          data: 'activity_name'
+        }, {
+          data: null,
+          render: data => {
+            const topics = data.topics;
+            const length = topics.length;
+            if (length > 1) {
+              return `
+                <div>${ topics[0]}</div>
+                <div class="small">and ${ length - 1 } more.</div>
+              `
+            } else if (length == 1) {
+              return topics[0]
+            } else {
+              return `<div class="text-muted font-italic">No topics.</div>`
+            }
+          }
+        }, {
+          data: null,
+          render: data => {
+            return `
+              <div class="dropdown text-center">
+                <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                  <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-header">Options</div>
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    onclick="ProjectActivities.initViewMode('${ data.id }')"
+                  >
+                    <span>View details</span>
+                  </button>
+                  ${
+                    project_details.status == 'Created'
+                        ? `
+                          <button
+                            type="button"
+                            class="dropdown-item"
+                            onclick="ProjectActivities.initEditMode('${ data.id }')"
+                          >
+                            <span>Edit details</span>
+                          </button>
+                        `
+                      : ''
+                    }
+                  }
+                </div>
+              </div>
+            `;
+          }
+        }
+      ]
     });
   }
 

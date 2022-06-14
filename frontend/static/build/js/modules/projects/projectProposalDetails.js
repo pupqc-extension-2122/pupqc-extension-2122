@@ -48,9 +48,9 @@ const ProjectDetails = (() => {
       const {
         title,
         implementer,
-        project_team: pt,
+        team_members: pt,
         target_groups: tg,
-        cooperating_agencies: ca,
+        partners: ca,
         start_date,
         end_date,
         impact_statement,
@@ -67,7 +67,7 @@ const ProjectDetails = (() => {
         '#projectDetails_body_projectTeam': () => {
           if (pt.length) {
             let list = '<ul class="mb-0">';
-            pt.forEach(p => list += `<li>${p.team_member}</li>`);
+            pt.forEach(p => list += `<li>${p}</li>`);
             list += '</ul>';
             return list;
           }
@@ -76,7 +76,7 @@ const ProjectDetails = (() => {
         '#projectDetails_body_targetGroups': () => {
           if (tg.length) {
             let list = '<ul class="mb-0">';
-            tg.forEach(t => list += `<li>${t.name}</li>`);
+            tg.forEach(t => list += `<li>${t}</li>`);
             list += '</ul>';
             return list;
           }
@@ -936,118 +936,33 @@ const ProjectActivities = (() => {
 })();
 
 
-let data;
+(() => {
+  const project_id = location.pathname.split('/')[3];
 
-setTimeout(() => {
-  data = {
-    id: 'project_id_1',
-    title: 'Strengthening Resillience To Disasters and Be a Solution to Changing Environment',
-    implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-    start_date: "Tue May 03 2022 00:00:00 GMT+0800 (Taipei Standard Time)",
-    end_date: "Tue May 04 2022 00:00:00 GMT+0800 (Taipei Standard Time)",
-    impact_statement: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
-    summary: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
-    status: 'Created',
-    project_team: [
-      { id: 1, name: 'team_member 1' },
-      { id: 2, name: 'team_member 2' },
-      { id: 3, name: 'team_member 3' },
-      { id: 4, name: 'team_member 4' },
-      { id: 5, name: 'team_member 5' },
-    ],
-    target_groups: [
-      { id: 1, name: 'target_group 1' },
-      { id: 2, name: 'target_group 2' },
-      { id: 3, name: 'target_group 3' },
-      { id: 4, name: 'target_group 4' },
-      { id: 5, name: 'target_group 5' },
-    ],
-    cooperating_agencies: [
-      { id: 1, name: 'cooperating_agencies 1' },
-      { id: 2, name: 'cooperating_agencies 2' },
-      { id: 3, name: 'cooperating_agencies 3' },
-      { id: 4, name: 'cooperating_agencies 4' },
-      { id: 5, name: 'cooperating_agencies 5' },
-    ],
-    financial_requirements: [
-      {
-        id: '1',
-        name: 'Operational Cost',
-        items: [
-          {
-            budget_item: "test",
-            particulars: "test",
-            quantity: 10,
-            estimated_cost: 20
-          }, {
-            budget_item: "test",
-            particulars: "test",
-            quantity: 20,
-            estimated_cost: 5
-          }, {
-            budget_item: "test",
-            particulars: "test",
-            quantity: 20,
-            estimated_cost: 5
-          }, 
-        ]
-      }, {
-          id: '2',
-          name: 'Travel Cost',
-          items: [
-            {
-              budget_item: "test",
-              particulars: "test",
-              quantity: 5,
-              estimated_cost: 2
-            }
-          ]
-      }, {
-        id: '3',
-        name: 'Supplies Cost',
-        items: [
-          {
-            budget_item: "test",
-            particulars: "test",
-            quantity: 20,
-            estimated_cost: 5
-          }
-        ]
-      },
-    ],
-    evaluation_plans: [
-      {
-        outcome: 'Outcome 1',
-        indicator: 'Indicator 1',
-        data_collection_method: 'DCM 1',
-        frequency: 'Frequency 1'
-      }, {
-        outcome: 'Outcome 1',
-        indicator: 'Indicator 1',
-        data_collection_method: 'DCM 1',
-        frequency: 'Frequency 1'
-      }, {
-        outcome: 'Outcome 1',
-        indicator: 'Indicator 1',
-        data_collection_method: 'DCM 1',
-        frequency: 'Frequency 1'
-      }, {
-        outcome: 'Outcome 1',
-        indicator: 'Indicator 1',
-        data_collection_method: 'DCM 1',
-        frequency: 'Frequency 1'
+  $.ajax({
+    url: `${ BASE_URL_API }/projects/${ project_id }`,
+    type: 'GET',
+    success: result => {
+      if (result.error) {
+        ajaxErrorHandler(result.message);
+      } else {
+        const data = result.data;
+        console.log(data);
+
+        ProjectDetails.init(data);
+        ProjectOptions.setOptions(data);
+
+        if ($('#activities_dt').length) {
+          AddProjectActivity.init(data);
+          ProjectActivities.init(data);
+        }
       }
-    ]
-  }
-
-  ProjectDetails.init(data);
-  ProjectOptions.setOptions(data);
-
-  if ($('#activities_dt').length) {
-    AddProjectActivity.init(data);
-    ProjectActivities.init(data);
-  }
-}, 1250);
+    },
+    error: () => {
+      ajaxErrorHandler();
+    }
+  })
+})();
 
 
 const updateStatus = (status) => {
