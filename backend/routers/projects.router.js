@@ -1,16 +1,25 @@
 let router = require('express').Router()
 const {
-  createProject, cancelProposal, viewProposal, updateProject, createProjectActivities, listProjectActivities
+  createProject,
+  cancelProposal,
+  viewProposal,
+  updateProject,
+  createProjectActivities,
+  submitProposal,
+  datatableApprovedProposal,
+  datatableProjectActivities
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
 router.use(jwtMiddleWare)
 
+router.get('/approved/datatables', datatableApprovedProposal)
+router.get('/:id/activities', datatableProjectActivities)
 router.get('/:id', viewProposal)
-router.get('/:id/activities', listProjectActivities)
-router.post('/:id/activity/create', createProjectActivities)
 router.post('/create', createProject)
+router.post('/:id/activity/create', createProjectActivities)
 router.put('/cancel/:id', cancelProposal)
+router.put('/submit/:id', submitProposal)
 router.put('/:id', updateProject)
 
 module.exports = router

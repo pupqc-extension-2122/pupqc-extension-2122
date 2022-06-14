@@ -2,7 +2,58 @@ const {
   Memos, Projects, Project_Partners, Project_Activities, Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
+const dataTable = require('sequelize-datatables')
 
+exports.viewProposal = async (req, res) => {
+  let id = req.params.id
+
+  let proposal = await Projects.findOne({
+    where: { id },
+    include: [
+      {
+        model: Partners,
+        as: 'partners',
+        through: {
+          attributes: []
+        }
+      }
+    ]
+
+  })
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  res.send({
+    error: false,
+    data: proposal
+  })
+
+}
+
+exports.datatableApprovedProposal = async (req, res) => {
+  try {
+
+    let data = await dataTable(Project, req.query, { where: { status: 'Approved' }, include: ['memos', 'partners'] })
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
+exports.datatableRejectedProposal = async (req, res) => {
+  try {
+
+    let data = await dataTable(Project, req.query, { where: { status: 'Rejected' }, include: ['memos', 'partners'] })
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
 
 exports.createProject = async (req, res) => {
   try {
@@ -197,45 +248,44 @@ exports.cancelProposal = async (req, res) => {
   })
 }
 
-exports.viewProposal = async (req, res) => {
-  let id = req.params.id
+exports.submitProposal = async (req, res) => {
+  try {
 
-  let proposal = await Projects.findOne({
-    where: { id },
-    include: [
-      {
-        model: Partners,
-        as: 'partners',
-        through: {
-          attributes: []
-        }
-      }
-    ]
+    if (!req.auth.roles.includes('Extensionist'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
-  })
+    const id = req.params.id
 
-  if (!proposal)
-    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+    let project = await Projects.findByPk(id, { include: ['activities'] })
 
-  res.send({
-    error: false,
-    data: proposal
-  })
+    if (!project.activities.length) {
+      return res.status(400).send({ error: true, message: 'Please make sure that the Project has Activites' })
+    }
 
+    project.status = 'Pending'
+    await project.save()
+
+    res.send({
+      error: false,
+      message: 'Project Proposal submitted for approval'
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
 }
 
-// ? Acitivities
-exports.listProjectActivities = async (req, res) => {
+
+// ? Activities
+exports.datatableProjectActivities = async (req, res) => {
   try {
 
     const id = req.params.id
 
-    let data = await Project_Activities.findAll({ where: { project_id: id } })
+    let data = await dataTable(Project_Activities, req.query, { where: { project_id: id } })
 
-    res.send({
-      error: false,
-      data
-    })
+    res.send(data)
 
   } catch (error) {
     console.log(error)
