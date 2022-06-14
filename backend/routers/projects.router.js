@@ -9,15 +9,17 @@ const {
   submitProposal,
   datatableDraftProposal,
   datatablePendingProposal,
-  datatableApprovedProposal
+  datatableApprovedProposal,
+  datatableRejectedProposal
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
 router.use(jwtMiddleWare)
 
 router.get('/draft/datatables', datatableDraftProposal)
-router.get('/pending/datatables', datatablePendingProposalProposal)
-router.get('/approved/datatables', datatableApprovedProposalProposal)
+router.get('/pending/datatables', datatablePendingProposal)
+router.get('/approved/datatables', datatableApprovedProposal)
+router.get('/rejected/datatables', datatableRejectedProposal)
 router.get('/:id/activities', listProjectActivities)
 router.get('/:id', viewProposal)
 router.post('/create', createProject)
