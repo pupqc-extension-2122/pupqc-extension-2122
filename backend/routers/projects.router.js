@@ -14,6 +14,7 @@ const jwtMiddleWare = require('../../utils/jwtMiddleware')
 router.use(jwtMiddleWare)
 
 router.get('/draft/datatables', datatableDraftProposal)
+router.get('/pending/datatables', datatableDraftProposal)
 router.get('/:id/activities', listProjectActivities)
 router.get('/:id', viewProposal)
 router.post('/create', createProject)

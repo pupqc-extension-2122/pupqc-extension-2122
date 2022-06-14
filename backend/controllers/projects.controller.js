@@ -43,6 +43,18 @@ exports.datatableDraftProposal = async (req, res) => {
   }
 }
 
+exports.datatablePendingProposal = async (req, res) => {
+  try {
+
+    let data = await dataTable(Project, req.query, { where: { status: 'Pending' }, include: ['memos', 'partners'] })
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.createProject = async (req, res) => {
   try {
 
