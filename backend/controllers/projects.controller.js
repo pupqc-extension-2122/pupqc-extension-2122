@@ -197,6 +197,34 @@ exports.cancelProposal = async (req, res) => {
   })
 }
 
+exports.submitProposal = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Extensionist'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const id = req.params.id
+
+    let project = await Projects.findByPk(id, { include: ['activities'] })
+
+    if (!project.activities.length) {
+      return res.status(400).send({ error: true, message: 'Please make sure that the Project has Activites' })
+    }
+
+    project.status = 'Pending'
+    await project.save()
+
+    res.send({
+      error: false,
+      message: 'Project Proposal submitted for approval'
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.viewProposal = async (req, res) => {
   let id = req.params.id
 
