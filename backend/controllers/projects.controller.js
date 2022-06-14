@@ -2,7 +2,46 @@ const {
   Memos, Projects, Project_Partners, Project_Activities, Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
+const dataTable = require('sequelize-datatables')
 
+exports.viewProposal = async (req, res) => {
+  let id = req.params.id
+
+  let proposal = await Projects.findOne({
+    where: { id },
+    include: [
+      {
+        model: Partners,
+        as: 'partners',
+        through: {
+          attributes: []
+        }
+      }
+    ]
+
+  })
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  res.send({
+    error: false,
+    data: proposal
+  })
+
+}
+
+exports.datatableDraftProposal = async (req, res) => {
+  try {
+
+    let data = await dataTable(Project, req.query, { where: { status: 'Created' }, include: ['memos', 'partners'] })
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
 
 exports.createProject = async (req, res) => {
   try {
@@ -225,32 +264,6 @@ exports.submitProposal = async (req, res) => {
   }
 }
 
-exports.viewProposal = async (req, res) => {
-  let id = req.params.id
-
-  let proposal = await Projects.findOne({
-    where: { id },
-    include: [
-      {
-        model: Partners,
-        as: 'partners',
-        through: {
-          attributes: []
-        }
-      }
-    ]
-
-  })
-
-  if (!proposal)
-    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
-
-  res.send({
-    error: false,
-    data: proposal
-  })
-
-}
 
 // ? Acitivities
 exports.listProjectActivities = async (req, res) => {
