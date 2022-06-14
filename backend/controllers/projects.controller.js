@@ -55,6 +55,7 @@ exports.datatablePendingProposal = async (req, res) => {
   }
 }
 
+//! Retain Approved
 exports.datatableApprovedProposal = async (req, res) => {
   try {
 
@@ -301,18 +302,15 @@ exports.submitProposal = async (req, res) => {
 }
 
 
-// ? Acitivities
-exports.listProjectActivities = async (req, res) => {
+// ? Activities
+exports.datatableProjectActivities = async (req, res) => {
   try {
 
     const id = req.params.id
 
-    let data = await Project_Activities.findAll({ where: { project_id: id } })
+    let data = await dataTable(Project_Activities, req.query, { where: { project_id: id } })
 
-    res.send({
-      error: false,
-      data
-    })
+    res.send(data)
 
   } catch (error) {
     console.log(error)
