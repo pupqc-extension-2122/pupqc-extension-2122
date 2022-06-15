@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         this.setDataValue('target_groups', val.join(';'))
       },
       get() {
-        return this.getDataValue('team_members').split(';')
+        return this.getDataValue('target_groups').split(';')
       }
     },
     team_members: {
