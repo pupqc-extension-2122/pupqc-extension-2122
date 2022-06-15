@@ -121,6 +121,7 @@ exports.createProject = async (req, res) => {
     if (data) {
       res.send({
         error: false,
+        data: data,
         message: 'Project Created!'
       })
     }

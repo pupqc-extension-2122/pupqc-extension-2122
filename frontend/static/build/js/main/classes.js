@@ -254,7 +254,7 @@ class ProjectTeamForm {
 		// Push a target group object
 		this.projectTeam.push({
 			id: formGroupId,
-			team_member: data
+			team_member: ''
 		});
 
 		// Append the form group before the last child (or add button)
@@ -1204,7 +1204,7 @@ class FinancialRequirementsForm {
 	 * o--/[=================>
 	 */
 
-	setLineItemBudgetList = (data = {}) => {
+	setLineItemBudgetList = (data = []) => {
 
 		// Create a copy of line item budget list
 		data.forEach(d => this.lineItemBudgetList.push({ ...d, selected: false }));
@@ -1411,10 +1411,18 @@ class FinancialRequirementsForm {
 		});
 
 		// *** If has data *** //
-		data.budget_item && nameInput.val(data.budget_item).trigger('change');
-		data.particulars && particularsInput.val(data.particulars).trigger('change');
-		data.quantity && qtyInput.val(data.quantity).trigger('change');
-		data.estimated_cost && costInput.val(data.estimated_cost).trigger('change');
+		data.budget_item 
+      && nameInput.val(data.budget_item)
+      && nameInput.trigger('change');
+		data.particulars 
+      && particularsInput.val(data.particulars)
+      && particularsInput.trigger('change');
+		data.quantity 
+      && qtyInput.val(data.quantity)
+      && qtyInput.trigger('change');
+		data.estimated_cost 
+      && costInput.val(data.estimated_cost)
+      && costInput.trigger('change');
 	}
 
 	removeBudgetItemRow(budgetItemRowId) {
@@ -1468,17 +1476,22 @@ class FinancialRequirementsForm {
 	}
 
 	setFinancialRequirements(data) {
-		let usedLineItemBudgetIds = [];
 		data.forEach(d => {
-			const lineItemBudgetId = d.line_item_budget_id;
+      
+      let BI_category = this.lineItemBudgetList.find(x => x.name == d.category);
+      this.addLineItemBudgetRows(BI_category, false);
 
-			if (!(lineItemBudgetId in usedLineItemBudgetIds)) {
-				const lineItemBudget = this.lineItemBudgetList.find(x => x.id == lineItemBudgetId);
-				this.addLineItemBudgetRows(lineItemBudget, false);
-				usedLineItemBudgetIds.push(lineItemBudgetId);
-			}
+      d.items.forEach(i => this.addBudgetItemRow(BI_category.id, i));
+      
+			// const lineItemBudgetId = d.line_item_budget_id;
 
-			this.addBudgetItemRow(lineItemBudgetId, d);
+			// if (!(lineItemBudgetId in usedLineItemBudgetIds)) {
+			// 	const lineItemBudget = this.lineItemBudgetList.find(x => x.id == lineItemBudgetId);
+			// 	this.addLineItemBudgetRows(lineItemBudget, false);
+			// 	usedLineItemBudgetIds.push(lineItemBudgetId);
+			// }
+
+			// this.addBudgetItemRow(lineItemBudgetId, d);
 		});
 	}
 

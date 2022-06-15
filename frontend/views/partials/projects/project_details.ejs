@@ -27,6 +27,17 @@
       <div class="skeleton text" style="width: 5rem"></div>
     </div>
 
+    <%# Presentation Schedule %>
+    <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
+      <div class="mr-2">
+        <i class="fas fa-calendar-alt fa-fw text-info"></i>
+      </div>
+      <div>
+        <div>The presentation is set on <span class="font-weight-bold">June 15, 2022</span></div>
+        <div class="small text-muted">in 20 days</div>
+      </div>
+    </div>
+
     <%# {# Navigation Tabs #} %>
     <ul 
       class="nav nav-pills mt-4" 
@@ -84,10 +95,10 @@
 <div class="card" id="projectDetails_body" style="display: none">
   <div class="card-body">
 
-    <%# {# Tab Content #} %>
+    <%# Tab Content %>
     <div class="tab-content" id="custom-content-below-tabContent">
 
-      <%# {# Summary Pane #} %>
+      <%# Summary Pane %>
       <div class="tab-pane fade show active" id="custom-content-below-summary" role="tabpanel"
         aria-labelledby="custom-content-below-summary-tab">
         <div class="tab-pane fade show active" id="summaryDetailsPane" role="tabpanel"
@@ -199,7 +210,7 @@
         </div>
       </div>
 
-      <%# {# Financial Requirements Pane #} %>
+      <%# Financial Requirements Pane %>
       <div class="tab-pane fade show" id="custom-content-below-financial" role="tabpanel"
         aria-labelledby="custom-content-below-financial-tab">
 
@@ -217,12 +228,21 @@
                 <th class="align-middle" style="width: 10%;">Amount</th>
               </tr>
             </thead>
-            <tbody id="projectDetails_body_financialRequirements"></tbody>
+            <tbody id="projectDetails_body_financialRequirements">
+              <tr>
+                <td colspan="5">
+                  <div class="p-5 my-5">
+                    <div class="spinner-grow text-primary mb-2"></div>
+                    <div>Loading ... Please wait.</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
 
-      <%# {# Evaluation Plan Pane #} %>
+      <%# Evaluation Plan Pane %>
       <div class="tab-pane fade" id="custom-content-below-evaluation" role="tabpanel"
         aria-labelledby="custom-content-below-evaluation-tab">
 
@@ -239,34 +259,13 @@
                 <th class="align-middle" style="width: 20%">Frequency</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="projectDetails_body_evaluationPlans">
               <tr>
-                <td>
-                  Participants are educated in how preventing fire and prepared in such calamities like
-                  earthquke.
-                </td>
-                <td>
-                  The participants adopt the gained knowledge and apply in himself/herself.
-                </td>
-                <td>
-                  Assessment Test/Activity
-                </td>
-                <td>
-                  Once
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Generation of waste can be limited
-                </td>
-                <td>
-                  Measurement of Waste/Trash per week
-                </td>
-                <td>
-                  Assessment/Evaluation
-                </td>
-                <td>
-                  Thrice
+                <td colspan="4">
+                  <div class="p-5 my-5">
+                    <div class="spinner-grow text-primary mb-2"></div>
+                    <div>Loading ... Please wait.</div>
+                  </div>
                 </td>
               </tr>
             </tbody>

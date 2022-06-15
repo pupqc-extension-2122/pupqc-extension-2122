@@ -20,6 +20,7 @@
 	let EP_form; // Evaluation Plan form
 	let lineItemBudget_list;
 	let cooperatingAgencies_list;
+  let project_id;
 
 	/**
 	 * * Functions
@@ -42,6 +43,8 @@
 			$('#editProject_startDate').valid();
 			$('#editProject_endDate').valid();
 		});
+
+    project_id = location.pathname.split('/')[3];
 	}
 
 	const handleStepper = () => {
@@ -121,42 +124,27 @@
 		});
 	}
 
-	const initCooperatingAgenciesGroupForm = () => {
-		const cooperating_agencies_list = [
-			{
-				id: 1,
-				name: 'coop_agency 1'
-			}, {
-				id: 2,
-				name: 'coop_agency 2'
-			}, {
-				id: 3,
-				name: 'coop_agency 3'
-			}, {
-				id: 4,
-				name: 'coop_agency 4'
-			}, {
-				id: 5,
-				name: 'coop_agency 5'
-			},  {
-				id: 6,
-				name: 'coop_agency 6'
-			},  {
-				id: 7,
-				name: 'coop_agency 7'
-			},  {
-				id: 8,
-				name: 'coop_agency 8'
-			},  {
-				id: 9,
-				name: 'coop_agency 9'
-			},  {
-				id: 10,
-				name: 'coop_agency test 10'
-			}, 
-		];
-
-		cooperatingAgencies_list = [...cooperating_agencies_list];
+	const initCooperatingAgenciesGroupForm = async () => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/partners`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          cooperatingAgencies_list = result.data;
+        }
+      },
+      error: () => {
+        ajaxErrorHandler(
+          {
+            file: 'projects/editProposal.js',
+            fn: 'onDOMLoad.initCooperatingAgenciesGroupForm()',
+          }
+          , 1
+        );
+      }
+    });
 
 		CA_form = new CooperatingAgenciesForm(
 			'#addProject_cooperatingAgencies_grp',
@@ -251,12 +239,58 @@
 					required: "Please compose the project summary here."
 				}
 			},
-			onSubmit: () => {
-				const data = getProjectDetailsData();
-				console.log(data);
+			onSubmit: async () => {
+        const submitBtn = $('#submitBtn');
+        const prevBtn = $('#prevBtn');
 
-				toastr.success("Submitted successfully!");
-			}
+        // Set elements to loading state
+        prevBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <span class="spinner-grow spinner-grow-sm m-0" role="status">
+              <span class="sr-only">Loading...</span>
+            </span>
+          </span>
+        `);
+
+        // To enable elements
+        const enableElements = () => {
+          prevBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html('Submit');
+        }
+
+        // Get the data
+        let data = getProjectDetailsData();
+
+        // Create the partner_id array and delete the cooperating_agencies
+        data.partner_id = data.cooperating_agencies.map(p => p.id);
+        delete data.cooperating_agencies;
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/${ project_id }`,
+          type: 'PUT',
+          data: data,
+          success: result => {
+            if (result.error) {
+              ajaxErrorHandler(result.message);
+              enableElements();
+            } else {
+              
+              // Set session alert
+              setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ project_id }`, {
+                theme: 'success',
+                message: 'A new proposal has been successfully updated.'
+              });
+            }
+          },
+          error: () => {
+            ajaxErrorHandler();
+            enableElements();
+          }
+        });
+      }
 		});
 	}
 
@@ -265,11 +299,11 @@
 		return {
 			title: formData.get('title'),
 			implementer: formData.get('implementer'),
-			project_team: PT_form.getTeamMembers(),
+			team_members: PT_form.getTeamMembers(),
 			target_groups: TG_form.getTargetGroups(),
 			cooperating_agencies: CA_form.getSelectedCooperatingAgencies(),
-			start_date: '' || new Date(formData.get('start_date')),
-			end_date: '' || new Date(formData.get('end_date')),
+			start_date: '' || moment(formData.get('start_date')).toISOString(),
+			end_date: '' || moment(formData.get('end_date')).toISOString(),
 			impact_statement: formData.get('impact_statement'),
 			summary: formData.get('summary'),
 			financial_requirements: FR_form.getFinancialRequirements().requirements,
@@ -281,7 +315,7 @@
 		const {
 			title,
 			implementer,
-			project_team: pt,
+			team_members: pt,
 			target_groups: tg,
 			cooperating_agencies: ca,
 			start_date,
@@ -430,7 +464,7 @@
 				let overallAmount = 0;
 
 				// Read the object for rendering in the DOM
-				fr.forEach(category => {
+				fr.forEach(requirement => {
 
 					// Create the line item budget row
 					financialRequirementRows += `
@@ -438,17 +472,14 @@
 							<td 
 								class="font-weight-bold"
 								colspan="5"
-							>${ category.name }</td>
+							>${ requirement.category }</td>
 						</tr>
 					`;
 
 					// Create the budget item rows
-					category.items.forEach(r => {
-						const { budget_item, particulars, quantity, estimated_cost } = r;
+					requirement.items.forEach(({ budget_item, particulars, quantity, estimated_cost }) => {
 						const totalAmount = quantity * estimated_cost;
-
 						overallAmount += totalAmount;
-
 						financialRequirementRows += `
 							<tr>
 								<td>${ budget_item }</td>
@@ -474,9 +505,7 @@
 	}
 
   const setInputValues = async () => {
-    const project_id = location.pathname.split('/')[3];
-
-    $.ajax({
+    await $.ajax({
       url: `${ BASE_URL_API }/projects/${ project_id }`,
       type: 'GET',
       success: result => {
@@ -484,6 +513,8 @@
           ajaxErrorHandler(result.message);
         } else {
           const data = result.data;
+
+          console.log(data);
               
           setInputValue({
             '#editProject_projectTitle': data.title,
@@ -496,15 +527,21 @@
 
           ['#editProject_startDate', '#editProject_endDate'].forEach(s => $(s).trigger('change'));
 
-          PT_form.setTeamMembers(data.project_team);
+          PT_form.setTeamMembers(data.team_members);
           TG_form.setTargetGroups(data.target_groups);
-          CA_form.setSelectedCooperatingAgencies(data.cooperating_agencies);
+          CA_form.setSelectedCooperatingAgencies(data.partners);
           FR_form.setFinancialRequirements(data.financial_requirements);
           EP_form.setEvaluationPlans(data.evaluation_plans);
         }
       },
       error: () => {
-        ajaxErrorHandler();
+        ajaxErrorHandler(
+          {
+            file: 'projects/editProposal.js',
+            fn: 'onDOMLoad.setInputValues()'
+          },
+          1
+        );
       }
     });
   }
@@ -528,7 +565,7 @@
 				handleForm();
 				initProjectTeamForm();
 				initTargetGroupForm();
-				initCooperatingAgenciesGroupForm();
+				await initCooperatingAgenciesGroupForm();
 				initFinancialRequirementsForm();
 				initEvaluationPlanForm();
         await setInputValues();

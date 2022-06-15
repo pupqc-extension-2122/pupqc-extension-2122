@@ -201,7 +201,6 @@ const ProjectMoa = (() => {
         },
         {
           data: 'partnership_representative'
-          
         },
         {
           data: null,
@@ -222,7 +221,7 @@ const ProjectMoa = (() => {
           render: ({ status }) => {
             const { theme, icon } = PARTNER_STATUS_STYLES[status];
             return `
-              <div class="text-center">
+              <div class="text-sm-center">
                 <div class="badge badge-subtle-${ theme } px-2 py-1">
                   <i class="${ icon } fa-fw mr-1"></i>
                   <span>${ status }</span>
@@ -234,10 +233,11 @@ const ProjectMoa = (() => {
           data: null,
           render: data => {
             return `
-              <div class="dropdown text-center">
+              <div class="dropdown text-sm-center">
                 
                 <div class="btn btn-sm btn-negative" data-toggle="dropdown">
                     <i class="fas fa-ellipsis-h"></i>
+                    <span class="ml-1 ml-sm-0 d-sm-none">Options</span>
                 </div>
                 
                   <div class="dropdown-menu dropdown-menu-right">

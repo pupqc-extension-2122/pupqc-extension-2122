@@ -67,4 +67,22 @@
 	 */
 	$('[data-card-widget="goback"]').on('click', () => history.back());
 
+  /**
+   * * If there is a session alert
+   */
+  if (localStorage.getItem('sessionAlert')) {
+    const { theme, message } = JSON.parse(localStorage.getItem('sessionAlert'));
+
+		const alert = {
+			"success": () => toastr.success(message),
+			"info": () => toastr.info(message),
+			"warning": () => toastr.warning(message),
+			"error": () => toastr.error(message)
+		}
+		alert[theme]();
+
+		// Remove session after 1s
+		setTimeout(() => localStorage.removeItem('sessionAlert'), 250);
+	}
+
 })();

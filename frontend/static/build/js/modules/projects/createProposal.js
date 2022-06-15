@@ -133,7 +133,13 @@
         }
       },
       error: () => {
-        ajaxErrorHandler();
+        ajaxErrorHandler(
+          {
+            file: 'projects/createProposal.js',
+            fn: 'onDOMLoad.initCooperatingAgenciesGroupForm()',
+          }
+          , 1
+        );
       }
     });
 
@@ -231,7 +237,7 @@
           required: "Please compose the project summary here."
         }
       },
-      onSubmit: () => {
+      onSubmit: async () => {
         const submitBtn = $('#submitBtn');
         const prevBtn = $('#prevBtn');
 
@@ -246,17 +252,21 @@
           </span>
         `);
 
+        // To enable elements
         const enableElements = () => {
           prevBtn.attr('disabled', false);
           submitBtn.attr('disabled', false);
           submitBtn.html('Submit');
         }
 
+        // Get the data
         let data = getProjectDetailsData();
+
+        // Create the partner_id array and delete the cooperating_agencies
         data.partner_id = data.cooperating_agencies.map(p => p.id);
         delete data.cooperating_agencies;
 
-        $.ajax({
+        await $.ajax({
           url: `${ BASE_URL_API }/projects/create`,
           type: 'POST',
           data: data,
@@ -265,18 +275,19 @@
               ajaxErrorHandler(result.message);
               enableElements();
             } else {
-              toastr.success('A new proposal has been successfully created.');
+              
+              // Set session alert
+              setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ result.data.id }`, {
+                theme: 'success',
+                message: 'A new proposal has been successfully created.'
+              });
             }
           },
           error: () => {
             ajaxErrorHandler();
             enableElements();
           }
-        })
-
-        console.log(data);
-
-        toastr.success("Submitted successfully!");
+        });
       }
     });
   }
@@ -451,7 +462,7 @@
 				let overallAmount = 0;
 
 				// Read the object for rendering in the DOM
-				fr.forEach(category => {
+				fr.forEach(requirement => {
 
 					// Create the line item budget row
 					financialRequirementRows += `
@@ -459,17 +470,14 @@
 							<td 
 								class="font-weight-bold"
 								colspan="5"
-							>${ category.name }</td>
+							>${ requirement.category }</td>
 						</tr>
 					`;
 
 					// Create the budget item rows
-					category.items.forEach(r => {
-						const { budget_item, particulars, quantity, estimated_cost } = r;
+					requirement.items.forEach(({ budget_item, particulars, quantity, estimated_cost }) => {
 						const totalAmount = quantity * estimated_cost;
-
 						overallAmount += totalAmount;
-
 						financialRequirementRows += `
 							<tr>
 								<td>${ budget_item }</td>

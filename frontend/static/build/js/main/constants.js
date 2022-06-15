@@ -105,51 +105,51 @@ const DT_CONFIG_DEFAULTS = {
     }
   ],
   autoWidth: false,
-  dom: `
-			<"row w-100"
-				<"col-md-2" l>
-				<"col-md-6" B>
-				<"col-md-4" f>
-			>
-			<t>
-			<"row"
-				<"col-md-6" i>
-				<"col-md-6" p>
-			>
-  `,
-  buttons: [
-    {
-      extend: "copy",
-      text: TEMPLATE.LABEL_ICON("Copy", "copy"),
-      className: "btn-sm btn-negative",
-      // exportOptions: { columns: visibleCols }
-    }, {
-      extend: "csv",
-      text: TEMPLATE.LABEL_ICON("CSV", "file-csv"),
-      className: "btn-sm btn-negative",
-      // exportOptions: { columns: visibleCols }
-    }, {
-      extend: "excel",
-      text: TEMPLATE.LABEL_ICON("Excel", "file-excel"),
-      className: "btn-sm btn-negative",
-      // exportOptions: { columns: visibleCols }
-    }, {
-      extend: "pdf",
-      text: TEMPLATE.LABEL_ICON("PDF", "file-pdf"),
-      className: "btn-sm btn-negative",
-      // exportOptions: { columns: visibleCols }
-    }, {
-      extend: "print",
-      text: TEMPLATE.LABEL_ICON("Print", "print"),
-      className: "btn-sm btn-negative",
-      // exportOptions: { columns: visibleCols }
-    }, {
-      extend: "colvis",
-      text: TEMPLATE.LABEL_ICON("Columns", "eye"),
-      className: "btn-sm btn-negative",
-      // columns: columnOpts
-    }
-  ],
+  // dom: `
+	// 		<"row w-100"
+	// 			<"col-md-2" l>
+	// 			<"col-md-6" B>
+	// 			<"col-md-4" f>
+	// 		>
+	// 		<t>
+	// 		<"row"
+	// 			<"col-md-6" i>
+	// 			<"col-md-6" p>
+	// 		>
+  // `,
+  // buttons: [
+  //   {
+  //     extend: "copy",
+  //     text: TEMPLATE.LABEL_ICON("Copy", "copy"),
+  //     className: "btn-sm btn-negative",
+  //     // exportOptions: { columns: visibleCols }
+  //   }, {
+  //     extend: "csv",
+  //     text: TEMPLATE.LABEL_ICON("CSV", "file-csv"),
+  //     className: "btn-sm btn-negative",
+  //     // exportOptions: { columns: visibleCols }
+  //   }, {
+  //     extend: "excel",
+  //     text: TEMPLATE.LABEL_ICON("Excel", "file-excel"),
+  //     className: "btn-sm btn-negative",
+  //     // exportOptions: { columns: visibleCols }
+  //   }, {
+  //     extend: "pdf",
+  //     text: TEMPLATE.LABEL_ICON("PDF", "file-pdf"),
+  //     className: "btn-sm btn-negative",
+  //     // exportOptions: { columns: visibleCols }
+  //   }, {
+  //     extend: "print",
+  //     text: TEMPLATE.LABEL_ICON("Print", "print"),
+  //     className: "btn-sm btn-negative",
+  //     // exportOptions: { columns: visibleCols }
+  //   }, {
+  //     extend: "colvis",
+  //     text: TEMPLATE.LABEL_ICON("Columns", "eye"),
+  //     className: "btn-sm btn-negative",
+  //     // columns: columnOpts
+  //   }
+  // ],
 }
 
 // DateTime Formats

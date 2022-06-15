@@ -136,27 +136,33 @@
       </div>
 
       <div class="card-body">
-
-        <table class="table w-100" id="projectMOA_dt">
-          <thead>
-            <th>Partner</th>
-            <th>Partnership Representative</th>
-            <th>Notary Signed Date</th>
-            <th>Validity Date</th>
-            <th>Status</th>
-            <th></th>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="6" class="text-center">
-                <div class="p-5 my-5">
-                  <div class="spinner-grow text-primary mb-2"></div>
-                  <div>Loading ... Please wait.</div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        
+        <%# MOA/MOU Datatable %>
+        <div class="table-responsive">
+          <table class="table w-100" id="projectMOA_dt">
+            <thead>
+              <!-- <th class="d-none">Date Created</th> -->
+              <th>Partner</th>
+              <th>Partnership Representative</th>
+              <th>Notary Signed Date</th>
+              <th>Validity Date</th>
+              <th>Status</th>
+              <th>
+                <span class="d-inline-block d-sm-none">Actions</span>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="6" class="text-center">
+                  <div class="p-5 my-5">
+                    <div class="spinner-grow text-primary mb-2"></div>
+                    <div>Loading ... Please wait.</div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
       </div>
     </div>
