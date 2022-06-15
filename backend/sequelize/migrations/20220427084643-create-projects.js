@@ -16,10 +16,10 @@ module.exports = {
         allowNull: false
       },
       target_groups: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       team_members: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       start_date: {
         type: Sequelize.DATEONLY,
@@ -38,7 +38,7 @@ module.exports = {
         allowNull: false
       },
       financial_requirements: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       evaluation_plans: {
