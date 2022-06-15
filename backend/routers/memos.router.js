@@ -5,10 +5,10 @@ const {
 
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
-router.use(jwtMiddleWare)
+// router.use(jwtMiddleWare)
 
-router.get('/:id', viewMemo)
 router.get('/datatables', dataTableMemo)
+router.get('/:id', viewMemo)
 router.put('/:id', updateMemo)
 
 module.exports = router
