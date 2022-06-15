@@ -11,11 +11,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      target_groups: {
+      implementer:{
         type: Sequelize.STRING,
+        allowNull: false
+      },
+      target_groups: {
+        type: Sequelize.TEXT,
       },
       team_members: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       start_date: {
         type: Sequelize.DATEONLY,
@@ -34,7 +38,7 @@ module.exports = {
         allowNull: false
       },
       financial_requirements: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       evaluation_plans: {
