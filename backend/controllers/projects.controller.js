@@ -31,6 +31,22 @@ exports.viewProposal = async (req, res) => {
 
 }
 
+exports.datatableExtensionistProposal = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Extensionist'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    let data = await dataTable(Projects, req.query, { where: { created_by: req.auth.id } })
+
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.datatableApprovedProposal = async (req, res) => {
   try {
 

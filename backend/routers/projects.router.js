@@ -7,13 +7,15 @@ const {
   createProjectActivities,
   submitProposal,
   datatableApprovedProposal,
-  datatableProjectActivities
+  datatableProjectActivities,
+  datatableExtensionistProposal
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
 router.use(jwtMiddleWare)
 
 router.get('/approved/datatables', datatableApprovedProposal)
+router.get('/extensionist/datatables', datatableExtensionistProposal)
 router.get('/:id/activities', datatableProjectActivities)
 router.get('/:id', viewProposal)
 router.post('/create', createProject)
