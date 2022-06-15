@@ -270,7 +270,7 @@ exports.cancelProposal = async (req, res) => {
   })
 }
 
-exports.submitProposal = async (req, res) => {
+exports.submitForReviewProposal = async (req, res) => {
   try {
 
     if (!req.auth.roles.includes('Extensionist'))
@@ -284,7 +284,7 @@ exports.submitProposal = async (req, res) => {
       return res.status(400).send({ error: true, message: 'Please make sure that the Project has Activites' })
     }
 
-    project.status = 'Pending'
+    project.status = 'For Review'
     await project.save()
 
     res.send({
