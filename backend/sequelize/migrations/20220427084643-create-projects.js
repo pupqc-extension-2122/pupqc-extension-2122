@@ -11,6 +11,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      implementer:{
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       target_groups: {
         type: Sequelize.STRING,
       },
