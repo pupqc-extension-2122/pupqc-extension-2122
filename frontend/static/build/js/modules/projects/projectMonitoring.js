@@ -11,115 +11,71 @@ const ProjectMonitoring = (() => {
   /**
  * * Local Variables
  */
-
+  let dt;
   let initialized = 0;
-
-  // ! Simulation
-  let data;
 
   /**
  * * Private Methods
  */
 
-  const initDataTable = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        
-        // Sample Data
-        data = [
-          {
-            id: 1,
-            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '07/01/2022',
-            end_date: '07/15/2022',
-            status: 'Approved',
-            target_groups: [
-              {
-                id: 1,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              }, {
-                id: 2,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              },
-            ]
-          }, {
-            id: 1,
-            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '06/01/2022',
-            end_date: '06/30/2022',
-            status: 'Approved',
-            target_groups: [
-              {
-                id: 1,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              }, {
-                id: 2,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              },
-            ]
-          }, {
-            id: 1,
-            title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-            implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-            start_date: '05/03/2022',
-            end_date: '05/04/2022',
-            status: 'Approved',
-            target_groups: [
-              {
-                id: 1,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              }, {
-                id: 2,
-                name: 'Staffs of Grain Foundation for PWDs Inc.'
-              },
-            ]
-          }
-        ];
-        resolve();
-      }, 2500);
-    });
-
-    // Data Table
+  const initDataTable = () => {
     dt = $('#projectMonitoring_dt').DataTable({
-      data: data,
-      responsive: true,
-      language: DT_LANGUAGE,
+      ...DT_CONFIG_DEFAULTS,
+      ajax: {
+        url: `${ BASE_URL_API }/projects/datatables`,
+        // success: result => {
+        //   console.log(result);
+        // },
+        error: () => {
+          ajaxErrorHandler(
+            {
+              file: 'projects/projectMonitoring.js',
+              fn: 'ProjectMonitoring.initDataTable()'
+            },
+            1
+          )
+        }
+      },
       columns: [
+        { 
+          data: 'title' 
+        },
         {
-          data: 'title'
-        }, {
           data: null,
-          render: ({ target_groups }) => {
-            if(target_groups.length > 1) {
+          sortable: false,
+          render: data => {
+            const target_groups = data.target_groups;
+            const length = target_groups.length;
+            if (length > 1) {
               return `
-                <div>${ target_groups[0].name }</div> 
-                <div class="small text-muted">and ${ target_groups.length - 1 } more.</div>
+                <div>${ target_groups[0]}</div>
+                <div class="small text-muted">and ${ length - 1 } more.</div>
               `
-            } else if(target_groups.length === 1) {
-              return target_groups[0].name;
+            } else if (length == 1) {
+              return target_groups[0]
             } else {
-              return `<div class="font-italic text-muted">No target groups have been set.</div>`
+              return `<div class="text-muted font-italic">No target groups.</div>`
             }
           }
-        }, {
+        },{
           data: null,
-          render: ({ start_date }) => {
+          render: data => {
+            const start_date = data.start_date
             return `
               <div>${ formatDateTime(start_date, 'Date') }</div>
               <div class="small text-muted">${ fromNow(start_date) }</div>
             `
           }
-        }, {
+        },{
           data: null,
-          render: ({ end_date }) => {
+          render: data => {
+            const end_date = data.end_date
             return `
               <div>${ formatDateTime(end_date, 'Date') }</div>
               <div class="small text-muted">${ fromNow(end_date) }</div>
             `
           }
-        }, {
+        },{
           data: null,
           render: data => {
             const { start_date, end_date } = data;
@@ -161,14 +117,14 @@ const ProjectMonitoring = (() => {
                     <span>View details</span>
                   </a>
                   <a 
-                    class="dropdown-item"A
+                    class="dropdown-item"
                     href="${ BASE_URL_WEB }/p/monitoring/${ data.id }/activities" 
                   >
                     <span>View activities</span>
                   </a>
                 </div>
               </div>
-            `;
+            `
           }
         }
       ]
@@ -178,6 +134,8 @@ const ProjectMonitoring = (() => {
   /**
  * * Public Methods
  */
+
+  const reloadDataTable = () => dt.ajax.reload();
 
   /**
  * * Init
@@ -195,7 +153,8 @@ const ProjectMonitoring = (() => {
  */
 
   return {
-    init
+    init,
+    reloadDataTable
   }
 
 })();

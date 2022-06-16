@@ -40,21 +40,27 @@ const ProjectMoaDetails = (() => {
       validators: {
         name: {
           required: "The partner name is required.",
+          notEmpty: "This field cannot be empty",
         },
         address: {
           required: "The partner address is required.",
+          notEmpty: "This field cannot be empty",
         },
         representative: {
           required: "The name of representative is required.",
+          notEmpty: "This field cannot be empty",
         },
         organization:  {
           required: "The organization is required.",
+          notEmpty: "This field cannot be empty",
         },
         pup_REPD: {
           required: "The name of PUP REPD Representative is required.",
+          notEmpty: "This field cannot be empty",
         },
         notary_date: {
           required: "Please select the notary signed date.",
+          notEmpty: "This field cannot be empty",
           afterDateTime: {
 						rule: moment().subtract(1, 'days'),
 						message: 'Notary Signed date must be current or onwards.'
@@ -62,6 +68,7 @@ const ProjectMoaDetails = (() => {
         },
         validity_date: {
           required: "Please select the validity date.",
+          notEmpty: "This field cannot be empty",
           afterDateTime: {
 						rule: moment().subtract(1, 'days'),
 						message: 'Validity date must be current or onwards.'
