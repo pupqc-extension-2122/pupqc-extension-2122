@@ -10,7 +10,8 @@ const {
   datatableProjectActivities,
   submitForEvaluationProposal,
   datatableProposal,
-  viewProjectActivities
+  viewProjectActivities,
+  updateProjectActivities
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
@@ -26,6 +27,7 @@ router.post('/:id/activities/create', createProjectActivities)
 router.put('/cancel/:id', cancelProposal)
 router.put('/review/:id', submitForReviewProposal)
 router.put('/evaluation/:id', submitForEvaluationProposal)
+router.put('/:project_id/activities/:activity_id', updateProjectActivities)
 router.put('/:id', updateProject)
 
 module.exports = router

@@ -387,3 +387,48 @@ exports.createProjectActivities = async (req, res) => {
     res.send(error)
   }
 }
+
+exports.updateProjectActivities = async (req, res) => {
+
+  try {
+
+    if (!req.auth.roles.includes('Extensionist')) {
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+    }
+
+    const project_id = req.params.project_id
+    const activity_id = req.params.activity_id
+    const body = req.body
+
+    let data = await Project_Activities.findOne({
+      where:{
+        id: activity_id,
+        project_id
+      }
+    })
+
+    if (!data)
+      return res.status(404).send({error:true, message: 'Project or Activity not found'})
+
+    data.activity_name = body.activity_name
+    data.topics = body.topics
+    data.outcomes = body.outcomes
+    data.start_date = body.start_date
+    data.end_date = body.end_date
+    data.details = body.details
+    data.details = body.details
+
+    await data.save()
+
+    res.send({
+      error: false,
+      message: 'Activity updated successfully'
+    })
+
+
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
