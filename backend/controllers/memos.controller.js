@@ -68,7 +68,7 @@ exports.dataTableMemo = async (req, res) => {
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
     }
 
-    let data = await datatables(Memos, req.query, {})
+    let data = await datatables(Memos, req.query, { include: ['organization'] })
 
     res.send(data)
 

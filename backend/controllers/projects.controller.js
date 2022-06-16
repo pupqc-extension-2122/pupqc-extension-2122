@@ -31,10 +31,20 @@ exports.viewProposal = async (req, res) => {
 
 }
 
-exports.datatableApprovedProposal = async (req, res) => {
+exports.datatableProposal = async (req, res) => {
   try {
 
-    let data = await dataTable(Project, req.query, { where: { status: 'Approved' }, include: ['memos', 'partners'] })
+    let options = { where: { created_by: req.auth.id } }
+
+    if (req.auth.roles.includes('Admin'))
+      options = {}
+
+    else if (req.auth.roles.includes('Chief'))
+      options = { where: { status: { [Op.not]: 'Created' } } }
+
+
+    let data = await dataTable(Projects, req.query, options)
+
     res.send(data)
 
   } catch (error) {
@@ -43,10 +53,10 @@ exports.datatableApprovedProposal = async (req, res) => {
   }
 }
 
-exports.datatableRejectedProposal = async (req, res) => {
+exports.datatableApprovedProposal = async (req, res) => {
   try {
 
-    let data = await dataTable(Project, req.query, { where: { status: 'Rejected' }, include: ['memos', 'partners'] })
+    let data = await dataTable(Project, req.query, { where: { status: 'Approved' }, include: ['memos', 'partners'] })
     res.send(data)
 
   } catch (error) {
@@ -249,7 +259,7 @@ exports.cancelProposal = async (req, res) => {
   })
 }
 
-exports.submitProposal = async (req, res) => {
+exports.submitForReviewProposal = async (req, res) => {
   try {
 
     if (!req.auth.roles.includes('Extensionist'))
@@ -259,16 +269,19 @@ exports.submitProposal = async (req, res) => {
 
     let project = await Projects.findByPk(id, { include: ['activities'] })
 
-    if (!project.activities.length) {
-      return res.status(400).send({ error: true, message: 'Please make sure that the Project has Activites' })
-    }
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project not found' })
 
-    project.status = 'Pending'
+    if (!project.activities.length)
+      return res.status(400).send({ error: true, message: 'Please make sure that the Project has Activites' })
+
+
+    project.status = 'For Review'
     await project.save()
 
     res.send({
       error: false,
-      message: 'Project Proposal submitted for approval'
+      message: 'Project Proposal is submitted For Review'
     })
 
   } catch (error) {
@@ -277,6 +290,29 @@ exports.submitProposal = async (req, res) => {
   }
 }
 
+exports.submitForEvaluationProposal = async (req, res) => {
+  try {
+
+    const id = req.params.id
+
+    let project = await Projects.findByPk(id, { where: { status: 'For Review' } })
+
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project not found' })
+
+    project.status = 'For Evaluation'
+    await project.save()
+
+    res.send({
+      error: false,
+      message: 'Project is submitted For Evaluation'
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
 
 // ? Activities
 exports.datatableProjectActivities = async (req, res) => {

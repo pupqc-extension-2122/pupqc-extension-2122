@@ -8,8 +8,8 @@ const jwtMiddleWare = require('../../utils/jwtMiddleware')
 router.use(jwtMiddleWare)
 
 // Routes
-router.get('/:id/memos', datatableMemos)
 router.get('/datatables', datatablePartners)
+router.get('/:id/memos', datatableMemos)
 router.get('/', listPartners)
 router.post('/create', createPartner)
 

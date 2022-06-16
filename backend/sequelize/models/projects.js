@@ -68,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
         isIn: {
           args: [
             'Created',
-            'For Approval',
+            'For Review',
             'For Evaluation',
             'Pending',
             'Approved',
