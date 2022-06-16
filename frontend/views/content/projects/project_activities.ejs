@@ -420,7 +420,7 @@
   </div>
 
   <%# Edit Project Activity Modal %>
-  <div class="modal fade" id="editProjectActivity_modal">
+  <div class="modal fade" data-backdrop="static" id="editProjectActivity_modal">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <form class="modal-content" id="editProjectActivity_form">
         <div class="modal-header">
@@ -452,6 +452,9 @@
 
           <%# Form groups %>
           <div id="editProjectActivity_formGroups" style="display: none">
+
+            <%# Activity ID %>
+            <input type="hidden" id="editProjectActivity_activityId" name="activity_id">
 
             <%# Title %>
             <div class="form-group">
@@ -500,12 +503,107 @@
                 </button>
               </div>
             </div>
+
+            <%# Start/End Date %>
+            <div class="form-row">
+
+              <%# Start Date %>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="editProjectActivity_startDate">
+                    <span>Start Date</span>
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group date">
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="editProjectActivity_startDate" 
+                      name="start_date"
+                      placeholder="Please select a start date" 
+                      data-inputmask-alias="datetime"
+                      data-inputmask-inputformat="mm/dd/yyyy" 
+                      data-mask 
+                    />
+                    <div class="input-group-append">
+                      <button 
+                        type="button" 
+                        class="btn btn-primary" 
+                        id="editProjectActivity_startDate_pickerBtn"
+                        data-toggle="tooltip" 
+                        title="Select a start date"
+                      >
+                        <i class="fa fa-calendar-day fa-fw"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <%# End Date %>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="editProjectActivity_endDate">
+                    <span>End Date</span>
+                    <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group date">
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="editProjectActivity_endDate" 
+                      name="end_date"
+                      placeholder="Please select an end date" 
+                      data-inputmask-alias="datetime"
+                      data-inputmask-inputformat="mm/dd/yyyy" 
+                      data-mask 
+                    />
+                    <div class="input-group-append">
+                      <button 
+                        type="button" 
+                        class="btn btn-primary" 
+                        id="editProjectActivity_endDate_pickerBtn"
+                        data-toggle="tooltip" 
+                        title="Select a start date"
+                      >
+                        <i class="fa fa-calendar-day fa-fw"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <%# Summary/Details %>
+            <div class="form-group">
+              <label for="editProjectActivity_details">
+                <span>Summary/Details</span>
+                <span class="text-danger">*</span>
+              </label>
+              <textarea 
+                class="form-control"
+                name="details" 
+                id="editProjectActivity_details" 
+                rows="5"
+                placeholder="Please type the summary/details of the activity here"
+              ></textarea>
+            </div>
+
           </div>
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-danger" id="editProjectActivity_form_saveBtn">
+          <button 
+            type="button" 
+            class="btn btn-negative" 
+            id="editProjectActivity_cancelBtn"
+            data-dismiss="modal"
+          >Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            id="editProjectActivity_saveBtn"
+          >
             <i class="fas fa-check mr-1"></i>
             <span>Save</span>
           </button>

@@ -285,8 +285,12 @@
               });
             }
           },
-          error: () => {
-            ajaxErrorHandler();
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/editProposal.js',
+              fn: 'onDOMLoad.handleForm()',
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
             enableElements();
           }
         });

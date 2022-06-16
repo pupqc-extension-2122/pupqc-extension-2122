@@ -28,13 +28,11 @@ const ProjectProposals = (() => {
         //   console.log(result)
         // },
         error: () => {
-          ajaxErrorHandler(
-            {
-              file: 'projectProposals.js',
-              fn: 'ProjectProposals.initDataTable()'
-            },
-            1
-          )
+          ajaxErrorHandler({
+            file: 'projects/projectProposals.js',
+            fn: 'ProjectProposals.initDataTable()',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1)
         }
       },
 			columns: [
@@ -43,9 +41,17 @@ const ProjectProposals = (() => {
           visible: false,
         }, {
 					data: 'title',
-          width: '30%'
+          width: '25%',
+          render: title => {
+            if (title.length > 100) {
+              return `<span title="${ title }" data-toggle="tooltip">${ title.substring(0, 100) } ...</span>`
+            } else {
+              return title;
+            }
+          }
 				}, {
 					data: null,
+          width: '25%',
           sortable: false,
 					render: data => {
             const { target_groups } = data;
@@ -64,7 +70,7 @@ const ProjectProposals = (() => {
 					data: 'start_date',
 					render: (data, type, row) => {
 						return `
-              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="text-nowrap">${ formatDateTime(data, 'Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
             `
 					}
@@ -72,7 +78,7 @@ const ProjectProposals = (() => {
 					data: 'end_date',
 					render: end_date => {
             return `
-              <div>${ formatDateTime(end_date, 'Date') }</div>
+              <div class="text-nowrap">${ formatDateTime(end_date, 'Date') }</div>
               <div class="small text-muted">${ fromNow(end_date) }</div>
             `
 					}

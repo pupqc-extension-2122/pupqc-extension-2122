@@ -95,7 +95,7 @@ const ProjectDetails = (() => {
           if (start_date && end_date) {
             return `
               <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
-              <div class="small">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+              <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
             `
           } else return noContentTemplate('No dates have been set up.');
         },
@@ -636,7 +636,7 @@ const AddProjectActivity = (() => {
       validators: {
         title: {
           required: 'The title of the activity is required.',
-          notEmpty: 'Test'
+          notEmpty: 'This field cannot be blank'
         },
         start_date: {
           required: 'Please select a start date', 
@@ -653,7 +653,8 @@ const AddProjectActivity = (() => {
           }
         },
         details: {
-          required: 'The summary/details of the activity is required'
+          required: 'The summary/details of the activity is required',
+          notEmpty: 'This field cannot be blank',
         }
       },
       onSubmit: () => onFormSubmit()
@@ -702,7 +703,7 @@ const AddProjectActivity = (() => {
 
     // Save data to db
     await $.ajax({
-      url: `${ BASE_URL_API }/projects/${ project_details.id }/activity/create`,
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/create`,
       type: 'POST',
       data: data,
       success: async result => {
@@ -722,8 +723,12 @@ const AddProjectActivity = (() => {
           toastr.success('An activity has been successfully added.');
         }
       },
-      error: () => {
-        ajaxErrorHandler();
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'AddProjectActivity.onFormSubmit()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
         enableElements();
       }
     });
@@ -765,52 +770,44 @@ const ProjectActivities = (() => {
   const dtElem = $('#activities_dt');
   const viewModal = $('#projectActivityDetails_modal');
   const editModal = $('#editProjectActivity_modal');
+  const editFormSelector = '#editProjectActivity_form';
+  const editForm = $(editFormSelector)[0];
   const user_roles = JSON.parse(getCookie('roles'));
   let project_details;
   let dt;
   let editValidator;
   let PA_form;
   let initialized = 0;
-
-  // ! Simulation
-  // Sample Data
-  const activities = [
-    {
-      id: 1,
-      name: 'Health Awareness and Office Productivity Tools',
-      topics: [
-        'Mental Health Awareness',
-        'How to Cope up with the Pandemic',
-        'Information Communication Technology',
-      ],
-      outcomes: [
-        'Participants will be knowledgeable about proper mental health care',
-        'Participant will know how to cope up with the pandemics',
-      ]
-    }, {
-      id: 2,
-      name: 'Media and Information Literacy and Google Apps',
-      topics: [
-        'Google Forms',
-        'Google Docs',
-        'Google Slides',
-      ],
-      outcomes: [
-        'Lorem ipsum dolor',
-        'Lorem ipsum dolor',
-      ]
-    }, 
-  ];
+  let isSubmitting = 0; // For edit
 
   /**
 	 * * Private Methods
 	 */
 
   const handleEditForm = () => {
-    editValidator = $app('#editProjectActivity_form').handleForm({
+    editValidator = $app(editFormSelector).handleForm({
       validators: {
         title: {
-          required: 'The title of the activity is required.'
+          required: 'The title of the activity is required.',
+          notEmpty: 'This field cannot be empty'
+        },
+        start_date: {
+          required: 'Please select a start date', 
+          beforeDateTimeSelector: {
+            rule: '#addProjectActivity_endDate',
+            message: "Start date must be before end date"
+          }
+        },
+        end_date: {
+          required: 'Please select a end date', 
+          afterDateTimeSelector: {
+            rule: '#addProjectActivity_startDate',
+            message: "End date must be after start date"
+          }
+        },
+        details: {
+          required: 'The summary/details of the activity is required',
+          notEmpty: 'This field cannot be blank',
         }
       },
       onSubmit: () => onEditFormSubmit()
@@ -820,6 +817,16 @@ const ProjectActivities = (() => {
   const preInitializations = () => {
 
     // *** Initialize Edit Activity Form *** //
+
+    // Initialize Start Date
+    $app('#editProjectActivity_startDate').initDateInput({
+      button: '#editProjectActivity_startDate_pickerBtn'
+    });
+
+    // Initialize End Date
+    $app('#editProjectActivity_endDate').initDateInput({
+      button: '#editProjectActivity_endDate_pickerBtn'
+    });
     
     PA_form = new ProjectActivityForm({
       topicsForm: {
@@ -849,8 +856,14 @@ const ProjectActivities = (() => {
 
     editModal.on('hidden.bs.modal', () => {
 
+      // Reset the edit form
+      editForm.reset();
+
       // Reset the activity form
       PA_form.resetActivityForm();
+
+      // Reset the validator
+      editValidator.resetForm();
 
       // Show the loaders
       $('#editProjectActivity_formGroups_loader').show();
@@ -869,14 +882,12 @@ const ProjectActivities = (() => {
         // success: result => {
         //   console.log(result);
         // },
-        error: () => {
-          ajaxErrorHandler(
-            {
-              file: 'projects/PropojectProposalDetails.js',
-              fn: 'ProjectActivities.initDataTable'
-            },
-            1
-          )
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/PropojectProposalDetails.js',
+            fn: 'ProjectActivities.initDataTable',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
         }
       },
       columns: [
@@ -907,9 +918,10 @@ const ProjectActivities = (() => {
         }, {
           data: null,
           sortable: false,
-          render: data => {
+          render: ({ start_date, end_date }) => {
             return `
-              <div>${ formatDateTime(data.start_date, 'MMM. D, YYYY') } - ${ formatDateTime(data.end_date, 'MMM. D, YYYY') }</div>
+              <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
+              <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
             `
           }
         }, {
@@ -955,13 +967,69 @@ const ProjectActivities = (() => {
     });
   }
 
-  const onEditFormSubmit = () => {
-    const data = {
-      ...PA_form.getActivityData()
+  const onEditFormSubmit = async () => {
+    isSubmitting = 1;
+
+    // Disable the elements
+    const saveBtn = $('#editProjectActivity_saveBtn');
+    const cancelBtn = $('#editProjectActivity_cancelBtn');
+    
+    cancelBtn.attr('disabled', true);
+    saveBtn.attr('disabled', true);
+    saveBtn.html(`
+      <span class="px-3">
+        <span class="spinner-grow spinner-grow-sm m-0" role="status">
+          <span class="sr-only">Loading...</span>
+        </span>
+      </span>
+    `);
+
+    // For enabling elements
+    const enableElements = () => {
+
+      // Enable buttons
+      cancelBtn.attr('disabled', false);
+      saveBtn.attr('disabled', false);
+      saveBtn.html(`Submit`);
+
+      isSubmitting = 0;
     }
-    console.log(data);
-    editModal.modal('hide');
-    toastr.success('A project activity has been successfully updated');
+
+
+    // Get the data
+    const fd = new FormData(editForm);
+    const data = {
+      activity_name: fd.get('title'),
+      ...PA_form.getActivityData(),
+      start_date: moment(fd.get('start_date')).toISOString(),
+      end_date: moment(fd.get('end_date')).toISOString(),
+      details: fd.get('details')
+    }
+    
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/${ fd.get('activity_id') }`,
+      type: 'PUT',
+      data: data,
+      success: async result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          await reloadDataTable();
+          editModal.modal('hide');
+          toastr.success('A project activity has been successfully updated');
+        }
+      }, 
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectActivities.onEditFormSubmit()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+        enableElements();
+      }
+    });
+
+    enableElements();
   }
 
   /**
@@ -973,62 +1041,126 @@ const ProjectActivities = (() => {
   }
 
   const initViewMode = async (activity_id) => {
+    
+    // Show the modal
     viewModal.modal('show');
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const { name, topics, outcomes } = activities.find(a => a.id == activity_id);
+    
+    // Get the project activity details
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/${ activity_id }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message)
+        } else {
+          const { 
+            activity_name, 
+            topics, 
+            outcomes,
+            start_date,
+            end_date,
+            details 
+          } = result.data;
 
-        // Set Content
-        setHTMLContent({
-          '#projectActivityDetails_title': name,
-          '#projectActivityDetails_topics': () => {
-            if(topics.length) {
-              let list = `<ul class="mb-0">`;
-              topics.forEach(t => list += `<li>${ t }</li>`);
-              list += `</ul>`;
-              return list;
-            }
-          },
-          '#projectActivityDetails_outcomes': () => {
-            if(outcomes.length) {
-              let list = `<ul class="mb-0">`;
-              outcomes.forEach(o => list += `<li>${ o }</li>`);
-              list += `</ul>`;
-              return list;
-            }
-          },
+          // Set Content
+          setHTMLContent({
+            '#projectActivityDetails_title': activity_name,
+            '#projectActivityDetails_topics': () => {
+              if(topics.length) {
+                let list = `<ul class="mb-0">`;
+                topics.forEach(t => list += `<li>${ t }</li>`);
+                list += `</ul>`;
+                return list;
+              }
+            },
+            '#projectActivityDetails_outcomes': () => {
+              if(outcomes.length) {
+                let list = `<ul class="mb-0">`;
+                outcomes.forEach(o => list += `<li>${ o }</li>`);
+                list += `</ul>`;
+                return list;
+              }
+            },
+            '#projectActivityDetails_timeframe': () => {
+              if (start_date && end_date) {
+                return `
+                  <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
+                  <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+                `
+              } else return noContentTemplate('No dates have been set up.');
+            },
+            '#projectActivityDetails_details': details
+          });
+  
+          // Hide the loaders
+          $('#projectActivityDetails_loader').hide();
+          $('#projectActivityDetails').show();
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectActivities.initViewMode()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
         });
-
-        // Hide the loaders
-        $('#projectActivityDetails_loader').hide();
-        $('#projectActivityDetails').show();
-        resolve();
-      }, 750)
+      }
     });
   }
 
   const initEditMode = async (activity_id) => {
+    
+    // Show the modal
     editModal.modal('show');
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const { name, topics, outcomes } = activities.find(a => a.id == activity_id);
+
+    // Get the details of the project activity
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/${ activity_id }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message)
+        } else {
+          const { 
+            activity_name, 
+            topics, 
+            outcomes,
+            start_date,
+            end_date,
+            details
+          } = result.data;
         
-        // Set the input values
-        setInputValue({'#editProjectActivity_title': name});
+          // Set the input values
+          setInputValue({
+            '#editProjectActivity_activityId': activity_id,
+            '#editProjectActivity_title': activity_name,
+            '#editProjectActivity_startDate': formatDateTime(start_date, 'MM/DD/YYYY'),
+            '#editProjectActivity_endDate': formatDateTime(end_date, 'MM/DD/YYYY'),
+            '#editProjectActivity_details': details,
+          });
 
-        // Set the topics and outcomes
-        PA_form.setTopics(topics);
-        PA_form.setOutcomes(outcomes);
+          // To make sure that input dates are updated
+          $('#editProjectActivity_startDate').trigger('change');
+          $('#editProjectActivity_endDate').trigger('change');
 
-        // Hide the loaders
-        $('#editProjectActivity_formGroups_loader').hide();
-        $('#editProjectActivity_formGroups').show();
-        
-        // Enable buttons
-        $('#editProjectActivity_form_saveBtn').attr('disabled', false);
+          // Set the topics and outcomes
+          PA_form.setTopics(topics);
+          PA_form.setOutcomes(outcomes);
 
-        resolve();
-      }, 750);
+          // Hide the loaders
+          $('#editProjectActivity_formGroups_loader').hide();
+          $('#editProjectActivity_formGroups').show();
+          
+          // Enable buttons
+          $('#editProjectActivity_form_saveBtn').attr('disabled', false);
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectActivities.initEditMode()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
     });
   }
   
@@ -1097,14 +1229,12 @@ const ProjectActivities = (() => {
         }
       }
     },
-    error: () => {
-      ajaxErrorHandler(
-        {
-          file: 'projects/projectProposalDetails.js',
-          fn: 'onDOMLoad.$.ajax'
-        },
-        1
-      );
+    error: (xhr, status, error) => {
+      ajaxErrorHandler({
+        file: 'projects/projectProposalDetails.js',
+        fn: 'onDOMLoad.$.ajax',
+        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+      }, 1);
     }
   });
 })();

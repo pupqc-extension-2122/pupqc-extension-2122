@@ -26,11 +26,12 @@ const Partnerships = (() => {
         // success: result => {
         //   console.log(result);
         // }
-        error: () => {
+        error: (xhr, status, error) => {
           ajaxErrorHandler(
             {
               file: 'memo/partners.js',
-              fn: 'Partnerships.initDataTable()'
+              fn: 'Partnerships.initDataTable()',
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
             },
             1
           )

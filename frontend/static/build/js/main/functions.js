@@ -113,8 +113,13 @@ const ajaxErrorHandler = (errMsg = '', onDOMLoad = 0) => {
     `);
   }
   if (DEV_MODE) {
-    if (typeof errMsg === 'object') errMsg = JSON.stringify({ details: errMsg });
-    console.error(`[ERR]: ${errMsg}` || 'Failed to call ajax.');
+    if (typeof errMsg === 'object') {
+      console.error(" ===== ERROR =====");
+      console.error(errMsg);
+      console.error(" =================");
+    } else {
+      console.error(`[ERR]: ${ errMsg || 'Failed to call ajax.' }`);
+    }
   }
 }
 

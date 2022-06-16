@@ -271,7 +271,11 @@ class ProjectTeamForm {
 		// Add validation to the input
 		input.rules('add', {
 			required: true,
-			messages: { required: 'A team member is required.' }
+      notEmpty: true,
+			messages: { 
+        required: 'A team member is required.',
+        notEmpty: 'This field cannot be blank',
+      }
 		});
 
 		// *** Initiate the inputs *** //
@@ -289,7 +293,7 @@ class ProjectTeamForm {
 
 		// Initiate the remove form group button
 		removeFormGroupBtn.on('click', () => {
-			if (input.val()) {
+			if (input.val().trim()) {
 
 				// Set the form group id in the data attribute of the modal
 				$('#confirmRemoveTeamMemberField_btn').attr('data-remove-team-member-field-id', formGroupId);
@@ -618,7 +622,11 @@ class TargetGroupsForm {
 		// Add validation to the input
 		input.rules('add', {
 			required: true,
-			messages: { required: 'The name of the target group is required.' }
+      notEmpty: true,
+			messages: { 
+        required: 'The name of the target group is required.',
+        notEmpty: 'This field cannot be blank',
+      }
 		});
 
 		// *** Initiate the inputs *** //
@@ -636,7 +644,7 @@ class TargetGroupsForm {
 
 		// Initiate the remove form group button
 		removeFormGroupBtn.on('click', () => {
-			if (this.#dataElement('targetGroupInput', formGroupId).val()) {
+			if (this.#dataElement('targetGroupInput', formGroupId).val().trim()) {
 
 				// Set the form group id in the data attribute of the modal
 				$('#confirmRemoveTargetGroupField_btn').attr('data-remove-target-group-field-id', formGroupId);
@@ -1316,7 +1324,11 @@ class FinancialRequirementsForm {
 		[nameInput, particularsInput].forEach(i =>
 			i.rules('add', {
 				required: true,
-				messages: { required: 'Required' }
+        notEmpty: true,
+				messages: { 
+          required: 'Required',
+          notEmpty: 'Cannot be blank',
+        } 
 			})
 		);
 
@@ -1399,7 +1411,12 @@ class FinancialRequirementsForm {
 			// If user already inserted some inputs, setup a confirmation
 
 			// So check if inputs has value
-			if (nameInput.val() || particularsInput.val() || qtyInput.val() || costInput.val()) {
+			if (
+        nameInput.val().trim()
+        || particularsInput.val().trim()
+        || qtyInput.val().trim()
+        || costInput.val().trim()
+      ) {
 
 				// Set the budget item id in confirm remove button
 				$('#confirmRemoveBudgetItem_btn').attr('data-budget-item-id', budgetItemRowId);
@@ -1793,8 +1810,10 @@ class EvaluationPlanForm {
 		[outcomeInput, indicatorInput, collectionMethodInput, frequencyInput].forEach(i =>
 			i.rules('add', {
 				required: true,
-				messages: {
-					required: 'Required'
+        notEmpty: true,
+        messages: {
+					required: 'Required',
+          notEmpty: 'Cannot be blank',
 				}
 			})
 		);
@@ -1841,7 +1860,12 @@ class EvaluationPlanForm {
 
 				// Check if the current row has value
 
-				if (outcomeInput.val() || indicatorInput.val() || collectionMethodInput.val() || frequencyInput.val()) {
+				if (
+          outcomeInput.val().trim() 
+          || indicatorInput.val().trim() 
+          || collectionMethodInput.val().trim() 
+          || frequencyInput.val().trim() 
+        ) {
 
 					// Set the data attribute value in modal button
 					$('#confirmRemoveEvaluationPlanRow_btn').attr('data-plan-row-id', planId);
@@ -2118,7 +2142,11 @@ class ProjectActivityForm {
 		// Add validation to the input
 		input.rules('add', {
 			required: true,
-			messages: { required: 'A topic is required.' }
+      notEmpty: true,
+			messages: { 
+        required: 'A topic is required.',
+        notEmpty: 'This field cannot be blank',
+      }
 		});
 
 		// *** Enable buttons *** //
@@ -2127,7 +2155,7 @@ class ProjectActivityForm {
 
 		// When user has to remove field
 		removeBtn.on('click', () => {
-			if(input.val()) {
+			if (input.val().trim()) {
 				toastr.warning('Has value');
 			} else if (this.topics.length == 1) {
 				toastr.warning('You must input at least one topic.');
@@ -2144,6 +2172,10 @@ class ProjectActivityForm {
 		this.topics = this.topics.filter(t => t.id != formGroupId);
 		this.#dataElement('topics', 'formGroupId', formGroupId).remove();
 	}
+
+  removeTopicEmptyFields = () => {
+    this.topics.forEach()
+  }
 
 	resetTopicsForm = () => {
 		this.topics.forEach(t => this.removeTopicFormGroup(t.id));
@@ -2191,7 +2223,11 @@ class ProjectActivityForm {
 		// Add validation to the input
 		input.rules('add', {
 			required: true,
-			messages: { required: 'An outcome statement is required.' }
+			notEmpty: true,
+      messages: { 
+        required: 'An outcome statement is required.',
+        notEmpty: 'This field cannot be blank',
+      }
 		});
 
 		// *** Enable buttons *** //
@@ -2200,7 +2236,7 @@ class ProjectActivityForm {
 
 		// When user has to remove field
 		removeBtn.on('click', () => {
-			if(input.val()) {
+			if (input.val().trim) {
 				toastr.warning('Has value');
 			} else if (this.outcomes.length == 1) {
 				toastr.warning('You must input at least one outcome.');

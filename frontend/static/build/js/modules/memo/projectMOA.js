@@ -65,7 +65,15 @@ const ProjectMoa = (() => {
             }
           }
         },
-        error: () => ajaxErrorHandler()
+        error: (xhr, status, error) => {
+          ajaxErrorHandler(
+            {
+              file: 'ProjectMOA.js',
+              fn: 'ProjectMoa.initialization()',
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText
+            }
+          )
+        }
       });
     });
 

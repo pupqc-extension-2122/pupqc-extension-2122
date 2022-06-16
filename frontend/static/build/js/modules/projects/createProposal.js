@@ -287,8 +287,12 @@
               });
             }
           },
-          error: () => {
-            ajaxErrorHandler();
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: 'onDOMLoad.$.ajax',
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
             enableElements();
           }
         });
