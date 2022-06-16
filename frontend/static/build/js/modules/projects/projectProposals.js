@@ -19,142 +19,67 @@ const ProjectProposals = (() => {
 	 * * Private Methods
 	 */
 
-	const initDataTable = () => {
-		const data = [
-			{
-				id: 1,
-				title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-				implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-				start_date: '05/03/2022',
-				end_date: '05/04/2022',
-				status: 'Created',
-				target_groups: [
-					{
-						id: 1,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					}, {
-						id: 2,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					},
-				]
-			}, {
-				id: 1,
-				title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-				implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-				start_date: '05/03/2022',
-				end_date: '05/04/2022',
-				status: 'For review',
-				target_groups: [
-					{
-						id: 1,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					}, {
-						id: 2,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					},
-				]
-			}, {
-				id: 1,
-				title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-				implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-				start_date: '05/03/2022',
-				end_date: '05/04/2022',
-				status: 'For evaluation',
-				target_groups: [
-					{
-						id: 1,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					}, {
-						id: 2,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					},
-				]
-			}, {
-				id: 1,
-				title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-				implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-				start_date: '05/03/2022',
-				end_date: '05/04/2022',
-				status: 'Pending',
-				target_groups: [
-					{
-						id: 1,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					}, {
-						id: 2,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					},
-				]
-			}, {
-				id: 1,
-				title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-				implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-				start_date: '05/03/2022',
-				end_date: '05/04/2022',
-				status: 'Approved',
-				target_groups: [
-					{
-						id: 1,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					}, {
-						id: 2,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					},
-				]
-			}, {
-				id: 1,
-				title: 'Strengthening Resilience To Disasters and Be a Solution to Changing Environment',
-				implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-				start_date: '05/03/2022',
-				end_date: '05/04/2022',
-				status: 'Canceled',
-				target_groups: [
-					{
-						id: 1,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					}, {
-						id: 2,
-						name: 'Staffs of Grain Foundation for PWDs Inc.'
-					},
-				]
-			}
-		]
-
-		dt = $('#projectProposals_dt').DataTable({
-			data: data,
-			responsive: true,
-			language: DT_LANGUAGE,
+	const initDataTable = async () => {
+		dt = await $('#projectProposals_dt').DataTable({
+			...DT_CONFIG_DEFAULTS,
+      ajax: {
+        url: `${ BASE_URL_API }/projects/datatables`,
+        // success: result => {
+        //   console.log(result)
+        // },
+        error: () => {
+          ajaxErrorHandler(
+            {
+              file: 'projectProposals.js',
+              fn: 'ProjectProposals.initDataTable()'
+            },
+            1
+          )
+        }
+      },
 			columns: [
-				{
-					data: 'title'
+        {
+          data: 'createdAt',
+          visible: false,
+        }, {
+					data: 'title',
+          width: '30%'
 				}, {
 					data: null,
-					render: ({ target_groups }) => {
+          sortable: false,
+					render: data => {
+            const { target_groups } = data;
 						if(target_groups.length > 1) {
 							return `
-								<div>${ target_groups[0].name }</div> 
-								<div class="small">and ${ target_groups.length - 1 } more.</div>
+								<div>${ target_groups[0] }</div> 
+								<div class="small text-muted">and ${ target_groups.length - 1 } more.</div>
 							`
 						} else if(target_groups.length === 1) {
-							return target_groups[0].name;
+							return target_groups[0];
 						} else {
 							return `<div class="font-italic text-muted">No target groups have been set.</div>`
 						}
 					}
 				}, {
-					data: null,
-					render: ({ start_date }) => {
-						return formatDateTime(start_date, 'Date');
+					data: 'start_date',
+					render: (data, type, row) => {
+						return `
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
+            `
 					}
 				}, {
-					data: null,
-					render: ({ end_date }) => {
-						return formatDateTime(end_date, 'Date');
+					data: 'end_date',
+					render: end_date => {
+            return `
+              <div>${ formatDateTime(end_date, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(end_date) }</div>
+            `
 					}
 				}, {
-					data: null,
-					render: ({ status }) => {
-						const { theme, icon } = PROJECT_STATUS_STYLES[status];
+					data: 'status',
+					render: status => {
+						const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[status];
 						return `
 							<div class="text-center">
 								<div class="badge badge-subtle-${ theme } px-2 py-1">
@@ -203,10 +128,10 @@ const ProjectProposals = (() => {
 	 * * Init
 	 */
 
-  const init = () => {
+  const init = async () => {
     if (!initialized) {
       initialized = 1;
-      initDataTable();
+      await initDataTable();
     }
   }
 

@@ -87,28 +87,29 @@ const ajaxErrorHandler = (errMsg = '', onDOMLoad = 0) => {
     const body = $('body');
     $('.wrapper').remove();
     body.removeClass();
-    body.addClass('login-page');
     body.prepend(`
-      <div class="login-box w-75">
-        <div class="user-select-none">
-          <div class="d-flex flex-column align-items-center justify-content-center mt-5">
-            <div class="row align-items-center justify-content-center">
-              <div class="col-md-6 d-flex justify-content-center">
-                <img class="w-100" src="${ BASE_URL_WEB }/img/app/load_error.svg" alt="Maintenance" draggable="false">
-              </div>
-            </div>
-          </div>
-          <div class="text-center mt-5">
-            <h3 class="d-inline-block text-nowrap">Oww snap!</h3>
-            <h3 class="d-inline-block text-nowrap">Something went wrong</h3>
-            <p>Don't worry, it is not your fault. You can try again by reloading this page.</p>
-            <button type="button" class="btn btn-primary" onclick="location.reload()">
-              <i class="i fas fa-sync-alt mr-1"></i>
-              <span>Reload the page</span>
-            </button>
+    <div class="d-flex flex-column align-items-center justify-content-center vh-100 w-100 user-select-none">
+      <div>
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-6 d-flex justify-content-center">
+            <img class="w-100" src="${ BASE_URL_WEB }/img/app/load_error.svg" alt="Maintenance" draggable="false">
           </div>
         </div>
       </div>
+      <div class="text-center mt-5">
+        <h3 class="d-inline-block text-nowrap">Oww snap!</h3>
+        <h3 class="d-inline-block text-nowrap">Something went wrong</h3>
+        <p>Don't worry, it is not your fault. You can try again by reloading this page.</p>
+        <button type="button" class="btn btn-negative" onclick="history.back()">
+          <i class="fas fa-arrow-left mr-1"></i>
+          <span>Go back</span>
+        </button>
+        <button type="button" class="btn btn-primary" onclick="location.reload()">
+          <i class="fas fa-sync-alt mr-1"></i>
+          <span>Reload the page</span>
+        </button>
+      </div>
+    </div>
     `);
   }
   if (DEV_MODE) {

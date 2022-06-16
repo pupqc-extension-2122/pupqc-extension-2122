@@ -42,7 +42,7 @@ module.exports = {
         allowNull: false
       },
       evaluation_plans: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       status: {

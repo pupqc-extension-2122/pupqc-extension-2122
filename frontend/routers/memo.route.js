@@ -23,7 +23,7 @@ const renderRoles = (roles) => {
 
 
 // Redirect
-router.get('/', (req, res) => res.redirect(`/m/dashboard`));
+router.get('/', jwtMiddleware, (req, res) => res.redirect(`/m/dashboard`));
 
 
 // Dashboard

@@ -165,7 +165,13 @@ const DATETIME_FORMATS = {
 
 // jQuery Custom Validation
 const CUSTOM_VALIDATIONS = [
-	{
+  {
+    ruleName: "notEmpty",
+    handler: (value, element, params) => {
+      return !value.replace(/\s/g, '').length
+    },
+		defaultMessage: 'This field cannot be empty'
+  }, {
 		ruleName: "lessThan",
 		handler: (value, element, params) => {
 			if ($(params).length) {
@@ -298,7 +304,7 @@ const MAX_EMPTY_FIELDS = 10;
 const MONEY_LIMIT = 999999999999;
 
 // Project Status Styles
-const PROJECT_STATUS_STYLES = {
+const PROJECT_PROPOSAL_STATUS_STYLES = {
 	'Created': {
 		icon: 'fas fa-pen',
 		theme: 'light'

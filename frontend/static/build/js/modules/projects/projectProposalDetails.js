@@ -31,7 +31,7 @@ const ProjectDetails = (() => {
         '#projectDetails_header_implementer': data.implementer,
         '#projectDetails_header_timeframe': () => `${formatDateTime(data.start_date, 'Date')} - ${formatDateTime(data.end_date, 'Date')}`,
         '#projectDetails_header_status': () => {
-          const { theme, icon } = PROJECT_STATUS_STYLES[data.status];
+          const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[data.status];
           return `
             <div class="badge badge-subtle-${theme} py-1 px-2">
               <i class="${icon} fa-fw mr-1"></i>
@@ -527,6 +527,7 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Extensionist')) {
       optionFunc = {
         'submitForApproval': () => {
+          $('#confirmSubmitForApproval_projectId').val(project_details.id);
           $('#confirmSubmitForApproval_modal').modal('show');
           // updateStatus('For review');
         },
@@ -581,6 +582,17 @@ const AddProjectActivity = (() => {
    */
 
   const initProjectActivityForm = () => {
+    
+    // Initialize Start Date
+    $app('#addProjectActivity_startDate').initDateInput({
+      button: '#addProjectActivity_startDate_pickerBtn'
+    });
+
+    // Initialize End Date
+    $app('#addProjectActivity_endDate').initDateInput({
+      button: '#addProjectActivity_endDate_pickerBtn'
+    });
+
     PA_form = new ProjectActivityForm({
       topicsForm: {
         formGroup: '#addProjectActivity_topics_grp',
@@ -609,7 +621,25 @@ const AddProjectActivity = (() => {
     validator = $app('#addProjectActivity_form').handleForm({
       validators: {
         title: {
-          required: 'The title of the activity is required.'
+          required: 'The title of the activity is required.',
+          notEmpty: 'Test'
+        },
+        start_date: {
+          required: 'Please select a start date', 
+          beforeDateTimeSelector: {
+            rule: '#addProjectActivity_endDate',
+            message: "Start date must be before end date"
+          }
+        },
+        end_date: {
+          required: 'Please select a end date', 
+          afterDateTimeSelector: {
+            rule: '#addProjectActivity_startDate',
+            message: "End date must be after start date"
+          }
+        },
+        details: {
+          required: 'The summary/details of the activity is required'
         }
       },
       onSubmit: () => onFormSubmit()
@@ -617,16 +647,35 @@ const AddProjectActivity = (() => {
   }
   
   const onFormSubmit = () => {
-    const data = {
-      title: 'Test',
-      ...PA_form.getActivityData()
-    }
-
-    console.log(data);
-
-    toastr.success('Submitted successfully!');
+    const fd = new FormData($('#addProjectActivity_form')[0]);
     
-    addActivityModal.modal('hide');
+    const data = {
+      activity_name: fd.get('title'),
+      ...PA_form.getActivityData(),
+      start_date: moment(fd.get('start_date')).toISOString(),
+      end_date: moment(fd.get('end_date')).toISOString(),
+      details: fd.get('details'),
+      status: 'Not evaluated'
+    }
+    
+    $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activity/create`,
+      type: 'POST',
+      data: data,
+      success: async result => {
+        if (result.error) {
+          ajaxErrorHandler();
+        } else {
+          await ProjectActivities.reloadDataTable();
+          addActivityModal.modal('hide');
+          toastr.success('An activity has been successfully added.');
+        }
+      },
+      error: () => {
+        ajaxErrorHandler();
+      }
+    })
+    
   }
 
   /**
@@ -779,16 +828,21 @@ const ProjectActivities = (() => {
       },
       columns: [
         {
-          data: 'activity_name'
+          data: 'createdAt',
+          visible: false
+        }, {
+          data: 'activity_name',
+          width: '50%'
         }, {
           data: null,
+          sortable: false,
           render: data => {
             const topics = data.topics;
             const length = topics.length;
             if (length > 1) {
               return `
                 <div>${ topics[0]}</div>
-                <div class="small">and ${ length - 1 } more.</div>
+                <div class="small text-muted">and ${ length - 1 } more.</div>
               `
             } else if (length == 1) {
               return topics[0]
@@ -798,6 +852,7 @@ const ProjectActivities = (() => {
           }
         }, {
           data: null,
+          width: '10%',
           render: data => {
 
             const editOption = () => {
@@ -815,7 +870,7 @@ const ProjectActivities = (() => {
             }
 
             return `
-              <div class="dropdown text-center">
+              <div class="dropdown text-sm-center">
                 <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
                   <i class="fas fa-ellipsis-h"></i>
                 </div>
@@ -851,10 +906,8 @@ const ProjectActivities = (() => {
 	 * * Public Methods
 	 */
 
-  const reloadDataTable = () => {
-    // dt.ajax.reload();
-    console.log(dt);
-    toastr.success('List of activities has been reloaded');
+  const reloadDataTable = async () => {
+    await dt.ajax.reload();
   }
 
   const initViewMode = async (activity_id) => {
@@ -944,6 +997,23 @@ const ProjectActivities = (() => {
 })();
 
 
+// const SubmitProject = (() => {
+//   let project_details;
+  
+//   const init = (projectDetailsData) => {
+//     project_details = projectDetailsData;
+//   }
+
+//   const forReview = () => {
+
+//   }
+
+//   return {
+//     init,
+//   }
+// })();
+
+
 (() => {
   const project_id = location.pathname.split('/')[3];
 
@@ -955,7 +1025,6 @@ const ProjectActivities = (() => {
         ajaxErrorHandler(result.message);
       } else {
         const data = result.data;
-        console.log(data);
 
         ProjectDetails.init(data);
         ProjectOptions.setOptions(data);
@@ -975,24 +1044,61 @@ const ProjectActivities = (() => {
         1
       );
     }
-  })
+  });
 })();
 
 
 const updateStatus = (status) => {
-  data.status = status;
-  ProjectDetails.loadDetails(data);
-  ProjectOptions.setOptions(data);
-  if ($('#activities_dt').length) {
-    AddProjectActivity.init(data);
-    ProjectActivities.init(data);
-  }
+  const projectId = $('#confirmSubmitForApproval_projectId').val();
+
+  $.ajax({
+    url: `${ BASE_URL_API }/projects/${ projectId }`,
+    type: 'GET',
+    success: result => {
+      if (result.error) {
+        ajaxErrorHandler(result.message);
+      } else {
+        const data = result.data;
+
+        ProjectDetails.loadDetails(data);
+        ProjectOptions.setOptions(data);
+        if ($('#activities_dt').length) {
+          AddProjectActivity.init(data);
+          ProjectActivities.init(data);
+        }
+      }
+    },
+    error: () => {
+      ajaxErrorHandler(
+        {
+          file: 'projects/projectProposalDetails.js',
+          fn: 'onDOMLoad.$.ajax'
+        },
+        1
+      );
+    }
+  });
 }
 
 $('#confirmSubmitForApproval_btn').on('click', () => {
-  updateStatus('For review');
-  $('#confirmSubmitForApproval_modal').modal('hide');
-  toastr.success('The proposal has been submitted successfully.');
+  const projectId = $('#confirmSubmitForApproval_projectId').val();
+  $.ajax({
+    url: `${ BASE_URL_API }/projects/review/${ projectId }`,
+    type: 'PUT',
+    success: result => {
+      if (result.error) {
+        ajaxErrorHandler(result.message);
+      } else {
+        console.log(result);
+        updateStatus('For review');
+        $('#confirmSubmitForApproval_modal').modal('hide');
+        toastr.success('The proposal has been submitted successfully.');
+      }
+    }, 
+    error: () => {
+      ajaxErrorHandler();
+    }
+  });
 });
 
 $('#confirmApproveForEvaluation_btn').on('click', () => {

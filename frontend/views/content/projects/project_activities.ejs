@@ -1,5 +1,7 @@
 <%# ***** Styles ***** %>
 
+<%# Daterange Picker %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/daterangepicker/daterangepicker.css">
 <%# DataTables %>
 <link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -22,14 +24,14 @@
     <div class="d-flex align-items-center justify-content-between">
       <div>
         <h1 class="m-0">Project Activities</h1>
-        <!-- <div class="text-secondary">Evaluate projects here</div> -->
+        <%# <div class="text-secondary">Evaluate projects here</div> %>
       </div>
       <div>
-        <!-- <button type="button" class="btn btn-default float-right" id="daterange-btn">
+        <%# <button type="button" class="btn btn-default float-right" id="daterange-btn">
           <i class="far fa-calendar-alt mr-1"></i>
           <span>Date Range Picker</span>
           <i class="fas fa-caret-down ml-1"></i>
-        </button> -->
+        </button> %>
       </div>
     </div>
   </div>
@@ -42,7 +44,7 @@
     <div class="row">
       <div class="col-md-9">
 
-        <!-- Project Details Header -->
+        <%# Project Details Header %>
         <div class="card card-primary card-outline" id="projectDetails_header">
           <div class="card-body">
             <div>
@@ -73,7 +75,7 @@
               </div>
 
               <%# Presentation Schedule %>
-              <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
+              <!-- <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
                 <div class="mr-2">
                   <i class="fas fa-calendar-alt fa-fw text-info"></i>
                 </div>
@@ -81,13 +83,13 @@
                   <div>The presentation is set on <span class="font-weight-bold">June 15, 2022</span></div>
                   <div class="small text-muted">in 20 days</div>
                 </div>
-              </div>
+              </div> -->
 
             </div>
           </div>
         </div>
 
-        <!-- Project Activities -->
+        <%# Project Activities %>
         <div class="card">
 
           <div class="card-header">
@@ -113,9 +115,12 @@
 
             <table class="table w-100" id="activities_dt">
               <thead>
-                <th>Name</th>
+                <th class="sr-only">Date Created</th>
+                <th>Activity Title / Name</th>
                 <th>Topics</th>
-                <th>Actions</th>
+                <th>
+                  <span class="d-sm-none">Actions</span>
+                </th>
               </thead>
               <tbody>
                 <td colspan="4" class="text-center">
@@ -136,7 +141,7 @@
 
       <div class="col-md-3">
 
-        <!-- Options Loader -->
+        <%# Options Loader %>
         <div class="card" id="projectDetails_options_card_loader">
           <div class="card-header">
             <div class="skeleton text my-1" style="width: 5rem ;height: 1rem"></div>
@@ -149,7 +154,7 @@
           </div>
         </div>
 
-        <!-- Options -->
+        <%# Options %>
         <div class="card" id="projectDetails_options_card" style="display: none">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -164,7 +169,7 @@
           <div class="card-body p-2" id="projectDetails_options"></div>
         </div>
 
-        <!-- Timeline -->
+        <%# Timeline %>
         <div class="timeline">
           <div class="time-label font-weight-light">
             <span class="bg-primary">History Logs</span>
@@ -262,7 +267,7 @@
           <%# Activity Title %>
           <div class="form-group">
             <label for="addProjectActivity_title">
-              <span>Activity Title</span>
+              <span>Activity Title / Name</span>
               <span class="text-danger">*</span>
             </label>
             <input type="text" class="form-control" id="addProjectActivity_title" name="title"
@@ -313,7 +318,10 @@
             <%# Start Date %>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="addProjectActivity_startDate">Start Date</label>
+                <label for="addProjectActivity_startDate">
+                  <span>Start Date</span>
+                  <span class="text-danger">*</span>
+                </label>
                 <div class="input-group date">
                   <input 
                     type="text" 
@@ -343,14 +351,17 @@
             <%# End Date %>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="addProjectActivity_endDate">End Date</label>
+                <label for="addProjectActivity_endDate">
+                  <span>End Date</span>
+                  <span class="text-danger">*</span>
+                </label>
                 <div class="input-group date">
                   <input 
                     type="text" 
                     class="form-control" 
                     id="addProjectActivity_endDate" 
-                    name="start_date"
-                    placeholder="Please select a start date" 
+                    name="end_date"
+                    placeholder="Please select an end date" 
                     data-inputmask-alias="datetime"
                     data-inputmask-inputformat="mm/dd/yyyy" 
                     data-mask 
@@ -413,7 +424,7 @@
         </div>
         <div class="modal-body">
 
-          <!-- Form groups loader -->
+          <%# Form groups loader %>
           <div id="editProjectActivity_formGroups_loader">
             <div class="form-group">
               <div class="skeleton text" style="width: 8rem"></div>
@@ -429,20 +440,20 @@
             </div>
           </div>
 
-          <!-- Form groups -->
+          <%# Form groups %>
           <div id="editProjectActivity_formGroups" style="display: none">
 
-            <!-- Title -->
+            <%# Title %>
             <div class="form-group">
               <label for="editProjectActivity_title">
-                <span>Activity Title</span>
+                <span>Activity Title / Name</span>
                 <span class="text-danger">*</span>
               </label>
               <input type="text" class="form-control" id="editProjectActivity_title" name="title"
                 placeholder="Type the title of activity here ..." />
             </div>
 
-            <!-- Topics Form Group -->
+            <%# Topics Form Group %>
             <div class="form-group" id="editProjectActivity_topics_grp">
               <label>
                 <span>Topics</span>
@@ -461,7 +472,7 @@
               </div>
             </div>
 
-            <!-- Outcomes Form Group -->
+            <%# Outcomes Form Group %>
             <div class="form-group" id="editProjectActivity_outcomes_grp">
               <label>
                 <span>Outcomes</span>
@@ -506,6 +517,10 @@
 
 <%# ***** Scripts ***** %>
 
+<%# InputMask %>
+<script src="<%=BASE_URL%>/plugins/inputmask/jquery.inputmask.min.js"></script>
+<%# daterangepicker %>
+<script src="<%=BASE_URL%>/plugins/daterangepicker/daterangepicker.js"></script>
 <%# Datatable and Plugins %>
 <script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
