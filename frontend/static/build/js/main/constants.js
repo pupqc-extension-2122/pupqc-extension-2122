@@ -168,7 +168,7 @@ const CUSTOM_VALIDATIONS = [
   {
     ruleName: "notEmpty",
     handler: (value, element, params) => {
-      return !value.replace(/\s/g, '').length
+      return value.replace(/\s/g, '').length;
     },
 		defaultMessage: 'This field cannot be empty'
   }, {

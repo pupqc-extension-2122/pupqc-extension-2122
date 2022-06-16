@@ -118,12 +118,13 @@
                 <th class="sr-only">Date Created</th>
                 <th>Activity Title / Name</th>
                 <th>Topics</th>
+                <th>Timeframe</th>
                 <th>
                   <span class="d-sm-none">Actions</span>
                 </th>
               </thead>
               <tbody>
-                <td colspan="4" class="text-center">
+                <td colspan="5" class="text-center">
                   <div class="p-5 my-5">
                     <div class="spinner-grow text-primary mb-2"></div>
                     <div>Loading ... Please wait.</div>
@@ -250,7 +251,7 @@
 <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
   
   <%# Add Project Activity Modal %>
-  <div class="modal fade" id="addProjectActivity_modal">
+  <div class="modal fade" data-backdrop="static" id="addProjectActivity_modal">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <form class="modal-content" id="addProjectActivity_form">
         <div class="modal-header">
@@ -399,8 +400,17 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="confirmRemoveLineItemBudget_btn">
+          <button 
+            type="button" 
+            class="btn btn-negative"
+            id="addProjectActivity_cancelBtn"
+            data-dismiss="modal"
+          >Cancel</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            id="addProjectActivity_saveBtn"
+          >
             <i class="fas fa-check mr-1"></i>
             <span>Save</span>
           </button>

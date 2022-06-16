@@ -212,9 +212,11 @@
       validators: {
         title: {
           required: "The title of the project is required.",
+          notEmpty: "This field cannot be empty",
         },
         implementer: {
           required: "The implementer is required.",
+          notEmpty: "This field cannot be empty",
         },
         start_date: {
           required: "Please select a date when the project will start.",
@@ -231,10 +233,12 @@
           }
         },
         impact_statement: {
-          required: "Please compose the impact statement here."
+          required: "Please compose the impact statement here.",
+          notEmpty: "This field cannot be empty",
         },
         summary: {
-          required: "Please compose the project summary here."
+          required: "Please compose the project summary here.",
+          notEmpty: "This field cannot be empty",
         }
       },
       onSubmit: async () => {

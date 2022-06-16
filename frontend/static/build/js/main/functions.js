@@ -199,11 +199,6 @@ const $app = (selector) => {
 
 		let validationRules = {}, validationMessages = {}
 
-		const booleanRuleKeys = [
-			'required',
-			'email'
-		]
-
 		const ruleObjects = ['rule', 'message']
 
 		Object.entries(validators).forEach(([name, objRules]) => {
@@ -212,7 +207,7 @@ const $app = (selector) => {
 
 			const rules = Object.entries(objRules);
 			rules.forEach(([ruleKey, rule]) => {
-				if (booleanRuleKeys.includes(ruleKey) && typeof rule === "string") {
+				if (typeof rule === "string") {
 					_rules[ruleKey] = true;
 					_messages[ruleKey] = rule
 				} else if (typeof rule === "object") {

@@ -571,10 +571,13 @@ const AddProjectActivity = (() => {
   /**
    * * Local Variables
    */
+  const formSelector = '#addProjectActivity_form';
+  const form = $(formSelector)[0];
   const addActivityModal = $('#addProjectActivity_modal');
   let validator;
   let PA_form;
   let initiated = 0;
+  let isSubmitting = 0;
   let project_details;
 
   /**
@@ -612,13 +615,24 @@ const AddProjectActivity = (() => {
 
     // On modal hide
     addActivityModal.on('hidden.bs.modal', () => {
-      PA_form.resetActivityForm();
-      validator.resetForm();
+      if (!isSubmitting) resetForm();
     });
   }
 
+  const resetForm = () => {
+
+    // Reset validation
+    validator.resetForm();
+    
+    // Reset native inputs
+    form.reset();
+
+    // Reset Automated Forms
+    PA_form.resetActivityForm();
+  }
+
   const handleForm = () => {
-    validator = $app('#addProjectActivity_form').handleForm({
+    validator = $app(formSelector).handleForm({
       validators: {
         title: {
           required: 'The title of the activity is required.',
@@ -646,9 +660,37 @@ const AddProjectActivity = (() => {
     });
   }
   
-  const onFormSubmit = () => {
-    const fd = new FormData($('#addProjectActivity_form')[0]);
+  const onFormSubmit = async () => {
+    isSubmitting = 1;
+
+    // Disable the elements
+    const saveBtn = $('#addProjectActivity_saveBtn');
+    const cancelBtn = $('#addProjectActivity_cancelBtn');
     
+    cancelBtn.attr('disabled', true);
+    saveBtn.attr('disabled', true);
+    saveBtn.html(`
+      <span class="px-3">
+        <span class="spinner-grow spinner-grow-sm m-0" role="status">
+          <span class="sr-only">Loading...</span>
+        </span>
+      </span>
+    `);
+
+    // For enabling elements
+    const enableElements = () => {
+
+      // Enable buttons
+      cancelBtn.attr('disabled', false);
+      saveBtn.attr('disabled', false);
+      saveBtn.html(`Submit`);
+
+      isSubmitting = 0;
+    }
+
+
+    // Get the data
+    const fd = new FormData(form);
     const data = {
       activity_name: fd.get('title'),
       ...PA_form.getActivityData(),
@@ -657,25 +699,36 @@ const AddProjectActivity = (() => {
       details: fd.get('details'),
       status: 'Not evaluated'
     }
-    
-    $.ajax({
+
+    // Save data to db
+    await $.ajax({
       url: `${ BASE_URL_API }/projects/${ project_details.id }/activity/create`,
       type: 'POST',
       data: data,
       success: async result => {
         if (result.error) {
-          ajaxErrorHandler();
+          ajaxErrorHandler(result.message);
         } else {
+
+          // Reload the datatable
           await ProjectActivities.reloadDataTable();
+          
+          // Hide the modal
           addActivityModal.modal('hide');
+          
+          // Reset the form
+          resetForm();
+
           toastr.success('An activity has been successfully added.');
         }
       },
       error: () => {
         ajaxErrorHandler();
+        enableElements();
       }
-    })
-    
+    });
+
+    enableElements();
   }
 
   /**
@@ -832,10 +885,11 @@ const ProjectActivities = (() => {
           visible: false
         }, {
           data: 'activity_name',
-          width: '50%'
+          width: '30%'
         }, {
           data: null,
           sortable: false,
+          width: '30%',
           render: data => {
             const topics = data.topics;
             const length = topics.length;
@@ -849,6 +903,14 @@ const ProjectActivities = (() => {
             } else {
               return `<div class="text-muted font-italic">No topics.</div>`
             }
+          }
+        }, {
+          data: null,
+          sortable: false,
+          render: data => {
+            return `
+              <div>${ formatDateTime(data.start_date, 'MMM. D, YYYY') } - ${ formatDateTime(data.end_date, 'MMM. D, YYYY') }</div>
+            `
           }
         }, {
           data: null,
