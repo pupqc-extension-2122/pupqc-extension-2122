@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isIn: {
-          args: [
+          args: [[
             'Created',
             'For Review',
             'For Evaluation',
@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
             'Approved',
             'Rejected',
             'Cancelled'
-          ],
+          ]],
           msg: 'Invalid Status'
         }
       }
