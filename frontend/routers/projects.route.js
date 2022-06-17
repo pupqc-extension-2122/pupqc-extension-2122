@@ -79,7 +79,7 @@ router.get('/create-proposal', jwtMiddleware, (req, res) => {
 });
 
 
-// Project Details
+// Project Proposal Details
 router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
   const { roles, first_name, last_name } = req.auth;
   const { project_id } = req.params;
@@ -105,7 +105,7 @@ router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
 });
 
 
-// Project Activities
+// Project Proposal Activities
 router.get('/proposals/:project_id/activities', jwtMiddleware, async (req, res) => {
   const { roles, first_name, last_name } = req.auth;
   const { project_id } = req.params;
@@ -173,6 +173,61 @@ router.get('/monitoring/', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
+
+// Project Monitoring Details
+router.get('/monitoring/:project_id', jwtMiddleware, async (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+  const { project_id } = req.params;
+
+  const project = await Projects.findOne({
+    where: { id: project_id }
+  });
+
+  if(!project) {
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
+  }
+
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_monitoring_details', {
+      document_title: 'Project Monitoring Details',
+      active_sidebar_tab: 'Project Monitoring',
+      name: `${ first_name } ${ last_name }`,
+      role: renderRoles(roles),
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
+
+
+// Project Monitoring Activities
+router.get('/monitoring/:project_id/activities', jwtMiddleware, async (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+  const { project_id } = req.params;
+
+  const project = await Projects.findOne({
+    where: { id: project_id }
+  });
+
+  if(!project) {
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
+  }
+
+  roles.includes('Extensionist') || roles.includes('Chief')
+    ? res.render(PATH + 'project_monitoring_activities', {
+      document_title: 'Project Activities',
+      active_sidebar_tab: 'Project Monitoring',
+      name: `${ first_name } ${ last_name }`,
+      role: renderRoles(roles),
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : console.log('404')
+});
+
+
+
+
 // Project Evaluation
 router.get('/evaluation/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
@@ -188,6 +243,7 @@ router.get('/evaluation/', jwtMiddleware, (req, res) => {
     })
     : console.log('404')
 });
+
 
 // Project Evaluation Details
 router.get('/evaluation/:project_id', jwtMiddleware, (req, res) => {
@@ -205,7 +261,8 @@ router.get('/evaluation/:project_id', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
-// Project Activities
+
+// Project Evaluation Activities
 router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
@@ -221,38 +278,6 @@ router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
     : console.log('404')
 });
 
-// Project Monitoring Details
-router.get('/monitoring/:project_id', jwtMiddleware, (req, res) => {
-  const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
-    ? res.render(PATH + 'project_monitoring_details', {
-      document_title: 'Project Monitoring Details',
-      active_sidebar_tab: 'Project Monitoring',
-      name: `${ first_name } ${ last_name }`,
-      role: renderRoles(roles),
-      roles: roles,
-      ...RENDER_OPTION_DEFAULTS
-    })
-    : console.log('404')
-});
 
-/* NOT YET FINISHED, NO EJS, JS, ETC.
-// Project Monitoring Activities
-router.get('/monitoring/:project_id/activities', jwtMiddleware, (req, res) => {
-  const { roles, first_name, last_name } = req.auth;
-
-  roles.includes('Extensionist') || roles.includes('Chief')
-    ? res.render(PATH + 'project_monitoring_activities', {
-      document_title: 'Project Monitoring Activities',
-      active_sidebar_tab: 'Project Monitoring',
-      name: `${ first_name } ${ last_name }`,
-      role: renderRoles(roles),
-      roles: roles,
-      ...RENDER_OPTION_DEFAULTS
-    })
-    : console.log('404')
-});
-
-*/
 module.exports = router;

@@ -518,8 +518,6 @@
         } else {
           const data = result.data;
 
-          console.log(data);
-              
           setInputValue({
             '#editProject_projectTitle': data.title,
             '#editProject_implementer': data.implementer,
@@ -538,14 +536,12 @@
           EP_form.setEvaluationPlans(data.evaluation_plans);
         }
       },
-      error: () => {
-        ajaxErrorHandler(
-          {
-            file: 'projects/editProposal.js',
-            fn: 'onDOMLoad.setInputValues()'
-          },
-          1
-        );
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/editProposal.js',
+          fn: 'onDOMLoad.setInputValues()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        }, 1);
       }
     });
   }

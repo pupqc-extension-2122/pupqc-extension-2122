@@ -78,7 +78,7 @@ const DT_CONFIG_DEFAULTS = {
         </div>
         <div class="text-secondary">Making it ready ...</div>
       </div>
-    `,
+    `, 
     processing: `
       <div class="text-center p-5 wait">
         <div class="spinner-grow text-primary mb-3" role="status">
@@ -101,7 +101,7 @@ const DT_CONFIG_DEFAULTS = {
   columnDefs: [
     {
       targets: [-1],
-      orderable: false
+      orderable: false,
     }
   ],
   autoWidth: false,
@@ -309,11 +309,11 @@ const PROJECT_PROPOSAL_STATUS_STYLES = {
 		icon: 'fas fa-pen',
 		theme: 'light'
 	},
-	'For review': {
+	'For Review': {
 		icon: 'fas fa-file-circle-question',
 		theme: 'info'
 	},
-	'For evaluation': {
+	'For Evaluation': {
 		icon: 'fas fa-file-circle-exclamation',
 		theme: 'info'
 	},
@@ -325,7 +325,7 @@ const PROJECT_PROPOSAL_STATUS_STYLES = {
 		icon: 'fas fa-check',
 		theme: 'success'
 	},
-	'Canceled': {
+	'Cancelled': {
 		icon: 'fas fa-times',
 		theme: 'danger'
 	},

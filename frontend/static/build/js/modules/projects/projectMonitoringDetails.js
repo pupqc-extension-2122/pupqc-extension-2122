@@ -1,150 +1,28 @@
 /**
  * ==============================================
- * * PROJECT EVALUATION DETAILS
+ * * PROJECT MONITORING DETAILS / ACTIVITIES
  * ==============================================
  */
 
 'use strict';
 
+
 const ProjectDetails = (() => {
 
   /**
-   * * Local Variables
+   * * Local Variables`
    */
 
   const header = $('#projectDetails_header');
   const body = $('#projectDetails_body');
-  const activitiesDT = $('#activities_dt');
-  const options = '#projectDetails_options';
   let initialized = 0;
-  let id;
 
   // Data Container
   let data;
-  let monitoring_status;
 
   /**
    * * Private Functions
    */
-
-  const getIdFromURL = async () => {
-    id = location.pathname.split('/')[3];
-  }
-
-  const getData = async () => {
-
-    // ! Simulation
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        data = {
-          id: 'project_id_1',
-          title: 'Strengthening Resillience To Disasters and Be a Solution to Changing Environment',
-          implementer: 'Polytechnic University of the Philippines, Quezon City Branch',
-          start_date: "Tue May 03 2022 00:00:00 GMT+0800 (Taipei Standard Time)",
-          end_date: "Tue May 04 2022 00:00:00 GMT+0800 (Taipei Standard Time)",
-          impact_statement: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
-          summary: "Consistent with the National Government Thrust, Quezon City Branch is determined to effect significant Human Development through consistent education.",
-          status: 'Approved',
-          project_team: [
-            { id: 1, name: 'team_member 1' },
-            { id: 2, name: 'team_member 2' },
-            { id: 3, name: 'team_member 3' },
-            { id: 4, name: 'team_member 4' },
-            { id: 5, name: 'team_member 5' },
-          ],
-          target_groups: [
-            { id: 1, name: 'target_group 1' },
-            { id: 2, name: 'target_group 2' },
-            { id: 3, name: 'target_group 3' },
-            { id: 4, name: 'target_group 4' },
-            { id: 5, name: 'target_group 5' },
-          ],
-          cooperating_agencies: [
-            { id: 1, name: 'cooperating_agencies 1' },
-            { id: 2, name: 'cooperating_agencies 2' },
-            { id: 3, name: 'cooperating_agencies 3' },
-            { id: 4, name: 'cooperating_agencies 4' },
-            { id: 5, name: 'cooperating_agencies 5' },
-          ],
-          financial_requirements: [
-            {
-              id: '1',
-              name: 'Operational Cost',
-              items: [
-                {
-                  budget_item: "test",
-                  particulars: "test",
-                  quantity: 10,
-                  estimated_cost: 20
-                }, {
-                  budget_item: "test",
-                  particulars: "test",
-                  quantity: 20,
-                  estimated_cost: 5
-                }, {
-                  budget_item: "test",
-                  particulars: "test",
-                  quantity: 20,
-                  estimated_cost: 5
-                },
-              ]
-            }, {
-              id: '2',
-              name: 'Travel Cost',
-              items: [
-                {
-                  budget_item: "test",
-                  particulars: "test",
-                  quantity: 5,
-                  estimated_cost: 2
-                }
-              ]
-            }, {
-              id: '3',
-              name: 'Supplies Cost',
-              items: [
-                {
-                  budget_item: "test",
-                  particulars: "test",
-                  quantity: 20,
-                  estimated_cost: 5
-                }
-              ]
-            },
-          ],
-          evaluation_plans: [
-            {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }, {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }, {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }, {
-              outcome: 'Outcome 1',
-              indicator: 'Indicator 1',
-              data_collection_method: 'DCM 1',
-              frequency: 'Frequency 1'
-            }
-          ]
-        }
-        resolve();
-      }, 1250);
-    });
-  }
-
-  const getMonitoringStatus = () => {
-    // ! Simulation
-    monitoring_status = 'Not yet started';
-  }
 
   const loadHeaderDetails = () => {
     if (header.length) {
@@ -153,12 +31,23 @@ const ProjectDetails = (() => {
         '#projectDetails_header_implementer': data.implementer,
         '#projectDetails_header_timeframe': () => `${formatDateTime(data.start_date, 'Date')} - ${formatDateTime(data.end_date, 'Date')}`,
         '#projectDetails_header_status': () => {
-
-          const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[monitoring_status];
+          const { start_date, end_date } = data;
+          const today = moment();
+          let status;
+          if (today.isBefore(start_date) && today.isBefore(end_date)) {
+            status = 'Not yet started';
+          } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
+            status = 'Finished';
+          } else if (today.isBetween(start_date, end_date)) {
+            status = 'On going';
+          } else {
+            status = 'No data';
+          }
+          const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
           return `
             <div class="badge badge-subtle-${theme} py-1 px-2">
               <i class="${icon} fa-fw mr-1"></i>
-              <span>${monitoring_status}</span>
+              <span>${status}</span>
             </div>
           `
         }
@@ -171,9 +60,9 @@ const ProjectDetails = (() => {
       const {
         title,
         implementer,
-        project_team: pt,
+        team_members: pt,
         target_groups: tg,
-        cooperating_agencies: ca,
+        partners: ca,
         start_date,
         end_date,
         impact_statement,
@@ -190,7 +79,7 @@ const ProjectDetails = (() => {
         '#projectDetails_body_projectTeam': () => {
           if (pt.length) {
             let list = '<ul class="mb-0">';
-            pt.forEach(p => list += `<li>${p.team_member}</li>`);
+            pt.forEach(p => list += `<li>${p}</li>`);
             list += '</ul>';
             return list;
           }
@@ -199,7 +88,7 @@ const ProjectDetails = (() => {
         '#projectDetails_body_targetGroups': () => {
           if (tg.length) {
             let list = '<ul class="mb-0">';
-            tg.forEach(t => list += `<li>${t.name}</li>`);
+            tg.forEach(t => list += `<li>${t}</li>`);
             list += '</ul>';
             return list;
           }
@@ -218,7 +107,7 @@ const ProjectDetails = (() => {
           if (start_date && end_date) {
             return `
               <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
-              <div class="small">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+              <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
             `
           } else return noContentTemplate('No dates have been set up.');
         },
@@ -249,77 +138,6 @@ const ProjectDetails = (() => {
           }
         },
         '#projectDetails_body_financialRequirements': () => {
-
-          // // Create a new object that holds financial requirements grouped by line item budget
-          // let frObj = {};
-          // let budgetItemCategoryList = [];
-
-          // // Group the requirements according to line item budget
-          // fr.forEach(r => {
-
-          //   // Create a copy of object
-          //   let requirement = { ...r };
-
-          //   // Get the budget item category id
-          //   const bic_id = requirement.budget_item_category.id;
-
-          //   // Create a key with empty array if line item budget key not yet exist
-          //   if (!(frObj[bic_id])) {
-          //     frObj[bic_id] = [];
-          //     budgetItemCategoryList.push(requirement.budget_item_category);
-          //   }
-
-          //   // Remove the budget_item_category in object
-          //   delete requirement.budget_item_category;
-
-          //   // Push the object according to key
-          //   frObj[bic_id].push(requirement);
-          // });
-
-          // let financialRequirementRows = '';
-          // let overallAmount = 0;
-
-          // // Read the object for rendering in the DOM
-          // Object.keys(frObj).forEach(key => {
-
-          //   // Create the line item budget row
-          //   financialRequirementRows += `
-          //     <tr style="background-color: #f6f6f6">
-          //       <td 
-          //         class="font-weight-bold"
-          //         colspan="5"
-          //       >${budgetItemCategoryList.find(x => x.id == key).name}</td>
-          //     </tr>
-          //   `;
-
-          //   // Create the budget item rows
-          //   frObj[key].forEach(r => {
-          //     const { budget_item, particulars, quantity, estimated_cost } = r;
-          //     const totalAmount = quantity * estimated_cost;
-
-          //     overallAmount += totalAmount;
-
-          //     financialRequirementRows += `
-          //       <tr>
-          //         <td>${budget_item}</td>
-          //         <td>${particulars}</td>
-          //         <td class="text-right">${quantity}</td>
-          //         <td class="text-right">${formatToPeso(estimated_cost)}</td>
-          //         <td class="text-right">${formatToPeso(totalAmount)}</td>
-          //       </tr>
-          //     `
-          //   });
-          // });
-
-          // financialRequirementRows += `
-          //   <tr class="font-weight-bold">
-          //     <td colspan="4" class="text-right">Overall Amount</td>
-          //     <td class="text-right">${formatToPeso(overallAmount)}</td>
-          //   </tr>
-          // `;
-
-          // return financialRequirementRows;
-
           let financialRequirementRows = '';
           let overallAmount = 0;
 
@@ -332,7 +150,7 @@ const ProjectDetails = (() => {
                 <td 
                   class="font-weight-bold"
                   colspan="5"
-                >${category.name}</td>
+                >${ category.category }</td>
               </tr>
             `;
 
@@ -345,11 +163,11 @@ const ProjectDetails = (() => {
 
               financialRequirementRows += `
                 <tr>
-                  <td>${budget_item}</td>
-                  <td>${particulars}</td>
-                  <td class="text-right">${quantity}</td>
-                  <td class="text-right">${formatToPeso(estimated_cost)}</td>
-                  <td class="text-right">${formatToPeso(totalAmount)}</td>
+                  <td>${ budget_item }</td>
+                  <td>${ particulars }</td>
+                  <td class="text-right">${ quantity }</td>
+                  <td class="text-right">${ formatToPeso(estimated_cost) }</td>
+                  <td class="text-right">${ formatToPeso(totalAmount) }</td>
                 </tr>
               `
             });
@@ -358,7 +176,7 @@ const ProjectDetails = (() => {
           financialRequirementRows += `
             <tr class="font-weight-bold">
               <td colspan="4" class="text-right">Overall Amount</td>
-              <td class="text-right">${formatToPeso(overallAmount)}</td>
+              <td class="text-right">${ formatToPeso(overallAmount) }</td>
             </tr>
           `;
 
@@ -369,107 +187,6 @@ const ProjectDetails = (() => {
       $('#projectDetails_navTabs').show();
     }
   }
-
-  const setOptions = () => {
-
-    const optionCategories = [
-      {
-        id: 'Project Activities',
-        header: `<div class="dropdown-header">Project Activities</div>`
-      }, {
-        id: 'Project Details',
-        header: `<div class="dropdown-header">Project Details</div>`
-      },
-      // {
-      //   id: 'For Project Evaluation',
-      //   header: `<div class="dropdown-header">Project Evaluation</div>`
-      // }, {
-      //   id: 'Others',
-      //   header: `<div class="dropdown-header">Others</div>`
-      // }
-    ]
-
-    const optionsDict = [
-      {
-        id: 'View activities',
-        category: 'Project Activities',
-        template: `
-          <button
-            class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${BASE_URL_WEB}/p/evaluation/${id}/activities')"
-          >
-            <i class="fas fa-list text-primary fa-fw mr-1"></i>
-            <span>View activities</span>
-          </button>
-        `
-      }, {
-        id: 'View project details',
-        category: 'Project Details',
-        template: `
-          <button
-            class="btn btn-negative btn-block text-left" 
-            onclick="location.replace('${BASE_URL_WEB}/p/evaluation/${id}')"
-          >
-            <i class="fas fa-list text-primary fa-fw mr-1"></i>
-            <span>View project details</span>
-          </button>
-        `
-      },
-    ];
-
-    const getOptionList = (optionArr = []) => {
-      let optionList = '';
-      let selectedOptions = {};
-      optionArr.forEach(o => {
-        const { id, category } = optionsDict.find(od => od.id == o);
-        if (!selectedOptions.hasOwnProperty(category)) selectedOptions[category] = [];
-        selectedOptions[category].push(id);
-      });
-      const entries = Object.entries(selectedOptions);
-      entries.forEach((s, i) => {
-        const [key, optionsArr] = s;
-        optionList += optionCategories.find(oc => oc.id == key).header;
-        optionsArr.forEach(o => optionList += optionsDict.find(od => od.id == o).template);
-        if (i < entries.length - 1) optionList += `<div class="dropdown-divider"></div>`
-      });
-      return optionList;
-    }
-
-    const optionsTemplate = {
-      'Not yet started': () => {
-        if (body.length) {
-          setHTMLContent(options, getOptionList([
-            'View activities',
-          ]));
-        }
-        if (activitiesDT.length) {
-          setHTMLContent(options, getOptionList([
-            'View project details',
-          ]));
-        }
-      }
-    }
-
-    // Set the options based on status
-    optionsTemplate[monitoring_status] !== "undefined"
-      ? optionsTemplate[monitoring_status]()
-      : console.error('No key with the same status for optionsTemplate');
-  }
-
-  const triggerOption = (option) => {
-    const optionFunc = {
-      'EvaluateTheProject': () => {
-        data.status = 'Not yet started';
-        setOptions();
-        loadHeaderDetails();
-        loadDetails();
-      }
-    }
-
-    optionFunc[option] !== "undefined"
-      ? optionFunc[option]()
-      : console.error('No key with the same status for optionsFunc');
-  };
 
   const removeLoaders = () => {
     $('#contentHeader_loader').remove();
@@ -486,25 +203,21 @@ const ProjectDetails = (() => {
    * * Public Functions
    */
 
-  const getId = () => id;
-
-  const loadDetails = async () => {
-    await getData();
-    getMonitoringStatus();
+  const loadDetails = (project_details_data) => {
+    if (project_details_data) data = project_details_data;
     loadHeaderDetails();
     loadBodyDetails();
-    setOptions();
   }
 
   /**
    * * Init
    */
 
-  const init = async () => {
+  const init = (projectDetailsData) => {
     if (!initialized) {
       initialized = 1;
-      getIdFromURL();
-      await loadDetails();
+      data = projectDetailsData;
+      loadDetails();
       removeLoaders();
     }
   }
@@ -515,10 +228,642 @@ const ProjectDetails = (() => {
 
   return {
     init,
-    getId,
     loadDetails,
-    // triggerOption
   }
 })();
 
-ProjectDetails.init();
+
+const ProjectOptions = (() => {
+
+  /**
+   * * Local Variables
+   */
+
+  const body = $('#projectDetails_body');
+  const activitiesDT = $('#activities_dt');
+  const options = '#projectDetails_options';
+  const user_roles = JSON.parse(getCookie('roles'));
+  let project_details;
+
+  /**
+   * * Public Methods
+   */
+
+  const setOptions = (data) => {
+
+    if (data) project_details = data;
+
+    // Get the status
+    const { id, status } = project_details;
+
+    const optionsDict = [
+      {
+        id: 'View activities',
+        category: 'Project Activities',
+        template: `
+          <div
+            role="button"
+            class="btn btn-negative btn-block text-left" 
+            onclick="location.replace('${BASE_URL_WEB}/p/monitoring/${id}/activities')"
+          >
+            <i class="fas fa-list text-primary fa-fw mr-1"></i>
+            <span>View activities</span>
+          </div>
+        `
+      }, {
+        id: 'View project details',
+        category: 'Project Details',
+        template: `
+          <div
+            role="button"
+            class="btn btn-negative btn-block text-left" 
+            onclick="location.replace('${BASE_URL_WEB}/p/monitoring/${id}')"
+          >
+            <i class="fas fa-list text-primary fa-fw mr-1"></i>
+            <span>View project details</span>
+          </div>
+        `
+      },
+    ];
+
+    const getOptionList = (optionArr = []) => {
+      if(optionArr.length) {
+        let optionList = '';
+        let selectedOptions = {};
+        optionArr.forEach(o => {
+          const { id, category } = optionsDict.find(od => od.id == o);
+          if (!selectedOptions.hasOwnProperty(category)) selectedOptions[category] = [];
+          selectedOptions[category].push(id);
+        });
+        const entries = Object.entries(selectedOptions);
+        entries.forEach((s, i) => {
+          const [key, optionsArr] = s;
+          optionList += `<div class="dropdown-header">${ key }</div>`;
+          optionsArr.forEach(o => optionList += optionsDict.find(od => od.id == o).template);
+          if (i < entries.length - 1) optionList += `<div class="dropdown-divider"></div>`
+        });
+        return optionList;
+      }
+    }
+
+    let optionsTemplate;
+    let optionList = [];
+
+    if (body.length) {
+      optionList.push('View activities');
+    } else if (activitiesDT.length) {
+      optionList.push('View project details');
+    }
+
+    if (user_roles.includes('Extensionist')) {
+      optionsTemplate = {
+        'Created': () => {
+          if (body.length) {
+            optionList.push('Edit project details');
+            optionList.push('Submit for approval');
+          }
+          if (activitiesDT.length) {
+            optionList.unshift('Add project activity');
+            optionList.push('Edit project details');
+            optionList.push('Submit for approval');
+          }
+        },
+        'For evaluation': () => {
+          optionList.push('Submit evaluation grade');
+        },
+        'Pending': () => {
+          optionList.push('Cancel the proposal');
+        },
+      }
+      if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
+    }
+
+    if (user_roles.includes('Chief')) {
+      optionsTemplate = {
+        'For review': () => {
+          optionList.push('Approve the proposal');
+          optionList.push('Reject the proposal');
+        },
+        'Pending': () => {
+          optionList.push('Approve the project');
+        }
+      }
+      if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
+    }
+
+    // Set the options based on status
+    setHTMLContent(options, getOptionList(optionList));
+  }
+
+  const triggerOption = (option) => {
+    let optionFunc;
+    
+    if (user_roles.includes('Extensionist')) {
+      optionFunc = {
+        'submitForApproval': () => {
+          $('#confirmSubmitForApproval_projectId').val(project_details.id);
+          $('#confirmSubmitForApproval_modal').modal('show');
+          // updateStatus('For review');
+        },
+        'submitEvaluationGrade': () => {
+          updateStatus('Pending');
+        },
+        'cancelTheProposal': () => {
+          updateStatus('Canceled');
+        }
+      }
+      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
+    }
+
+    if (user_roles.includes('Chief')) {
+      optionFunc = {
+        'approveTheProposal': () => {
+          $('#confirmApproveForEvaluation_modal').modal('show');
+        },
+        'rejectTheProposal': () => {
+          updateStatus('Created');
+        },
+        'approveTheProject': () => {
+          $('#confirmApproveTheProject_modal').modal('show');
+          // updateStatus('Approved');
+        }
+      }
+      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
+    }
+
+  };
+
+  return {
+    setOptions,
+    triggerOption
+  }
+})();
+
+
+const ProjectActivities = (() => {
+
+  /**
+	 * * Local Variables
+	 */
+
+  const dtElem = $('#activities_dt');
+  const viewModal = $('#projectActivityDetails_modal');
+  const editModal = $('#editProjectActivity_modal');
+  const editFormSelector = '#editProjectActivity_form';
+  const editForm = $(editFormSelector)[0];
+  const user_roles = JSON.parse(getCookie('roles'));
+  let project_details;
+  let dt;
+  let editValidator;
+  let PA_form;
+  let initialized = 0;
+  let isSubmitting = 0; // For edit
+
+  /**
+	 * * Private Methods
+	 */
+
+  const initializations = () => {
+
+    // *** Initialize Edit Activity Form *** //
+
+    // Initialize Start Date
+    $app('#editProjectActivity_startDate').initDateInput({
+      button: '#editProjectActivity_startDate_pickerBtn'
+    });
+
+    // Initialize End Date
+    $app('#editProjectActivity_endDate').initDateInput({
+      button: '#editProjectActivity_endDate_pickerBtn'
+    });
+    
+    PA_form = new ProjectActivityForm({
+      topicsForm: {
+        formGroup: '#editProjectActivity_topics_grp',
+        buttons: {
+          add: '#editTopic_btn',
+          clear: '#clearEditTopicEmptyFields_btn'
+        }
+      },
+      outcomesForm: {
+        formGroup: '#editProjectActivity_outcomes_grp',
+        buttons: {
+          add: '#editOutcome_btn',
+          clear: '#clearEditOutcomeEmptyFields_btn'
+        }
+      }
+    });
+
+    // *** On Modals Hidden State *** //
+    
+    viewModal.on('hidden.bs.modal', () => {
+
+      // Show the loaders
+      $('#projectActivityDetails_loader').show();
+      $('#projectActivityDetails').hide();
+    });
+
+    editModal.on('show.bs.modal', () => {
+      if (project_details.status !== 'Created') return;
+    });
+
+    editModal.on('hidden.bs.modal', () => {
+
+      // Reset the edit form
+      editForm.reset();
+
+      // Reset the activity form
+      PA_form.resetActivityForm();
+
+      // Reset the validator
+      editValidator.resetForm();
+
+      // Show the loaders
+      $('#editProjectActivity_formGroups_loader').show();
+      $('#editProjectActivity_formGroups').hide();
+
+      // Disable buttons
+      $('#editProjectActivity_form_saveBtn').attr('disabled', true);
+    });
+  }
+
+  const initDataTable = async () => {
+    dt = dtElem.DataTable({
+      ...DT_CONFIG_DEFAULTS,
+      ajax: {
+        url: `${ BASE_URL_API }/projects/${ project_details.id }/activities`,
+        // success: result => {
+        //   console.log(result);
+        // },
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/PropojectMonitoringDetails.js',
+            fn: 'ProjectActivities.initDataTable',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
+        }
+      },
+      columns: [
+        {
+          data: 'createdAt',
+          visible: false
+        }, {
+          data: 'activity_name',
+          width: '30%'
+        }, {
+          data: null,
+          sortable: false,
+          width: '30%',
+          render: data => {
+            const topics = data.topics;
+            const length = topics.length;
+            if (length > 1) {
+              return `
+                <div>${ topics[0]}</div>
+                <div class="small text-muted">and ${ length - 1 } more.</div>
+              `
+            } else if (length == 1) {
+              return topics[0]
+            } else {
+              return `<div class="text-muted font-italic">No topics.</div>`
+            }
+          }
+        }, {
+          data: null,
+          sortable: false,
+          render: ({ start_date, end_date }) => {
+            return `
+              <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
+              <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+            `
+          }
+        }, {
+          data: null,
+          width: '10%',
+          render: data => {
+
+            const editOption = () => {
+              return user_roles.includes('Extensionist') && project_details.status == 'Created'
+                ? `
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    onclick="ProjectActivities.initEditMode('${ data.id }')"
+                  >
+                    <span>Edit details</span>
+                  </button>
+                `
+                : ''
+            }
+
+            return `
+              <div class="dropdown text-sm-center">
+                <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                  <i class="fas fa-ellipsis-h"></i>
+                </div>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-header">Options</div>
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    onclick="ProjectActivities.initViewMode('${ data.id }')"
+                  >
+                    <span>View details</span>
+                  </button>
+                  ${ editOption() }
+                </div>
+              </div>
+            `;
+          }
+        }
+      ]
+    });
+  }
+
+  const handleEditForm = () => {
+    editValidator = $app(editFormSelector).handleForm({
+      validators: {
+        title: {
+          required: 'The title of the activity is required.',
+          notEmpty: 'This field cannot be empty'
+        },
+        start_date: {
+          required: 'Please select a start date', 
+          beforeDateTimeSelector: {
+            rule: '#addProjectActivity_endDate',
+            message: "Start date must be before end date"
+          }
+        },
+        end_date: {
+          required: 'Please select a end date', 
+          afterDateTimeSelector: {
+            rule: '#addProjectActivity_startDate',
+            message: "End date must be after start date"
+          }
+        },
+        details: {
+          required: 'The summary/details of the activity is required',
+          notEmpty: 'This field cannot be blank',
+        }
+      },
+      onSubmit: () => onEditFormSubmit()
+    });
+  }
+
+  const onEditFormSubmit = async () => {
+    isSubmitting = 1;
+
+    // Disable the elements
+    const saveBtn = $('#editProjectActivity_saveBtn');
+    const cancelBtn = $('#editProjectActivity_cancelBtn');
+    
+    cancelBtn.attr('disabled', true);
+    saveBtn.attr('disabled', true);
+    saveBtn.html(`
+      <span class="px-3">
+        <span class="spinner-grow spinner-grow-sm m-0" role="status">
+          <span class="sr-only">Loading...</span>
+        </span>
+      </span>
+    `);
+
+    // For enabling elements
+    const enableElements = () => {
+
+      // Enable buttons
+      cancelBtn.attr('disabled', false);
+      saveBtn.attr('disabled', false);
+      saveBtn.html(`Submit`);
+
+      isSubmitting = 0;
+    }
+
+
+    // Get the data
+    const fd = new FormData(editForm);
+    const data = {
+      activity_name: fd.get('title'),
+      ...PA_form.getActivityData(),
+      start_date: moment(fd.get('start_date')).toISOString(),
+      end_date: moment(fd.get('end_date')).toISOString(),
+      details: fd.get('details')
+    }
+    
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/${ fd.get('activity_id') }`,
+      type: 'PUT',
+      data: data,
+      success: async result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          await reloadDataTable();
+          editModal.modal('hide');
+          toastr.success('A project activity has been successfully updated');
+        }
+      }, 
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectActivities.onEditFormSubmit()',
+          data: data,
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+        enableElements();
+      }
+    });
+
+    enableElements();
+  }
+
+  /**
+	 * * Public Methods
+	 */
+
+  const reloadDataTable = async () => {
+    await dt.ajax.reload();
+  }
+
+  const initViewMode = async (activity_id) => {
+    
+    // Show the modal
+    viewModal.modal('show');
+    
+    // Get the project activity details
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/${ activity_id }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message)
+        } else {
+          const { 
+            activity_name, 
+            topics, 
+            outcomes,
+            start_date,
+            end_date,
+            details 
+          } = result.data;
+
+          // Set Content
+          setHTMLContent({
+            '#projectActivityDetails_title': activity_name,
+            '#projectActivityDetails_topics': () => {
+              if(topics.length) {
+                let list = `<ul class="mb-0">`;
+                topics.forEach(t => list += `<li>${ t }</li>`);
+                list += `</ul>`;
+                return list;
+              }
+            },
+            '#projectActivityDetails_outcomes': () => {
+              if(outcomes.length) {
+                let list = `<ul class="mb-0">`;
+                outcomes.forEach(o => list += `<li>${ o }</li>`);
+                list += `</ul>`;
+                return list;
+              }
+            },
+            '#projectActivityDetails_timeframe': () => {
+              if (start_date && end_date) {
+                return `
+                  <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
+                  <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+                `
+              } else return noContentTemplate('No dates have been set up.');
+            },
+            '#projectActivityDetails_details': details
+          });
+  
+          // Hide the loaders
+          $('#projectActivityDetails_loader').hide();
+          $('#projectActivityDetails').show();
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectActivities.initViewMode()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
+    });
+  }
+
+  const initEditMode = async (activity_id) => {
+    if (project_details.status !== 'Created') return;
+    
+    // Show the modal
+    editModal.modal('show');
+
+    // Get the details of the project activity
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/${ activity_id }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message)
+        } else {
+          const { 
+            activity_name, 
+            topics, 
+            outcomes,
+            start_date,
+            end_date,
+            details
+          } = result.data;
+        
+          // Set the input values
+          setInputValue({
+            '#editProjectActivity_activityId': activity_id,
+            '#editProjectActivity_title': activity_name,
+            '#editProjectActivity_startDate': formatDateTime(start_date, 'MM/DD/YYYY'),
+            '#editProjectActivity_endDate': formatDateTime(end_date, 'MM/DD/YYYY'),
+            '#editProjectActivity_details': details,
+          });
+
+          // To make sure that input dates are updated
+          $('#editProjectActivity_startDate').trigger('change');
+          $('#editProjectActivity_endDate').trigger('change');
+
+          // Set the topics and outcomes
+          PA_form.setTopics(topics);
+          PA_form.setOutcomes(outcomes);
+
+          // Hide the loaders
+          $('#editProjectActivity_formGroups_loader').hide();
+          $('#editProjectActivity_formGroups').show();
+          
+          // Enable buttons
+          $('#editProjectActivity_form_saveBtn').attr('disabled', false);
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectActivities.initEditMode()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
+    });
+  }
+  
+  /**
+	 * * Init
+	 */
+
+  const init = (data) => {
+    if (!initialized) {
+      initialized = 1;
+      project_details = data;
+      handleEditForm();
+      initializations();
+      initDataTable();
+    };
+  }
+
+  /**
+	 * * Return Public Functions
+	 */
+
+  return {
+    init,
+    reloadDataTable,
+    initViewMode,
+    initEditMode,
+  }
+})();
+
+
+(() => {
+  const project_id = location.pathname.split('/')[3];
+
+  $.ajax({
+    url: `${ BASE_URL_API }/projects/${ project_id }`,
+    type: 'GET',
+    success: result => {
+      if (result.error) {
+        ajaxErrorHandler(result.message);
+      } else {
+        const data = result.data;
+
+        ProjectDetails.init(data);
+        ProjectOptions.setOptions(data);
+
+        if ($('#activities_dt').length) {
+          ProjectActivities.init(data);
+        } else {
+          setDocumentTitle(`${ data.title } - Project Details`);
+        }
+      }
+    },
+    error: (xhr, status, error) => {
+      ajaxErrorHandler({
+        file: 'projects/projectMonitoringDetails.js',
+        fn: 'onDOMLoad.$.ajax',
+        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+      }, 1);
+    }
+  });
+})();

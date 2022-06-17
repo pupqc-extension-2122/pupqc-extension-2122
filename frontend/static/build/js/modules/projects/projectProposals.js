@@ -27,7 +27,7 @@ const ProjectProposals = (() => {
         // success: result => {
         //   console.log(result)
         // },
-        error: () => {
+        error: (xhr, status, error) => {
           ajaxErrorHandler({
             file: 'projects/projectProposals.js',
             fn: 'ProjectProposals.initDataTable()',
@@ -100,10 +100,12 @@ const ProjectProposals = (() => {
 					render: data => {
 						return `
 							<div class="dropdown text-center">
+
 								<div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
 									<i class="fas fa-ellipsis-h"></i>
 								</div>
-								<div class="dropdown-menu dropdown-menu-right">
+								
+                <div class="dropdown-menu dropdown-menu-right">
 									<div class="dropdown-header">Options</div>
 									<a 
 										class="dropdown-item"
@@ -115,9 +117,10 @@ const ProjectProposals = (() => {
 										class="dropdown-item"
 										href="${ BASE_URL_WEB }/p/proposals/${ data.id }/activities" 
 									>
-										<span>Manage activities</span>
+										<span>${ data.status == 'Created' ? 'Manage' : 'View' } activities</span>
 									</a>
 								</div>
+                
 							</div>
 						`;
 					}

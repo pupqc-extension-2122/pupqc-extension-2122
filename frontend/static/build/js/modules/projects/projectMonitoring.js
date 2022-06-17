@@ -22,26 +22,36 @@ const ProjectMonitoring = (() => {
     dt = $('#projectMonitoring_dt').DataTable({
       ...DT_CONFIG_DEFAULTS,
       ajax: {
-        url: `${ BASE_URL_API }/projects/datatables`,
+        url: `${ BASE_URL_API }/projects/approved/datatables`,
         // success: result => {
         //   console.log(result);
         // },
-        error: () => {
-          ajaxErrorHandler(
-            {
-              file: 'projects/projectMonitoring.js',
-              fn: 'ProjectMonitoring.initDataTable()'
-            },
-            1
-          )
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/projectMonitoring.js',
+            fn: 'ProjectMonitoring.initDataTable()',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
         }
       },
       columns: [
-        { 
-          data: 'title' 
-        },
         {
+          data: 'createdAt',
+          sortable: false,
+          visible: false
+        }, {
+					data: 'title',
+          width: '25%',
+          render: title => {
+            if (title.length > 100) {
+              return `<span title="${ title }" data-toggle="tooltip">${ title.substring(0, 100) } ...</span>`
+            } else {
+              return title;
+            }
+          }
+				}, {
           data: null,
+          width: '25%',
           sortable: false,
           render: data => {
             const target_groups = data.target_groups;

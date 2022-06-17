@@ -126,81 +126,9 @@ const ProjectDetails = (() => {
           }
         },
         '#projectDetails_body_financialRequirements': () => {
-
-          // // Create a new object that holds financial requirements grouped by line item budget
-          // let frObj = {};
-          // let budgetItemCategoryList = [];
-
-          // // Group the requirements according to line item budget
-          // fr.forEach(r => {
-
-          //   // Create a copy of object
-          //   let requirement = { ...r };
-
-          //   // Get the budget item category id
-          //   const bic_id = requirement.budget_item_category.id;
-
-          //   // Create a key with empty array if line item budget key not yet exist
-          //   if (!(frObj[bic_id])) {
-          //     frObj[bic_id] = [];
-          //     budgetItemCategoryList.push(requirement.budget_item_category);
-          //   }
-
-          //   // Remove the budget_item_category in object
-          //   delete requirement.budget_item_category;
-
-          //   // Push the object according to key
-          //   frObj[bic_id].push(requirement);
-          // });
-
-          // let financialRequirementRows = '';
-          // let overallAmount = 0;
-
-          // // Read the object for rendering in the DOM
-          // Object.keys(frObj).forEach(key => {
-
-          //   // Create the line item budget row
-          //   financialRequirementRows += `
-          //     <tr style="background-color: #f6f6f6">
-          //       <td 
-          //         class="font-weight-bold"
-          //         colspan="5"
-          //       >${budgetItemCategoryList.find(x => x.id == key).name}</td>
-          //     </tr>
-          //   `;
-
-          //   // Create the budget item rows
-          //   frObj[key].forEach(r => {
-          //     const { budget_item, particulars, quantity, estimated_cost } = r;
-          //     const totalAmount = quantity * estimated_cost;
-
-          //     overallAmount += totalAmount;
-
-          //     financialRequirementRows += `
-          //       <tr>
-          //         <td>${budget_item}</td>
-          //         <td>${particulars}</td>
-          //         <td class="text-right">${quantity}</td>
-          //         <td class="text-right">${formatToPeso(estimated_cost)}</td>
-          //         <td class="text-right">${formatToPeso(totalAmount)}</td>
-          //       </tr>
-          //     `
-          //   });
-          // });
-
-          // financialRequirementRows += `
-          //   <tr class="font-weight-bold">
-          //     <td colspan="4" class="text-right">Overall Amount</td>
-          //     <td class="text-right">${formatToPeso(overallAmount)}</td>
-          //   </tr>
-          // `;
-
-          // return financialRequirementRows;
           
           let financialRequirementRows = '';
           let overallAmount = 0;
-
-          console.log(fr);
 
           // Read the object for rendering in the DOM
           fr.forEach(category => {
@@ -612,7 +540,7 @@ const AddProjectActivity = (() => {
         }
       }
     });
-
+    
     // On modal hide
     addActivityModal.on('hidden.bs.modal', () => {
       if (!isSubmitting) resetForm();
@@ -662,6 +590,8 @@ const AddProjectActivity = (() => {
   }
   
   const onFormSubmit = async () => {
+    if (project_details.status !== 'Created') return;
+
     isSubmitting = 1;
 
     // Disable the elements
@@ -720,16 +650,18 @@ const AddProjectActivity = (() => {
           // Reset the form
           resetForm();
 
+          // Show a toast notification
           toastr.success('An activity has been successfully added.');
         }
       },
       error: (xhr, status, error) => {
+        enableElements();
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'AddProjectActivity.onFormSubmit()',
+          data: data,
           details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
         });
-        enableElements();
       }
     });
 
@@ -784,37 +716,7 @@ const ProjectActivities = (() => {
 	 * * Private Methods
 	 */
 
-  const handleEditForm = () => {
-    editValidator = $app(editFormSelector).handleForm({
-      validators: {
-        title: {
-          required: 'The title of the activity is required.',
-          notEmpty: 'This field cannot be empty'
-        },
-        start_date: {
-          required: 'Please select a start date', 
-          beforeDateTimeSelector: {
-            rule: '#addProjectActivity_endDate',
-            message: "Start date must be before end date"
-          }
-        },
-        end_date: {
-          required: 'Please select a end date', 
-          afterDateTimeSelector: {
-            rule: '#addProjectActivity_startDate',
-            message: "End date must be after start date"
-          }
-        },
-        details: {
-          required: 'The summary/details of the activity is required',
-          notEmpty: 'This field cannot be blank',
-        }
-      },
-      onSubmit: () => onEditFormSubmit()
-    });
-  }
-
-  const preInitializations = () => {
+  const initializations = () => {
 
     // *** Initialize Edit Activity Form *** //
 
@@ -852,6 +754,10 @@ const ProjectActivities = (() => {
       // Show the loaders
       $('#projectActivityDetails_loader').show();
       $('#projectActivityDetails').hide();
+    });
+
+    editModal.on('show.bs.modal', () => {
+      if (project_details.status !== 'Created') return;
     });
 
     editModal.on('hidden.bs.modal', () => {
@@ -967,6 +873,36 @@ const ProjectActivities = (() => {
     });
   }
 
+  const handleEditForm = () => {
+    editValidator = $app(editFormSelector).handleForm({
+      validators: {
+        title: {
+          required: 'The title of the activity is required.',
+          notEmpty: 'This field cannot be empty'
+        },
+        start_date: {
+          required: 'Please select a start date', 
+          beforeDateTimeSelector: {
+            rule: '#addProjectActivity_endDate',
+            message: "Start date must be before end date"
+          }
+        },
+        end_date: {
+          required: 'Please select a end date', 
+          afterDateTimeSelector: {
+            rule: '#addProjectActivity_startDate',
+            message: "End date must be after start date"
+          }
+        },
+        details: {
+          required: 'The summary/details of the activity is required',
+          notEmpty: 'This field cannot be blank',
+        }
+      },
+      onSubmit: () => onEditFormSubmit()
+    });
+  }
+
   const onEditFormSubmit = async () => {
     isSubmitting = 1;
 
@@ -1023,6 +959,7 @@ const ProjectActivities = (() => {
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectActivities.onEditFormSubmit()',
+          data: data,
           details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
         });
         enableElements();
@@ -1108,6 +1045,7 @@ const ProjectActivities = (() => {
   }
 
   const initEditMode = async (activity_id) => {
+    if (project_details.status !== 'Created') return;
     
     // Show the modal
     editModal.modal('show');
@@ -1173,7 +1111,7 @@ const ProjectActivities = (() => {
       initialized = 1;
       project_details = data;
       handleEditForm();
-      preInitializations();
+      initializations();
       initDataTable();
     };
   }
@@ -1189,23 +1127,6 @@ const ProjectActivities = (() => {
     initEditMode,
   }
 })();
-
-
-// const SubmitProject = (() => {
-//   let project_details;
-  
-//   const init = (projectDetailsData) => {
-//     project_details = projectDetailsData;
-//   }
-
-//   const forReview = () => {
-
-//   }
-
-//   return {
-//     init,
-//   }
-// })();
 
 
 (() => {
@@ -1226,6 +1147,9 @@ const ProjectActivities = (() => {
         if ($('#activities_dt').length) {
           AddProjectActivity.init(data);
           ProjectActivities.init(data);
+          setDocumentTitle(`${ data.title } - Project Activities`);
+        } else {
+          setDocumentTitle(`${ data.title } - Project Details`);
         }
       }
     },
@@ -1260,17 +1184,16 @@ const updateStatus = (status) => {
         }
       }
     },
-    error: () => {
-      ajaxErrorHandler(
-        {
-          file: 'projects/projectProposalDetails.js',
-          fn: 'onDOMLoad.$.ajax'
-        },
-        1
-      );
+    error: (xhr, status, error) => {
+      ajaxErrorHandler({
+        file: 'projects/projectProposalDetails.js',
+        fn: 'onDOMLoad.$.ajax',
+        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+      }, 1);
     }
   });
 }
+
 
 $('#confirmSubmitForApproval_btn').on('click', () => {
   const projectId = $('#confirmSubmitForApproval_projectId').val();
@@ -1292,6 +1215,7 @@ $('#confirmSubmitForApproval_btn').on('click', () => {
     }
   });
 });
+
 
 $('#confirmApproveForEvaluation_btn').on('click', () => {
   updateStatus('For evaluation');

@@ -114,9 +114,7 @@ const ajaxErrorHandler = (errMsg = '', onDOMLoad = 0) => {
   }
   if (DEV_MODE) {
     if (typeof errMsg === 'object') {
-      console.error(" ===== ERROR =====");
       console.error(errMsg);
-      console.error(" =================");
     } else {
       console.error(`[ERR]: ${ errMsg || 'Failed to call ajax.' }`);
     }
@@ -135,6 +133,13 @@ const setSessionAlert = (redirectURL, alert = { theme: "", message: "" }) => {
 	location.assign(redirectURL);
 }
 
+
+/**
+ * Set Document Title
+ */
+const setDocumentTitle = (message, withTail = 1) => {
+  document.title = `${ message }${ withTail ? ' | PUPQC Extension Management System' : '' }`;
+}
 
 /** 
  * ? Moments Custom Functions 

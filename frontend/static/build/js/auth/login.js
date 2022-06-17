@@ -81,21 +81,26 @@
           setTimeout(() => location.assign('/p'), 750);
         }
       },
-      error: () => {
+      error: (xhr, status, error) => {
         enableElements();
         toastr.error('Something went wrong. Please reload the page.', null, {
           "positionClass": "toast-top-center mt-3",
           "timeOut": "0",
           "extendedTimeOut": "0",
         });
-        console.error(`[ERR]: Failed to call ajax.`);
+        ajaxErrorHandler({
+          file: 'auth/login.js',
+          fn: 'onDOMLoad.$.ajax',
+          data: data,
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
       }
     });
   }
 
 	return {
 		init: () => {
-			handleForm();
+			handleForm(); 
 		}
 	}
 })().init();
