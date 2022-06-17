@@ -33,16 +33,17 @@ const ProjectDetails = (() => {
         '#projectDetails_header_status': () => {
           const { start_date, end_date } = data;
           const today = moment();
+          
           let status;
-          if (today.isBefore(start_date) && today.isBefore(end_date)) {
+          if (today.isBefore(start_date) && today.isBefore(end_date))
             status = 'Not yet started';
-          } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
+          else if (today.isAfter(start_date) && today.isAfter(end_date))
             status = 'Finished';
-          } else if (today.isBetween(start_date, end_date)) {
+          else if (today.isBetween(start_date, end_date))
             status = 'On going';
-          } else {
+          else
             status = 'No data';
-          }
+
           const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
           return `
             <div class="badge badge-subtle-${theme} py-1 px-2">
@@ -256,6 +257,7 @@ const ProjectOptions = (() => {
     // Get the status
     const { id, status } = project_details;
 
+    // Dictionary of options
     const optionsDict = [
       {
         id: 'View activities',
@@ -286,6 +288,7 @@ const ProjectOptions = (() => {
       },
     ];
 
+    // Get Option List function
     const getOptionList = (optionArr = []) => {
       if(optionArr.length) {
         let optionList = '';
@@ -306,6 +309,8 @@ const ProjectOptions = (() => {
       }
     }
 
+    // *** Set option list *** //
+
     let optionsTemplate;
     let optionList = [];
 
@@ -315,87 +320,12 @@ const ProjectOptions = (() => {
       optionList.push('View project details');
     }
 
-    if (user_roles.includes('Extensionist')) {
-      optionsTemplate = {
-        'Created': () => {
-          if (body.length) {
-            optionList.push('Edit project details');
-            optionList.push('Submit for approval');
-          }
-          if (activitiesDT.length) {
-            optionList.unshift('Add project activity');
-            optionList.push('Edit project details');
-            optionList.push('Submit for approval');
-          }
-        },
-        'For evaluation': () => {
-          optionList.push('Submit evaluation grade');
-        },
-        'Pending': () => {
-          optionList.push('Cancel the proposal');
-        },
-      }
-      if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
-    }
-
-    if (user_roles.includes('Chief')) {
-      optionsTemplate = {
-        'For review': () => {
-          optionList.push('Approve the proposal');
-          optionList.push('Reject the proposal');
-        },
-        'Pending': () => {
-          optionList.push('Approve the project');
-        }
-      }
-      if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
-    }
-
     // Set the options based on status
     setHTMLContent(options, getOptionList(optionList));
   }
 
-  const triggerOption = (option) => {
-    let optionFunc;
-    
-    if (user_roles.includes('Extensionist')) {
-      optionFunc = {
-        'submitForApproval': () => {
-          $('#confirmSubmitForApproval_projectId').val(project_details.id);
-          $('#confirmSubmitForApproval_modal').modal('show');
-          // updateStatus('For review');
-        },
-        'submitEvaluationGrade': () => {
-          updateStatus('Pending');
-        },
-        'cancelTheProposal': () => {
-          updateStatus('Canceled');
-        }
-      }
-      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
-    }
-
-    if (user_roles.includes('Chief')) {
-      optionFunc = {
-        'approveTheProposal': () => {
-          $('#confirmApproveForEvaluation_modal').modal('show');
-        },
-        'rejectTheProposal': () => {
-          updateStatus('Created');
-        },
-        'approveTheProject': () => {
-          $('#confirmApproveTheProject_modal').modal('show');
-          // updateStatus('Approved');
-        }
-      }
-      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
-    }
-
-  };
-
   return {
     setOptions,
-    triggerOption
   }
 })();
 

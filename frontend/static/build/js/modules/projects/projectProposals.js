@@ -117,7 +117,7 @@ const ProjectProposals = (() => {
 										class="dropdown-item"
 										href="${ BASE_URL_WEB }/p/proposals/${ data.id }/activities" 
 									>
-										<span>${ data.status == 'Created' ? 'Manage' : 'View' } activities</span>
+										<span>${ data.status == 'Created' || data.status == 'For Revision' ? 'Manage' : 'View' } activities</span>
 									</a>
 								</div>
                 

@@ -309,6 +309,10 @@ const PROJECT_PROPOSAL_STATUS_STYLES = {
 		icon: 'fas fa-pen',
 		theme: 'light'
 	},
+  'For Revision': {
+		icon: 'fas fa-file-pen',
+		theme: 'warning'
+	},
 	'For Review': {
 		icon: 'fas fa-file-circle-question',
 		theme: 'info'

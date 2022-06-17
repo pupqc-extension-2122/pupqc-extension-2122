@@ -233,6 +233,108 @@ const ProjectOptions = (() => {
   const options = '#projectDetails_options';
   const user_roles = JSON.parse(getCookie('roles'));
   let project_details;
+  let initialized = 0;
+  let processing = 0; // For submissions
+
+  // Submission Modals
+  const forApprovalModal = $('#confirmSubmitForApproval_modal');
+
+  /**
+   * * Private Methods
+   */
+
+  const initSubmissions = () => {
+
+    // * ======== FOR EXTENSIONIST ======== * //
+
+    // *** Submit For Approval *** //
+    
+    const forApproval_confirmBtn = $('#confirmSubmitForApproval_btn');
+    
+    forApproval_confirmBtn.on('click', async () => {
+      processing = 1;
+      
+      // Disable elements
+      forApproval_confirmBtn.attr('disabled', true);
+      forApproval_confirmBtn.html(`
+        <span class="px-3">
+          <span class="spinner-grow spinner-grow-sm m-0" role="status">
+            <span class="sr-only">Loading...</span>
+          </span>
+        </span>
+      `);
+      
+      // Enable elements function
+      const enableElements = () => {
+        forApproval_confirmBtn.attr('disabled', false);
+        forApproval_confirmBtn.html('Yes, please!');
+        processing = 0;
+      }
+
+      await $.ajax({
+        url: `${ BASE_URL_API }/projects/review/${ project_details.id }`,
+        type: 'PUT',
+        success: async result => {
+          enableElements();
+          if (result.error) {
+            forApprovalModal.modal('hide');
+            toastr.warning(result.message);
+          } else {
+            await updateStatus();
+            forApprovalModal.modal('hide');
+            toastr.success('The proposal has been submitted successfully.');
+          }
+        }, 
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/projectProposalDetails.js',
+            fn: `ProjectOptions.initSubmissions(): $('#confirmSubmitForApproval_btn').on('click', ...)`,
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          });
+          enableElements();
+        }
+      });
+    });
+
+    forApprovalModal.on('hide.bs.modal', (e) => processing && e.preventDefault());
+    
+    // *** Submit For Evaluation *** //
+    
+    $('#confirmApproveForEvaluation_btn').on('click', () => {
+      updateStatus('For evaluation');
+      $('#confirmApproveForEvaluation_modal').modal('hide');
+      toastr.success('The proposal has been approved successfully.');
+    });
+  }
+
+  const updateStatus = async () => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          const data = result.data;
+  
+          ProjectDetails.loadDetails(data);
+          ProjectOptions.setOptions(data);
+          if ($('#activities_dt').length) {
+            AddProjectActivity.init(data);
+            ProjectActivities.init(data);
+          }
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectOptions.updateStatus()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
+    });
+  } 
+
 
   /**
    * * Public Methods
@@ -245,6 +347,7 @@ const ProjectOptions = (() => {
     // Get the status
     const { id, status } = project_details;
 
+    // Dictionary of options
     const optionsDict = [
       {
         id: 'Add project activity',
@@ -352,16 +455,16 @@ const ProjectOptions = (() => {
           </button>
         `
       }, {
-        id: 'Reject the proposal',
+        id: 'Request for revision',
         category: 'For Submission',
         template: `
           <button 
             type="button"
-            class="btn btn-outline-danger btn-block text-left" 
+            class="btn btn-outline-warning btn-block text-left" 
             onclick="ProjectOptions.triggerOption('rejectTheProposal')"
           >
-            <i class="fas fa-times fa-fw mr-1"></i>
-            <span>Reject the proposal</span>
+            <i class="fas fa-file-pen fa-fw mr-1"></i>
+            <span>Request for revision</span>
           </button>
         `
       }, {
@@ -380,6 +483,7 @@ const ProjectOptions = (() => {
       }
     ];
 
+    // Get Option List function
     const getOptionList = (optionArr = []) => {
       if(optionArr.length) {
         let optionList = '';
@@ -400,6 +504,8 @@ const ProjectOptions = (() => {
       }
     }
 
+    // *** Set the options *** //
+
     let optionsTemplate;
     let optionList = [];
 
@@ -410,19 +516,22 @@ const ProjectOptions = (() => {
     }
 
     if (user_roles.includes('Extensionist')) {
+      const revisingOptions = () => {
+        if (body.length) {
+          optionList.push('Edit project details');
+          optionList.push('Submit for approval');
+        }
+        if (activitiesDT.length) {
+          optionList.unshift('Add project activity');
+          optionList.push('Edit project details');
+          optionList.push('Submit for approval');
+        }
+      }
+
       optionsTemplate = {
-        'Created': () => {
-          if (body.length) {
-            optionList.push('Edit project details');
-            optionList.push('Submit for approval');
-          }
-          if (activitiesDT.length) {
-            optionList.unshift('Add project activity');
-            optionList.push('Edit project details');
-            optionList.push('Submit for approval');
-          }
-        },
-        'For evaluation': () => {
+        'Created': () => revisingOptions(),
+        'For Revision': () => revisingOptions(),
+        'For Evaluation': () => {
           optionList.push('Submit evaluation grade');
         },
         'Pending': () => {
@@ -434,9 +543,9 @@ const ProjectOptions = (() => {
 
     if (user_roles.includes('Chief')) {
       optionsTemplate = {
-        'For review': () => {
+        'For Review': () => {
           optionList.push('Approve the proposal');
-          optionList.push('Reject the proposal');
+          optionList.push('Request for revision');
         },
         'Pending': () => {
           optionList.push('Approve the project');
@@ -450,44 +559,62 @@ const ProjectOptions = (() => {
   }
 
   const triggerOption = (option) => {
-    let optionFunc;
+    let optionFunc = {};
     
     if (user_roles.includes('Extensionist')) {
-      optionFunc = {
-        'submitForApproval': () => {
-          $('#confirmSubmitForApproval_projectId').val(project_details.id);
-          $('#confirmSubmitForApproval_modal').modal('show');
-          // updateStatus('For review');
-        },
-        'submitEvaluationGrade': () => {
-          updateStatus('Pending');
-        },
-        'cancelTheProposal': () => {
-          updateStatus('Canceled');
-        }
-      }
-      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
+      
+      optionFunc.submitForApproval = () => {
+        $('#confirmSubmitForApproval_projectId').val(project_details.id);
+        forApprovalModal.modal('show');
+      };
+      
+      optionFunc.submitEvaluationGrade = () => {
+        alert('Pending');
+      };
+
+      optionFunc.cancelTheProposal = () => {
+        alert('Canceled');
+      };
+
     }
 
     if (user_roles.includes('Chief')) {
-      optionFunc = {
-        'approveTheProposal': () => {
-          $('#confirmApproveForEvaluation_modal').modal('show');
-        },
-        'rejectTheProposal': () => {
-          updateStatus('Created');
-        },
-        'approveTheProject': () => {
-          $('#confirmApproveTheProject_modal').modal('show');
-          // updateStatus('Approved');
-        }
+      
+      optionFunc.approveTheProposal = () => {
+        $('#confirmApproveForEvaluation_modal').modal('show');
       }
-      if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
+
+      optionFunc.rejectTheProposal = () => {
+        updateStatus('Created');
+      }
+      
+      optionFunc.approveTheProject = () => {
+        $('#confirmApproveTheProject_modal').modal('show');
+      }
+
     }
 
+    if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
   };
 
+  /**
+   * * Init
+   */
+
+  const init = (data) => {
+    if (!initialized) {
+      initialized = 1;
+      initSubmissions();
+      setOptions(data);
+    }
+  }
+  
+  /**
+   * * Return Public Methods
+   */
+
   return {
+    init,
     setOptions,
     triggerOption
   }
@@ -590,7 +717,7 @@ const AddProjectActivity = (() => {
   }
   
   const onFormSubmit = async () => {
-    if (project_details.status !== 'Created') return;
+    if (!(project_details.status === 'Created' || project_details.status === 'For Revision')) return;
 
     isSubmitting = 1;
 
@@ -904,6 +1031,8 @@ const ProjectActivities = (() => {
   }
 
   const onEditFormSubmit = async () => {
+    if (project_details.status !== 'Created' || project_details.status !== 'For Revision') return;
+
     isSubmitting = 1;
 
     // Disable the elements
@@ -1045,7 +1174,7 @@ const ProjectActivities = (() => {
   }
 
   const initEditMode = async (activity_id) => {
-    if (project_details.status !== 'Created') return;
+    if (project_details.status !== 'Created' || project_details.status !== 'For Revision') return;
     
     // Show the modal
     editModal.modal('show');
@@ -1142,14 +1271,18 @@ const ProjectActivities = (() => {
         const data = result.data;
 
         ProjectDetails.init(data);
-        ProjectOptions.setOptions(data);
+        ProjectOptions.init(data);
+
+        const documentTitle = data.title.length > 75 
+          ? data.title.substring(0, 75) + ' ...' 
+          : data.title;
 
         if ($('#activities_dt').length) {
           AddProjectActivity.init(data);
           ProjectActivities.init(data);
-          setDocumentTitle(`${ data.title } - Project Activities`);
+          setDocumentTitle(`${ documentTitle } - Project Activities`);
         } else {
-          setDocumentTitle(`${ data.title } - Project Details`);
+          setDocumentTitle(`${ documentTitle } - Project Details`);
         }
       }
     },
@@ -1162,63 +1295,3 @@ const ProjectActivities = (() => {
     }
   });
 })();
-
-
-const updateStatus = (status) => {
-  const projectId = $('#confirmSubmitForApproval_projectId').val();
-
-  $.ajax({
-    url: `${ BASE_URL_API }/projects/${ projectId }`,
-    type: 'GET',
-    success: result => {
-      if (result.error) {
-        ajaxErrorHandler(result.message);
-      } else {
-        const data = result.data;
-
-        ProjectDetails.loadDetails(data);
-        ProjectOptions.setOptions(data);
-        if ($('#activities_dt').length) {
-          AddProjectActivity.init(data);
-          ProjectActivities.init(data);
-        }
-      }
-    },
-    error: (xhr, status, error) => {
-      ajaxErrorHandler({
-        file: 'projects/projectProposalDetails.js',
-        fn: 'onDOMLoad.$.ajax',
-        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-      }, 1);
-    }
-  });
-}
-
-
-$('#confirmSubmitForApproval_btn').on('click', () => {
-  const projectId = $('#confirmSubmitForApproval_projectId').val();
-  $.ajax({
-    url: `${ BASE_URL_API }/projects/review/${ projectId }`,
-    type: 'PUT',
-    success: result => {
-      if (result.error) {
-        ajaxErrorHandler(result.message);
-      } else {
-        console.log(result);
-        updateStatus('For review');
-        $('#confirmSubmitForApproval_modal').modal('hide');
-        toastr.success('The proposal has been submitted successfully.');
-      }
-    }, 
-    error: () => {
-      ajaxErrorHandler();
-    }
-  });
-});
-
-
-$('#confirmApproveForEvaluation_btn').on('click', () => {
-  updateStatus('For evaluation');
-  $('#confirmApproveForEvaluation_modal').modal('hide');
-  toastr.success('The proposal has been approved successfully.');
-});

@@ -25,7 +25,7 @@
    * * Functions
    */
 
-  const initializations = () => {
+  const initializations = async () => {
 
     // Initialize Start Date
     $app('#addProject_startDate').initDateInput({
@@ -39,8 +39,21 @@
 
     // Handle Date inputs on change
     $('#addProject_startDate, #addProject_endDate').on('change', () => {
-      $('#addProject_startDate').valid();
-      $('#addProject_endDate').valid();
+      const startDateElem = $('#addProject_startDate');
+      const endDateElem = $('#addProject_endDate');
+
+      startDateElem.valid();
+      endDateElem.valid();
+
+      const start_date = startDateElem.val();
+      const end_date = endDateElem.val();
+      
+      if (start_date && end_date) {
+        getPartners({
+          start_date: moment(start_date).toISOString(),
+          end_date: moment(end_date).toISOString()
+        });
+      }
     });
   }
 
@@ -103,6 +116,22 @@
     });
   }
 
+  const getPartners = async (params) => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          cooperatingAgencies_list = result.data;
+          CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
+          console.log(result.data);
+        }
+      },
+    })
+  }
+
   const initProjectTeamForm = () => {
     PT_form = new ProjectTeamForm('#addProject_projectTeam_grp', {
       buttons: {
@@ -121,34 +150,32 @@
     });
   }
 
-  const initCooperatingAgenciesGroupForm = async () => {
-    await $.ajax({
-      url: `${ BASE_URL_API }/partners`,
-      type: 'GET',
-      success: result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message);
-        } else {
-          cooperatingAgencies_list = result.data;
-        }
-      },
-      error: () => {
-        ajaxErrorHandler(
-          {
-            file: 'projects/createProposal.js',
-            fn: 'onDOMLoad.initCooperatingAgenciesGroupForm()',
-          }
-          , 1
-        );
-      }
-    });
+  const initCooperatingAgenciesGroupForm = () => {
+    // await $.ajax({
+    //   url: `${ BASE_URL_API }/partners`,
+    //   type: 'GET',
+    //   success: result => {
+    //     if (result.error) {
+    //       ajaxErrorHandler(result.message);
+    //     } else {
+    //       cooperatingAgencies_list = result.data;
+    //     }
+    //   },
+    //   error: () => {
+    //     ajaxErrorHandler(
+    //       {
+    //         file: 'projects/createProposal.js',
+    //         fn: 'onDOMLoad.initCooperatingAgenciesGroupForm()',
+    //       }
+    //       , 1
+    //     );
+    //   }
+    // });
 
     CA_form = new CooperatingAgenciesForm(
       '#addProject_cooperatingAgencies_grp',
       '#addProject_cooperatingAgencies_select'
     );
-
-    CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
   }
 
   const initFinancialRequirementsForm = () => {
@@ -400,73 +427,6 @@
         }
       },
       '#projectDetailsConfirm_financialRequirements': () => {
-
-        // // Create a new object that holds financial requirements grouped by line item budget
-        // let frObj = {};
-
-        // // Group the requirements according to line item budget
-        // fr.forEach(r => {
-
-        //   // Create a copy of object
-        //   let requirement = { ...r };
-
-        //   // Get the line item budget id
-        //   const id = requirement.line_item_budget_id;
-
-        //   // Create a key with empty array if line item budget key not yet exist
-        //   if (!(id in frObj)) frObj[id] = [];
-
-        //   // Remove the line_item_budget_id key in object
-        //   delete requirement.line_item_budget_id;
-
-        //   // Push the object according to key
-        //   frObj[id].push(requirement);
-        // });
-
-        // let financialRequirementRows = '';
-        // let overallAmount = 0;
-
-        // // Read the object for rendering in the DOM
-        // Object.keys(frObj).forEach(key => {
-
-        //   // Create the line item budget row
-        //   financialRequirementRows += `
-        //     <tr style="background-color: #f6f6f6">
-        //       <td 
-        //         class="font-weight-bold"
-        //         colspan="5"
-        //       >${lineItemBudget_list.find(x => x.id == key).name}</td>
-        //     </tr>
-        //   `;
-
-        //   // Create the budget item rows
-        //   frObj[key].forEach(r => {
-        //     const { budget_item, particulars, quantity, estimated_cost } = r;
-        //     const totalAmount = quantity * estimated_cost;
-
-        //     overallAmount += totalAmount;
-
-        //     financialRequirementRows += `
-        //       <tr>
-        //         <td>${budget_item}</td>
-        //         <td>${particulars}</td>
-        //         <td class="text-right">${quantity}</td>
-        //         <td class="text-right">${formatToPeso(estimated_cost)}</td>
-        //         <td class="text-right">${formatToPeso(totalAmount)}</td>
-        //       </tr>
-        //     `
-        //   });
-        // });
-
-        // financialRequirementRows += `
-        //   <tr class="font-weight-bold">
-        //     <td colspan="4" class="text-right">Overall Amount</td>
-        //     <td class="text-right">${formatToPeso(overallAmount)}</td>
-        //   </tr>
-        // `;
-
-        // return financialRequirementRows;
-        
 				let financialRequirementRows = '';
 				let overallAmount = 0;
 
@@ -526,12 +486,12 @@
   return {
     init: async () => {
       if ($(formSelector).length) {
-        initializations();
+        await initializations();
         handleStepper();
         handleForm();
         initProjectTeamForm();
         initTargetGroupForm();
-        await initCooperatingAgenciesGroupForm();
+        initCooperatingAgenciesGroupForm();
         initFinancialRequirementsForm();
         initEvaluationPlanForm();
         removeLoaders();

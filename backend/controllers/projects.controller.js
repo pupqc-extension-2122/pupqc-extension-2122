@@ -273,8 +273,10 @@ exports.submitForReviewProposal = async (req, res) => {
       return res.status(404).send({ error: true, message: 'Project not found' })
 
     if (!project.activities.length)
-      return res.status(400).send({ error: true, message: 'Please make sure that the Project has Activites' })
+      return res.send({ error: true, message: 'Please include at least one project activity' })
 
+    if (!(project.status == 'Created' || project.status == 'For Revision'))
+      return res.status(400).send({ error: true, message: 'Invalid action' })
 
     project.status = 'For Review'
     await project.save()
