@@ -1,10 +1,34 @@
+const { Op } = require('sequelize')
 const datatables = require('sequelize-datatables')
 const { Partners, Memos } = require('../sequelize/models')
 
 exports.listPartners = async (req, res) => {
   try {
 
-    let data = await Partners.findAll()
+    const start_date = req.query.start_date || null
+    const end_date = req.query.end_date || null
+
+    let options = {}
+    if (start_date && end_date){
+      options = {
+        include: {
+          model: Memos,
+          as: 'memos',
+          where: {
+            [Op.and]: {
+              end_date:{
+                [Op.gt]: end_date
+              },
+              validity_date: {
+                [Op.lte]: start_date
+              }
+            }
+          }
+        }
+      }
+    }
+
+    let data = await Partners.findAll(options)
 
     res.send({
       error: false,
