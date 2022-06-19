@@ -4,6 +4,8 @@ const {
 const { Op } = require('sequelize')
 const dataTable = require('sequelize-datatables')
 
+// ? Projects
+
 exports.viewProposal = async (req, res) => {
   let id = req.params.id
 
@@ -235,6 +237,8 @@ exports.updateProject = async (req, res) => {
   }
 }
 
+// ? For Submission
+
 exports.cancelProposal = async (req, res) => {
   if (!req.auth.roles.includes('Extensionist'))
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
@@ -270,7 +274,7 @@ exports.submitForReviewProposal = async (req, res) => {
     let project = await Projects.findByPk(id, { include: ['activities'] })
 
     if (!project)
-      return res.status(404).send({ error: true, message: 'Project not found' })
+      return res.status(404).send({ error: true, message: 'Bad Request' })
 
     if (!project.activities.length)
       return res.send({ error: true, message: 'Please include at least one project activity' })
@@ -316,7 +320,33 @@ exports.submitForEvaluationProposal = async (req, res) => {
   }
 }
 
+exports.approveProposal = async (req, res) => {
+  if (!req.auth.roles.includes('Chief'))
+    return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+  let id = req.params.id
+
+  let proposal = await Projects.findByPk(id)
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  if (proposal.status != 'Pending')
+    return res.status(400).send({ error: true, message: 'Bad Request' })
+
+  proposal.status = 'Approved'
+
+  await proposal.save()
+
+  res.send({
+    error: false,
+    message: 'Proposal approved successfully!'
+  });
+}
+
+
 // ? Activities
+
 exports.datatableProjectActivities = async (req, res) => {
   try {
 

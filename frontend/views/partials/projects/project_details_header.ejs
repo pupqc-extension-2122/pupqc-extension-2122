@@ -1,0 +1,75 @@
+<%# Project Details Header %>
+<div class="card card-primary card-outline" id="projectDetails_header">
+  <div class="card-body">
+
+    <%# Title %>
+    <div class="row">
+      <div class="col-10">
+        <h3 id="projectDetails_header_title">
+          <div class="skeleton h3"></div>
+          <div class="skeleton h3"></div>
+        </h3>
+      </div>
+    </div>
+    
+    <%# Implementer %>
+    <div id="projectDetails_header_implementer">
+      <div class="skeleton text" style="width: 50%"></div>
+    </div>
+    
+    <%# Time Frame %>
+    <div id="projectDetails_header_timeframe">
+      <div class="skeleton text" style="width: 25%"></div>
+    </div>
+    
+    <%# Status %>
+    <div class="mt-1" id="projectDetails_header_status">
+      <div class="skeleton text" style="width: 5rem"></div>
+    </div>
+
+    <%# Presentation Schedule %>
+    <!-- <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
+      <div class="mr-2">
+        <i class="fas fa-calendar-alt fa-fw text-info"></i>
+      </div>
+      <div>
+        <div>The presentation is set on <span class="font-weight-bold">June 15, 2022</span></div>
+        <div class="small text-muted">in 20 days</div>
+      </div>
+    </div> -->
+
+    <%# {# Navigation Tabs #} %>
+    <ul 
+      class="nav nav-pills mt-4" 
+      role="tablist" 
+      id="projectDetails_navTabs"
+      style="display: none"
+    >
+
+      <%# {# Summary Tab #} %>
+      <li class="nav-item">
+        <a class="nav-link active" id="custom-content-below-summary-tab" data-toggle="pill"
+          href="#custom-content-below-summary" role="tab"
+          aria-controls="custom-content-below-summary">Summary</a>
+      </li>
+
+      <div class="nav-item pl-1"></div>
+
+      <%# {# Financial Requirements Tab #} %>
+      <li class="nav-item">
+        <a class="nav-link" id="custom-content-below-financial-tab" data-toggle="pill"
+          href="#custom-content-below-financial" role="tab"
+          aria-controls="custom-content-below-financial">Financial Requirements</a>
+      </li>
+
+      <div class="nav-item pl-1"></div>
+
+      <%# {# Evaluation Plan Tab #} %>
+      <li class="nav-item">
+        <a class="nav-link" id="custom-content-below-evaluation-tab" data-toggle="pill"
+          href="#custom-content-below-evaluation" role="tab"
+          aria-controls="custom-content-below-evaluation">Evaluation Plan</a>
+      </li>
+    </ul>
+  </div>
+</div>

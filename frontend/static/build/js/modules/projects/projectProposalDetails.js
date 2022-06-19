@@ -24,18 +24,32 @@ const ProjectDetails = (() => {
    * * Private Functions
    */
 
+  const loadActiveBreadcrumb = () => {
+    $('#active_breadcrumb').html(() => {
+      const title = data.title;
+      if (title.length > 30) {
+        return `${ title.substring(0, 30) } ...`
+      } else {
+        return title;
+      }
+    });
+  }
+
   const loadHeaderDetails = () => {
+    loadActiveBreadcrumb();
+
     if (header.length) {
       setHTMLContent({
         '#projectDetails_header_title': data.title,
         '#projectDetails_header_implementer': data.implementer,
         '#projectDetails_header_timeframe': () => `${formatDateTime(data.start_date, 'Date')} - ${formatDateTime(data.end_date, 'Date')}`,
         '#projectDetails_header_status': () => {
-          const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[data.status];
+          const status = data.status;
+          const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[status];
           return `
             <div class="badge badge-subtle-${theme} py-1 px-2">
               <i class="${icon} fa-fw mr-1"></i>
-              <span>${data.status}</span>
+              <span>${status}</span>
             </div>
           `
         }
@@ -237,26 +251,27 @@ const ProjectOptions = (() => {
   let processing = 0; // For submissions
 
   // Submission Modals
-  const forApprovalModal = $('#confirmSubmitForApproval_modal');
+  const forApproval_modal = $('#confirmSubmitForApproval_modal');
+  const setPresentationSchedule_modal = $('#setPresentationSchedule_modal');
+  const approveProject_modal = $('#confirmApproveTheProject_modal');
+  const cancelProposal_modal = $('#confirmCancelTheProposal_modal');
 
   /**
    * * Private Methods
    */
 
-  const initSubmissions = () => {
+  const initForApproval = () => {
 
-    // * ======== FOR EXTENSIONIST ======== * //
+    const confirmBtn = $('#confirmSubmitForApproval_btn');
+    
+    confirmBtn.on('click', async () => {
+      if (!(project_details.status == 'Created' || project_details.status == 'For Revision')) return;
 
-    // *** Submit For Approval *** //
-    
-    const forApproval_confirmBtn = $('#confirmSubmitForApproval_btn');
-    
-    forApproval_confirmBtn.on('click', async () => {
       processing = 1;
       
       // Disable elements
-      forApproval_confirmBtn.attr('disabled', true);
-      forApproval_confirmBtn.html(`
+      confirmBtn.attr('disabled', true);
+      confirmBtn.html(`
         <span class="px-3">
           <span class="spinner-grow spinner-grow-sm m-0" role="status">
             <span class="sr-only">Loading...</span>
@@ -266,29 +281,29 @@ const ProjectOptions = (() => {
       
       // Enable elements function
       const enableElements = () => {
-        forApproval_confirmBtn.attr('disabled', false);
-        forApproval_confirmBtn.html('Yes, please!');
+        confirmBtn.attr('disabled', false);
+        confirmBtn.html('Yes, please!');
         processing = 0;
       }
 
       await $.ajax({
         url: `${ BASE_URL_API }/projects/review/${ project_details.id }`,
         type: 'PUT',
-        success: async result => {
+        success: async res => {
           enableElements();
-          if (result.error) {
-            forApprovalModal.modal('hide');
-            toastr.warning(result.message);
+          if (res.error) {
+            forApproval_modal.modal('hide');
+            toastr.warning(res.message);
           } else {
             await updateStatus();
-            forApprovalModal.modal('hide');
+            forApproval_modal.modal('hide');
             toastr.success('The proposal has been submitted successfully.');
           }
         }, 
         error: (xhr, status, error) => {
           ajaxErrorHandler({
             file: 'projects/projectProposalDetails.js',
-            fn: `ProjectOptions.initSubmissions(): $('#confirmSubmitForApproval_btn').on('click', ...)`,
+            fn: `ProjectOptions.initForApproval(): confirmBtn.on('click', ...)`,
             details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
           });
           enableElements();
@@ -296,15 +311,167 @@ const ProjectOptions = (() => {
       });
     });
 
-    forApprovalModal.on('hide.bs.modal', (e) => processing && e.preventDefault());
-    
-    // *** Submit For Evaluation *** //
-    
-    $('#confirmApproveForEvaluation_btn').on('click', () => {
-      updateStatus('For evaluation');
-      $('#confirmApproveForEvaluation_modal').modal('hide');
-      toastr.success('The proposal has been approved successfully.');
+    forApproval_modal.on('show.bs.modal', (e) => {
+      if (!(project_details.status == 'Created' || project_details.status == 'For Revision')) e.preventDefault();
     });
+
+    forApproval_modal.on('hide.bs.modal', (e) => processing && e.preventDefault());
+    
+  }
+
+  const initForEvaluation = () => {
+
+    // Initialize Date Input
+    $app('#setPresentation_date').initDateInput({
+      button: '#setPresentation_date_pickerBtn'
+    });
+
+    // Prevent showing the modal if status is not "For Review"
+    setPresentationSchedule_modal.on('show.bs.modal', (e) => {
+      if (project_details.status !== 'For Review') e.preventDefault();
+    });
+
+    $app('#setPresentationSchedule_form').handleForm({
+      validators: {
+        presentation_date: {
+          required: 'Please select a date for the presentation of the project',
+          afterToday: 'Date must be later than today'
+        }
+      },
+      onSubmit: () => {
+        if (project_details.status !== 'For Review') return;
+        toastr.success('Submitted');
+      }
+    });
+  }
+
+  const initApproveProject = () => {
+
+    const confirmBtn = $('#confirmApproveTheProject_btn');
+
+    confirmBtn.on('click', async (e) => {
+      if (project_details.status !== 'Pending') e.preventDefault();
+      
+      processing = 1;
+      
+      // Disable elements
+      confirmBtn.attr('disabled', true);
+      confirmBtn.html(`
+        <span class="px-3">
+          <span class="spinner-grow spinner-grow-sm m-0" role="status">
+            <span class="sr-only">Loading...</span>
+          </span>
+        </span>
+      `);
+    
+      // Enable elements function
+      const enableElements = () => {
+        confirmBtn.attr('disabled', false);
+        confirmBtn.html('Yes, please!');
+        processing = 0;
+      }
+      
+      await $.ajax({
+        url: `${ BASE_URL_API }/projects/approve/${ project_details.id }`,
+        type: 'PUT',
+        success: async res => {
+          if (res.error) {
+            ajaxErrorHandler(res.message);
+            enableElements();
+          } else {
+            await updateStatus();
+            enableElements();
+            approveProject_modal.modal('hide');
+            toastr.success('The proposal has been approved.');
+          }
+        },
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/projectProposalDetails.js',
+            fn: `ProjectOptions.initApproveProject(): confirmBtn.on('click', ...)`,
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          });
+          enableElements();
+        }
+      })
+    });
+
+    approveProject_modal.on('show.bs.modal', (e) => {
+      if (project_details.status != 'Pending') e.preventDefault();
+    });
+
+    approveProject_modal.on('hide.bs.modal', (e) => processing && e.preventDefault())
+  }
+
+  const initCancelProposal = () => {
+
+    const confirmBtn = $('#confirmCancelTheProposal_btn');
+
+    confirmBtn.on('click', async () => {
+      if (project_details.status !== 'Pending') return;
+
+      processing = 1;
+
+      // Disable elements
+      confirmBtn.attr('disabled', true);
+      confirmBtn.html(`
+        <span class="px-3">
+          <span class="spinner-grow spinner-grow-sm m-0" role="status">
+            <span class="sr-only">Loading...</span>
+          </span>
+        </span>
+      `);
+
+      // Enable elements function
+      const enableElements = () => {
+        confirmBtn.attr('disabled', false);
+        confirmBtn.html('Yes, please!');
+        processing = 0;
+      }
+
+      await $.ajax({
+        url: `${ BASE_URL_API }/projects/cancel/${ project_details.id }`,
+        type: 'PUT',
+        success: async res => {
+          enableElements();
+          if (res.error) {
+            cancelProposal_modal.modal('hide');
+            toastr.warning(res.message);
+          } else {
+            await updateStatus();
+            cancelProposal_modal.modal('hide');
+            toastr.success('The proposal has been submitted successfully.');
+          }
+        }, 
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/projectProposalDetails.js',
+            fn: `ProjectOptions.initCancelProposal(): confirmBtn.on('click', ...)`,
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          });
+          enableElements();
+        }
+      });
+    });
+
+    cancelProposal_modal.on('show.bs.modal', (e) => {
+      if (project_details.status !== 'Pending') e.preventDefault();
+    });
+
+    cancelProposal_modal.on('hide.bs.modal', (e) => processing && e.preventDefault());
+  }
+
+  const initSubmissions = () => {
+
+    // * ======== FOR EXTENSIONIST ======== * //
+
+    initForApproval();
+    initForEvaluation();
+    initCancelProposal();
+
+    // * ======== FOR CHIEF ======== * //
+
+    initApproveProject();
   }
 
   const updateStatus = async () => {
@@ -333,8 +500,7 @@ const ProjectOptions = (() => {
         });
       }
     });
-  } 
-
+  }
 
   /**
    * * Public Methods
@@ -434,24 +600,24 @@ const ProjectOptions = (() => {
         template: `
           <button 
             type="button"
-            class="btn btn-outline-warning btn-block text-left" 
+            class="btn btn-negative btn-block text-left" 
             onclick="ProjectOptions.triggerOption('cancelTheProposal')"
           >
-            <i class="fas fa-times-circle fa-fw mr-1"></i>
+            <i class="fas fa-times-circle fa-fw mr-1 text-warning"></i>
             <span>Cancel the proposal</span>
           </button>
         `
       }, {
-        id: 'Approve the proposal',
+        id: 'Set presentation schedule',
         category: 'For Submission',
         template: `
           <button 
             type="button"
-            class="btn btn-outline-success btn-block text-left" 
+            class="btn btn-outline-primary btn-block text-left" 
             onclick="ProjectOptions.triggerOption('approveTheProposal')"
           >
-            <i class="fas fa-check fa-fw mr-1"></i>
-            <span>Approve the proposal</span>
+            <i class="fas fa-calendar-alt fa-fw mr-1"></i>
+            <span>Set presentation schedule</span>
           </button>
         `
       }, {
@@ -460,10 +626,10 @@ const ProjectOptions = (() => {
         template: `
           <button 
             type="button"
-            class="btn btn-outline-warning btn-block text-left" 
+            class="btn btn-negative btn-block text-left" 
             onclick="ProjectOptions.triggerOption('rejectTheProposal')"
           >
-            <i class="fas fa-file-pen fa-fw mr-1"></i>
+            <i class="fas fa-file-pen fa-fw mr-1 text-warning"></i>
             <span>Request for revision</span>
           </button>
         `
@@ -544,7 +710,7 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Chief')) {
       optionsTemplate = {
         'For Review': () => {
-          optionList.push('Approve the proposal');
+          optionList.push('Set presentation schedule');
           optionList.push('Request for revision');
         },
         'Pending': () => {
@@ -564,8 +730,7 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Extensionist')) {
       
       optionFunc.submitForApproval = () => {
-        $('#confirmSubmitForApproval_projectId').val(project_details.id);
-        forApprovalModal.modal('show');
+        forApproval_modal.modal('show');
       };
       
       optionFunc.submitEvaluationGrade = () => {
@@ -573,7 +738,7 @@ const ProjectOptions = (() => {
       };
 
       optionFunc.cancelTheProposal = () => {
-        alert('Canceled');
+        cancelProposal_modal.modal('show');
       };
 
     }
@@ -581,7 +746,7 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Chief')) {
       
       optionFunc.approveTheProposal = () => {
-        $('#confirmApproveForEvaluation_modal').modal('show');
+        setPresentationSchedule_modal.modal('show');
       }
 
       optionFunc.rejectTheProposal = () => {
@@ -589,7 +754,7 @@ const ProjectOptions = (() => {
       }
       
       optionFunc.approveTheProject = () => {
-        $('#confirmApproveTheProject_modal').modal('show');
+        approveProject_modal.modal('show');
       }
 
     }
@@ -632,7 +797,7 @@ const AddProjectActivity = (() => {
   let validator;
   let PA_form;
   let initiated = 0;
-  let isSubmitting = 0;
+  let processing = 0;
   let project_details;
 
   /**
@@ -669,8 +834,13 @@ const AddProjectActivity = (() => {
     });
     
     // On modal hide
-    addActivityModal.on('hidden.bs.modal', () => {
-      if (!isSubmitting) resetForm();
+    addActivityModal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    })
+
+    // On modal hidden
+    addActivityModal.on('hidden.bs.modal', (e) => {
+      processing ? e.preventDefault() : resetForm();
     });
   }
 
@@ -719,7 +889,7 @@ const AddProjectActivity = (() => {
   const onFormSubmit = async () => {
     if (!(project_details.status === 'Created' || project_details.status === 'For Revision')) return;
 
-    isSubmitting = 1;
+    processing = 1;
 
     // Disable the elements
     const saveBtn = $('#addProjectActivity_saveBtn');
@@ -743,7 +913,7 @@ const AddProjectActivity = (() => {
       saveBtn.attr('disabled', false);
       saveBtn.html(`Submit`);
 
-      isSubmitting = 0;
+      processing = 0;
     }
 
 
@@ -763,14 +933,18 @@ const AddProjectActivity = (() => {
       url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/create`,
       type: 'POST',
       data: data,
-      success: async result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message);
+      success: async res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+          enableElements();
         } else {
 
           // Reload the datatable
           await ProjectActivities.reloadDataTable();
           
+          // Enable Elements
+          enableElements();
+
           // Hide the modal
           addActivityModal.modal('hide');
           
@@ -791,8 +965,6 @@ const AddProjectActivity = (() => {
         });
       }
     });
-
-    enableElements();
   }
 
   /**
@@ -837,7 +1009,7 @@ const ProjectActivities = (() => {
   let editValidator;
   let PA_form;
   let initialized = 0;
-  let isSubmitting = 0; // For edit
+  let processing = 0; // For edit
 
   /**
 	 * * Private Methods
@@ -885,6 +1057,10 @@ const ProjectActivities = (() => {
 
     editModal.on('show.bs.modal', () => {
       if (project_details.status !== 'Created') return;
+    });
+
+    editModal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
     });
 
     editModal.on('hidden.bs.modal', () => {
@@ -1033,7 +1209,7 @@ const ProjectActivities = (() => {
   const onEditFormSubmit = async () => {
     if (project_details.status !== 'Created' || project_details.status !== 'For Revision') return;
 
-    isSubmitting = 1;
+    processing = 1;
 
     // Disable the elements
     const saveBtn = $('#editProjectActivity_saveBtn');
@@ -1057,9 +1233,8 @@ const ProjectActivities = (() => {
       saveBtn.attr('disabled', false);
       saveBtn.html(`Submit`);
 
-      isSubmitting = 0;
+      processing = 0;
     }
-
 
     // Get the data
     const fd = new FormData(editForm);
@@ -1075,11 +1250,13 @@ const ProjectActivities = (() => {
       url: `${ BASE_URL_API }/projects/${ project_details.id }/activities/${ fd.get('activity_id') }`,
       type: 'PUT',
       data: data,
-      success: async result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message);
+      success: async res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+          enableElements();
         } else {
           await reloadDataTable();
+          enableElements();
           editModal.modal('hide');
           toastr.success('A project activity has been successfully updated');
         }
@@ -1095,7 +1272,6 @@ const ProjectActivities = (() => {
       }
     });
 
-    enableElements();
   }
 
   /**
@@ -1174,7 +1350,7 @@ const ProjectActivities = (() => {
   }
 
   const initEditMode = async (activity_id) => {
-    if (project_details.status !== 'Created' || project_details.status !== 'For Revision') return;
+    if (!(project_details.status === 'Created' || project_details.status === 'For Revision')) return;
     
     // Show the modal
     editModal.modal('show');
@@ -1264,11 +1440,11 @@ const ProjectActivities = (() => {
   $.ajax({
     url: `${ BASE_URL_API }/projects/${ project_id }`,
     type: 'GET',
-    success: result => {
-      if (result.error) {
-        ajaxErrorHandler(result.message);
+    success: res => {
+      if (res.error) {
+        ajaxErrorHandler(res.message);
       } else {
-        const data = result.data;
+        const data = res.data;
 
         ProjectDetails.init(data);
         ProjectOptions.init(data);

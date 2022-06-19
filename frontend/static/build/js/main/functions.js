@@ -219,7 +219,7 @@ const $app = (selector) => {
 			rules.forEach(([ruleKey, rule]) => {
 				if (typeof rule === "string") {
 					_rules[ruleKey] = true;
-					_messages[ruleKey] = rule
+					_messages[ruleKey] = rule;
 				} else if (typeof rule === "object") {
 					Object.keys(rule).forEach(key => {
 						if (!ruleObjects.includes(key)) {
@@ -240,7 +240,7 @@ const $app = (selector) => {
 			rules: validationRules,
 			messages: validationMessages,
 			errorElement: 'div',
-			errorClass: 'invalid-feedback font-weight-bold font-italic',
+			errorClass: 'invalid-feedback',
 			errorPlacement: (error, element) => {
 				if (element.parent('.input-group').length) { // For checkbox/radio
 					error
@@ -299,7 +299,7 @@ const $app = (selector) => {
 			singleDatePicker: true,
 			autoUpdateInput: false,
 			autoApply: true,
-			showDropdowns: false,
+			showDropdowns: true,
 			opens: 'left',
 			drops: 'auto',
 			// locale: {

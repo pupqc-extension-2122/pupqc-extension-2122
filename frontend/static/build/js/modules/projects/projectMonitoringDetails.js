@@ -24,7 +24,20 @@ const ProjectDetails = (() => {
    * * Private Functions
    */
 
+  const loadActiveBreadcrumb = () => {
+    $('#active_breadcrumb').html(() => {
+      const title = data.title;
+      if (title.length > 30) {
+        return `${ title.substring(0, 30) } ...`
+      } else {
+        return title;
+      }
+    });
+  }
+
   const loadHeaderDetails = () => {
+    loadActiveBreadcrumb();
+    
     if (header.length) {
       setHTMLContent({
         '#projectDetails_header_title': data.title,

@@ -24,8 +24,8 @@ const ProjectProposals = (() => {
 			...DT_CONFIG_DEFAULTS,
       ajax: {
         url: `${ BASE_URL_API }/projects/datatables`,
-        // success: result => {
-        //   console.log(result)
+        // success: res => {
+        //   console.log(res)
         // },
         error: (xhr, status, error) => {
           ajaxErrorHandler({
@@ -133,6 +133,8 @@ const ProjectProposals = (() => {
 	 * * Public Methods
 	 */
 
+  const reloadDataTable = () => dt.ajax.reload();
+
 	/**
 	 * * Init
 	 */
@@ -149,7 +151,8 @@ const ProjectProposals = (() => {
 	 */
 	
   return {
-		init
+		init,
+    reloadDataTable
 	}
 })();
 

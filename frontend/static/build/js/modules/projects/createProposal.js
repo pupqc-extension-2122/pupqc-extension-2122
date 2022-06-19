@@ -301,14 +301,14 @@
           url: `${ BASE_URL_API }/projects/create`,
           type: 'POST',
           data: data,
-          success: result => {
-            if (result.error) {
-              ajaxErrorHandler(result.message);
+          success: res => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
               enableElements();
             } else {
               
               // Set session alert
-              setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ result.data.id }`, {
+              setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ res.data.id }`, {
                 theme: 'success',
                 message: 'A new proposal has been successfully created.'
               });

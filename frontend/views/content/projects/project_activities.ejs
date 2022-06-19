@@ -19,7 +19,7 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p/proposals">Project Proposals</a></li>
-      <li class="breadcrumb-item active">Project Activities</li>
+      <li class="breadcrumb-item active" id="active_breadcrumb">Project Details</li>
     </ol>
     <div class="d-flex align-items-center justify-content-between">
       <div>
@@ -44,50 +44,7 @@
     <div class="row">
       <div class="col-md-9">
 
-        <%# Project Details Header %>
-        <div class="card card-primary card-outline" id="projectDetails_header">
-          <div class="card-body">
-            <div>
-
-              <%# Title %>
-              <div class="row">
-                <div class="col-10">
-                  <h3 id="projectDetails_header_title">
-                    <div class="skeleton h3"></div>
-                    <div class="skeleton h3"></div>
-                  </h3>
-                </div>
-              </div>
-
-              <%# Implementer %>
-              <div id="projectDetails_header_implementer">
-                <div class="skeleton text" style="width: 50%"></div>
-              </div>
-
-              <%# Time Frame %>
-              <div id="projectDetails_header_timeframe">
-                <div class="skeleton text" style="width: 25%"></div>
-              </div>
-
-              <%# Status %>
-              <div class="mt-1" id="projectDetails_header_status">
-                <div class="skeleton text" style="width: 5rem"></div>
-              </div>
-
-              <%# Presentation Schedule %>
-              <!-- <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
-                <div class="mr-2">
-                  <i class="fas fa-calendar-alt fa-fw text-info"></i>
-                </div>
-                <div>
-                  <div>The presentation is set on <span class="font-weight-bold">June 15, 2022</span></div>
-                  <div class="small text-muted">in 20 days</div>
-                </div>
-              </div> -->
-
-            </div>
-          </div>
-        </div>
+        <%- include('../../partials/projects/project_details_header') %>
 
         <%# Project Activities %>
         <div class="card">
@@ -96,15 +53,31 @@
             <div class="d-flex align-items-center justify-content-between">
               <h3 class="card-title">List of Activities</h3>
               <div class="card-tools">
-                <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse"
-                  data-toggle="tooltip" title="Collapse card">
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-negative" 
+                  data-card-widget="collapse"
+                  data-toggle="tooltip" 
+                  title="Collapse card"
+                >
                   <i class="fas fa-minus"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-negative" data-card-widget="maximize"
-                  data-toggle="tooltip" title="Maximize/minimize card">
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-negative" 
+                  data-card-widget="maximize"
+                  data-toggle="tooltip" 
+                  title="Maximize/minimize card"
+                >
                   <i class="fas fa-expand"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-negative" data-toggle="tooltip" title="Reload table">
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-negative" 
+                  data-toggle="tooltip" 
+                  title="Reload table"
+                  onclick="ProjectActivities.reloadDataTable()"
+                >
                   <i class="fas fa-sync-alt"></i>
                 </button>
               </div>
@@ -112,27 +85,27 @@
           </div>
 
           <div class="card-body">
-
-            <table class="table w-100" id="activities_dt">
-              <thead>
-                <th class="sr-only">Date Created</th>
-                <th>Activity Title / Name</th>
-                <th>Topics</th>
-                <th>Timeframe</th>
-                <th>
-                  <span class="d-sm-none">Actions</span>
-                </th>
-              </thead>
-              <tbody>
-                <td colspan="5" class="text-center">
-                  <div class="p-5 my-5">
-                    <div class="spinner-grow text-primary mb-2"></div>
-                    <div>Loading ... Please wait.</div>
-                  </div>
-                </td>
-              </tbody>
-            </table>
-
+            <div class="table-responsive">
+              <table class="table w-100" id="activities_dt">
+                <thead>
+                  <th class="sr-only">Date Created</th>
+                  <th>Activity Title / Name</th>
+                  <th>Topics</th>
+                  <th>Timeframe</th>
+                  <th>
+                    <span class="d-sm-none">Actions</span>
+                  </th>
+                </thead>
+                <tbody>
+                  <td colspan="5" class="text-center">
+                    <div class="p-5 my-5">
+                      <div class="spinner-grow text-primary mb-2"></div>
+                      <div>Loading ... Please wait.</div>
+                    </div>
+                  </td>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -244,9 +217,7 @@
 
 <%# === Modals === %>
 
-
 <%- include('../../partials/projects/modals/project_activity_details') %>
-
 
 <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
   
@@ -617,7 +588,7 @@
 
 
 <% if (JSON.parse(JSON.stringify(roles)).includes('Chief')) { %>
-  <%- include('../../partials/projects/modals/confirm_approve_for_evaluation') %>
+  <%- include('../../partials/projects/modals/set_presentation_schedule') %>
   <%- include('../../partials/projects/modals/confirm_approve_the_project') %>
 <% } %>
 

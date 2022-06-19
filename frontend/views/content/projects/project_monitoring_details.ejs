@@ -13,7 +13,7 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p/monitoring">Project Monitoring</a></li>
-      <li class="breadcrumb-item active">Project Details</li>
+      <li class="breadcrumb-item active" id="active_breadcrumb">Project Details</li>
     </ol>
     <div class="d-flex align-items-center justify-content-between">
       <div>
@@ -39,7 +39,8 @@
 
       <div class="col-md-9">
         
-        <%- include('../../partials/projects/project_details') %>
+        <%- include('../../partials/projects/project_details_header') %>
+        <%- include('../../partials/projects/project_details_body') %>
 
       </div>
 

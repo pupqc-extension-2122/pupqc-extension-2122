@@ -38,7 +38,7 @@
   <div class="container-fluid">
 
     <%# Info Cards %>
-    <div class="row">
+    <div class="row d-none">
         <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
                 <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
@@ -100,13 +100,29 @@
           <div class="d-flex align-items-center justify-content-between">
             <h3 class="card-title">List of approved projects to be monitored</h3>
             <div class="card-tools">
-              <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse" title="Collapse card">
+              <button 
+                type="button" 
+                class="btn btn-sm btn-negative" 
+                data-card-widget="collapse" 
+                title="Collapse card"
+              >
                 <i class="fas fa-minus"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-negative" data-card-widget="maximize" title="Maximize/minimize card">
+              <button 
+                type="button" 
+                class="btn btn-sm btn-negative" 
+                data-card-widget="maximize" 
+                title="Maximize/minimize card"
+              >
                 <i class="fas fa-expand"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-negative" title="Reload card content">
+              <button 
+                type="button" 
+                class="btn btn-sm btn-negative"
+                data-toggle="tooltip" 
+                title="Reload table"
+                onclick="ProjectMonitoring.reloadDataTable()"
+              >
                 <i class="fas fa-sync-alt"></i>
               </button>
             </div>

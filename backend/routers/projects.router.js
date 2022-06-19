@@ -11,23 +11,30 @@ const {
   submitForEvaluationProposal,
   datatableProposal,
   viewProjectActivities,
-  updateProjectActivities
+  updateProjectActivities,
+  approveProposal
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
 router.use(jwtMiddleWare)
 
+// * Projects
 router.get('/approved/datatables', datatableApprovedProposal)
 router.get('/datatables', datatableProposal)
-router.get('/:project_id/activities/:activity_id', viewProjectActivities)
-router.get('/:id/activities', datatableProjectActivities)
+router.put('/:id', updateProject)
 router.get('/:id', viewProposal)
 router.post('/create', createProject)
+
+// * Activities
+router.get('/:project_id/activities/:activity_id', viewProjectActivities)
+router.get('/:id/activities', datatableProjectActivities)
 router.post('/:id/activities/create', createProjectActivities)
+router.put('/:project_id/activities/:activity_id', updateProjectActivities)
+
+// * For submission
 router.put('/cancel/:id', cancelProposal)
 router.put('/review/:id', submitForReviewProposal)
 router.put('/evaluation/:id', submitForEvaluationProposal)
-router.put('/:project_id/activities/:activity_id', updateProjectActivities)
-router.put('/:id', updateProject)
+router.put('/approve/:id', approveProposal)
 
 module.exports = router

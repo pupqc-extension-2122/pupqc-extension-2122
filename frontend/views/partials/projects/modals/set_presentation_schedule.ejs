@@ -1,0 +1,52 @@
+<%# Set Presentation Schedule Modal %>
+<div class="modal fade" id="setPresentationSchedule_modal" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" id="setPresentationSchedule_form">
+      <div class="modal-header">
+        <h4 class="modal-title">Set Project Presentation Schedule</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label for="setPresentation_date">
+                <span>Date of presentation</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="input-group date">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="setPresentation_date" 
+                  name="presentation_date"
+                  placeholder="Please select date of presentation" 
+                  data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="mm/dd/yyyy" 
+                  data-mask 
+                />
+                <div class="input-group-append">
+                  <button 
+                    type="button" 
+                    class="btn btn-primary" 
+                    id="setPresentation_date_pickerBtn"
+                    data-toggle="tooltip" 
+                    title="Select date of presentation"
+                  >
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="setPresentationSchedule_btn">Save schedule</button>
+      </div>
+    </form>
+  </div>
+</div>

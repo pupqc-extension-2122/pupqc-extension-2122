@@ -88,9 +88,11 @@ router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
     where: { id: project_id }
   });
 
-  if(!project) {
+  if(!project)
     return res.status(404).send({ error: true, message: 'Page Not Found' });
-  }
+
+  if(project.status === 'Created' && roles.includes('Chief'))
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_details', {
@@ -114,9 +116,11 @@ router.get('/proposals/:project_id/activities', jwtMiddleware, async (req, res) 
     where: { id: project_id }
   });
 
-  if(!project) {
+  if(!project)
     return res.status(404).send({ error: true, message: 'Page Not Found' });
-  }
+  
+  if(project.status === 'Created' && roles.includes('Chief'))
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_activities', {
@@ -140,9 +144,8 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, async (req, res) => {
     where: { id: project_id }
   });
 
-  if(!project) {
+  if(!project)
     return res.status(404).send({ error: true, message: 'Page Not Found' });
-  }
 
   roles.includes('Extensionist')
     ? res.render(PATH + 'edit_proposal', {
@@ -183,9 +186,8 @@ router.get('/monitoring/:project_id', jwtMiddleware, async (req, res) => {
     where: { id: project_id }
   });
 
-  if(!project) {
+  if(!project)
     return res.status(404).send({ error: true, message: 'Page Not Found' });
-  }
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_monitoring_details', {
@@ -209,9 +211,8 @@ router.get('/monitoring/:project_id/activities', jwtMiddleware, async (req, res)
     where: { id: project_id }
   });
 
-  if(!project) {
+  if(!project)
     return res.status(404).send({ error: true, message: 'Page Not Found' });
-  }
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_monitoring_activities', {

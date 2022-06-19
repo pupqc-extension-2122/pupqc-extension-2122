@@ -1,3 +1,10 @@
+<%# ***** Styles ***** %>
+
+<%# Daterange Picker %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/daterangepicker/daterangepicker.css">
+
+
+
 <%# ***** Body ***** %>
 
 <%- include('../../partials/loaders/content_header') %>
@@ -8,7 +15,7 @@
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p/proposals">Project Proposals</a></li>
-      <li class="breadcrumb-item active">Project Proposals</li>
+      <li class="breadcrumb-item active" id="active_breadcrumb">Project Details</li>
     </ol>
     <div class="d-flex align-items-center justify-content-between">
       <div>
@@ -34,7 +41,8 @@
 
       <div class="col-md-9">
 
-        <%- include('../../partials/projects/project_details') %>
+        <%- include('../../partials/projects/project_details_header') %>
+        <%- include('../../partials/projects/project_details_body') %>
         <%- include('../../partials/projects/comments') %>
 
       </div>
@@ -141,20 +149,26 @@
   </div>
 </main>
 
-
 <%# === Modals === %>
 
 <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
   <%- include('../../partials/projects/modals/confirm_submit_for_approval') %>
+  <%- include('../../partials/projects/modals/confirm_cancel_the_proposal') %>
 <% } %>
 
 <% if (JSON.parse(JSON.stringify(roles)).includes('Chief')) { %>
-  <%- include('../../partials/projects/modals/confirm_approve_for_evaluation') %>
+  <%- include('../../partials/projects/modals/set_presentation_schedule') %>
   <%- include('../../partials/projects/modals/confirm_approve_the_project') %>
 <% } %>
 
 
+
 <%# ***** Scripts ***** %>
+
+<%# InputMask %>
+<script src="<%=BASE_URL%>/plugins/inputmask/jquery.inputmask.min.js"></script>
+<%# daterangepicker %>
+<script src="<%=BASE_URL%>/plugins/daterangepicker/daterangepicker.js"></script>
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>

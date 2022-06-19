@@ -213,15 +213,11 @@ const CUSTOM_VALIDATIONS = [
 		defaultMessage: 'It must be greater than or equal to something'
 	}, {
 		ruleName: "beforeToday",
-		handler: (value, element, params) => {
-			return this.optional(element) || isBeforeToday(value);
-		},
+		handler: (value, element, params) => isBeforeToday(moment(value)),
 		defaultMessage: 'Date and/or time must be earlier than today'
 	}, {
 		ruleName: "afterToday",
-		handler: (value, element, params) => {
-			return this.optional(element) || isAfterToday(value);
-		},
+		handler: (value, element, params) => isAfterToday(moment(value)),
 		defaultMessage: 'Date and/or time must be later than today'
 	}, {
 		ruleName: "beforeTimeSelector",

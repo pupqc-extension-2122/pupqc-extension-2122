@@ -128,11 +128,11 @@
     await $.ajax({
       url: `${ BASE_URL_API }/partners`,
       type: 'GET',
-      success: result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message);
+      success: res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
         } else {
-          cooperatingAgencies_list = result.data;
+          cooperatingAgencies_list = res.data;
         }
       },
       error: () => {
