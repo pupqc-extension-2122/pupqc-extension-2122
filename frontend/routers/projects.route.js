@@ -91,7 +91,7 @@ router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
   if(!project)
     return res.status(404).send({ error: true, message: 'Page Not Found' });
 
-  if(project.status === 'Created' && roles.includes('Chief'))
+  if(project.status === 'Created' && roles.length === 1 && roles.includes('Chief'))
     return res.status(404).send({ error: true, message: 'Page Not Found' });
 
   roles.includes('Extensionist') || roles.includes('Chief')
@@ -119,7 +119,7 @@ router.get('/proposals/:project_id/activities', jwtMiddleware, async (req, res) 
   if(!project)
     return res.status(404).send({ error: true, message: 'Page Not Found' });
   
-  if(project.status === 'Created' && roles.includes('Chief'))
+  if(project.status === 'Created' && roles.length === 1 && roles.includes('Chief'))
     return res.status(404).send({ error: true, message: 'Page Not Found' });
 
   roles.includes('Extensionist') || roles.includes('Chief')
