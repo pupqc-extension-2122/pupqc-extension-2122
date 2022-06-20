@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Budget_Item_Categories',
-    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   return Budget_Item_Categories;
 };

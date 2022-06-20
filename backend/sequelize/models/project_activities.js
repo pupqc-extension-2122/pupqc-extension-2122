@@ -31,19 +31,19 @@ module.exports = (sequelize, DataTypes) => {
     },
     topics: {
       type: DataTypes.STRING,
-      set(val){
+      set(val) {
         this.setDataValue('topics', val.join(';'))
       },
-      get(){
+      get() {
         return this.getDataValue('topics').split(';')
       }
     },
     outcomes: {
       type: DataTypes.STRING,
-      set(val){
+      set(val) {
         this.setDataValue('outcomes', val.join(';'))
       },
-      get(){
+      get() {
         return this.getDataValue('outcomes').split(';')
       }
     },
@@ -67,7 +67,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Project_Activities',
     tableName: 'Project_Activities',
-    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   return Project_Activities;
 };
