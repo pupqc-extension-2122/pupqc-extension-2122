@@ -1,5 +1,5 @@
-const datatables = require('sequelize-datatables')
 const { Memos } = require('../sequelize/models')
+const datatable = require('../../utils/datatableResponse')
 
 exports.viewMemo = async (req, res) => {
   try {
@@ -68,7 +68,7 @@ exports.dataTableMemo = async (req, res) => {
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
     }
 
-    let data = await datatables(Memos, req.query, { include: ['organization'] })
+    let data = await datatable(Memos, req.query, { include: ['organization'] })
 
     res.send(data)
 
