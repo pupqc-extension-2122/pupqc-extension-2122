@@ -2,7 +2,7 @@ const {
   Memos, Projects, Project_Partners, Project_Activities, Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
-const dataTable = require('sequelize-datatables')
+const datatable = require('../../utils/datatableResponse')
 
 // ? Projects
 
@@ -36,16 +36,16 @@ exports.viewProposal = async (req, res) => {
 exports.datatableProposal = async (req, res) => {
   try {
 
-    let options = { where: { created_by: req.auth.id } }
+    // let options = { where: { created_by: req.auth.id } }
 
-    if (req.auth.roles.includes('Admin'))
-      options = {}
+    // if (req.auth.roles.includes('Admin'))
+    //   options = {}
 
-    else if (req.auth.roles.includes('Chief'))
-      options = { where: { status: { [Op.not]: 'Created' } } }
+    // else if (req.auth.roles.includes('Chief'))
+    //   options = { where: { status: { [Op.not]: 'Created' } } }
 
 
-    let data = await dataTable(Projects, req.query, options)
+    let data = await datatable(Projects, req.query, {include: ['memos', 'partners']})
 
     res.send(data)
 

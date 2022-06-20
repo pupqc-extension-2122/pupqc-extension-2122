@@ -1,5 +1,5 @@
 const { Op } = require('sequelize')
-const datatables = require('sequelize-datatables')
+const datatable = require('../../utils/datatableResponse')
 const { Partners, Memos } = require('../sequelize/models')
 
 exports.listPartners = async (req, res) => {
@@ -46,7 +46,7 @@ exports.datatableMemos = async (req, res) => {
 
     const id = req.params.id
 
-    const data = await datatables(Memos, req.query, {
+    const data = await datatable(Memos, req.query, {
       where: { partner_id: id },
       include: ['projects']
     })
@@ -66,7 +66,7 @@ exports.datatablePartners = async (req, res) => {
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
     }
 
-    let data = await datatables(Partners, req.query, {})
+    let data = await datatable(Partners, req.query, {})
 
     res.send(data)
 
