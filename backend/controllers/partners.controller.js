@@ -2,6 +2,20 @@ const { Op } = require('sequelize')
 const datatable = require('../../utils/datatableResponse')
 const { Partners, Memos } = require('../sequelize/models')
 
+exports.countPartners = async (req, res) => {
+  let all_count = await Partners.count()
+
+  let active_count = await Partners.count({
+    include: {
+      model: Memos,
+      as: 'memos',
+      where: { validity_date: { [Op.gte]: new Date() } }
+    }
+  })
+
+  res.send({ error: false, data: { all_count, active_count } })
+}
+
 exports.listPartners = async (req, res) => {
   try {
 
@@ -9,14 +23,14 @@ exports.listPartners = async (req, res) => {
     const end_date = req.query.end_date || null
 
     let options = {}
-    if (start_date && end_date){
+    if (start_date && end_date) {
       options = {
         include: {
           model: Memos,
           as: 'memos',
           where: {
             [Op.and]: {
-              end_date:{
+              end_date: {
                 [Op.gt]: end_date
               },
               validity_date: {
