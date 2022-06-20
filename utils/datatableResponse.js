@@ -44,8 +44,9 @@ async function datatable(model, config, options = {}) {
   start = config.start
   length = config.length
 
-  // * SET PARAMS
-  options.attributes = columns.filter(el => el[0] != '$')
+  // * SET ATTRIBUTES
+  // options.attributes = columns.filter(el => el[0] != '$')
+
   // * IF SEARCH
   if (config.search.value)
     options.where = { [Op.and]: [{ ...options.where }, { [Op.or]: search }] }
