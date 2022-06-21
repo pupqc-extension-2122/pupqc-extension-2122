@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.Projects, { foreignKey: 'created_by', as: 'projects' })
       this.hasMany(models.Comments, { foreignKey: 'user_id', as: 'comments' })
-      this.belongsToMany(models.Roles, { through: 'User_Roles' })
+      this.belongsToMany(models.Roles, { foreignKey: 'user_id', through: 'User_Roles' })
     }
 
     verify(password) {
