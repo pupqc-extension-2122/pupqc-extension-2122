@@ -1097,17 +1097,24 @@ const ProjectActivities = (() => {
             fn: 'ProjectActivities.initDataTable',
             details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
           }, 1);
+        },
+        data: {
+          types: {
+            created_at: 'date',
+            activity_name: 'string'
+          }
         }
       },
       columns: [
         {
-          data: 'createdAt',
+          data: 'created_at',
           visible: false
         }, {
           data: 'activity_name',
           width: '30%'
         }, {
           data: null,
+          searchable: false,
           sortable: false,
           width: '30%',
           render: data => {
@@ -1126,6 +1133,7 @@ const ProjectActivities = (() => {
           }
         }, {
           data: null,
+          searchable: false,
           sortable: false,
           render: ({ start_date, end_date }) => {
             return `
@@ -1207,7 +1215,7 @@ const ProjectActivities = (() => {
   }
 
   const onEditFormSubmit = async () => {
-    if (project_details.status !== 'Created' || project_details.status !== 'For Revision') return;
+    if (!(project_details.status == 'Created' || project_details.status == 'For Revision')) return;
 
     processing = 1;
 

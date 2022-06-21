@@ -110,7 +110,6 @@
 		PT_form = new ProjectTeamForm('#editProject_projectTeam_grp', {
 			buttons: {
 				add: '#addTeamMember_btn',
-				clear: '#clearProjectTeamEmptyFields_btn'
 			}
 		});
 	}
@@ -119,7 +118,6 @@
 		TG_form = new TargetGroupsForm('#editProject_targetGroups_grp', {
 			buttons: {
 				add: '#addTargetGroup_btn',
-				clear: '#clearTargetGroupEmptyFields_btn'
 			}
 		});
 	}
@@ -136,13 +134,11 @@
         }
       },
       error: () => {
-        ajaxErrorHandler(
-          {
-            file: 'projects/editProposal.js',
-            fn: 'onDOMLoad.initCooperatingAgenciesGroupForm()',
-          }
-          , 1
-        );
+        ajaxErrorHandler({
+          file: 'projects/createPropsal.js',
+          fn: 'onDOMLoad.getPartners()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
       }
     });
 
@@ -204,7 +200,6 @@
 		EP_form = new EvaluationPlanForm('#evaluationPlan_form', {
 			buttons: {
 				add: '#evaluationPlan_addPlan_btn',
-				clear: '#evaluationPlan_clearEmptyFields_btn'
 			}
 		});
 	}

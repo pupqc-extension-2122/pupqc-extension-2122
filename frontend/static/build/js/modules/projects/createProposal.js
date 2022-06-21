@@ -126,9 +126,15 @@
         } else {
           cooperatingAgencies_list = result.data;
           CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
-          console.log(result.data);
         }
       },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/createPropsal.js',
+          fn: 'onDOMLoad.getPartners()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
     })
   }
 
@@ -136,7 +142,7 @@
     PT_form = new ProjectTeamForm('#addProject_projectTeam_grp', {
       buttons: {
         add: '#addTeamMember_btn',
-        clear: '#clearProjectTeamEmptyFields_btn'
+        // clear: '#clearProjectTeamEmptyFields_btn'
       }
     });
   }
@@ -145,7 +151,7 @@
     TG_form = new TargetGroupsForm('#addProject_targetGroups_grp', {
       buttons: {
         add: '#addTargetGroup_btn',
-        clear: '#clearTargetGroupEmptyFields_btn'
+        // clear: '#clearTargetGroupEmptyFields_btn'
       }
     });
   }

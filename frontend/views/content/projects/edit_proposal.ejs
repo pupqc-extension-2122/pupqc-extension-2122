@@ -58,14 +58,14 @@
 
       <div class="card-body">
 
-        <!-- Stepper -->
+        <%# Stepper %>
         <div class="bs-stepper" id="editProject_stepper">
 
-          <!-- Stepper Header -->
+          <%# Stepper Header %>
           <div class="table-responsive mb-3">
             <div class="bs-stepper-header" role="tablist">
 
-              <!-- Project Details -->
+              <%# Project Details %>
               <div class="step" data-target="#projectDetails_stepperPane">
                 <button type="button" class="step-trigger" role="tab"
                   aria-controls="projectDetails_stepperPane" id="financialRequirements_stepperHeaderBtn">
@@ -76,7 +76,7 @@
 
               <div class="line"></div>
 
-              <!-- Financial Requirements -->
+              <%# Financial Requirements %>
               <div class="step" data-target="#financialRequirements_stepperPane">
                 <button type="button" class="step-trigger" role="tab"
                   aria-controls="financialRequirements_stepperPane" id="financialRequirements_stepperHeaderBtn">
@@ -87,7 +87,7 @@
 
               <div class="line"></div>
 
-              <!-- Evaluation Plan -->
+              <%# Evaluation Plan %>
               <div class="step" data-target="#evaluationPlan_stepperPane">
                 <button type="button" class="step-trigger" role="tab"
                   aria-controls="evaluationPlan_stepperPane" id="evaluationPlan_stepperHeaderBtn">
@@ -98,7 +98,7 @@
 
               <div class="line"></div>
 
-              <!-- Confirmation -->
+              <%# Confirmation %>
               <div class="step" data-target="#confirmation_stepperPane">
                 <button type="button" class="step-trigger" role="tab"
                   aria-controls="confirmation_stepperPane" id="confirmation_stepperHeaderBtn">
@@ -109,15 +109,15 @@
             </div>
           </div>
 
-          <!-- Stepper Content -->
+          <%# Stepper Content %>
           <div class="bs-stepper-content">
 
-            <!-- Project Details -->
+            <%# Project Details %>
             <div id="projectDetails_stepperPane" class="content" role="tabpanel"
               aria-labelledby="financialRequirements_stepperHeaderBtn">
               <div class="form-row">
 
-                <!-- Project Title -->
+                <%# Project Title %>
                 <div class="col-12">
                   <div class="form-group">
                     <label for="editProject_projectTitle">
@@ -129,7 +129,7 @@
                   </div>
                 </div>
 
-                <!-- Implementer -->
+                <%# Implementer %>
                 <div class="col-12">
                   <div class="form-group">
                     <label for="editProject_implementer">
@@ -141,7 +141,7 @@
                   </div>
                 </div>
 
-                <!-- Project Team -->
+                <%# Project Team %>
                 <div class="col-12">
                   <div class="form-group" id="editProject_projectTeam_grp">
                     <label>
@@ -154,15 +154,11 @@
                         <i class="fas fa-plus mr-1"></i>
                         <span>Add team member</span>
                       </button>
-                      <button type="button" class="btn btn-sm btn-warning" id="clearProjectTeamEmptyFields_btn">
-                        <i class="fas fa-eraser mr-1"></i>
-                        <span>Clear empty fields</span>
-                      </button>
                     </div>
                   </div>
                 </div>
 
-                <!-- Target Groups -->
+                <%# Target Groups %>
                 <div class="col-12">
                   <div class="form-group" id="editProject_targetGroups_grp">
                     <label>
@@ -175,15 +171,11 @@
                         <i class="fas fa-plus mr-1"></i>
                         <span>Add target group</span>
                       </button>
-                      <button type="button" class="btn btn-sm btn-warning" id="clearTargetGroupEmptyFields_btn">
-                        <i class="fas fa-eraser mr-1"></i>
-                        <span>Clear empty fields</span>
-                      </button>
                     </div>
                   </div>
                 </div>
 
-                <!-- Cooperating Agencies -->
+                <%# Cooperating Agencies %>
                 <div class="col-12">
                   <div class="form-group" id="addProject_cooperatingAgencies_grp">
                     <label for="addProject_cooperatingAgencies">
@@ -193,7 +185,7 @@
 
                     <div class="form-group">
                       <div class="form-row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                           <select 
                             name="cooperating_agencies" 
                             id="addProject_cooperatingAgencies_select" 
@@ -203,30 +195,12 @@
                             <option disabled>No cooperating agencies yet.</option>
                           </select>
                         </div>
-                        <div class="col-md-4 text-right">
-                          <button class="btn btn-primary btn-sm" type="button">
-                            <i class="fas fa-pen mr-1"></i>
-                            <span>Create cooperating agency</span>
-                          </button>
-                        </div>
                       </div>
                     </div>
-
-                    <!-- <div class="d-flex justify-content-between">
-                      <button type="button" class="btn btn-sm btn-success" id="addCooperatingAgency_btn">
-                        <i class="fas fa-plus mr-1"></i>
-                        <span>Add cooperating agency</span>
-                      </button>
-                      <button type="button" class="btn btn-sm btn-warning"
-                        id="clearCooperatingAgenciesEmptyFields_btn">
-                        <i class="fas fa-eraser mr-1"></i>
-                        <span>Clear empty fields</span>
-                      </button>
-                    </div> -->
                   </div>
                 </div>
 
-                <!-- Start Date -->
+                <%# Start Date %>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="editProject_startDate">
@@ -247,7 +221,7 @@
                   </div>
                 </div>
 
-                <!-- End Date -->
+                <%# End Date %>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="editProject_endDate">
@@ -268,7 +242,7 @@
                   </div>
                 </div>
 
-                <!-- Impact Statement -->
+                <%# Impact Statement %>
                 <div class="col-12">
                   <div class="form-group">
                     <label for="editProject_impactStatement">
@@ -281,7 +255,7 @@
                   </div>
                 </div>
 
-                <!-- Summary -->
+                <%# Summary %>
                 <div class="col-12">
                   <div class="form-group">
                     <label for="editProject_summary">
@@ -293,7 +267,7 @@
                   </div>
                 </div>
 
-                <!-- Document -->
+                <%# Document %>
                 <div class="col-12">
                   <div class="form-group">
                     <label for="editProject_document">
@@ -310,16 +284,16 @@
               </div>
             </div>
 
-            <!-- Financial Requirements -->
+            <%# Financial Requirements %>
             <div id="financialRequirements_stepperPane" class="content" role="tabpanel"
               aria-labelledby="financialRequirements_stepperHeaderBtn">
 
-              <!-- Add Line Item Budget -->
+              <%# Add Line Item Budget %>
               <div class="form-group">
                 <label for="">Add line item budget</label>
                 <div class="form-row">
 
-                  <!-- Options -->
+                  <%# Options %>
                   <div class="col-10 col-md-6 ">
                     <select class="form-select select2" style="width: 100%" name="line_item_budget"
                       id="financialRequirement_addLineItemBudget_select">
@@ -327,7 +301,7 @@
                     </select>
                   </div>
 
-                  <!-- Add button -->
+                  <%# Add button %>
                   <div class="col-2 col-md-6 ">
                     <button type="button" class="btn btn-success" id="financialRequirement_addLineItemBudget_btn"
                       data-toggle="tooltip" title="Select a line item budget and click this button to add">
@@ -337,7 +311,7 @@
                 </div>
               </div>
 
-              <!-- Financial Requirement Table -->
+              <%# Financial Requirement Table %>
               <div class="table-responsive">
                 <table class="table table-bordered" id="financialRequirements_form">
                   <thead class="text-center">
@@ -373,7 +347,7 @@
               </div>
             </div>
 
-            <!-- Evaluation Plan -->
+            <%# Evaluation Plan %>
             <div id="evaluationPlan_stepperPane" class="content" role="tabpanel"
               aria-labelledby="evaluationPlan_stepperHeaderBtn">
 
@@ -393,11 +367,6 @@
                           <i class="fas fa-plus mr-1"></i>
                           <span>Add plan row</span>
                         </button>
-                        <button type="button" class="btn btn-sm btn-warning"
-                          id="evaluationPlan_clearEmptyFields_btn">
-                          <i class="fas fa-eraser mr-1"></i>
-                          <span>Clear empty fields</span>
-                        </button>
                       </td>
                     </tr>
                   </tbody>
@@ -406,21 +375,21 @@
 
             </div>
 
-            <!-- Confirmation -->
+            <%# Confirmation %>
             <div id="confirmation_stepperPane" class="content" role="tabpanel"
               aria-labelledby="confirmation_stepperHeaderBtn">
-              <!-- Label -->
+              <%# Label %>
               <div class="form-group">
                 <label>Please review if you typed the correct details before saving</label>
               </div>
 
-              <!-- Project Requirements -->
+              <%# Project Requirements %>
               <h4 class="mb-3">I. Project Details</h4>
               <dl class="row">
 
                 <div class="col-12"><hr class="mt-0 mb-2"></div>
 
-                <!-- Title -->
+                <%# Title %>
                 <dt class="col-md-3">
                   <div class="mx-2">Title</div>
                 </dt>
@@ -430,7 +399,7 @@
 
                 <div class="col-12"><hr class="my-2"></div>
 
-                <!-- Implementer -->
+                <%# Implementer %>
                 <dt class="col-md-3">
                   <div class="mx-2">Implementer</div>
                 </dt>
@@ -440,7 +409,7 @@
 
                 <div class="col-12"><hr class="my-2"></div>
 
-                <!-- Project Team -->
+                <%# Project Team %>
                 <dt class="col-md-3">
                   <div class="mx-2">Project Team</div>
                 </dt>
@@ -450,7 +419,7 @@
 
                 <div class="col-12"><hr class="my-2"></div>
 
-                <!-- Target Groups -->
+                <%# Target Groups %>
                 <dt class="col-md-3">
                   <div class="mx-2">Target Group(s)</div>
                 </dt>
@@ -460,7 +429,7 @@
 
                 <div class="col-12"><hr class="my-2"></div>
 
-                <!-- Cooperating Agencies -->
+                <%# Cooperating Agencies %>
                 <dt class="col-md-3">
                   <div class="mx-2">Cooperating Agency(ies)</div>
                 </dt>
@@ -470,7 +439,7 @@
 
                 <div class="col-12"><hr class="my-2"></div>
 
-                <!-- Time Frame -->
+                <%# Time Frame %>
                 <dt class="col-md-3">
                   <div class="mx-2">Time Frame</div>
                 </dt>
@@ -480,7 +449,7 @@
                 
                 <div class="col-12"><hr class="my-2"></div>
 
-                <!-- Impact Statement -->
+                <%# Impact Statement %>
                 <dt class="col-md-3">
                   <div class="mx-2">Impact Statement</div>
                 </dt>
@@ -490,7 +459,7 @@
                 
                 <div class="col-12"><hr class="my-2"></div>
 
-                <!-- Summary -->
+                <%# Summary %>
                 <dt class="col-md-3">
                   <div class="mx-2">Summary</div>
                 </dt>
@@ -501,7 +470,7 @@
                 <div class="col-12"><hr class="my-2"></div>
               </dl>
 
-              <!-- Financial Requirements -->
+              <%# Financial Requirements %>
               <h4 class="mb-3">II. Financial Requirements</h4>
               <div class="table-responsive mb-4">
                 <table class="table table-bordered">
@@ -517,13 +486,6 @@
                   </thead>
                   <tbody id="projectDetailsConfirm_financialRequirements">
                     <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                    <tr>
                       <td colspan="4" class="text-right">
                         <b>Overall Amount</b>
                       </td>
@@ -533,7 +495,7 @@
                 </table>
               </div>
 
-              <!-- Evaluation Plan -->
+              <%# Evaluation Plan %>
               <h4 class="mb-3">III. Evaluation Plan</h4>
               <div class="table-responsive mb-4">
                 <table class="table table-bordered">

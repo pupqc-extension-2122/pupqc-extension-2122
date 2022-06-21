@@ -352,7 +352,7 @@ exports.datatableProjectActivities = async (req, res) => {
 
     const id = req.params.id
 
-    let data = await dataTable(Project_Activities, req.query, { where: { project_id: id } })
+    let data = await datatable(Project_Activities, req.query, { where: { project_id: id } })
 
     res.send(data)
 

@@ -14,7 +14,6 @@ class ProjectTeamForm {
 	constructor(selector, params = {
 		buttons: {
 			add: '',
-			clear: ''
 		}
 	}) {
 
@@ -23,7 +22,6 @@ class ProjectTeamForm {
 		const FORM = `[data-form="projectTeam"]`;
 		const BUTTONS = {
 			ADD: `[data-team-member-btn="add"]`,
-			CLEAR: `[data-team-member-btn="clear"]`
 		}
 
 		// *** Setting up properties *** //
@@ -35,7 +33,6 @@ class ProjectTeamForm {
 
 		this.btn = {
 			add: this.form.find(btn.add || BUTTONS.ADD),
-			clear: this.form.find(btn.clear || BUTTONS.CLEAR)
 		}
 
 		this.data = {
@@ -124,36 +121,6 @@ class ProjectTeamForm {
     </div>
   `
 
-	#addTeamMemberFieldModal = `
-    <div class="modal" id="addTeamMemberField_modal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Confirmation</h4>
-            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="d-flex">
-              <h1 class="mr-3 display-4">
-                <i class="fas fa-exclamation-circle text-info"></i>
-              </h1>
-              <div>
-                <div class="font-weight-bold mb-2">Add team member field</div>
-                <p>You've already added <span id="teamMemberEmptyFields_count">0</span> empty fields.<br>Do you want to add another one?</p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" id="confirmAddTeamMemberField_btn">Yes, please!</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-
 	/**
 	 * * Private Methods
 	 * o--/[=================>
@@ -163,25 +130,10 @@ class ProjectTeamForm {
 
 		// *** Initialize the buttons *** //
 
-		const { add: addBtn, clear: clrBtn } = this.btn;
+		const { add: addBtn } = this.btn;
 
 		// For add button
-		addBtn.on('click', () => {
-
-			// Get how many empty fields were added
-			const emptyFields = this.projectTeam.filter(x => !x.target_group).length;
-			if (emptyFields >= MAX_EMPTY_FIELDS) {
-
-				// Set the number of empty fields
-				setHTMLContent('#teamMemberEmptyFields_count', emptyFields);
-
-				// Show the modal
-				$('#addTeamMemberField_modal').modal('show');
-			} else this.addTeamMember();
-		});
-
-		// For clear button
-		clrBtn.on('click', () => this.clearEmptyFields());
+		addBtn.on('click', () => this.addTeamMember());
 
 		// *** For Remove Team Member Field Modal *** //
 
@@ -210,30 +162,6 @@ class ProjectTeamForm {
 			});
 		}
 
-		// *** For Remove Team Member Field Modal *** //
-
-		if (!$('#addTeamMemberField_modal').length) {
-
-			// Append the Add team member field modal to the DOM
-			$('body').append(this.#addTeamMemberFieldModal);
-
-			// Initialize the functionalities of the modal
-
-			const addTeamMemberFieldModal = $('#addTeamMemberField_modal');
-			const confirmAddTeamMemberFieldBtn = $('#confirmAddTeamMemberField_btn');
-
-			addTeamMemberFieldModal.on('hide.bs.modal', setHTMLContent('#teamMemberEmptyFields_count', 0));
-
-			confirmAddTeamMemberFieldBtn.on('click', () => {
-
-				// Add new target group
-				this.addTeamMember();
-
-				// Hide the modal
-				addTeamMemberFieldModal.modal('hide');
-			});
-		}
-
 		// *** Default settings *** //
 
 		// Append a blank field
@@ -241,6 +169,14 @@ class ProjectTeamForm {
 	}
 
 	#dataElement = (dataAttr, value) => this.form.find(`[${this.data[dataAttr]}="${value}"]`);
+
+  #setAddBtnState = () => {
+    this.btn.add.attr('disabled', () =>
+      this.projectTeam.reduce((acc, cur) =>
+        acc = !this.#dataElement('teamMemberInput', cur.id).val().trim()
+      , false)
+    );
+  }
 
 	/**
 	 * * Public Methods
@@ -281,13 +217,16 @@ class ProjectTeamForm {
 		// *** Initiate the inputs *** //
 
 		// Get the target group name if input changes
-		input.on('keyup change', () =>
-			this.projectTeam = this.projectTeam.map(t =>
+		input.on('keyup change', () => {
+      this.#setAddBtnState();
+      this.projectTeam = this.projectTeam.map(t =>
 				t.id == formGroupId ? { ...t, team_member: input.val() } : t
 			)
-		);
+    });
 
 		// *** Initiate the buttons *** //
+
+    this.#setAddBtnState();
 
 		const removeFormGroupBtn = this.#dataElement('removeFormGroupBtn', formGroupId);
 
@@ -325,14 +264,8 @@ class ProjectTeamForm {
 
 		// If there are no target group, add new field by default
 		this.projectTeam.length === 0 && this.addTeamMember();
-	}
 
-	clearEmptyFields = () => {
-		this.projectTeam.forEach(({ id }) =>
-			this.projectTeam.length > 1
-			&& !this.#dataElement('teamMemberInput', id).val()
-			&& this.removeTeamMember(id)
-		);
+    this.#setAddBtnState();
 	}
 
 	setTeamMembers = (data, method = 'reset') => {
@@ -370,7 +303,6 @@ class TargetGroupsForm {
 	constructor(selector, params = {
 		buttons: {
 			add: '',
-			clear: ''
 		}
 	}) {
 
@@ -379,7 +311,6 @@ class TargetGroupsForm {
 		const FORM = `[data-form="targetGroups"]`;
 		const BUTTONS = {
 			ADD: `[data-target-groups-btn="add"]`,
-			CLEAR: `[data-target-groups-btn="clear"]`
 		}
 
 		// *** Setting up properties *** //
@@ -391,7 +322,6 @@ class TargetGroupsForm {
 
 		this.btn = {
 			add: this.form.find(btn.add || BUTTONS.ADD),
-			clear: this.form.find(btn.clear || BUTTONS.CLEAR)
 		}
 
 		this.data = {
@@ -453,37 +383,6 @@ class TargetGroupsForm {
     </div>
   `
 
-  #addTargetGroupFieldModal = `
-    <div class="modal" id="addTargetGroupField_modal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Confirmation</h4>
-            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="d-flex">
-              <h1 class="mr-3 display-4">
-                <i class="fas fa-exclamation-circle text-info"></i>
-              </h1>
-              <div>
-                <div class="font-weight-bold mb-2">Add target group field</div>
-                <p>You've already added <span id="targetGroupFields_count">0</span> empty fields.<br>Do you want to add another
-                  one?</p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary" id="confirmAddTargetGroupField_btn">Yes, please!</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-
 	/**
 	 * * Private Methods
 	 * o--/[=================>
@@ -493,21 +392,10 @@ class TargetGroupsForm {
 
 		// *** Initialize the buttons *** //
 
-		const { add: addBtn, clear: clrBtn } = this.btn;
+		const { add: addBtn, } = this.btn;
 
 		// For add button
-		addBtn.on('click', () => {
-			const emptyFields = this.targetGroups.filter(x => !x.target_group).length;
-			if (emptyFields >= MAX_EMPTY_FIELDS) {
-				setHTMLContent('#targetGroupFields_count', emptyFields);
-				$('#addTargetGroupField_modal').modal('show');
-			} else {
-				this.addTargetGroup();
-			}
-		});
-
-		// For clear button
-		clrBtn.on('click', () => this.clearEmptyFields());
+		addBtn.on('click', () => this.addTargetGroup());
 
 		// *** For Remove Target Group Field Modal *** //
 
@@ -530,27 +418,6 @@ class TargetGroupsForm {
 
 				// Hide the modal
 				confirmRemoveModal.modal('hide');
-			});
-		}
-
-		// *** For Remove Target Group Field Modal *** //
-
-		// Append the Add target group field modal to the DOM
-		if (!$('#addTargetGroupField_modal').length) {
-			$('body').append(this.#addTargetGroupFieldModal);
-
-			const addTargetGroupFieldModal = $('#addTargetGroupField_modal');
-			const confirmAddTargetGroupFieldBtn = $('#confirmAddTargetGroupField_btn');
-
-			addTargetGroupFieldModal.on('hide.bs.modal', setHTMLContent('#targetGroupFields_count', 0));
-
-			confirmAddTargetGroupFieldBtn.on('click', () => {
-
-				// Add new target group
-				this.addTargetGroup();
-
-				// Hide the modal
-				addTargetGroupFieldModal.modal('hide');
 			});
 		}
 
@@ -593,6 +460,15 @@ class TargetGroupsForm {
     </div>
   `
 
+  #setAddBtnState = () => {
+    this.btn.add.attr('disabled', () =>
+      this.targetGroups.reduce((a, c) => 
+        a = !this.#dataElement('targetGroupInput', c.id).val().trim(), 
+        false
+      )
+    )
+  }
+
 	/**
 	 * * Public Methods
 	 * o--/[=================>
@@ -632,13 +508,16 @@ class TargetGroupsForm {
 		// *** Initiate the inputs *** //
 
 		// Get the target group name if input changes
-		input.on('keyup change', () =>
+		input.on('keyup change', () => {
+      this.#setAddBtnState();
 			this.targetGroups = this.targetGroups.map(t =>
 				t.id == formGroupId ? { ...t, target_group: input.val() } : t
-			)
-		);
+			);
+    });
 
 		// *** Initiate the buttons *** //
+
+    this.#setAddBtnState();
 
 		const removeFormGroupBtn = this.#dataElement('removeFormGroupBtn', formGroupId);
 
@@ -675,14 +554,8 @@ class TargetGroupsForm {
 
 		// If there are no target group, add new field by default
 		this.targetGroups.length === 0 && this.addTargetGroup();
-	}
 
-	clearEmptyFields = () => {
-		this.targetGroups.forEach(({ id }) =>
-			this.targetGroups.length > 1
-			&& !this.#dataElement('targetGroupInput', id).val()
-			&& this.removeTargetGroup(id)
-		);
+    this.#setAddBtnState();
 	}
 
 	setTargetGroups = (data, method = 'reset') => {
@@ -1196,8 +1069,7 @@ class FinancialRequirementsForm {
 		const overallAmountElem = $('#overallAmount');
 
 		// Compute the overall amount
-		let overallAmount = 0;
-		this.requirements.forEach(r => overallAmount += r.quantity * r.estimated_cost);
+		let overallAmount = this.requirements.reduce((a, c) => a += c.quantity * c.estimated_cost, 0);
 
 		// Change the overall amount in the DOM
 		overallAmountElem.html(formatToPeso(overallAmount < MONEY_LIMIT ? overallAmount : MONEY_LIMIT));
@@ -1209,6 +1081,20 @@ class FinancialRequirementsForm {
 
 		return overallAmount;
 	}
+
+  #setAddBudgetItemBtn = (line_item_budget_id) => {
+    this.#dataElement('addBudgetItemBtn', line_item_budget_id).attr('disabled', () => 
+      [...this.requirements]
+        .filter(x => x.line_item_budget_id == line_item_budget_id)
+        .reduce((a, { row_id }) =>
+          a = !(
+            this.#dataElement('budgetItemNameInput', row_id).val().trim()
+            && this.#dataElement('budgetItemParticularsInput', row_id).val().trim()
+            && this.#dataElement('budgetItemQtyInput', row_id).val().trim()
+            && this.#dataElement('budgetItemCostInput', row_id).val().trim()
+          ), false)
+    )
+  }
 
 	/**
 	 * * Public Methods
@@ -1351,20 +1237,22 @@ class FinancialRequirementsForm {
 		// *** Initiate inputs *** //
 
 		// For budget item name
-		nameInput.on('keyup change', () =>
-			this.requirements = this.requirements.map(r =>
+		nameInput.on('keyup change', () => {
+      this.requirements = this.requirements.map(r =>
 				r.row_id == budgetItemRowId && r.line_item_budget_id == lineItemBudgetId
 					? { ...r, budget_item: nameInput.val() } : r
-			)
-		);
+			);
+      this.#setAddBudgetItemBtn(lineItemBudgetId);
+    });
 
 		// For budget item particulars
-		particularsInput.on('keyup change', () =>
+		particularsInput.on('keyup change', () => {
 			this.requirements = this.requirements.map(r =>
 				r.row_id == budgetItemRowId && r.line_item_budget_id == lineItemBudgetId
 					? { ...r, particulars: particularsInput.val() } : r
 			)
-		);
+      this.#setAddBudgetItemBtn(lineItemBudgetId);
+    });
 
 		// For quantity and estimated cost
 		this.#dataElement(['budgetItemQtyInput', 'budgetItemCostInput'], budgetItemRowId).on('keyup change', () => {
@@ -1395,9 +1283,13 @@ class FinancialRequirementsForm {
 
 			// Get the overall amount
 			this.#getOverallAmount();
+
+      this.#setAddBudgetItemBtn(lineItemBudgetId);
 		});
 
 		// *** Initialize the buttons *** //
+
+    this.#setAddBudgetItemBtn(lineItemBudgetId);
 
 		// Get the remove budget item button
 		const removeBudgetItemBtn = this.#dataElement('removeBudgetItemBtn', budgetItemRowId);
@@ -1456,14 +1348,16 @@ class FinancialRequirementsForm {
 			// Remove the budget item row from DOM
 			// if there are only 1 instance of the budget item on a line item budget
 			this.#dataElement('lineItemBudgetRowId', budgetItemRowId).remove();
+
+      // Remove the requirement object
+      this.requirements = this.requirements.filter(x => x.row_id != budgetItemRowId);
+
+      this.#setAddBudgetItemBtn(lib_id);
 		} else {
 
 			// Remove the entire line item budget rows from DOM
 			this.removeLineItemBudgetRows(lib_id);
 		}
-
-		// Remove the requirement object
-		this.requirements = this.requirements.filter(x => x.row_id != budgetItemRowId);
 
 		// Update the overall amount
 		this.#getOverallAmount();
@@ -1502,39 +1396,8 @@ class FinancialRequirementsForm {
       this.addLineItemBudgetRows(BI_category, false);
 
       d.items.forEach(i => this.addBudgetItemRow(BI_category.id, i));
-      
-			// const lineItemBudgetId = d.line_item_budget_id;
-
-			// if (!(lineItemBudgetId in usedLineItemBudgetIds)) {
-			// 	const lineItemBudget = this.lineItemBudgetList.find(x => x.id == lineItemBudgetId);
-			// 	this.addLineItemBudgetRows(lineItemBudget, false);
-			// 	usedLineItemBudgetIds.push(lineItemBudgetId);
-			// }
-
-			// this.addBudgetItemRow(lineItemBudgetId, d);
 		});
 	}
-
-	// getFinancialRequirements() {
-	// 	let requirements = [];
-	// 	this.requirements.forEach(r => {
-
-	// 		// Create a copy of requirement
-	// 		// This prevent the modification of the original object
-	// 		let requirement = { ...r };
-
-	// 		// Delete the row_id key
-	// 		delete requirement.row_id;
-
-	// 		// Push the requirement to the requirements
-	// 		requirements.push(requirement);
-	// 	});
-
-	// 	return {
-	// 		requirements: requirements,
-	// 		overallAmount: this.#getOverallAmount()
-	// 	};
-	// }
 
   getFinancialRequirements() {
     let requirements = [];
@@ -1569,7 +1432,6 @@ class EvaluationPlanForm {
 	constructor(selector, params = {
 		buttons: {
 			add: '',
-			clear: ''
 		}
 	}) {
 
@@ -1579,7 +1441,6 @@ class EvaluationPlanForm {
 
 		const BUTTONS = {
 			ADD: '[data-evaluation-plan-btn="add"]',
-			CLEAR: '[data-evaluation-plan-btn="clear"]',
 		}
 
 		// *** Setting up properties *** //
@@ -1590,6 +1451,7 @@ class EvaluationPlanForm {
 
 		// Plan object
 		// {
+		//     row_id: '',
 		//     outcome: '',
 		//     indicator: '',
 		//     data_collection_method: '',
@@ -1600,7 +1462,6 @@ class EvaluationPlanForm {
 
 		this.btn = {
 			add: $(buttons.add || BUTTONS.ADD),
-			clear: $(buttons.clear || BUTTONS.CLEAR)
 		}
 
 		this.data = {
@@ -1745,13 +1606,9 @@ class EvaluationPlanForm {
 
 		// *** Setting up buttons *** //
 
-		const { add: addBtn, clear: clearBtn } = this.btn;
+		const { add: addBtn } = this.btn;
 
-		addBtn.on('click', () => {
-			this.addPlanRow();
-		});
-
-		clearBtn.on('click', () => this.clearEmptyRows());
+		addBtn.on('click', () => this.addPlanRow());
 
 		// *** Remove Evaluation Plan Row Modal *** //
 		if(!$('#removeEvaluationPlanRow_modal').length) {
@@ -1773,6 +1630,18 @@ class EvaluationPlanForm {
 		// *** Default settings *** //
 		this.addPlanRow();
 	}
+
+  #setAddBtnState = () => {
+    this.btn.add.attr('disabled', () => 
+      this.evaluationPlans.reduce((a, {row_id}) =>
+        a = !(
+          this.#dataElement('outcomeInput', row_id).val().trim()
+					&& this.#dataElement('indicatorInput', row_id).val().trim()
+					&& this.#dataElement('collectionMethodInput', row_id).val().trim()
+					&& this.#dataElement('frequencyInput', row_id).val().trim()
+        ), false)
+    )
+  }
 
 	/**
 	 * * Public Methods
@@ -1821,34 +1690,40 @@ class EvaluationPlanForm {
 		// *** Inputs on keyup/change *** //
 
 		// Get the outcome
-		outcomeInput.on('keyup change', () =>
+		outcomeInput.on('keyup change', () => {
 			this.evaluationPlans = this.evaluationPlans.map(p =>
 				p.row_id == planId ? { ...p, outcome: outcomeInput.val() } : p
 			)
-		);
+      this.#setAddBtnState();
+    });
 
 		// Get the indicator
-		indicatorInput.on('keyup change', () =>
+		indicatorInput.on('keyup change', () => {
 			this.evaluationPlans = this.evaluationPlans.map(p =>
 				p.row_id == planId ? { ...p, indicator: indicatorInput.val() } : p
 			)
-		);
+      this.#setAddBtnState();
+    });
 
 		// Get data collection collection method
-		collectionMethodInput.on('keyup change', () =>
+		collectionMethodInput.on('keyup change', () => {
 			this.evaluationPlans = this.evaluationPlans.map(p =>
 				p.row_id == planId ? { ...p, data_collection_method: collectionMethodInput.val() } : p
 			)
-		);
+      this.#setAddBtnState();
+    });
 
 		// Get frequency
-		frequencyInput.on('keyup change', () =>
+		frequencyInput.on('keyup change', () => {
 			this.evaluationPlans = this.evaluationPlans.map(p =>
 				p.row_id == planId ? { ...p, frequency: frequencyInput.val() } : p
 			)
-		);
+      this.#setAddBtnState();
+    });
 
 		// *** Initiate the buttons *** //
+
+    this.#setAddBtnState();
 
 		// Initiate the remove plan button
 		const removePlanBtn = this.#dataElement('removePlanBtn', planId);
@@ -1901,19 +1776,8 @@ class EvaluationPlanForm {
 
 		// Remove plan row from the DOM
 		this.#dataElement('planRowId', planId).remove();
-	}
 
-	clearEmptyRows = () => {
-		this.evaluationPlans.forEach(ep => {
-			if (this.evaluationPlans.length > 1) {
-				const { row_id } = ep;
-				!this.#dataElement('outcomeInput', row_id).val()
-					&& !this.#dataElement('indicatorInput', row_id).val()
-					&& !this.#dataElement('collectionMethodInput', row_id).val()
-					&& !this.#dataElement('frequencyInput', row_id).val()
-					&& this.removePlanRow(row_id);
-			}
-		});
+    this.#setAddBtnState();
 	}
 
 	setEvaluationPlans = (data, method = 'reset') => {
@@ -1956,14 +1820,12 @@ class ProjectActivityForm {
 			formGroup: '',
 			buttons: {
 				add: '',
-				clear: ''
 			}
 		},
 		outcomesForm: {
 			formGroup: '',
 			buttons: {
 				add: '',
-				clear: ''
 			}
 		}
 	}) {
@@ -1974,11 +1836,9 @@ class ProjectActivityForm {
 		this.BUTTONS = {
 			topics: {
 				add: $(this.topicsForm.buttons.add),
-				clear: $(this.topicsForm.buttons.clear)
 			},
 			outcomes: {
 				add: $(this.outcomesForm.buttons.add),
-				clear: $(this.outcomesForm.buttons.clear)
 			}
 		}
 
@@ -2084,29 +1944,33 @@ class ProjectActivityForm {
 
 		const { topics: topicBtn, outcomes: outcomeBtn } = this.BUTTONS;
 
-		topicBtn.add.on('click', () => {
-			const emptyFields = [...this.topics].filter(x => !x.topic).length;
-			if(emptyFields < 10) {
-				this.addTopicFormGroup();
-			} else {
-				toastr.warning(emptyFields);
-			}
-		});
+		topicBtn.add.on('click', () => this.addTopicFormGroup());
 
-		outcomeBtn.add.on('click', () => {
-			const emptyFields = [...this.outcomes].filter(x => !x.outcome).length;
-			if(emptyFields < 10) {
-				this.addOutcomeFormGroup();
-			} else {
-				toastr.warning(emptyFields);
-			}
-		});
+		outcomeBtn.add.on('click', () => this.addOutcomeFormGroup());
 
 		// *** Default Settings *** //
 
 		this.addTopicFormGroup();
 		this.addOutcomeFormGroup();
 	}
+
+  #setAddTopicBtnState = () => {
+    this.BUTTONS.topics.add.attr('disabled', () =>
+      this.topics.reduce((a, c) => 
+        a = !this.#dataElement('topics', 'input', c.id).val().trim(), 
+        false
+      )
+    )
+  }
+
+  #setAddOutcomeBtnState = () => {
+    this.BUTTONS.outcomes.add.attr('disabled', () =>
+      this.outcomes.reduce((a, c) => 
+        a = !this.#dataElement('outcomes', 'input', c.id).val().trim(), 
+        false
+      )
+    )
+  }
 
 	/**
 	 * * Public Methods
@@ -2137,6 +2001,7 @@ class ProjectActivityForm {
 			this.topics = this.topics.map(t => 
 				t.id == formGroupId ? { ...t, topic: input.val() } : t
 			)
+      this.#setAddTopicBtnState();
 		});
 
 		// Add validation to the input
@@ -2150,6 +2015,8 @@ class ProjectActivityForm {
 		});
 
 		// *** Enable buttons *** //
+
+    this.#setAddTopicBtnState();
 
 		const removeBtn = this.#dataElement('topics', 'removeBtn', formGroupId);
 
@@ -2171,11 +2038,8 @@ class ProjectActivityForm {
 	removeTopicFormGroup = (formGroupId) => {
 		this.topics = this.topics.filter(t => t.id != formGroupId);
 		this.#dataElement('topics', 'formGroupId', formGroupId).remove();
+    this.#setAddTopicBtnState();
 	}
-
-  removeTopicEmptyFields = () => {
-    this.topics.forEach()
-  }
 
 	resetTopicsForm = () => {
 		this.topics.forEach(t => this.removeTopicFormGroup(t.id));
@@ -2217,8 +2081,9 @@ class ProjectActivityForm {
 		input.on('keyup change', () => {
 			this.outcomes = this.outcomes.map(t => 
 				t.id == formGroupId ? { ...t, outcome: input.val() } : t
-			)
-		});
+			);
+      this.#setAddOutcomeBtnState();
+    });
 
 		// Add validation to the input
 		input.rules('add', {
@@ -2231,6 +2096,8 @@ class ProjectActivityForm {
 		});
 
 		// *** Enable buttons *** //
+
+    this.#setAddOutcomeBtnState();
 
 		const removeBtn = this.#dataElement('outcomes', 'removeBtn', formGroupId);
 
@@ -2252,6 +2119,7 @@ class ProjectActivityForm {
 	removeOutcomeFormGroup = (formGroupId) => {
 		this.outcomes = this.outcomes.filter(t => t.id != formGroupId);
 		this.#dataElement('outcomes', 'formGroupId', formGroupId).remove();
+    this.#setAddOutcomeBtnState();
 	}
 
 	resetOutcomesForm = () => {

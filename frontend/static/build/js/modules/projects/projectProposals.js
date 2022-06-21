@@ -32,12 +32,21 @@ const ProjectProposals = (() => {
             file: 'projects/projectProposals.js',
             fn: 'ProjectProposals.initDataTable()',
             details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-          }, 1)
+          }, 1);
+        },
+        data: {
+          types: {
+            created_at: 'date',
+            title: 'string',
+            start_date: 'date',
+            end_date: 'date',
+            status: 'string'
+          }
         }
       },
 			columns: [
         {
-          data: 'createdAt',
+          data: 'created_at',
           visible: false,
         }, {
 					data: 'title',
@@ -52,6 +61,7 @@ const ProjectProposals = (() => {
 				}, {
 					data: null,
           width: '25%',
+          searchable: false,
           sortable: false,
 					render: data => {
             const { target_groups } = data;
@@ -99,7 +109,7 @@ const ProjectProposals = (() => {
 					data: null,
 					render: data => {
 						return `
-							<div class="dropdown text-center">
+							<div class="dropdown text-sm-center">
 
 								<div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
 									<i class="fas fa-ellipsis-h"></i>
