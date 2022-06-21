@@ -36,13 +36,13 @@ exports.viewProposal = async (req, res) => {
 exports.datatableProposal = async (req, res) => {
   try {
 
-    // let options = { where: { created_by: req.auth.id } }
+    let options = { where: { created_by: req.auth.id } }
 
-    // if (req.auth.roles.includes('Admin'))
-    //   options = {}
+    if (req.auth.roles.includes('Admin'))
+      options = {}
 
-    // else if (req.auth.roles.includes('Chief'))
-    //   options = { where: { status: { [Op.not]: 'Created' } } }
+    else if (req.auth.roles.includes('Chief'))
+      options = { where: { status: { [Op.not]: 'Created' } } }
 
 
     let data = await datatable(Projects, req.query, {include: ['memos', 'partners']})
@@ -300,6 +300,7 @@ exports.submitForEvaluationProposal = async (req, res) => {
   try {
 
     const id = req.params.id
+    const body = req.body
 
     let project = await Projects.findByPk(id, { where: { status: 'For Review' } })
 
@@ -307,11 +308,12 @@ exports.submitForEvaluationProposal = async (req, res) => {
       return res.status(404).send({ error: true, message: 'Project not found' })
 
     project.status = 'For Evaluation'
+    project.presentation_date = body.presentation_date
     await project.save()
 
     res.send({
       error: false,
-      message: 'Project is submitted For Evaluation'
+      message: 'Project is now For Evaluation'
     })
 
   } catch (error) {
