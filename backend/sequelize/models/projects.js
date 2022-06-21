@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Users, { foreignKey: 'created_by', as: 'extensionist' })
-      this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
-      // this.hasMany(models.Financial_Requirements, {foreignKey: 'project_id', as: 'financial_requirements'})
-      // this.hasMany(models.Evaluation_Plans, { foreignKey: 'project_id', as: 'evaluation_plans' })
+      this.hasOne(models.Evaluations, {foreignKey: 'project_id', as: 'evaluation'})
       this.hasMany(models.Project_Partners, { foreignKey: 'project_id', as: 'project_partners' })
+      this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
+      this.hasMany(models.Comments, { foreignKey: 'project_id', as: 'comments' })
+      this.belongsTo(models.Users, { foreignKey: 'created_by', as: 'extensionist' })
       this.belongsToMany(models.Partners, { foreignKey: 'project_id', through: models.Project_Partners, as: 'partners' })
       this.belongsToMany(models.Memos, { foreignKey: 'project_id', through: models.Project_Partners, as: 'memos' })
     }
@@ -73,7 +73,6 @@ module.exports = (sequelize, DataTypes) => {
             'For Evaluation',
             'Pending',
             'Approved',
-            'Rejected',
             'Cancelled'
           ]],
           msg: 'Invalid Status'
@@ -110,6 +109,7 @@ module.exports = (sequelize, DataTypes) => {
         return JSON.parse(this.getDataValue('evaluation_plans'))
       }
     },
+    presentation_date: DataTypes.DATEONLY,
     created_by: {
       type: DataTypes.UUID,
       allowNull: false
