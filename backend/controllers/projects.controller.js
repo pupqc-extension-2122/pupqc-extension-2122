@@ -18,6 +18,11 @@ exports.viewProposal = async (req, res) => {
         through: {
           attributes: []
         }
+      },
+      {
+        model: Comments,
+        as: 'comments',
+        include: ['user']
       }
     ]
 
