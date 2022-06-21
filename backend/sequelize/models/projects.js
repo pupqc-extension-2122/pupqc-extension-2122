@@ -73,7 +73,6 @@ module.exports = (sequelize, DataTypes) => {
             'For Evaluation',
             'Pending',
             'Approved',
-            'Rejected',
             'Cancelled'
           ]],
           msg: 'Invalid Status'
@@ -110,6 +109,7 @@ module.exports = (sequelize, DataTypes) => {
         return JSON.parse(this.getDataValue('evaluation_plans'))
       }
     },
+    presentation_date: DataTypes.DATEONLY,
     created_by: {
       type: DataTypes.UUID,
       allowNull: false

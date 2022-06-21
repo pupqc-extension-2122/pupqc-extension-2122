@@ -49,6 +49,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      presentation_date: {
+        type: Sequelize.DATEONLY
+      },
       created_by: {
         type: Sequelize.UUID,
         references: {
