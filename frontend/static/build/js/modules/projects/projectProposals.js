@@ -53,7 +53,7 @@ const ProjectProposals = (() => {
           width: '25%',
           render: (data, type, row) => {
             const displayTitle = data.length > 100
-              ? `<span title="${ title }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
+              ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
               : data
             return `<a href="${ BASE_URL_WEB }/p/proposals/${ row.id }">${ displayTitle }</a>`
           }

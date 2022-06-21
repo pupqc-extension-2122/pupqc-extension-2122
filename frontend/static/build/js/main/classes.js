@@ -171,10 +171,11 @@ class ProjectTeamForm {
 	#dataElement = (dataAttr, value) => this.form.find(`[${this.data[dataAttr]}="${value}"]`);
 
   #setAddBtnState = () => {
-    this.btn.add.attr('disabled', () =>
-      this.projectTeam.reduce((acc, cur) =>
-        acc = !this.#dataElement('teamMemberInput', cur.id).val().trim()
-      , false)
+    this.btn.add.attr('disabled',
+      this.projectTeam.some(e => {
+        const val = this.#dataElement('teamMemberInput', e.id).val().trim();
+        return !(val && val.length >= 5);  
+      })
     );
   }
 
@@ -216,12 +217,12 @@ class ProjectTeamForm {
 
 		// *** Initiate the inputs *** //
 
-		// Get the target group name if input changes
+		// Get the team member if input changes
 		input.on('keyup change', () => {
-      this.#setAddBtnState();
       this.projectTeam = this.projectTeam.map(t =>
 				t.id == formGroupId ? { ...t, team_member: input.val() } : t
-			)
+			);
+      this.#setAddBtnState();
     });
 
 		// *** Initiate the buttons *** //
@@ -461,12 +462,12 @@ class TargetGroupsForm {
   `
 
   #setAddBtnState = () => {
-    this.btn.add.attr('disabled', () =>
-      this.targetGroups.reduce((a, c) => 
-        a = !this.#dataElement('targetGroupInput', c.id).val().trim(), 
-        false
-      )
-    )
+    this.btn.add.attr('disabled',
+      this.targetGroups.some(e => {
+        const val = this.#dataElement('targetGroupInput', e.id).val().trim();
+        return !(val && val.length >= 5);  
+      })
+    );
   }
 
 	/**
@@ -1083,16 +1084,22 @@ class FinancialRequirementsForm {
 	}
 
   #setAddBudgetItemBtn = (line_item_budget_id) => {
-    this.#dataElement('addBudgetItemBtn', line_item_budget_id).attr('disabled', () => 
+    this.#dataElement('addBudgetItemBtn', line_item_budget_id).attr('disabled',
       [...this.requirements]
         .filter(x => x.line_item_budget_id == line_item_budget_id)
-        .reduce((a, { row_id }) =>
-          a = !(
-            this.#dataElement('budgetItemNameInput', row_id).val().trim()
-            && this.#dataElement('budgetItemParticularsInput', row_id).val().trim()
-            && this.#dataElement('budgetItemQtyInput', row_id).val().trim()
-            && this.#dataElement('budgetItemCostInput', row_id).val().trim()
-          ), false)
+        .some(({ row_id }) => {
+          const name = this.#dataElement('budgetItemNameInput', row_id).val().trim();
+          const particulars = this.#dataElement('budgetItemParticularsInput', row_id).val().trim();
+          const qty = this.#dataElement('budgetItemQtyInput', row_id).val().trim();
+          const cost = this.#dataElement('budgetItemCostInput', row_id).val().trim();
+
+          return (
+            !(name && name.length >= 5)
+            || !(particulars && particulars.length >= 5)
+            || !(qty && parseFloat(qty) > 0)
+            || !(cost && parseFloat(cost) > 0)
+          )
+        })
     )
   }
 
@@ -1633,13 +1640,19 @@ class EvaluationPlanForm {
 
   #setAddBtnState = () => {
     this.btn.add.attr('disabled', () => 
-      this.evaluationPlans.reduce((a, {row_id}) =>
-        a = !(
-          this.#dataElement('outcomeInput', row_id).val().trim()
-					&& this.#dataElement('indicatorInput', row_id).val().trim()
-					&& this.#dataElement('collectionMethodInput', row_id).val().trim()
-					&& this.#dataElement('frequencyInput', row_id).val().trim()
-        ), false)
+      this.evaluationPlans.some(({row_id}) => {
+        const outcome = this.#dataElement('outcomeInput', row_id).val().trim();
+        const indicator = this.#dataElement('indicatorInput', row_id).val().trim();
+        const collectionMethod = this.#dataElement('collectionMethodInput', row_id).val().trim();
+        const frequency = this.#dataElement('frequencyInput', row_id).val().trim();
+
+        return (
+          !(outcome && outcome.length >= 5)
+          || !(indicator && outcome.length >= 5)
+          || !(collectionMethod && outcome.length >= 5)
+          || !(frequency && outcome.length >= 5)
+        )
+      })
     )
   }
 
@@ -2020,19 +2033,19 @@ class ProjectActivityForm {
 
   #setAddTopicBtnState = () => {
     this.BUTTONS.topics.add.attr('disabled', () =>
-      this.topics.reduce((a, c) => 
-        a = !this.#dataElement('topics', 'input', c.id).val().trim(), 
-        false
-      )
+      this.topics.some(({id}) => { 
+        const val = this.#dataElement('topics', 'input', id).val().trim();
+        return !(val && val.length >= 5);
+      })
     )
   }
 
   #setAddOutcomeBtnState = () => {
     this.BUTTONS.outcomes.add.attr('disabled', () =>
-      this.outcomes.reduce((a, c) => 
-        a = !this.#dataElement('outcomes', 'input', c.id).val().trim(), 
-        false
-      )
+      this.outcomes.some(({id}) => {
+        const val = this.#dataElement('outcomes', 'input', id).val().trim();
+        return !(val && val.length >= 5);
+      })
     )
   }
 
