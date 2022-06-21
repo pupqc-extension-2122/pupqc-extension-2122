@@ -1930,6 +1930,41 @@ class ProjectActivityForm {
 			</div>
 		`
 	}
+
+	#removeTopicFieldModal = `
+    <div class="modal" id="removeTopicField_modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex">
+              <h1 class="mr-3 display-4">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+              </h1>
+              <div>
+                <div class="font-weight-bold mb-2">Remove topic field</div>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this topic field?<br>Your inputs can not be saved.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+            <button 
+              type="button" 
+              class="btn btn-danger" 
+              id="confirmRemoveTopicField_btn"
+              data-remove-topic-field-id=""
+            >Yes, I'm sure.</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
 	
 	/**
 	 * * Private Methods
@@ -1952,6 +1987,35 @@ class ProjectActivityForm {
 
 		this.addTopicFormGroup();
 		this.addOutcomeFormGroup();
+
+    
+		// *** For Remove Topic Field Modal *** //
+
+		if (!$('#removeTopicField_modal').length) {
+
+			// Append the Remove Target Group Field Modal to the DOM
+			$('body').append(this.#removeTopicFieldModal);
+
+			// Initialize the modal
+
+			const confirmRemoveModal = $('#removeTopicField_modal');
+			const confirmRemoveBtn = $('#confirmRemoveTopicField_btn');
+			const confirmRemoveBtnData = 'data-remove-topic-field-id';
+
+			// When remove target group field modal will hide, reset the button attirbute value
+			confirmRemoveModal.on('hide.bs.modal', () => confirmRemoveBtn.attr(confirmRemoveBtnData, ''));
+
+			// When confirming to remove target group field
+			confirmRemoveBtn.on('click', () => {
+
+				// Get the form group id from the attribute and remove the team member
+				this.removeTopicFormGroup(confirmRemoveBtn.attr(confirmRemoveBtnData));
+
+				// Hide the modal
+				confirmRemoveModal.modal('hide');
+			});
+		}
+
 	}
 
   #setAddTopicBtnState = () => {
@@ -2023,7 +2087,13 @@ class ProjectActivityForm {
 		// When user has to remove field
 		removeBtn.on('click', () => {
 			if (input.val().trim()) {
-				toastr.warning('Has value');
+        
+				// Set the form group id in the data attribute of the modal
+				$('#confirmRemoveTopicField_btn').attr('data-remove-topic-field-id', formGroupId);
+
+				// Show the confirmation modal
+				$('#removeTopicField_modal').modal('show');
+
 			} else if (this.topics.length == 1) {
 				toastr.warning('You must input at least one topic.');
 			} else {
@@ -2038,6 +2108,10 @@ class ProjectActivityForm {
 	removeTopicFormGroup = (formGroupId) => {
 		this.topics = this.topics.filter(t => t.id != formGroupId);
 		this.#dataElement('topics', 'formGroupId', formGroupId).remove();
+    
+		// If there are no target group, add new field by default
+		this.topics.length === 0 && this.addTopicFormGroup();
+
     this.#setAddTopicBtnState();
 	}
 
@@ -2046,10 +2120,31 @@ class ProjectActivityForm {
 		this.addTopicFormGroup();
 	}
 
-	setTopics = (data) => {
-		this.topics.forEach(t => this.removeTopicFormGroup(t.id));
-		console.log(data);
-		data.forEach(d => this.addTopicFormGroup(d));
+	setTopics = (data, method = 'reset') => {
+		if (data && data.length) {
+			const fn = {
+				'reset': () => {
+
+					// Remove all preset form groups
+					this.topics.forEach(({ id }) => {
+
+						// Immediately hide the tooltip from the remove button
+						this.#dataElement('topics', 'removeBtn', id).tooltip('hide');
+
+						// Remove the target group object based on id
+						this.topics = this.topics.filter(x => x.id != id);
+
+						// Remove the element from the DOM
+						this.#dataElement('topics', 'formGroupId', id).remove();
+					});
+
+					// Return a new form groups
+					data.forEach(d => this.addTopicFormGroup(d));
+				},
+				'append': () => data.forEach(d => this.addTopicFormGroup(d)),
+			}
+			fn[method]();
+		} else console.error('No data has been fetched');
 	}
 
 	getTopics = () => {

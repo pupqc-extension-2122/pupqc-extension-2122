@@ -51,12 +51,11 @@ const ProjectProposals = (() => {
         }, {
 					data: 'title',
           width: '25%',
-          render: title => {
-            if (title.length > 100) {
-              return `<span title="${ title }" data-toggle="tooltip">${ title.substring(0, 100) } ...</span>`
-            } else {
-              return title;
-            }
+          render: (data, type, row) => {
+            const displayTitle = data.length > 100
+              ? `<span title="${ title }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
+              : data
+            return `<a href="${ BASE_URL_WEB }/p/proposals/${ row.id }">${ displayTitle }</a>`
           }
 				}, {
 					data: null,
@@ -108,6 +107,17 @@ const ProjectProposals = (() => {
 				}, {
 					data: null,
 					render: data => {
+            const editable = data.status == 'Created' || data.status == 'For Revision'
+                ? `
+                  <a 
+                    class="dropdown-item"
+                    href="${ BASE_URL_WEB }/p/edit-proposal/${ data.id }" 
+                  >
+                    <span>Edit details</span>
+                  </a>
+                `
+                : ''
+
 						return `
 							<div class="dropdown text-sm-center">
 
@@ -123,6 +133,7 @@ const ProjectProposals = (() => {
 									>
 										<span>View details</span>
 									</a>
+                  ${ editable }
 									<a 
 										class="dropdown-item"
 										href="${ BASE_URL_WEB }/p/proposals/${ data.id }/activities" 
