@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.Projects, { foreignKey: 'created_by', as: 'projects' })
+      this.hasMany(models.Comments, { foreignKey: 'user_id', as: 'comments' })
       this.belongsToMany(models.Roles, { through: 'User_Roles' })
     }
 
