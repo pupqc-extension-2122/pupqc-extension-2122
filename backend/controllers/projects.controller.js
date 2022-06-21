@@ -1,5 +1,5 @@
 const {
-  Memos, Projects, Project_Partners, Project_Activities, Partners
+  Comments, Memos, Projects, Project_Partners, Project_Activities, Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
 const datatable = require('../../utils/datatableResponse')
@@ -45,7 +45,7 @@ exports.datatableProposal = async (req, res) => {
       options = { where: { status: { [Op.not]: 'Created' } } }
 
 
-    let data = await datatable(Projects, req.query, {include: ['memos', 'partners']})
+    let data = await datatable(Projects, req.query, { include: ['memos', 'partners'] })
 
     res.send(data)
 
@@ -366,19 +366,19 @@ exports.datatableProjectActivities = async (req, res) => {
 
 exports.viewProjectActivities = async (req, res) => {
   try {
-    
+
     const project_id = req.params.project_id
     const activity_id = req.params.activity_id
 
     let data = await Project_Activities.findOne({
-      where:{
+      where: {
         id: activity_id,
         project_id
       }
     })
 
     if (!data)
-      return res.status(404).send({error:true, message: 'Project or Activity not found'})
+      return res.status(404).send({ error: true, message: 'Project or Activity not found' })
 
     res.send({
       error: false,
@@ -436,14 +436,14 @@ exports.updateProjectActivities = async (req, res) => {
     const body = req.body
 
     let data = await Project_Activities.findOne({
-      where:{
+      where: {
         id: activity_id,
         project_id
       }
     })
 
     if (!data)
-      return res.status(404).send({error:true, message: 'Project or Activity not found'})
+      return res.status(404).send({ error: true, message: 'Project or Activity not found' })
 
     data.activity_name = body.activity_name
     data.topics = body.topics
@@ -461,6 +461,36 @@ exports.updateProjectActivities = async (req, res) => {
     })
 
 
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
+// ? Comments
+exports.addComment = async (req, res) => {
+  try {
+
+    const project_id = req.params.id
+
+    let project = await Projects.findByPk(project_id)
+
+    if (!project.status == 'For Review' && !project.status == 'For Revision')
+      return res.status(404).send({ error: true, message: 'Bad Request' })
+
+    let comment = await Comments.create({
+      body: req.body.body,
+      project_id,
+      user_id: req.auth.id
+    })
+
+    if (comment) {
+      res.send({
+        error: false,
+        message: 'Comment added!'
+      })
+    }
 
   } catch (error) {
     console.log(error)
