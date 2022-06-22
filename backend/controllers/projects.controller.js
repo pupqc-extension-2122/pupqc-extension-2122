@@ -1,5 +1,11 @@
 const {
-  Comments, Memos, Projects, Project_Partners, Project_Activities, Partners
+  Comments,
+  Memos,
+  Projects,
+  Project_Partners,
+  Project_Activities,
+  Project_Evaluations,
+  Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
 const datatable = require('../../utils/datatableResponse')
@@ -304,6 +310,9 @@ exports.submitForReviewProposal = async (req, res) => {
 exports.submitForEvaluationProposal = async (req, res) => {
   try {
 
+    if (!req.auth.roles.includes('Chief'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
     const id = req.params.id
     const body = req.body
 
@@ -349,6 +358,45 @@ exports.approveProposal = async (req, res) => {
     error: false,
     message: 'Proposal approved successfully!'
   });
+}
+
+// ? Evaluations
+exports.evaluateProposal = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Chief'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const project_id = req.params.project_id
+    const body = req.body
+
+    let project = await Projects.findByPk(project_id, { where: { status: 'For Evaluation' } })
+    if (!project)
+      return res.status(404).send({error: true, message: 'Project not Found'})
+    
+    let project_evaluation = await Project_Evaluations.create({
+      project_id: project.id,
+      project_title: project.title,
+      evaluation_date: body.evaluation_date,
+      evaluators: body.evaluators,
+      average_points: body.average_points
+    })
+
+    if (project_evaluation){
+      project.status = 'Pending'
+      await project.save()
+
+      res.send({
+        error:false,
+        message: 'Project Evaluation recorded'
+      })
+    }
+
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
 }
 
 
