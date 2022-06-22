@@ -1182,7 +1182,10 @@ const ProjectActivities = (() => {
           visible: false
         }, {
           data: 'activity_name',
-          width: '30%'
+          width: '30%',
+          render: (data, type, row) => {
+            return `<span class="text-primary" style="cursor: pointer" onclick="ProjectActivities.initViewMode('${ row.id }')">${ data }</span>`
+          }
         }, {
           data: null,
           searchable: false,
