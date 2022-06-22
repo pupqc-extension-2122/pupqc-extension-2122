@@ -52,6 +52,39 @@ const ProjectDetails = (() => {
           `
         }
       });
+
+      if (data.status == 'For Evaluation' && data.presentation_date) {
+        $('#projectDetails_header_status').after(() => {
+          const presentationDate = moment(data.presentation_date);
+          const formattedPresentationDate = presentationDate.format('MMMM D, YYYY (dddd)');
+          const humanizedPresentationDate = presentationDate.fromNow();
+          if (moment(presentationDate).isAfter(moment())) {
+            return `
+              <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
+                <div class="mr-2">
+                  <i class="fas fa-calendar-alt fa-fw text-info"></i>
+                </div>
+                <div>
+                  <div>The presentation has been set on <span class="font-weight-bold">${ formattedPresentationDate }</span></div>
+                  <div class="small text-muted">${ humanizedPresentationDate }</div>
+                </div>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="d-flex px-3 py-2 border border-warning mt-3 rounded" style="background: #fff1ec">
+                <div class="mr-2">
+                  <i class="fas fa-calendar-alt fa-fw text-info"></i>
+                </div>
+                <div>
+                  <div>The presentation has been set on <span class="font-weight-bold">${ formattedPresentationDate }</span></div>
+                  <div class="small text-muted">${ humanizedPresentationDate }</div>
+                </div>
+              </div>
+            `
+          }
+        });
+      }
     }
   }
 
@@ -251,6 +284,7 @@ const ProjectOptions = (() => {
   // Submission Modals
   const forApproval_modal = $('#confirmSubmitForApproval_modal');
   const setPresentationSchedule_modal = $('#setPresentationSchedule_modal');
+  const setProjectEvaluation_modal = $('#setProjectEvaluation_modal');
   const approveProject_modal = $('#confirmApproveTheProject_modal');
   const cancelProposal_modal = $('#confirmCancelTheProposal_modal');
 
@@ -336,11 +370,67 @@ const ProjectOptions = (() => {
           afterToday: 'Date must be later than today'
         }
       },
-      onSubmit: () => {
+      onSubmit: async () => {
         if (project_details.status !== 'For Review') return;
-        toastr.success('Submitted');
+
+        processing = 1;
+
+        const confirmBtn = $('#setPresentationSchedule_btn');
+
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <span class="spinner-grow spinner-grow-sm m-0" role="status">
+              <span class="sr-only">Loading...</span>
+            </span>
+          </span>
+        `);
+        
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Yes, please!');
+          processing = 0;
+        }
+
+        // Get Data
+        const fd = new FormData($('#setPresentationSchedule_form')[0]);
+
+        const data = {
+          presentation_date: moment(fd.get('presentation_date')).toISOString()
+        }
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/evaluation/${ project_details.id }`,
+          type: 'PUT',
+          data: data,
+          success: async res => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+              enableElements();
+            } else {
+              await updateStatus();
+              enableElements();
+              setPresentationSchedule_modal.modal('hide');
+              toastr.success('A presentation schedule has been set.');
+            }
+          },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: `ProjectOptions.initForEvaluation(): confirmBtn.on('click', ...)`,
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+            enableElements();
+          }
+        })
       }
     });
+  }
+
+  const initProjectEvaluation = () => {
+    const PE_form = new ProjectEvaluatorsForm($('#setProjectEvaluation_evaluatorsForm'));
   }
 
   const initApproveProject = () => {
@@ -391,7 +481,7 @@ const ProjectOptions = (() => {
           });
           enableElements();
         }
-      })
+      });
     });
 
     approveProject_modal.on('show.bs.modal', (e) => {
@@ -464,11 +554,12 @@ const ProjectOptions = (() => {
     // * ======== FOR EXTENSIONIST ======== * //
 
     initForApproval();
-    initForEvaluation();
     initCancelProposal();
-
+    
     // * ======== FOR CHIEF ======== * //
-
+    
+    initForEvaluation();
+    initProjectEvaluation();
     initApproveProject();
   }
 
@@ -625,7 +716,7 @@ const ProjectOptions = (() => {
           <button 
             type="button"
             class="btn btn-negative btn-block text-left" 
-            onclick="ProjectOptions.triggerOption('rejectTheProposal')"
+            onclick="ProjectOptions.triggerOption('requestForRevision')"
           >
             <i class="fas fa-file-pen fa-fw mr-1 text-warning"></i>
             <span>Request for revision</span>
@@ -695,9 +786,6 @@ const ProjectOptions = (() => {
       optionsTemplate = {
         'Created': () => revisingOptions(),
         'For Revision': () => revisingOptions(),
-        'For Evaluation': () => {
-          optionList.push('Submit evaluation grade');
-        },
         'Pending': () => {
           optionList.push('Cancel the proposal');
         },
@@ -710,6 +798,9 @@ const ProjectOptions = (() => {
         'For Review': () => {
           optionList.push('Set presentation schedule');
           optionList.push('Request for revision');
+        },
+        'For Evaluation': () => {
+          optionList.push('Submit evaluation grade');
         },
         'Pending': () => {
           optionList.push('Approve the project');
@@ -726,35 +817,17 @@ const ProjectOptions = (() => {
     let optionFunc = {};
     
     if (user_roles.includes('Extensionist')) {
-      
-      optionFunc.submitForApproval = () => {
-        forApproval_modal.modal('show');
-      };
-      
-      optionFunc.submitEvaluationGrade = () => {
-        alert('Pending');
-      };
-
-      optionFunc.cancelTheProposal = () => {
-        cancelProposal_modal.modal('show');
-      };
-
+      optionFunc.submitForApproval = () => forApproval_modal.modal('show');
+      optionFunc.cancelTheProposal = () => cancelProposal_modal.modal('show');
     }
 
     if (user_roles.includes('Chief')) {
-      
-      optionFunc.approveTheProposal = () => {
-        setPresentationSchedule_modal.modal('show');
+      optionFunc.approveTheProposal = () => setPresentationSchedule_modal.modal('show');
+      optionFunc.requestForRevision = () => {
+        alert('Revise');
       }
-
-      optionFunc.rejectTheProposal = () => {
-        updateStatus('Created');
-      }
-      
-      optionFunc.approveTheProject = () => {
-        approveProject_modal.modal('show');
-      }
-
+      optionFunc.submitEvaluationGrade = () => setProjectEvaluation_modal.modal('show');
+      optionFunc.approveTheProject = () => approveProject_modal.modal('show');
     }
 
     if (typeof optionFunc[option] !== "undefined") optionFunc[option]();

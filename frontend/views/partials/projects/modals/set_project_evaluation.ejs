@@ -1,0 +1,91 @@
+<%# Set Project Evaluation Modal %>
+<div class="modal fade" id="setProjectEvaluation_modal" data-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content" id="setProjectEvaluation_form">
+      <div class="modal-header">
+        <h4 class="modal-title">Set Project Evaluation</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+        <%# Date of Evaluation %>
+        <div class="form-group">
+          <label for="setProjectEvaluation_evaluationDate">
+            <span>Date of Evaluation</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group date">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="setProjectEvaluation_evaluationDate" 
+              name="presentation_date"
+              placeholder="Please select date of presentation" 
+              data-inputmask-alias="datetime"
+              data-inputmask-inputformat="mm/dd/yyyy" 
+              data-mask 
+            />
+            <div class="input-group-append">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                id="setProjectEvaluation_evaluationDate_pickerBtn"
+                data-toggle="tooltip" 
+                title="Select date of presentation"
+              >
+                <i class="fa fa-calendar-day fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <%# Evaluators %>
+        <div class="table-responsive">
+          <table class="table table-bordered" id="setProjectEvaluation_evaluatorsForm">
+            <thead>
+              <th width="75%">Evaluator</th>
+              <th width="12%">Total Points<br>(in %)</th>
+              <th width="8%" class="text-center">Remarks</th>
+              <th width="5%"></th>
+            </thead>
+            <tbody>
+              <tr data-project-evaluators-form-row="add">
+                <td colspan="4" class="text-center">
+                  <button 
+                    type="button" 
+                    class="btn btn-sm btn-success" 
+                    data-project-evaluators-form-btn="add"
+                  >
+                    <i class="fas fa-plus mr-1"></i>
+                    <span>Add row</span>
+                  </>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-right font-weight-bold">Average Score</td>
+                <td 
+                  class="text-right font-weight-bold" 
+                  data-project-evaluators-form-display="averagePoints"
+                >--</td>
+                <td 
+                  class="text-center font-weight-bold text-success"
+                  data-project-evaluators-form-display="averageRemarks"
+                >--</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Note: To be able to pass the evaluation, the project proposal should get at least 70% average points</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="setProjectEvaluation_btn">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

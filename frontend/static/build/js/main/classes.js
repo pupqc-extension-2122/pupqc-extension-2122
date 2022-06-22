@@ -2260,3 +2260,180 @@ class ProjectActivityForm {
 		this.resetOutcomesForm();
 	}
 }
+
+
+class ProjectEvaluatorsForm {
+  constructor(tableForm, buttons = {
+    add: ''
+  }) {
+    this.form = tableForm;
+
+    this.btn = {
+      add: buttons.add || this.form.find('[data-project-evaluators-form-btn="add"]')
+    }
+
+    this.evaluators = [];
+    // obj = {
+    //   row_id: uuid(),
+    //   evaluator_name: '',
+    //   points: 0,
+    // }
+
+    this.data = {
+      rowId: 'data-project-evaluators-form-row-id',
+      input: 'data-project-evaluators-form-input',
+      row: 'data-project-evaluators-form-row',
+      display: 'data-project-evaluators-form-display'
+    }
+  
+    this.#initializations();
+  }
+  
+	/**
+	 * * Template Literals
+	 */
+
+  #evaluatorRow = (rowId) => `
+    <tr ${ this.data.rowId }="${ rowId }">
+      <td>
+        <input 
+          type="text" 
+          class="form-control form-control-border"
+          name="name"
+          ${ this.data.input }="name"
+        />
+      </td>
+      <td>
+        <input 
+          type="text" 
+          class="form-control form-control-border"
+          name="points"
+          ${ this.data.input }="points"
+        />
+      </td>
+      <td>
+        <div class="text-center" ${ this.data.display }="remarks">--</div>
+      </td>
+      <td>
+        <button type="button" class="btn btn-sm btn-negative">
+          <i class="fas fa-times text-danger"></i>
+        </button>
+      </td>
+    </tr>
+  `
+
+	/**
+	 * * Private Methods
+	 */
+
+  #initializations = () => {
+    this.btn.add.on('click', () => this.addEvaluatorRow());
+
+    this.addEvaluatorRow();
+  }
+
+  #getAveragePoints = () => {
+    const averagePoints = this.form.find(`[${ this.data.display }="averagePoints"]`);
+    const remarks = this.form.find(`[${ this.data.display }="averageRemarks"]`);
+    
+    if (!this.evaluators.some(x => x.points <= 0)) {
+      let sum = this.evaluators.reduce((a, c) => a + c.points, 0);
+      let average = (sum/this.evaluators.length) || 0;
+      
+      if (average >= 1 && average <= 100) {
+        averagePoints.html(`${ average.toFixed(4) }%`);
+      } else {
+        averagePoints.html('--');
+      }
+
+      if (average >= 70 && average <= 100) {
+        remarks.html(`
+          <span class="font-weight-bold text-success text-uppercase">PASSED</span>
+        `);
+      } else if (average < 70 && average >= 1) {
+        remarks.html(`
+          <span class="font-weight-bold text-danger text-uppercase">FAILED</span>
+        `);
+      } else {
+        remarks.html('--');
+      }
+    } else {
+      averagePoints.html('--');
+      remarks.html('--');
+    }
+  }
+
+  #setAddBtnState = () => {
+    this.btn.add.attr('disabled', () =>
+      this.evaluators.some(x => {
+        const row = this.form.find(`[${ this.data.rowId }="${ x.row_id }"]`);
+        const nameInput = row.find(`[${ this.data.input }="name"]`).val().trim();
+        const pointsInput = row.find(`[${ this.data.input }="points"]`).val().trim();
+        return !nameInput || !(pointsInput && parseFloat(pointsInput) > 0);
+      })
+    )
+  }
+
+  /**
+	 * * Public Methods
+	 */
+
+  addEvaluatorRow = () => {
+
+    // Create a unique id for the row
+    const rowId = uuid();
+
+    // Push an object into the evaluators array
+    this.evaluators.push({
+      row_id: rowId,
+      name: '',
+      points: 0
+    });
+
+    // Append the row before the add row
+    this.form.find('[data-project-evaluators-form-row="add"]').before(this.#evaluatorRow(rowId));
+
+    const row = this.form.find(`[${ this.data.rowId }="${ rowId }"]`);
+
+    // *** Initialize inputs *** //
+
+    const nameInput = row.find(`[${ this.data.input }="name"]`);
+    const pointsInput = row.find(`[${ this.data.input }="points"]`);
+    const remarks = row.find(`[${ this.data.display }="remarks"]`);
+
+    const getRemarks = (points) => {
+      if (points >= 70 && points <= 100) {
+        remarks.html(`
+          <span class="font-weight-bold text-success text-uppercase">PASSED</span>
+        `);
+      } else if (points < 70 && points >= 1) {
+        remarks.html(`
+          <span class="font-weight-bold text-danger text-uppercase">FAILED</span>
+        `);
+      } else {
+        remarks.html('--');
+      }
+      this.#getAveragePoints();
+    }
+
+    nameInput.on('keyup change', () => {
+      this.evaluators = this.evaluators.map(x =>
+        x.row_id === rowId ? { ...x, name: nameInput.val() } : x
+      )
+      this.#setAddBtnState();
+    });
+
+    pointsInput.on('keyup change', () => {
+      const points = parseFloat(pointsInput.val()) || 0;
+      this.evaluators = this.evaluators.map(x =>
+        x.row_id === rowId ? { ...x, points: points } : x
+      );
+      getRemarks(points);
+      this.#setAddBtnState();
+    });
+
+    // *** Initialize buttons *** //
+    
+    this.#setAddBtnState();
+  }
+}
