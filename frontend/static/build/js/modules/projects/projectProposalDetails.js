@@ -430,6 +430,23 @@ const ProjectOptions = (() => {
   }
 
   const initProjectEvaluation = () => {
+
+    // Initialize Presentation Date
+    $app('#setProjectEvaluation_evaluationDate').initDateInput({
+      button: '#setProjectEvaluation_evaluationDate_pickerBtn'
+    });
+
+    $app('#setProjectEvaluation_form').handleForm({
+      validators: {
+        presentation_date: {
+          required: 'Please select a presentation date'
+        }
+      },
+      onSubmit:() => {
+        alert('Submiited');
+      }
+    });
+
     const PE_form = new ProjectEvaluatorsForm($('#setProjectEvaluation_evaluatorsForm'));
   }
 
@@ -553,14 +570,18 @@ const ProjectOptions = (() => {
 
     // * ======== FOR EXTENSIONIST ======== * //
 
-    initForApproval();
-    initCancelProposal();
-    
+    if (user_roles.includes('Extensionist')) {
+      initForApproval();
+      initCancelProposal();
+    }
+
     // * ======== FOR CHIEF ======== * //
-    
-    initForEvaluation();
-    initProjectEvaluation();
-    initApproveProject();
+
+    if (user_roles.includes('Chief')) {
+      initForEvaluation();
+      initProjectEvaluation();
+      initApproveProject();
+    }
   }
 
   const updateStatus = async () => {
@@ -572,9 +593,10 @@ const ProjectOptions = (() => {
           ajaxErrorHandler(result.message);
         } else {
           const data = result.data;
-  
+
           ProjectDetails.loadDetails(data);
           ProjectOptions.setOptions(data);
+
           if ($('#activities_dt').length) {
             AddProjectActivity.init(data);
             ProjectActivities.init(data);
@@ -1126,8 +1148,8 @@ const ProjectActivities = (() => {
       $('#projectActivityDetails').hide();
     });
 
-    editModal.on('show.bs.modal', () => {
-      if (project_details.status !== 'Created') return;
+    editModal.on('show.bs.modal', (e) => {
+      if (project_details.status !== 'Created') e.preventDefault();
     });
 
     editModal.on('hide.bs.modal', (e) => {

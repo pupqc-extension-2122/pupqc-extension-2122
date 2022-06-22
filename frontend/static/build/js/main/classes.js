@@ -2278,12 +2278,18 @@ class ProjectEvaluatorsForm {
     //   evaluator_name: '',
     //   points: 0,
     // }
+    
+    this.PASSING_GRADE = 70;
+
+    const dataPrefix = 'data-project-evaluators-form';
 
     this.data = {
-      rowId: 'data-project-evaluators-form-row-id',
-      input: 'data-project-evaluators-form-input',
-      row: 'data-project-evaluators-form-row',
-      display: 'data-project-evaluators-form-display'
+      rowId: `${dataPrefix}-rowid`,
+      input: `${dataPrefix}-input`,
+      row: `${dataPrefix}-row`,
+      button: `${dataPrefix}-btn`,
+      display: `${dataPrefix}-display`,
+      modal: `${dataPrefix}-modal`,
     }
   
     this.#initializations();
@@ -2293,33 +2299,80 @@ class ProjectEvaluatorsForm {
 	 * * Template Literals
 	 */
 
-  #evaluatorRow = (rowId) => `
+  #evaluatorRow = rowId => `
     <tr ${ this.data.rowId }="${ rowId }">
       <td>
         <input 
           type="text" 
           class="form-control form-control-border"
-          name="name"
+          name="name-${ rowId }"
           ${ this.data.input }="name"
+          placeholder="Type the name of the evaluator here ..."
         />
       </td>
       <td>
         <input 
           type="text" 
           class="form-control form-control-border"
-          name="points"
+          name="points-${ rowId }"
           ${ this.data.input }="points"
+          placeholder="%"
         />
       </td>
       <td>
         <div class="text-center" ${ this.data.display }="remarks">--</div>
       </td>
-      <td>
-        <button type="button" class="btn btn-sm btn-negative">
+      <td class="text-center">
+        <button 
+          type="button" 
+          class="btn btn-sm btn-negative"
+          data-toggle="tooltip"
+          title="Remove row"
+          ${ this.data.button }="removeRow"
+        >
           <i class="fas fa-times text-danger"></i>
         </button>
       </td>
     </tr>
+  `
+
+	#removeEvaluatorRowModal = () => `
+    <div class="modal" ${ this.data.modal }="removeEvaluatorRow">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex">
+              <h1 class="mr-3 display-4">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+              </h1>
+              <div>
+                <div class="font-weight-bold mb-2">Remove evaluator row</div>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this row?<br>Your inputs can not be saved.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button 
+              type="button" 
+              class="btn btn-negative" 
+              data-dismiss="modal"
+            >Cancel</button>
+            <button 
+              type="button" 
+              class="btn btn-danger" 
+              ${ this.data.button }="confirmRemoveRow" 
+              ${ this.data.rowId }=""
+            >Yes, I'm sure.</button>
+          </div>
+        </div>
+      </div>
+    </div>
   `
 
 	/**
@@ -2327,7 +2380,32 @@ class ProjectEvaluatorsForm {
 	 */
 
   #initializations = () => {
+
+    // *** Initialize buttons *** //
+
     this.btn.add.on('click', () => this.addEvaluatorRow());
+
+    // *** For remove row modal *** //
+
+    if (!$(`[${ this.data.modal }="removeEvaluatorRow"]`).length) {
+      $('body').append(this.#removeEvaluatorRowModal);
+
+      const removeModal = $(`[${ this.data.modal }="removeEvaluatorRow"]`);
+      const confirmBtn = removeModal.find(`[${ this.data.button }="confirmRemoveRow"]`);
+
+      removeModal.on('show.bs.modal', (e) => {
+        if (!confirmBtn.attr(this.data.rowId)) e.preventDefault();
+      });
+
+      confirmBtn.on('click', () => {
+        this.removeEvaluatorRow(confirmBtn.attr(this.data.rowId));
+        removeModal.modal('hide');
+      });
+
+      removeModal.on('hide.bs.modal', () => confirmBtn.attr(this.data.rowId, ''));
+    }
+
+    // *** Default Settings *** //
 
     this.addEvaluatorRow();
   }
@@ -2365,11 +2443,11 @@ class ProjectEvaluatorsForm {
 
   #setAddBtnState = () => {
     this.btn.add.attr('disabled', () =>
-      this.evaluators.some(x => {
-        const row = this.form.find(`[${ this.data.rowId }="${ x.row_id }"]`);
+      this.evaluators.some(({row_id}) => {
+        const row = this.form.find(`[${ this.data.rowId }="${ row_id }"]`);
         const nameInput = row.find(`[${ this.data.input }="name"]`).val().trim();
         const pointsInput = row.find(`[${ this.data.input }="points"]`).val().trim();
-        return !nameInput || !(pointsInput && parseFloat(pointsInput) > 0);
+        return !(nameInput && nameInput.length > 5) || !(pointsInput && parseFloat(pointsInput) > 0);
       })
     )
   }
@@ -2400,13 +2478,27 @@ class ProjectEvaluatorsForm {
     const nameInput = row.find(`[${ this.data.input }="name"]`);
     const pointsInput = row.find(`[${ this.data.input }="points"]`);
     const remarks = row.find(`[${ this.data.display }="remarks"]`);
+    
+    nameInput.rules('add', {
+      required: true,
+      messages: {
+        required: 'The name of the evaluator is required'
+      }
+    });
+
+    pointsInput.rules('add', {
+      required: true,
+      messages: {
+        required: 'Required'
+      }
+    });
 
     const getRemarks = (points) => {
-      if (points >= 70 && points <= 100) {
+      if (points >= this.PASSING_GRADE && points <= 100) {
         remarks.html(`
           <span class="font-weight-bold text-success text-uppercase">PASSED</span>
         `);
-      } else if (points < 70 && points >= 1) {
+      } else if (points < this.PASSING_GRADE && points >= 1) {
         remarks.html(`
           <span class="font-weight-bold text-danger text-uppercase">FAILED</span>
         `);
@@ -2431,9 +2523,50 @@ class ProjectEvaluatorsForm {
       getRemarks(points);
       this.#setAddBtnState();
     });
+    
+    this.#getAveragePoints();
 
     // *** Initialize buttons *** //
+
+    this.#setAddBtnState();
+
+    const removeRowBtn = row.find(`[${ this.data.button }="removeRow"]`);
+
+    removeRowBtn.on('click', () => {
+      
+      // Immediately hide the tooltip if active
+      removeRowBtn.tooltip('hide');
+
+      // Check if inputs has atleast value
+      if (nameInput.val().trim() || pointsInput.val().trim()) {
+        $(`[${ this.data.button }="confirmRemoveRow"]`).attr(this.data.rowId, rowId);
+        $(`[${ this.data.modal }="removeEvaluatorRow"]`).modal('show');
+      } else {
+        this.evaluators.length == 1
+          ? toastr.warning('Please include at least one evaluator')
+          : this.removeEvaluatorRow(rowId);
+      }
+    });
+  }
+
+  removeEvaluatorRow = (rowId) => {
+    
+    // Remove the object based on id
+    this.evaluators = this.evaluators.filter(x => x.row_id != rowId);
+
+    // Remove the row from the DOM
+    this.form.find(`[${ this.data.rowId }="${ rowId }"]`).remove();
+
+    // If there are no row, add an empty row
+    this.evaluators.length === 0 && this.addEvaluatorRow();
+
+    this.#getAveragePoints();
     
     this.#setAddBtnState();
+  }
+
+  getEvaluatorsData = () => {
+    return {
+    }
   }
 }
