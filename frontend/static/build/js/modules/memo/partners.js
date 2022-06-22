@@ -32,14 +32,19 @@ const Partnerships = (() => {
               file: 'memo/partners.js',
               fn: 'Partnerships.initDataTable()',
               details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-            },
-            1
-          )
+            }, 1);
+        },
+        data: {
+          types: {
+            created_at: 'date',
+            name: 'string',
+            status: 'string'
+          }
         }
       },
       columns: [
         {
-          data: 'createdAt', visible: false
+          data: 'created_at', visible: false
         },
         { 
           data: 'name' 

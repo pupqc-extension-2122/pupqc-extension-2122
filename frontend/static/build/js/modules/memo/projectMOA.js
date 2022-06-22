@@ -109,18 +109,10 @@ const ProjectMoa = (() => {
         notary_date: {
           required: "Please select the notary signed date.",
           notEmpty: "This field cannot be empty",
-          afterDateTime: {
-						rule: moment().subtract(1, 'days'),
-						message: 'Notary Signed date must be current or onwards.'
-					},
         },
         validity_date: {
           required: "Please select the validity date.",
           notEmpty: "This field cannot be empty",
-          afterDateTime: {
-						rule: moment().subtract(1, 'days'),
-						message: 'Validity date must be current or onwards.'
-					}
         },
         uploadDocument: {
           required: "MOA/MOU attachment is required.",

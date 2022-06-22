@@ -32,11 +32,20 @@ const ProjectMonitoring = (() => {
             fn: 'ProjectMonitoring.initDataTable()',
             details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
           }, 1);
+        },
+        data: {
+          types: {
+            created_at: 'date',
+            title: 'string',
+            start_date: 'date',
+            end_date: 'date',
+            status: 'string'
+          }
         }
       },
       columns: [
         {
-          data: 'createdAt',
+          data: 'created_at',
           sortable: false,
           visible: false
         }, {
