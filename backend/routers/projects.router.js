@@ -14,7 +14,8 @@ const {
   updateProjectActivities,
   approveProposal,
   addComment,
-  editComment
+  editComment,
+  deleteComment
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
@@ -43,4 +44,5 @@ router.put('/approve/:id', approveProposal)
 // * For comments
 router.post('/:project_id/comments/add', addComment)
 router.put('/:project_id/comments/:comment_id', editComment)
+router.delete('/:project_id/comments/:comment_id', deleteComment)
 module.exports = router

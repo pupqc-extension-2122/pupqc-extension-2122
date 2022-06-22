@@ -503,7 +503,6 @@ exports.addComment = async (req, res) => {
   }
 }
 
-// TODO: UPDATE/DELETE
 exports.editComment = async (req, res) => {
   try {
 
@@ -518,10 +517,34 @@ exports.editComment = async (req, res) => {
     comment.body = req.body.body
     await comment.save()
 
-      res.send({
-        error: false,
-        message: 'Comment updated!'
-      })
+    res.send({
+      error: false,
+      message: 'Comment updated!'
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
+exports.deleteComment = async (req, res) => {
+  try {
+
+    const project_id = req.params.project_id
+    const comment_id = req.params.comment_id
+
+    let comment = await Comments.findByPk(comment_id, { where: { project_id, user_id: req.auth.id } })
+
+    if (!comment)
+      return res.status(404).send({ error: false, message: 'Comment not found' })
+
+    await comment.destroy()
+
+    res.send({
+      error: false,
+      message: 'Comment deleted successfully'
+    })
 
   } catch (error) {
     console.log(error)
