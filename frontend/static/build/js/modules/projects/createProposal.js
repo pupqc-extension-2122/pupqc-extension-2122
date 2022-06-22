@@ -283,9 +283,7 @@
         submitBtn.attr('disabled', true);
         submitBtn.html(`
           <span class="px-3">
-            <span class="spinner-grow spinner-grow-sm m-0" role="status">
-              <span class="sr-only">Loading...</span>
-            </span>
+            <i class="fas fa-spinner fa-spin-pulse"></i>
           </span>
         `);
 

@@ -1500,46 +1500,46 @@ class EvaluationPlanForm {
       <tr ${planRowId}="${planId}">
         <td>
           <div class="form-group">
-              <input 
-                type="text" 
-                class="form-control form-control-border"
-                autocomplete="false"
-                name="outcome-${planId}"
-                ${outcomeInput}="${planId}"
-              />
+            <input 
+              type="text" 
+              class="form-control form-control-border"
+              autocomplete="false"
+              name="outcome-${planId}"
+              ${outcomeInput}="${planId}"
+            />
           </div>
         </td>
         <td>
           <div class="form-group">
-              <input 
-                type="text" 
-                class="form-control form-control-border"
-                autocomplete="false"
-                name="indicator-${planId}"
-                ${indicatorInput}="${planId}"
-              />
+            <input 
+              type="text" 
+              class="form-control form-control-border"
+              autocomplete="false"
+              name="indicator-${planId}"
+              ${indicatorInput}="${planId}"
+            />
           </div>
         </td>
         <td>
           <div class="form-group">
-              <input 
-                type="text" 
-                class="form-control form-control-border"
-                autocomplete="false"
-                name="data_collection_method-${planId}"
-                ${collectionMethodInput}="${planId}"
-              />
+            <input 
+              type="text" 
+              class="form-control form-control-border"
+              autocomplete="false"
+              name="data_collection_method-${planId}"
+              ${collectionMethodInput}="${planId}"
+            />
           </div>
         </td>
         <td>
           <div class="form-group">
-              <input 
-                type="text" 
-                class="form-control form-control-border"
-                autocomplete="false"
-                name="frequency-${planId}"
-                ${frequencyInput}="${planId}"
-              />
+            <input 
+              type="text" 
+              class="form-control form-control-border"
+              autocomplete="false"
+              name="frequency-${planId}"
+              ${frequencyInput}="${planId}"
+            />
           </div>
         </td>
         <td class="text-center">
@@ -2262,7 +2262,7 @@ class ProjectActivityForm {
 }
 
 
-class ProjectEvaluatorsForm {
+class ProjectEvaluationForm {
   constructor(tableForm, buttons = {
     add: ''
   }) {
@@ -2302,22 +2302,26 @@ class ProjectEvaluatorsForm {
   #evaluatorRow = rowId => `
     <tr ${ this.data.rowId }="${ rowId }">
       <td>
-        <input 
-          type="text" 
-          class="form-control form-control-border"
-          name="name-${ rowId }"
-          ${ this.data.input }="name"
-          placeholder="Type the name of the evaluator here ..."
-        />
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-control form-control-border"
+            name="name-${ rowId }"
+            ${ this.data.input }="name"
+            placeholder="Type the name of the evaluator here ..."
+          />
+        </div>
       </td>
       <td>
-        <input 
-          type="text" 
-          class="form-control form-control-border"
-          name="points-${ rowId }"
-          ${ this.data.input }="points"
-          placeholder="%"
-        />
+        <div class="form-group">
+          <input 
+            type="text" 
+            class="form-control form-control-border"
+            name="points-${ rowId }"
+            ${ this.data.input }="points"
+            placeholder="%"
+          />
+        </div>
       </td>
       <td>
         <div class="text-center" ${ this.data.display }="remarks">--</div>
@@ -2481,15 +2485,23 @@ class ProjectEvaluatorsForm {
     
     nameInput.rules('add', {
       required: true,
+      minlength: 5,
       messages: {
-        required: 'The name of the evaluator is required'
+        required: 'The name of the evaluator is required',
+        minlength: 'Your input is an invalid name',
       }
     });
 
     pointsInput.rules('add', {
       required: true,
+      number: true,
+      min: 1,
+      max: 100,
       messages: {
-        required: 'Required'
+        required: 'Required',
+        number: 'Invalid value',
+        min: 'Invalid value',
+        max: 'Invalid value',
       }
     });
 
@@ -2565,8 +2577,18 @@ class ProjectEvaluatorsForm {
     this.#setAddBtnState();
   }
 
-  getEvaluatorsData = () => {
+  getEvaluationData = () => {
+    const averagePoints = (this.evaluators.reduce((a, c) => a + c.points, 0) / this.evaluators.length).toFixed(4);
     return {
+      evaluation: this.evaluators.map(e => {
+        let y = {...e};
+        delete y.row_id;
+        return y;
+      }),
+      average: {
+        points: averagePoints,
+        remarks: averagePoints >= 70 ? 'PASSED' : 'FAILED',
+      } 
     }
   }
 }

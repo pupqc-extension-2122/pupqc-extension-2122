@@ -60,7 +60,7 @@ const ProjectDetails = (() => {
           const humanizedPresentationDate = presentationDate.fromNow();
           if (moment(presentationDate).isAfter(moment())) {
             return `
-              <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
+              <div id="presentationDate_notif" class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
                 <div class="mr-2">
                   <i class="fas fa-calendar-alt fa-fw text-info"></i>
                 </div>
@@ -72,9 +72,9 @@ const ProjectDetails = (() => {
             `;
           } else {
             return `
-              <div class="d-flex px-3 py-2 border border-warning mt-3 rounded" style="background: #fff1ec">
+              <div id="presentationDate_notif" class="d-flex px-3 py-2 border border-warning mt-3 rounded" style="background: #fff1ec">
                 <div class="mr-2">
-                  <i class="fas fa-calendar-alt fa-fw text-info"></i>
+                  <i class="fas fa-calendar-alt fa-fw text-warning"></i>
                 </div>
                 <div>
                   <div>The presentation has been set on <span class="font-weight-bold">${ formattedPresentationDate }</span></div>
@@ -84,6 +84,8 @@ const ProjectDetails = (() => {
             `
           }
         });
+      } else {
+        if ($('#presentationDate_notif').length) $('#presentationDate_notif').remove();
       }
     }
   }
@@ -305,9 +307,7 @@ const ProjectOptions = (() => {
       confirmBtn.attr('disabled', true);
       confirmBtn.html(`
         <span class="px-3">
-          <span class="spinner-grow spinner-grow-sm m-0" role="status">
-            <span class="sr-only">Loading...</span>
-          </span>
+          <i class="fas fa-spinner fa-spin-pulse"></i>
         </span>
       `);
       
@@ -381,9 +381,7 @@ const ProjectOptions = (() => {
         confirmBtn.attr('disabled', true);
         confirmBtn.html(`
           <span class="px-3">
-            <span class="spinner-grow spinner-grow-sm m-0" role="status">
-              <span class="sr-only">Loading...</span>
-            </span>
+            <i class="fas fa-spinner fa-spin-pulse"></i>
           </span>
         `);
         
@@ -424,13 +422,15 @@ const ProjectOptions = (() => {
             });
             enableElements();
           }
-        })
+        });
       }
     });
   }
 
   const initProjectEvaluation = () => {
 
+    let PE_form;
+    
     // Initialize Presentation Date
     $app('#setProjectEvaluation_evaluationDate').initDateInput({
       button: '#setProjectEvaluation_evaluationDate_pickerBtn'
@@ -442,12 +442,65 @@ const ProjectOptions = (() => {
           required: 'Please select a presentation date'
         }
       },
-      onSubmit:() => {
-        alert('Submiited');
+      onSubmit: async () => {
+        if (project_details.status !== 'For Evaluation') return;
+
+        processing = 1;
+
+        const confirmBtn = $('#setProjectEvaluation_btn');
+
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+        
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Yes, please!');
+          processing = 0;
+        }
+
+        // Get the data
+        const fd = new FormData($('#setProjectEvaluation_form')[0]);
+        const evaluationData = PE_form.getEvaluationData();
+        const data = {
+          evaluation_date: moment(fd.get('evaluation_date')).toISOString(),
+          evaluators: evaluationData.evaluation,
+          average_points: evaluationData.average.points,
+        }
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/${ project_details.id }/evaluate`,
+          type: 'POST',
+          data: data,
+          success: async res => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+              enableElements();
+            } else {
+              await updateStatus();
+              enableElements();
+              setProjectEvaluation_modal.modal('hide');
+              toastr.success('An evaluation has been saved.');
+            }
+          },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: `ProjectOptions.initProjectEvaluation(): confirmBtn.on('click', ...)`,
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+            enableElements();
+          }
+        });
       }
     });
 
-    const PE_form = new ProjectEvaluatorsForm($('#setProjectEvaluation_evaluatorsForm'));
+    PE_form = new ProjectEvaluationForm($('#setProjectEvaluation_evaluatorsForm'));
   }
 
   const initApproveProject = () => {
@@ -463,9 +516,7 @@ const ProjectOptions = (() => {
       confirmBtn.attr('disabled', true);
       confirmBtn.html(`
         <span class="px-3">
-          <span class="spinner-grow spinner-grow-sm m-0" role="status">
-            <span class="sr-only">Loading...</span>
-          </span>
+          <i class="fas fa-spinner fa-spin-pulse"></i>
         </span>
       `);
     
@@ -521,9 +572,7 @@ const ProjectOptions = (() => {
       confirmBtn.attr('disabled', true);
       confirmBtn.html(`
         <span class="px-3">
-          <span class="spinner-grow spinner-grow-sm m-0" role="status">
-            <span class="sr-only">Loading...</span>
-          </span>
+          <i class="fas fa-spinner fa-spin-pulse"></i>
         </span>
       `);
 
@@ -992,9 +1041,7 @@ const AddProjectActivity = (() => {
     saveBtn.attr('disabled', true);
     saveBtn.html(`
       <span class="px-3">
-        <span class="spinner-grow spinner-grow-sm m-0" role="status">
-          <span class="sr-only">Loading...</span>
-        </span>
+        <i class="fas fa-spinner fa-spin-pulse"></i>
       </span>
     `);
 
@@ -1323,9 +1370,7 @@ const ProjectActivities = (() => {
     saveBtn.attr('disabled', true);
     saveBtn.html(`
       <span class="px-3">
-        <span class="spinner-grow spinner-grow-sm m-0" role="status">
-          <span class="sr-only">Loading...</span>
-        </span>
+        <i class="fas fa-spinner fa-spin-pulse"></i>
       </span>
     `);
 
