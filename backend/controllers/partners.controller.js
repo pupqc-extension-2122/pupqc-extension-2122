@@ -107,7 +107,6 @@ exports.createPartner = async (req, res) => {
       include: {
         model: Memos,
         as: 'memos',
-        attributes: { exclude: ['id'] },
         limit: 1,
         order: [['validity_date', 'DESC']]
       }
