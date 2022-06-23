@@ -457,7 +457,7 @@ const ProjectOptions = (() => {
         const fd = new FormData($('#setPresentationSchedule_form')[0]);
 
         const data = {
-          presentation_date: moment(fd.get('presentation_date')).toISOString(true)
+          presentation_date: fd.get('presentation_date')
         }
 
         await $.ajax({
@@ -533,7 +533,7 @@ const ProjectOptions = (() => {
         const fd = new FormData($('#setProjectEvaluation_form')[0]);
         const evaluationData = PE_form.getEvaluationData();
         const data = {
-          evaluation_date: moment(fd.get('evaluation_date')).toISOString(true),
+          evaluation_date: fd.get('evaluation_date'),
           evaluators: evaluationData.evaluation,
           average_points: evaluationData.average.points,
         }
@@ -1150,8 +1150,8 @@ const AddProjectActivity = (() => {
     const data = {
       activity_name: fd.get('title'),
       ...PA_form.getActivityData(),
-      start_date: moment(fd.get('start_date')).toISOString(true),
-      end_date: moment(fd.get('end_date')).toISOString(true),
+      start_date: fd.get('start_date'),
+      end_date: fd.get('end_date'),
       details: fd.get('details'),
       status: 'Not evaluated'
     }
@@ -1424,7 +1424,8 @@ const ProjectActivities = (() => {
           render: data => {
 
             const editOption = () => {
-              return user_roles.includes('Extensionist') && project_details.status == 'Created'
+              return user_roles.includes('Extensionist') && (project_details.status == 'Created' || project_details.status == 'For Revision'
+)
                 ? `
                   <button
                     type="button"
@@ -1548,8 +1549,8 @@ const ProjectActivities = (() => {
     const data = {
       activity_name: fd.get('title'),
       ...PA_form.getActivityData(),
-      start_date: moment(fd.get('start_date')).toISOString(true),
-      end_date: moment(fd.get('end_date')).toISOString(true),
+      start_date: fd.get('start_date'),
+      end_date: fd.get('end_date'),
       details: fd.get('details')
     }
     

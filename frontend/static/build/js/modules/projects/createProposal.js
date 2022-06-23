@@ -50,8 +50,8 @@
       
       if (start_date && end_date) {
         getPartners({
-          start_date: moment(start_date).toISOString(true),
-          end_date: moment(end_date).toISOString(true)
+          start_date: start_date,
+          end_date: end_date
         });
       }
     });
@@ -117,6 +117,7 @@
   }
 
   const getPartners = async (params) => {
+    console.log(params);
     await $.ajax({
       url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
       type: 'GET',
@@ -261,6 +262,7 @@
         },
         start_date: {
           required: "Please select a date when the project will start.",
+          dateISO: "Your input is an invalid date",
           beforeDateTimeSelector: {
             rule: '#addProject_endDate',
             message: 'The start date must be earlier than end date.'
@@ -268,6 +270,7 @@
         },
         end_date: {
           required: "Please select a date when the project will end.",
+          dateISO: "Your input is an invalid date",
           afterDateTimeSelector: {
             rule: '#addProject_startDate',
             message: 'The end date must be later than the start date.'
@@ -356,8 +359,8 @@
       team_members: PT_form.getTeamMembers(),
       target_groups: TG_form.getTargetGroups(),
       cooperating_agencies: CA_form.getSelectedCooperatingAgencies(),
-      start_date: '' || moment(fd.get('start_date')).toISOString(true),
-      end_date: '' || moment(fd.get('end_date')).toISOString(true),
+      start_date: '' || fd.get('start_date'),
+      end_date: '' || fd.get('end_date'),
       impact_statement: fd.get('impact_statement'),
       summary: fd.get('summary'),
       financial_requirements: FR_form.getFinancialRequirements().requirements,

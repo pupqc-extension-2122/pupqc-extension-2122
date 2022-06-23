@@ -66,13 +66,11 @@ const ProjectMoa = (() => {
           }
         },
         error: (xhr, status, error) => {
-          ajaxErrorHandler(
-            {
-              file: 'ProjectMOA.js',
-              fn: 'ProjectMoa.initialization()',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText
-            }
-          )
+          ajaxErrorHandler({
+            file: 'ProjectMOA.js',
+            fn: 'ProjectMoa.initialization()',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText
+          })
         }
       });
     });
@@ -113,10 +111,6 @@ const ProjectMoa = (() => {
         organization:  {
           required: "The organization is required.",
           notEmpty: "This field cannot be empty.",
-          minlength: {
-            rule: 5,
-            message: "Make sure you type the full name of the organization."
-          }
         },
         pup_REPD: {
           required: "The name of PUP REPD Representative is required.",
@@ -154,9 +148,7 @@ const ProjectMoa = (() => {
         submitBtn.attr('disabled', true);
         submitBtn.html(`
           <span class="px-3">
-            <span class="spinner-grow spinner-grow-sm m-0" role="status">
-              <span class="sr-only">Loading...</span>
-            </span>
+            <i class="fas fa-spinner fa-spin-pulse"></i>
           </span>
         `);
 
@@ -171,12 +163,10 @@ const ProjectMoa = (() => {
           representative_partner: fd.get('representative'),
           representative_pup: fd.get('pup_REPD'),
           organization_id: fd.get('organization'),
-          notarized_date: moment(fd.get('notary_date')).toISOString(true),
-          validity_date: moment(fd.get('validity_date')).toISOString(true),
+          notarized_date: fd.get('notary_date'),
+          validity_date: fd.get('validity_date'),
           duration: 3
         }
-
-        console.log(data);
 
         $.ajax({
           url: `${ BASE_URL_API }/partners/create`,

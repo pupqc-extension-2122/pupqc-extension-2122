@@ -289,6 +289,9 @@ const $app = (selector) => {
 		inputmask = {},
 	}) => {
 
+    const DATE_FORMAT = 'yyyy-mm-dd';
+    const MOMENT_DATE_FORMAT = 'YYYY-MM-DD';
+
 		/**
 		 * For Date Range Picker
 		 */
@@ -321,7 +324,7 @@ const $app = (selector) => {
 
 		// Initialize default options
 		let _inputmask = {
-			placeholder: 'mm/dd/yyyy',
+			placeholder: DATE_FORMAT,
 		}
 
 		// Reconfigure the options if set
@@ -338,11 +341,11 @@ const $app = (selector) => {
 			btn.daterangepicker(_daterangepicker);
 
 			// Initialize Input Mask
-			input.inputmask('mm/dd/yyyy', _inputmask);
+			input.inputmask(DATE_FORMAT, _inputmask);
 
 			// On Button Apply
 			btn.on('apply.daterangepicker', (ev, { startDate }) => {
-				input.val(startDate.format('MM/DD/YYYY'));
+        input.val(startDate.format(MOMENT_DATE_FORMAT));
 				input.trigger('change');
 				input.valid();
 			});
@@ -353,7 +356,7 @@ const $app = (selector) => {
 				input.trigger('change');
 				input.valid();
 				const element = btn.data('daterangepicker');
-				const dateToday = moment().format('MM/DD/YYYY');
+				const dateToday = moment().format(MOMENT_DATE_FORMAT);
 				element.setStartDate(dateToday);
 				element.setEndDate(dateToday);
 			});
@@ -363,10 +366,11 @@ const $app = (selector) => {
 				const value = input.val();
 				const element = btn.data('daterangepicker');
 				if (value) {
-					element.setStartDate(value);
-					element.setEndDate(value);
+          const val = moment(value).toDate();
+					element.setStartDate(val);
+					element.setEndDate(val);
 				} else {
-					const dateToday = moment().format('MM/DD/YYYY');
+					const dateToday = moment().toDate();
 					element.setStartDate(dateToday);
 					element.setEndDate(dateToday);
 				}

@@ -312,17 +312,17 @@
 	}
 
 	const getProjectDetailsData = () => {
-		const formData = new FormData($(formSelector)[0]);
+		const fd = new FormData($(formSelector)[0]);
 		return {
-			title: formData.get('title'),
-			implementer: formData.get('implementer'),
+			title: fd.get('title'),
+			implementer: fd.get('implementer'),
 			team_members: PT_form.getTeamMembers(),
 			target_groups: TG_form.getTargetGroups(),
 			cooperating_agencies: CA_form.getSelectedCooperatingAgencies(),
-			start_date: '' || moment(formData.get('start_date')).toISOString(true),
-			end_date: '' || moment(formData.get('end_date')).toISOString(true),
-			impact_statement: formData.get('impact_statement'),
-			summary: formData.get('summary'),
+			start_date: '' || fd.get('start_date'),
+			end_date: '' || fd.get('end_date'),
+			impact_statement: fd.get('impact_statement'),
+			summary: fd.get('summary'),
 			financial_requirements: FR_form.getFinancialRequirements().requirements,
 			evaluation_plans: EP_form.getEvaluationPlans()
 		}
