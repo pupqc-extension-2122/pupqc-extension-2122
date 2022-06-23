@@ -1223,6 +1223,8 @@ const ProjectActivities = (() => {
       if (project_details.status !== 'Created') e.preventDefault();
     });
 
+    editModal.on('shown.bs.modal', () => $(editFormSelector).valid());
+
     editModal.on('hide.bs.modal', (e) => {
       if (processing) e.preventDefault();
     });
@@ -1265,7 +1267,9 @@ const ProjectActivities = (() => {
         data: {
           types: {
             created_at: 'date',
-            activity_name: 'string'
+            activity_name: 'string',
+            start_date: 'date',
+            end_date: 'date'
           }
         }
       },
@@ -1275,7 +1279,7 @@ const ProjectActivities = (() => {
           visible: false
         }, {
           data: 'activity_name',
-          width: '30%',
+          width: '25%',
           render: (data, type, row) => {
             return `<span class="text-primary" style="cursor: pointer" onclick="ProjectActivities.initViewMode('${ row.id }')">${ data }</span>`
           }
@@ -1283,7 +1287,7 @@ const ProjectActivities = (() => {
           data: null,
           searchable: false,
           sortable: false,
-          width: '30%',
+          width: '25%',
           render: data => {
             const topics = data.topics;
             const length = topics.length;
@@ -1299,18 +1303,60 @@ const ProjectActivities = (() => {
             }
           }
         }, {
-          data: null,
-          searchable: false,
-          sortable: false,
-          render: ({ start_date, end_date }) => {
+          data: 'start_date',
+          width: '22.5%',
+          render: (data, type, row) => {
+            const start_date = data;
+            const needEdit = () => {
+              return !moment(start_date).isBetween(
+                moment(project_details.start_date), 
+                moment(project_details.end_date),
+                undefined,
+                '[]'
+              )
+                ? `
+                  <i 
+                    class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                    style="--fa-animation-duration: 1s;"
+                    data-toggle="tooltip" 
+                    title="The start date should be within the project timeline"
+                  ></i>
+                ` : ''
+            }
             return `
-              <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
-              <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+              <div>${ needEdit() }${formatDateTime(start_date, 'Date')}</div>
+              <div class="small text-muted">${ fromNow(start_date) }</div>
+            `
+          }
+        }, {
+          data: 'end_date',
+          width: '22.5%',
+          render: (data, type, row) => {
+            const end_date = data;
+            const needEdit = () => {
+              return !moment(end_date).isBetween(
+                moment(project_details.start_date), 
+                moment(project_details.end_date),
+                undefined,
+                '[]'
+              )
+                ? `
+                  <i 
+                    class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                    style="--fa-animation-duration: 1s;"
+                    data-toggle="tooltip" 
+                    title="The end date should be within the project timeline"
+                  ></i>
+                ` : ''
+            }
+            return `
+              <div>${ needEdit() }${formatDateTime(end_date, 'Date')}</div>
+              <div class="small text-muted">${ fromNow(end_date) }</div>
             `
           }
         }, {
           data: null,
-          width: '10%',
+          width: '5%',
           render: data => {
 
             const editOption = () => {
@@ -1522,9 +1568,74 @@ const ProjectActivities = (() => {
             },
             '#projectActivityDetails_timeframe': () => {
               if (start_date && end_date) {
+                const needStartDateEdit = () => {
+                  return !moment(start_date).isBetween(
+                    moment(project_details.start_date), 
+                    moment(project_details.end_date),
+                    undefined,
+                    '[]'
+                  )
+                    ? `
+                      <i 
+                        class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                        style="--fa-animation-duration: 1s;"
+                        data-toggle="tooltip" 
+                        title="The start date should be within the project timeline"
+                      ></i>
+                    ` : ''
+                }
+                const needEndDateEdit = () => {
+                  return !moment(end_date).isBetween(
+                    moment(project_details.start_date), 
+                    moment(project_details.end_date),
+                    undefined,
+                    '[]'
+                  )
+                    ? `
+                      <i 
+                        class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                        style="--fa-animation-duration: 1s;"
+                        data-toggle="tooltip" 
+                        title="The end date should be within the project timeline"
+                      ></i>
+                    ` : ''
+                }
+                const getDuration = () => {
+                  if (moment(start_date).isSame(moment(end_date))) {
+                    return 'in the whole day';
+                  } else {
+                    return moment(start_date).to(moment(end_date), true);
+                  }
+                }
                 return `
-                  <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
-                  <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+                  <div class="ml-2 ml-lg-0 row">
+                    <div class="pl-0 col-4 col-lg-2">
+                      <div class="font-weight-bold">Start Date:</div>
+                    </div>
+                    <div class="col-8 col-lg-10">
+                      <div>${ needStartDateEdit() }${ moment(start_date).format('MMMM D, YYYY (dddd)') }</div>
+                      <div class="small text-muted">${ fromNow(start_date) }</div>
+                    </div>
+
+                    <div class="col-12"><div class="mt-2"></div></div>
+
+                    <div class="pl-0 col-4 col-lg-2">
+                      <div class="font-weight-bold">End Date:</div>
+                    </div>
+                    <div class="col-8 col-lg-10">
+                      <div>${ needEndDateEdit() }${ moment(end_date).format('MMMM D, YYYY (dddd)') }</div>
+                      <div class="small text-muted">${ fromNow(end_date) }</div>
+                    </div>
+
+                    <div class="col-12"><div class="mt-2"></div></div>
+
+                    <div class="pl-0 col-4 col-lg-2">
+                      <div class="font-weight-bold">Duration:</div>
+                    </div>
+                    <div class="col-8 col-lg-10">
+                      <div>Approximately ${ getDuration() }</div>
+                    </div>
+                  </div>
                 `
               } else return noContentTemplate('No dates have been set up.');
             },

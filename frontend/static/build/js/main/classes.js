@@ -1999,6 +1999,41 @@ class ProjectActivityForm {
       </div>
     </div>
   `
+
+	#removeOutcomeFieldModal = `
+  <div class="modal" id="removeOutcomeField_modal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Confirmation</h4>
+          <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex">
+            <h1 class="mr-3 display-4">
+              <i class="fas fa-exclamation-triangle text-warning"></i>
+            </h1>
+            <div>
+              <div class="font-weight-bold mb-2">Remove outcome field</div>
+              <p>You've already entered some data here!<br>Are you sure you want to remove this outcome field?<br>Your inputs can not be saved.</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+          <button 
+            type="button" 
+            class="btn btn-danger" 
+            id="confirmRemoveOutcomeField_btn"
+            data-remove-outcome-field-id=""
+          >Yes, I'm sure.</button>
+        </div>
+      </div>
+    </div>
+  </div>
+`
 	
 	/**
 	 * * Private Methods
@@ -2027,7 +2062,7 @@ class ProjectActivityForm {
 
 		if (!$('#removeTopicField_modal').length) {
 
-			// Append the Remove Target Group Field Modal to the DOM
+			// Append the Remove Topic Field Modal to the DOM
 			$('body').append(this.#removeTopicFieldModal);
 
 			// Initialize the modal
@@ -2044,6 +2079,33 @@ class ProjectActivityForm {
 
 				// Get the form group id from the attribute and remove the team member
 				this.removeTopicFormGroup(confirmRemoveBtn.attr(confirmRemoveBtnData));
+
+				// Hide the modal
+				confirmRemoveModal.modal('hide');
+			});
+		}
+
+		// *** For Remove Outcome Field Modal *** //
+
+		if (!$('#removeOutcomeField_modal').length) {
+
+			// Append the Remove Outcome Field Modal to the DOM
+			$('body').append(this.#removeOutcomeFieldModal);
+
+			// Initialize the modal
+
+			const confirmRemoveModal = $('#removeOutcomeField_modal');
+			const confirmRemoveBtn = $('#confirmRemoveOutcomeField_btn');
+			const confirmRemoveBtnData = 'data-remove-outcome-field-id';
+
+			// When remove target group field modal will hide, reset the button attirbute value
+			confirmRemoveModal.on('hide.bs.modal', () => confirmRemoveBtn.attr(confirmRemoveBtnData, ''));
+
+			// When confirming to remove target group field
+			confirmRemoveBtn.on('click', () => {
+
+				// Get the form group id from the attribute and remove the team member
+				this.removeOutcomeFormGroup(confirmRemoveBtn.attr(confirmRemoveBtnData));
 
 				// Hide the modal
 				confirmRemoveModal.modal('hide');
@@ -2236,8 +2298,14 @@ class ProjectActivityForm {
 
 		// When user has to remove field
 		removeBtn.on('click', () => {
-			if (input.val().trim) {
-				toastr.warning('Has value');
+			if (input.val().trim()) {
+        
+				// Set the form group id in the data attribute of the modal
+				$('#confirmRemoveOutcomeField_btn').attr('data-remove-outcome-field-id', formGroupId);
+
+				// Show the confirmation modal
+				$('#removeOutcomeField_modal').modal('show');
+
 			} else if (this.outcomes.length == 1) {
 				toastr.warning('You must input at least one outcome.');
 			} else {
@@ -2252,6 +2320,10 @@ class ProjectActivityForm {
 	removeOutcomeFormGroup = (formGroupId) => {
 		this.outcomes = this.outcomes.filter(t => t.id != formGroupId);
 		this.#dataElement('outcomes', 'formGroupId', formGroupId).remove();
+
+		// If there are no outcomes, add new field by default
+		this.outcomes.length === 0 && this.addOutcomeFormGroup();
+
     this.#setAddOutcomeBtnState();
 	}
 
@@ -2260,9 +2332,31 @@ class ProjectActivityForm {
 		this.addOutcomeFormGroup();
 	}
 
-	setOutcomes = (data) => {
-		this.outcomes.forEach(t => this.removeOutcomeFormGroup(t.id));
-		data.forEach(d => this.addOutcomeFormGroup(d));
+	setOutcomes = (data, method = 'reset') => {
+    if (data && data.length) {
+			const fn = {
+				'reset': () => {
+
+					// Remove all preset form groups
+					this.outcomes.forEach(({ id }) => {
+
+						// Immediately hide the tooltip from the remove button
+						this.#dataElement('outcomes', 'removeBtn', id).tooltip('hide');
+
+						// Remove the target group object based on id
+						this.outcomes = this.outcomes.filter(x => x.id != id);
+
+						// Remove the element from the DOM
+						this.#dataElement('outcomes', 'formGroupId', id).remove();
+					});
+
+					// Return a new form groups
+					data.forEach(d => this.addOutcomeFormGroup(d));
+				},
+				'append': () => data.forEach(d => this.addOutcomeFormGroup(d)),
+			}
+			fn[method]();
+		} else console.error('No data has been fetched');
 	}
 
 	getOutcomes = () => {
