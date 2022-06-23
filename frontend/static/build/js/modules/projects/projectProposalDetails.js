@@ -285,6 +285,7 @@ const ProjectOptions = (() => {
 
   // Submission Modals
   const forApproval_modal = $('#confirmSubmitForApproval_modal');
+  const forRevision_modal = $('#confirmRequestForRevision_modal');
   const setPresentationSchedule_modal = $('#setPresentationSchedule_modal');
   const setProjectEvaluation_modal = $('#setProjectEvaluation_modal');
   const approveProject_modal = $('#confirmApproveTheProject_modal');
@@ -348,6 +349,62 @@ const ProjectOptions = (() => {
     });
 
     forApproval_modal.on('hide.bs.modal', (e) => processing && e.preventDefault());
+    
+  }
+
+  const initForRevision = () => {
+    const confirmBtn = $('#confirmRequestForRevision_btn');
+    
+    confirmBtn.on('click', async () => {
+      if (project_details.status != 'For Review') return;
+
+      processing = 1;
+      
+      // Disable elements
+      confirmBtn.attr('disabled', true);
+      confirmBtn.html(`
+        <span class="px-3">
+          <i class="fas fa-spinner fa-spin-pulse"></i>
+        </span>
+      `);
+      
+      // Enable elements function
+      const enableElements = () => {
+        confirmBtn.attr('disabled', false);
+        confirmBtn.html('Yes, please!');
+        processing = 0;
+      }
+
+      await $.ajax({
+        url: `${ BASE_URL_API }/projects/revise/${ project_details.id }`,
+        type: 'PUT',
+        success: async res => {
+          enableElements();
+          if (res.error) {
+            forApproval_modal.modal('hide');
+            toastr.warning(res.message);
+          } else {
+            await updateStatus();
+            forRevision_modal.modal('hide');
+            toastr.success('Your request of project revision has been successfully saved.');
+          }
+        }, 
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/projectProposalDetails.js',
+            fn: `ProjectOptions.initForRevision(): confirmBtn.on('click', ...)`,
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          });
+          enableElements();
+        }
+      });
+    });
+
+    forRevision_modal.on('show.bs.modal', (e) => {
+      if (!project_details.status == 'For Review') e.preventDefault();
+    });
+
+    forRevision_modal.on('hide.bs.modal', (e) => processing && e.preventDefault());
     
   }
 
@@ -627,6 +684,7 @@ const ProjectOptions = (() => {
     // * ======== FOR CHIEF ======== * //
 
     if (user_roles.includes('Chief')) {
+      initForRevision();
       initForEvaluation();
       initProjectEvaluation();
       initApproveProject();
@@ -894,9 +952,7 @@ const ProjectOptions = (() => {
 
     if (user_roles.includes('Chief')) {
       optionFunc.approveTheProposal = () => setPresentationSchedule_modal.modal('show');
-      optionFunc.requestForRevision = () => {
-        alert('Revise');
-      }
+      optionFunc.requestForRevision = () => forRevision_modal.modal('show');
       optionFunc.submitEvaluationGrade = () => setProjectEvaluation_modal.modal('show');
       optionFunc.approveTheProject = () => approveProject_modal.modal('show');
     }

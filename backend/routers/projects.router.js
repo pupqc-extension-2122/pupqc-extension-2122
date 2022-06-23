@@ -2,6 +2,7 @@ let router = require('express').Router()
 const {
   createProject,
   cancelProposal,
+  requestForRevision,
   viewProposal,
   updateProject,
   createProjectActivities,
@@ -37,6 +38,7 @@ router.put('/:project_id/activities/:activity_id', updateProjectActivities)
 
 // * For submission
 router.put('/cancel/:id', cancelProposal)
+router.put('/revise/:id', requestForRevision)
 router.put('/review/:id', submitForReviewProposal)
 router.put('/evaluation/:id', submitForEvaluationProposal)
 router.put('/approve/:id', approveProposal)

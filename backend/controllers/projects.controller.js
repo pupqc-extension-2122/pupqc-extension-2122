@@ -274,6 +274,30 @@ exports.cancelProposal = async (req, res) => {
   })
 }
 
+exports.requestForRevision = async (req, res) => {
+  if (!req.auth.roles.includes('Chief'))
+    return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+  let id = req.params.id
+
+  let proposal = await Projects.findByPk(id)
+
+  if (!proposal)
+    return res.status(404).send({ error: true, message: 'Proposal Not Found' })
+
+  if (proposal.status != 'For Review')
+    return res.status(400).send({ error: true, message: 'Bad Request' })
+
+  proposal.status = 'For Revision'
+
+  await proposal.save()
+
+  res.send({
+    error: false,
+    message: 'Request for revision has been saved successfully!'
+  })
+}
+
 exports.submitForReviewProposal = async (req, res) => {
   try {
 
