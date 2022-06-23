@@ -246,7 +246,19 @@ const CUSTOM_VALIDATIONS = [
 				const c = $(params).val();
 				return !c
 					? true
-					: moment(value, 'MM/DD/YYYY HH:mm:ss').isBefore(moment(c, 'MM/DD/YYYY HH:mm:ss'));
+					: moment(value).isBefore(moment(c));
+			}
+			return true;
+		},
+		defaultMessage: 'It must before an indicated date and time'
+	}, {
+		ruleName: "sameOrBeforeDateTimeSelector",
+		handler: (value, element, params) => {
+			if ($(params).length) {
+				const c = $(params).val();
+				return !c
+					? true
+					: moment(value).isSameOrBefore(moment(c));
 			}
 			return true;
 		},
@@ -258,7 +270,19 @@ const CUSTOM_VALIDATIONS = [
 				const c = $(params).val();
 				return !c
 					? true
-					: moment(value, 'MM/DD/YYYY HH:mm:ss').isAfter(moment(c, 'MM/DD/YYYY HH:mm:ss'));
+					: moment(value).isAfter(moment(c));
+			}
+			return true;
+		},
+		defaultMessage: 'It must after an indicated date and time'
+	}, {
+		ruleName: "sameOrAfterDateTimeSelector",
+		handler: (value, element, params) => {
+			if ($(params).length) {
+				const c = $(params).val();
+				return !c
+					? true
+					: moment(value).isSameOrAfter(moment(c));
 			}
 			return true;
 		},
@@ -268,7 +292,15 @@ const CUSTOM_VALIDATIONS = [
 		handler: (value, element, params) => {
 			return !params
 				? true
-				: moment(value, 'MM/DD/YYYY HH:mm:ss').isBefore(moment(params, 'MM/DD/YYYY HH:mm:ss'));
+				: moment(value).isBefore(moment(params));
+		},
+		defaultMessage: 'It must after an indicated date and time'
+	}, {
+		ruleName: "sameOrBeforeDateTime",
+		handler: (value, element, params) => {
+			return !params
+				? true
+				: moment(value).isSameOrBefore(moment(params));
 		},
 		defaultMessage: 'It must after an indicated date and time'
 	}, {
@@ -276,7 +308,15 @@ const CUSTOM_VALIDATIONS = [
 		handler: (value, element, params) => {
 			return !params
 				? true
-				: moment(value, 'MM/DD/YYYY HH:mm:ss').isAfter(moment(params, 'MM/DD/YYYY HH:mm:ss'));
+				: moment(value).isAfter(moment(params));
+		},
+		defaultMessage: 'It must after an indicated date and time'
+	}, {
+		ruleName: "sameOrAfterDateTime",
+		handler: (value, element, params) => {
+			return !params
+				? true
+				: moment(value).isSameOrAfter(moment(params));
 		},
 		defaultMessage: 'It must after an indicated date and time'
 	}

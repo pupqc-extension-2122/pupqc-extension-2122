@@ -28,15 +28,15 @@ const PartnershipDetails = (() => {
       validators: {
         name: {
           required: "The partner name is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
         },
         address: {
           required: "The partner address is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
         },
         organization:  {
           required: "The organization is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
         }
       },
       onSubmit: () => {

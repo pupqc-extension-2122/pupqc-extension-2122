@@ -88,31 +88,59 @@ const ProjectMoa = (() => {
       validators: {
         name: {
           required: "The partner name is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: "Make sure you type the full name of the partner."
+          }
         },
         address: {
           required: "The partner address is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: "Make sure you type the full address."
+          }
         },
         representative: {
           required: "The name of representative is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: "Make sure you type the name of the representative."
+          }
         },
         organization:  {
           required: "The organization is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: "Make sure you type the full name of the organization."
+          }
         },
         pup_REPD: {
           required: "The name of PUP REPD Representative is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: "Make sure you type the full name of the PUP REPD representative."
+          }
         },
         notary_date: {
           required: "Please select the notary signed date.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          beforeDateTimeSelector: {
+            rule: '#addMOA_validityDate',
+            message: 'The notary date must be ealier than the validity date.' 
+          }
         },
         validity_date: {
           required: "Please select the validity date.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          afterDateTimeSelector: {
+            rule: '#addMOA_notarySignedDate',
+            message: 'The validity date must be later than the notary date.' 
+          }
         },
         uploadDocument: {
           required: "MOA/MOU attachment is required.",

@@ -1003,25 +1003,49 @@ const AddProjectActivity = (() => {
       validators: {
         title: {
           required: 'The title of the activity is required.',
-          notEmpty: 'This field cannot be blank'
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full title of the activity.'
+          }
         },
         start_date: {
           required: 'Please select a start date', 
-          beforeDateTimeSelector: {
+          sameOrAfterDateTime: {
+            rule: project_details.start_date,
+            message: 'The start date must be within the project timeline.'
+          },
+          sameOrBeforeDateTime: {
+            rule: project_details.end_date,
+            message: 'The start date must be within the project timeline.'
+          },
+          sameOrBeforeDateTimeSelector: {
             rule: '#addProjectActivity_endDate',
-            message: "Start date must be before end date"
+            message: "The start date must be earlier than the end date"
           }
         },
         end_date: {
           required: 'Please select a end date', 
-          afterDateTimeSelector: {
+          sameOrAfterDateTime: {
+            rule: project_details.start_date,
+            message: 'The end date must be within the project timeline.'
+          },
+          sameOrBeforeDateTime: {
+            rule: project_details.end_date,
+            message: 'The end date must be within the project timeline.'
+          },
+          sameOrAfterDateTimeSelector: {
             rule: '#addProjectActivity_startDate',
-            message: "End date must be after start date"
+            message: "The end date must be later than the start date"
           }
         },
         details: {
-          required: 'The summary/details of the activity is required',
-          notEmpty: 'This field cannot be blank',
+          required: 'The summary/details of the activity is required.',
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full summary or details of the activity.'
+          }
         }
       },
       onSubmit: () => onFormSubmit()
@@ -1332,25 +1356,49 @@ const ProjectActivities = (() => {
       validators: {
         title: {
           required: 'The title of the activity is required.',
-          notEmpty: 'This field cannot be empty'
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full title of the activity.'
+          }
         },
         start_date: {
           required: 'Please select a start date', 
-          beforeDateTimeSelector: {
-            rule: '#addProjectActivity_endDate',
-            message: "Start date must be before end date"
+          sameOrAfterDateTime: {
+            rule: project_details.start_date,
+            message: 'The start date must be within the project timeline.'
+          },
+          sameOrBeforeDateTime: {
+            rule: project_details.end_date,
+            message: 'The start date must be within the project timeline.'
+          },
+          sameOrBeforeDateTimeSelector: {
+            rule: '#editProjectActivity_endDate',
+            message: "The start date must be earlier than the end date."
           }
         },
         end_date: {
           required: 'Please select a end date', 
-          afterDateTimeSelector: {
-            rule: '#addProjectActivity_startDate',
-            message: "End date must be after start date"
+          sameOrAfterDateTime: {
+            rule: project_details.start_date,
+            message: 'The end date must be within the project timeline.'
+          },
+          sameOrBeforeDateTime: {
+            rule: project_details.end_date,
+            message: 'The end date must be within the project timeline.'
+          },
+          sameOrAfterDateTimeSelector: {
+            rule: '#editProjectActivity_startDate',
+            message: "The end date must be later than the end date."
           }
         },
         details: {
-          required: 'The summary/details of the activity is required',
-          notEmpty: 'This field cannot be blank',
+          required: 'The summary/details of the activity is required.',
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full summary or details of the activity.'
+          }
         }
       },
       onSubmit: () => onEditFormSubmit()

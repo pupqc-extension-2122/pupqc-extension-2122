@@ -171,7 +171,7 @@
 <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
 
   <%# Add Memo Modal %>
-  <div class="modal fade" id="addMemo_modal">
+  <div class="modal fade" id="addMemo_modal" data-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable">
       <form class="modal-content" id="addMemo_form">
         <div class="modal-header">
@@ -213,7 +213,7 @@
                   class="form-control" 
                   id="addMOA_partnershipName" 
                   name="name"
-                  placeholder="Insert partnership name here ..."
+                  placeholder="Insert partnership name here"
                 />
               </div>
             </div>
@@ -230,7 +230,7 @@
                   class="form-control" 
                   id="addMOA_partnerAddress" 
                   name="address"
-                  placeholder="Insert partner address here ..."
+                  placeholder="Insert partner address here"
                 />
               </div>
             </div>
@@ -247,7 +247,7 @@
                   class="form-control" 
                   id="addMOA_partnershipRepresentative" 
                   name="representative"
-                  placeholder="Insert partnership representative name here ..."
+                  placeholder="Insert partnership representative name here"
                 />
               </div>
             </div>
@@ -264,7 +264,7 @@
                   class="form-control" 
                   id="addMOA_pupREPD" 
                   name="pup_REPD"
-                  placeholder="Insert PUP REPD representative here ..."
+                  placeholder="Insert PUP REPD representative here"
                 />
               </div>
             </div>
@@ -347,8 +347,13 @@
                     data-mask 
                   />
                   <div class="input-group-append">
-                    <button type="button" class="btn btn-primary" id="addMOA_validityDate_pickerBtn"
-                      data-toggle="tooltip" title="Select validity date">
+                    <button 
+                      type="button" 
+                      class="btn btn-primary" 
+                      id="addMOA_validityDate_pickerBtn"
+                      data-toggle="tooltip" 
+                      title="Select validity date"
+                    >
                       <i class="fa fa-calendar-day fa-fw"></i>
                     </button>
                   </div>
@@ -366,10 +371,10 @@
                 <div class="input-group">
                     <div class="custom-file">
                         <input 
-                            type="file" 
-                            class="custom-file-input" 
-                            id="uploadDocument"
-                            name="uploadDocument"
+                          type="file" 
+                          class="custom-file-input" 
+                          id="uploadDocument"
+                          name="uploadDocument"
                         >
                         <label class="custom-file-label" for="uploadDocument">Choose file</label>
                     </div>

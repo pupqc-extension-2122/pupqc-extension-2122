@@ -209,9 +209,11 @@ class ProjectTeamForm {
 		input.rules('add', {
 			required: true,
       notEmpty: true,
+      minlength: 5,
 			messages: { 
         required: 'A team member is required.',
         notEmpty: 'This field cannot be blank',
+        minlength: "Make sure you type the member's full name.",
       }
 		});
 
@@ -500,9 +502,11 @@ class TargetGroupsForm {
 		input.rules('add', {
 			required: true,
       notEmpty: true,
+      minlength: 5,
 			messages: { 
         required: 'The name of the target group is required.',
         notEmpty: 'This field cannot be blank',
+        minlength: 'Make sure you type the full name of the target group',
       }
 		});
 
@@ -810,7 +814,7 @@ class FinancialRequirementsForm {
             class="btn btn-sm btn-negative text-danger" 
             ${this.data.removeLineItemBudgetBtn}="${lineItemBudget.id}"
 						data-toggle="tooltip"
-            title="Remove line item budget rows"
+            title="Remove budget item category group"
         >
             <i class="fas fa-trash-alt"></i>
         </button>
@@ -913,8 +917,8 @@ class FinancialRequirementsForm {
                 <i class="fas fa-exclamation-triangle text-warning"></i>
               </h1>
               <div>
-                <div class="font-weight-bold mb-2">Remove line item budget</div>
-                <p>Are you sure you want to remove the entire line item budget?<br>Your inputs can not be saved.</p>
+                <div class="font-weight-bold mb-2">Remove budget item category group</div>
+                <p>Are you sure you want to remove the entire budget category group?<br>Your inputs can not be saved.</p>
               </div>
             </div>
           </div>
@@ -1073,7 +1077,11 @@ class FinancialRequirementsForm {
 		let overallAmount = this.requirements.reduce((a, c) => a += c.quantity * c.estimated_cost, 0);
 
 		// Change the overall amount in the DOM
-		overallAmountElem.html(formatToPeso(overallAmount < MONEY_LIMIT ? overallAmount : MONEY_LIMIT));
+		overallAmountElem.html(formatToPeso(
+      overallAmount < MONEY_LIMIT && overallAmount > -MONEY_LIMIT
+        ? overallAmount 
+        : MONEY_LIMIT
+    ));
 
 		// Change the style of the overall amount if less than 0
 		overallAmount < 0 || overallAmount > MONEY_LIMIT
@@ -1090,14 +1098,14 @@ class FinancialRequirementsForm {
         .some(({ row_id }) => {
           const name = this.#dataElement('budgetItemNameInput', row_id).val().trim();
           const particulars = this.#dataElement('budgetItemParticularsInput', row_id).val().trim();
-          const qty = this.#dataElement('budgetItemQtyInput', row_id).val().trim();
-          const cost = this.#dataElement('budgetItemCostInput', row_id).val().trim();
+          const qty = parseFloat(this.#dataElement('budgetItemQtyInput', row_id).val().trim());
+          const cost = parseFloat(this.#dataElement('budgetItemCostInput', row_id).val().trim());
 
           return (
-            !(name && name.length >= 5)
-            || !(particulars && particulars.length >= 5)
-            || !(qty && parseFloat(qty) > 0)
-            || !(cost && parseFloat(cost) > 0)
+            !(name && name.length >= 3)
+            || !(particulars && particulars.length >= 3)
+            || !(qty && qty > 0 && qty < MONEY_LIMIT)
+            || !(cost && cost > 0 && qty < MONEY_LIMIT)
           )
         })
     )
@@ -1218,9 +1226,11 @@ class FinancialRequirementsForm {
 			i.rules('add', {
 				required: true,
         notEmpty: true,
+        minlength: 3,
 				messages: { 
           required: 'Required',
           notEmpty: 'Cannot be blank',
+          minlength: 'Type the full details',
         } 
 			})
 		);
@@ -1281,7 +1291,16 @@ class FinancialRequirementsForm {
 			const totalAmountElement = this.#dataElement('budgetItemTotalAmount', budgetItemRowId);
 
 			// Change the total amount in the DOM
-			totalAmountElement.html(formatToPeso(total < MONEY_LIMIT ? total : MONEY_LIMIT));
+			totalAmountElement.html(() => {
+        let totalAmount;
+        if (total > MONEY_LIMIT)
+          totalAmount = MONEY_LIMIT
+        else if (total < -MONEY_LIMIT)
+          totalAmount = -MONEY_LIMIT
+        else
+          totalAmount = total
+        return formatToPeso(totalAmount);
+      });
 
 			// Change the style if total amount is less than 0
 			total < 0 || total > MONEY_LIMIT
@@ -1647,10 +1666,10 @@ class EvaluationPlanForm {
         const frequency = this.#dataElement('frequencyInput', row_id).val().trim();
 
         return (
-          !(outcome && outcome.length >= 5)
-          || !(indicator && outcome.length >= 5)
-          || !(collectionMethod && outcome.length >= 5)
-          || !(frequency && outcome.length >= 5)
+          !(outcome && outcome.length >= 3)
+          || !(indicator && outcome.length >= 3)
+          || !(collectionMethod && outcome.length >= 3)
+          || !(frequency && outcome.length >= 3)
         )
       })
     )
@@ -1693,9 +1712,11 @@ class EvaluationPlanForm {
 			i.rules('add', {
 				required: true,
         notEmpty: true,
+        minlength: 3,
         messages: {
 					required: 'Required',
           notEmpty: 'Cannot be blank',
+          minlength: 'Type the full details',
 				}
 			})
 		);
@@ -1749,10 +1770,10 @@ class EvaluationPlanForm {
 				// Check if the current row has value
 
 				if (
-          outcomeInput.val().trim() 
-          || indicatorInput.val().trim() 
-          || collectionMethodInput.val().trim() 
-          || frequencyInput.val().trim() 
+          outcomeInput.valid() 
+          || indicatorInput.valid()
+          || collectionMethodInput.valid()
+          || frequencyInput.valid()
         ) {
 
 					// Set the data attribute value in modal button
@@ -2035,7 +2056,7 @@ class ProjectActivityForm {
     this.BUTTONS.topics.add.attr('disabled', () =>
       this.topics.some(({id}) => { 
         const val = this.#dataElement('topics', 'input', id).val().trim();
-        return !(val && val.length >= 5);
+        return !(val && val.length >= 3);
       })
     )
   }
@@ -2044,7 +2065,7 @@ class ProjectActivityForm {
     this.BUTTONS.outcomes.add.attr('disabled', () =>
       this.outcomes.some(({id}) => {
         const val = this.#dataElement('outcomes', 'input', id).val().trim();
-        return !(val && val.length >= 5);
+        return !(val && val.length >= 3);
       })
     )
   }
@@ -2085,9 +2106,11 @@ class ProjectActivityForm {
 		input.rules('add', {
 			required: true,
       notEmpty: true,
+      minlength: 3,
 			messages: { 
         required: 'A topic is required.',
-        notEmpty: 'This field cannot be blank',
+        notEmpty: 'This field cannot be blank.',
+        minlength: 'Make sure you type the full title of a topic.'
       }
 		});
 
@@ -2197,9 +2220,11 @@ class ProjectActivityForm {
 		input.rules('add', {
 			required: true,
 			notEmpty: true,
+      minlength: 5,
       messages: { 
         required: 'An outcome statement is required.',
-        notEmpty: 'This field cannot be blank',
+        notEmpty: 'This field cannot be blank.',
+        minlength: 'Make sure you type the full details of an outcome.',
       }
 		});
 
@@ -2451,7 +2476,7 @@ class ProjectEvaluationForm {
         const row = this.form.find(`[${ this.data.rowId }="${ row_id }"]`);
         const nameInput = row.find(`[${ this.data.input }="name"]`).val().trim();
         const pointsInput = row.find(`[${ this.data.input }="points"]`).val().trim();
-        return !(nameInput && nameInput.length > 5) || !(pointsInput && parseFloat(pointsInput) > 0);
+        return !(nameInput && nameInput.length >= 3) || !(pointsInput && parseFloat(pointsInput) > 0);
       })
     )
   }
@@ -2485,23 +2510,25 @@ class ProjectEvaluationForm {
     
     nameInput.rules('add', {
       required: true,
-      minlength: 5,
+      notEmpty: true,
+      minlength: 3,
       messages: {
         required: 'The name of the evaluator is required',
+        notEmpty: 'This field cannot be blank',
         minlength: 'Your input is an invalid name',
       }
     });
 
     pointsInput.rules('add', {
       required: true,
+      notEmpty: true,
       number: true,
-      min: 1,
-      max: 100,
+      range: [1, 100],
       messages: {
         required: 'Required',
+        notEmpty: 'Required',
         number: 'Invalid value',
-        min: 'Invalid value',
-        max: 'Invalid value',
+        range: 'Invalid value',
       }
     });
 

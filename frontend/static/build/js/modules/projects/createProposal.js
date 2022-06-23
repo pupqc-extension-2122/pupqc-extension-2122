@@ -245,33 +245,49 @@
       validators: {
         title: {
           required: "The title of the project is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full title of the project.'
+          }
         },
         implementer: {
           required: "The implementer is required.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full name of the implementer.'
+          }
         },
         start_date: {
           required: "Please select a date when the project will start.",
           beforeDateTimeSelector: {
             rule: '#addProject_endDate',
-            message: 'Start date must be before end date'
+            message: 'The start date must be earlier than end date.'
           }
         },
         end_date: {
           required: "Please select a date when the project will end.",
           afterDateTimeSelector: {
             rule: '#addProject_startDate',
-            message: 'End date must be after start date'
+            message: 'The end date must be later than the start date.'
           }
         },
         impact_statement: {
           required: "Please compose the impact statement here.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be empty.",
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full details for the impact statement.'
+          }
         },
         summary: {
           required: "Please compose the project summary here.",
           notEmpty: "This field cannot be empty",
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full summary of the project'
+          }
         }
       },
       onSubmit: async () => {
