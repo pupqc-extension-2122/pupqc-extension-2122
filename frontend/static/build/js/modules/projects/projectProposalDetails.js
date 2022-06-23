@@ -423,8 +423,12 @@ const ProjectOptions = (() => {
     $app('#setPresentationSchedule_form').handleForm({
       validators: {
         presentation_date: {
-          required: 'Please select a date for the presentation of the project',
-          afterToday: 'Date must be later than today'
+          required: 'Please select a date for the presentation of the project.',
+          afterToday: 'The presentation date must be later than today.',
+          beforeDateTime: {
+            rule: project_details.end_date,
+            message: 'The presentation date must be earlier than the end of the project timeline'
+          }
         }
       },
       onSubmit: async () => {
@@ -495,9 +499,13 @@ const ProjectOptions = (() => {
 
     $app('#setProjectEvaluation_form').handleForm({
       validators: {
-        presentation_date: {
-          required: 'Please select a presentation date'
-        }
+        evaluation_date: {
+          required: 'Please select when the evaluation occured.',
+          beforeDateTime: {
+            rule: project_details.end_date,
+            message: 'The evaluation date must be earlier than the end of the project timeline.'
+          }
+        },
       },
       onSubmit: async () => {
         if (project_details.status !== 'For Evaluation') return;
@@ -967,8 +975,8 @@ const ProjectOptions = (() => {
   const init = (data) => {
     if (!initialized) {
       initialized = 1;
-      initSubmissions();
       setOptions(data);
+      initSubmissions();
     }
   }
   

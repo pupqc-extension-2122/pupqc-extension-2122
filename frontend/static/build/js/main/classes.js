@@ -2607,9 +2607,9 @@ class ProjectEvaluationForm {
       notEmpty: true,
       minlength: 3,
       messages: {
-        required: 'The name of the evaluator is required',
-        notEmpty: 'This field cannot be blank',
-        minlength: 'Your input is an invalid name',
+        required: 'The name of the evaluator is required.',
+        notEmpty: 'This field cannot be blank.',
+        minlength: 'Make sure you type the full name of the evaluator.',
       }
     });
 
