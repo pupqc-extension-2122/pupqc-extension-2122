@@ -587,8 +587,8 @@ const ProjectActivities = (() => {
     const data = {
       activity_name: fd.get('title'),
       ...PA_form.getActivityData(),
-      start_date: moment(fd.get('start_date')).toISOString(),
-      end_date: moment(fd.get('end_date')).toISOString(),
+      start_date: moment(fd.get('start_date')).toISOString(true),
+      end_date: moment(fd.get('end_date')).toISOString(true),
       details: fd.get('details')
     }
     

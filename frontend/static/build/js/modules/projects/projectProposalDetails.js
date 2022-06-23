@@ -457,7 +457,7 @@ const ProjectOptions = (() => {
         const fd = new FormData($('#setPresentationSchedule_form')[0]);
 
         const data = {
-          presentation_date: moment(fd.get('presentation_date')).toISOString()
+          presentation_date: moment(fd.get('presentation_date')).toISOString(true)
         }
 
         await $.ajax({
@@ -533,7 +533,7 @@ const ProjectOptions = (() => {
         const fd = new FormData($('#setProjectEvaluation_form')[0]);
         const evaluationData = PE_form.getEvaluationData();
         const data = {
-          evaluation_date: moment(fd.get('evaluation_date')).toISOString(),
+          evaluation_date: moment(fd.get('evaluation_date')).toISOString(true),
           evaluators: evaluationData.evaluation,
           average_points: evaluationData.average.points,
         }
@@ -1150,8 +1150,8 @@ const AddProjectActivity = (() => {
     const data = {
       activity_name: fd.get('title'),
       ...PA_form.getActivityData(),
-      start_date: moment(fd.get('start_date')).toISOString(),
-      end_date: moment(fd.get('end_date')).toISOString(),
+      start_date: moment(fd.get('start_date')).toISOString(true),
+      end_date: moment(fd.get('end_date')).toISOString(true),
       details: fd.get('details'),
       status: 'Not evaluated'
     }
@@ -1548,8 +1548,8 @@ const ProjectActivities = (() => {
     const data = {
       activity_name: fd.get('title'),
       ...PA_form.getActivityData(),
-      start_date: moment(fd.get('start_date')).toISOString(),
-      end_date: moment(fd.get('end_date')).toISOString(),
+      start_date: moment(fd.get('start_date')).toISOString(true),
+      end_date: moment(fd.get('end_date')).toISOString(true),
       details: fd.get('details')
     }
     

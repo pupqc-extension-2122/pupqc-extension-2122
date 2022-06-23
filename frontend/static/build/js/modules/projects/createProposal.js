@@ -50,8 +50,8 @@
       
       if (start_date && end_date) {
         getPartners({
-          start_date: moment(start_date).toISOString(),
-          end_date: moment(end_date).toISOString()
+          start_date: moment(start_date).toISOString(true),
+          end_date: moment(end_date).toISOString(true)
         });
       }
     });
@@ -356,8 +356,8 @@
       team_members: PT_form.getTeamMembers(),
       target_groups: TG_form.getTargetGroups(),
       cooperating_agencies: CA_form.getSelectedCooperatingAgencies(),
-      start_date: '' || moment(fd.get('start_date')).toISOString(),
-      end_date: '' || moment(fd.get('end_date')).toISOString(),
+      start_date: '' || moment(fd.get('start_date')).toISOString(true),
+      end_date: '' || moment(fd.get('end_date')).toISOString(true),
       impact_statement: fd.get('impact_statement'),
       summary: fd.get('summary'),
       financial_requirements: FR_form.getFinancialRequirements().requirements,

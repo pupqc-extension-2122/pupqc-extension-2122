@@ -171,8 +171,8 @@ const ProjectMoa = (() => {
           representative_partner: fd.get('representative'),
           representative_pup: fd.get('pup_REPD'),
           organization_id: fd.get('organization'),
-          notarized_date: moment(fd.get('notary_date')).toISOString(),
-          validity_date: moment(fd.get('validity_date')).toISOString(),
+          notarized_date: moment(fd.get('notary_date')).toISOString(true),
+          validity_date: moment(fd.get('validity_date')).toISOString(true),
           duration: 3
         }
 
