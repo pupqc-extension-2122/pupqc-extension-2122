@@ -19,18 +19,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
+      validate: { notEmpty: true },
       primaryKey: true,
     },
     project_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     activity_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     topics: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true },
       set(val) {
         this.setDataValue('topics', val.join(';'))
       },
@@ -40,6 +45,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     outcomes: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true },
       set(val) {
         this.setDataValue('outcomes', val.join(';'))
       },
@@ -49,19 +56,23 @@ module.exports = (sequelize, DataTypes) => {
     },
     start_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     end_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     details: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     }
   }, {
     sequelize,

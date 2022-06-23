@@ -29,14 +29,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     first_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     middle_name: {
       type: DataTypes.STRING,
     },
     last_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     suffix_name: {
       type: DataTypes.STRING,
@@ -51,7 +53,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
   }, {
     sequelize,

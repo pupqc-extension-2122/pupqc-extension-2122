@@ -17,9 +17,11 @@ module.exports = {
       },
       target_groups: {
         type: Sequelize.TEXT,
+        allowNull: false,
       },
       team_members: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: false
       },
       start_date: {
         type: Sequelize.DATEONLY,

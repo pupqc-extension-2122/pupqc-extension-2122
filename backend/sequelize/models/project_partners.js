@@ -21,15 +21,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     project_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+      validate: {notEmpty: true},
     },
     partner_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+      validate: {notEmpty: true},
     },
     memo_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+      validate: {notEmpty: true},
     }
   }, {
     sequelize,

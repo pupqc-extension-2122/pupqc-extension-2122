@@ -24,38 +24,45 @@ module.exports = (sequelize, DataTypes) => {
     },
     partner_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     partner_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     organization_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     duration: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     validity_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     end_date: {
       type: DataTypes.DATEONLY,
-      set(value) {
+      set(val) {
         let base = new Date(this.getDataValue('validity_date'))
         this.setDataValue('end_date', new Date(base.setDate(base.getDate() + (this.getDataValue('duration') * 365.25))))
       }
     },
     representative_pup: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     representative_partner: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true },
     },
     notarized_date: {
       type: DataTypes.DATEONLY,

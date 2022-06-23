@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Projects, {foreignKey: 'project_id', as: 'project'})
+      this.belongsTo(models.Projects, { foreignKey: 'project_id', as: 'project' })
     }
   }
   Project_Evaluations.init({
@@ -22,29 +22,34 @@ module.exports = (sequelize, DataTypes) => {
     },
     project_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true }
     },
     project_title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true }
     },
     evaluation_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true }
     },
     evaluators: {
       type: DataTypes.TEXT,
       allowNull: false,
-      set(val){
+      validate: { notEmpty: true },
+      set(val) {
         this.setDataValue('evaluators', val.join(';'))
       },
-      get(){
+      get() {
         return this.getDataValue('evaluators').split(';')
       }
     },
     average_points: {
       type: DataTypes.NUMERIC,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true }
     }
   }, {
     sequelize,

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasOne(models.Project_Evaluations, {foreignKey: 'project_id', as: 'evaluation'})
+      this.hasOne(models.Project_Evaluations, { foreignKey: 'project_id', as: 'evaluation' })
       this.hasMany(models.Project_Partners, { foreignKey: 'project_id', as: 'project_partners' })
       this.hasMany(models.Project_Activities, { foreignKey: 'project_id', as: 'activities' })
       this.hasMany(models.Comments, { foreignKey: 'project_id', as: 'comments' })
@@ -24,19 +24,21 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
+      allowNull: false, validate: { notEmpty: true },
       primaryKey: true,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false, validate: { notEmpty: true }
     },
     implementer: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false, validate: { notEmpty: true }
     },
     target_groups: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true },
       set(val) {
         this.setDataValue('target_groups', val.join(';'))
       },
@@ -46,6 +48,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     team_members: {
       type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true },
       set(val) {
         this.setDataValue('team_members', val.join(';'))
       },
@@ -55,11 +59,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     start_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false, validate: { notEmpty: true }
     },
     end_date: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false, validate: { notEmpty: true }
     },
     status: {
       type: DataTypes.STRING,
@@ -82,14 +86,17 @@ module.exports = (sequelize, DataTypes) => {
     impact_statement: {
       type: DataTypes.TEXT,
       allowNull: false,
+      validate: { notEmpty: true }
     },
     summary: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      validate: { notEmpty: true }
     },
     financial_requirements: {
       type: DataTypes.TEXT,
       allowNull: false,
+      validate: { notEmpty: true },
       set(val) {
         let data = JSON.stringify(val)
         this.setDataValue('financial_requirements', data)
@@ -101,6 +108,7 @@ module.exports = (sequelize, DataTypes) => {
     evaluation_plans: {
       type: DataTypes.TEXT,
       allowNull: false,
+      validate: { notEmpty: true },
       set(val) {
         let data = JSON.stringify(val)
         this.setDataValue('evaluation_plans', data)
@@ -112,7 +120,7 @@ module.exports = (sequelize, DataTypes) => {
     presentation_date: DataTypes.DATEONLY,
     created_by: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false, validate: { notEmpty: true }
     }
   }, {
     sequelize,
