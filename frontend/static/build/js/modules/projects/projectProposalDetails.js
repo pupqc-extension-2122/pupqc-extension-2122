@@ -1111,7 +1111,7 @@ const AddProjectActivity = (() => {
   let validator;
   let PA_form;
   let initiated = 0;
-  let processing = 0;
+  let processing = false;
   let project_details;
 
   /**
@@ -1182,7 +1182,8 @@ const AddProjectActivity = (() => {
           }
         },
         start_date: {
-          required: 'Please select a start date', 
+          required: 'Please select a start date',
+          dateISO: 'Your input is not a valid date',
           sameOrAfterDateTime: {
             rule: project_details.start_date,
             message: 'The start date must be within the project timeline.'
@@ -1197,7 +1198,8 @@ const AddProjectActivity = (() => {
           }
         },
         end_date: {
-          required: 'Please select a end date', 
+          required: 'Please select a end date',
+          dateISO: 'Your input is not a valid date',
           sameOrAfterDateTime: {
             rule: project_details.start_date,
             message: 'The end date must be within the project timeline.'
@@ -1227,7 +1229,7 @@ const AddProjectActivity = (() => {
   const onFormSubmit = async () => {
     if (!(project_details.status === 'Created' || project_details.status === 'For Revision')) return;
 
-    processing = 1;
+    processing = true;
 
     // Disable the elements
     const saveBtn = $('#addProjectActivity_saveBtn');
@@ -1249,7 +1251,7 @@ const AddProjectActivity = (() => {
       saveBtn.attr('disabled', false);
       saveBtn.html(`Submit`);
 
-      processing = 0;
+      processing = false;
     }
 
 
@@ -1344,8 +1346,8 @@ const ProjectActivities = (() => {
   let dt;
   let editValidator;
   let PA_form;
-  let initialized = 0;
-  let processing = 0; // For edit
+  let initialized = false;
+  let processing = false; // For edit
 
   /**
 	 * * Private Methods
@@ -1629,7 +1631,7 @@ const ProjectActivities = (() => {
   const onEditFormSubmit = async () => {
     if (!(project_details.status == 'Created' || project_details.status == 'For Revision')) return;
 
-    processing = 1;
+    processing = true;
 
     // Disable the elements
     const saveBtn = $('#editProjectActivity_saveBtn');
@@ -1651,7 +1653,7 @@ const ProjectActivities = (() => {
       saveBtn.attr('disabled', false);
       saveBtn.html(`Submit`);
 
-      processing = 0;
+      processing = false;
     }
 
     // Get the data
@@ -1894,7 +1896,7 @@ const ProjectActivities = (() => {
 
   const init = (data) => {
     if (!initialized) {
-      initialized = 1;
+      initialized = true;
       project_details = data;
       handleEditForm();
       initializations();

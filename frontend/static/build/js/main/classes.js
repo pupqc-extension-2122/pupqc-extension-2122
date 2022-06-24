@@ -2215,7 +2215,6 @@ class ProjectActivityForm {
 
 	resetTopicsForm = () => {
 		this.topics.forEach(t => this.removeTopicFormGroup(t.id));
-		this.addTopicFormGroup();
 	}
 
 	setTopics = (data, method = 'reset') => {
@@ -2329,7 +2328,6 @@ class ProjectActivityForm {
 
 	resetOutcomesForm = () => {
 		this.outcomes.forEach(t => this.removeOutcomeFormGroup(t.id));
-		this.addOutcomeFormGroup();
 	}
 
 	setOutcomes = (data, method = 'reset') => {
