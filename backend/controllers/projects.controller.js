@@ -554,9 +554,12 @@ exports.updateProjectActivities = async (req, res) => {
 exports.addComment = async (req, res) => {
   try {
 
-    const project_id = req.params.id
+    const project_id = req.params.project_id
 
     let project = await Projects.findByPk(project_id)
+    
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project Not Found' })
 
     if (!project.status == 'For Review' && !project.status == 'For Revision')
       return res.status(404).send({ error: true, message: 'Bad Request' })
@@ -570,6 +573,7 @@ exports.addComment = async (req, res) => {
     if (comment) {
       res.send({
         error: false,
+        data: comment,
         message: 'Comment added!'
       })
     }

@@ -1917,6 +1917,137 @@ const ProjectActivities = (() => {
 })();
 
 
+const ProjectComments = (() => {
+  
+  /**
+	 * * Local Variables
+	 */
+
+  const container = $('#projectComments_commentsList');
+  const formSelector = '#projectComment_form';
+  const form = $(formSelector)[0];
+  const commentInput = $('#projectComment_comment');
+  const user_id = getCookie('user');
+  let project_details;
+  let initialized = false;
+
+  /**
+	 * * Private Functions
+	 */
+
+  const resetForm = () => {
+    commentInput.val('').trigger('input');
+  }
+
+  const handleForm = () => {
+    $app(formSelector).handleForm({
+      validators: {},
+      onSubmit: async () => {
+        const fd = new FormData(form);
+        const body = fd.get('comment').trim();
+
+        if (body === '') {
+          resetForm();
+          return;
+        }
+
+        const data = { body: fd.get('comment') }
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/${ project_details.id }/comments/add`,
+          type: 'POST',
+          data: data,
+          success: res => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              console.log(res);
+              addComment({
+                body: data.body,
+                created_at: moment(),
+                user: {
+                  id: user_id,
+                  first_name: 'first_name',
+                  last_name: 'last_name'
+                }
+              });
+            }
+          },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: 'ProjectComments.handleForm().$.ajax',
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+          }
+        });
+
+        resetForm();
+      }
+    });
+  }
+
+  const loadComments = () => {
+    project_details.comments.forEach(c => addComment({ ...c }));
+  }
+
+  /**
+	 * * Public Functions
+	 */
+
+  const init = (projectData) => {
+    if (!initialized) {
+      initialized = true;
+      project_details = projectData;
+      handleForm();
+      loadComments();
+    }
+  }
+
+  const addComment = ({ body, created_at, user }) => {
+    const isCommentedByUser = () => {
+      return user.id == user_id 
+        ? `
+          <div class="mt-1">
+            <div class="btn btn-light btn-sm py-0">Edit</div>
+            <div class="btn btn-light btn-sm py-0">Delete</div>
+          </div>
+        `
+        : ''
+    }
+
+    const comment = `
+      <div class="d-flex mb-3">
+        <div class="user-block mr-3">
+          <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
+          <!-- <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image"> -->
+        </div>
+        <div class="flex-grow-1">
+          <a href="#" class="font-weight-bold text-black">${ user.first_name } ${ user.last_name }</a>
+          <div class="small text-muted">${ fromNow(created_at) }</div>
+          <div class="mt-2">
+            <div>${ body }</div>
+            ${ isCommentedByUser() }
+          </div>
+        </div>
+      </div>
+    `
+
+    container.prepend(comment);
+  }
+
+  /**
+	 * * On DOM Load
+	 */
+
+  return {
+    init,
+    addComment
+  }
+
+})();
+
+
 (() => {
   const project_id = location.pathname.split('/')[3];
 
@@ -1943,6 +2074,8 @@ const ProjectActivities = (() => {
         } else {
           setDocumentTitle(`${ documentTitle } - Project Details`);
         }
+
+        ProjectComments.init(data);
       }
     },
     error: (xhr, status, error) => {

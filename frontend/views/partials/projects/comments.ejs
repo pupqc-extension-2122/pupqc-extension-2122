@@ -3,24 +3,44 @@
   <div class="card-header">
     <div class="card-title">Comments</div>
   </div>
-  <div class="card-body" id="projectComments_grp">
+  <div class="card-body">
     
-    <div class="d-flex mb-3" id="projectComment_addComment_grp">
+    <%# Comments Form %>
+    <form class="d-flex" id="projectComment_form">
       <div class="user-block mr-3">
         <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
         <!-- <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image"> -->
       </div>
-      <div class="flex-grow-1">
-        <textarea 
-          class="form-control" 
-          name="" 
-          id="" 
-          cols="30" 
-          rows="3" 
-          placeholder="Add a comment here ..."
-          data-autoresize
-        ></textarea>
+      <div class="flex-grow-1 d-flex">
+          <div class="form-group mr-3 flex-grow-1">
+            <textarea 
+              class="form-control form-control-border comment" 
+              name="comment" 
+              id="projectComment_comment" 
+              cols="30" 
+              rows="1" 
+              placeholder="Post a comment here ..."
+              data-autoresize
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Post a comment here"
+            ></textarea>
+          </div>
+          <div>
+            <button 
+              type="submit"
+              class="btn btn-primary" 
+              data-toggle="tooltip" 
+              title="Post a comment"
+            >
+              <i class="fas fa-share"></i>
+            </button>
+          </div>
       </div>
-    </div>
+    </form>
+
+    <%# Comments should appear below here %>
+    <div id="projectComments_commentsList"></div>
+
   </div>
 </div>
