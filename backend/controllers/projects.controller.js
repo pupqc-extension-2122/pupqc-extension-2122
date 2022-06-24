@@ -32,7 +32,8 @@ exports.viewProposal = async (req, res) => {
       {
         model: Comments,
         as: 'comments',
-        include: ['user']
+        include: ['user'],
+        order: [['created_at', 'ASC']]
       }
     ]
 
