@@ -433,7 +433,7 @@ const ProjectOptions = (() => {
             forApproval_modal.modal('hide');
             toastr.warning(res.message);
           } else {
-            await updateStatus();
+            updateProjectDetails({ status: 'For Review' });
             forApproval_modal.modal('hide');
             toastr.success('The proposal has been submitted successfully.');
           }
@@ -489,7 +489,7 @@ const ProjectOptions = (() => {
             forApproval_modal.modal('hide');
             toastr.warning(res.message);
           } else {
-            await updateStatus();
+            updateProjectDetails({ status: 'For Revision' });
             forRevision_modal.modal('hide');
             toastr.success('Your request of project revision has been successfully saved.');
           }
@@ -575,7 +575,10 @@ const ProjectOptions = (() => {
               ajaxErrorHandler(res.message);
               enableElements();
             } else {
-              await updateStatus();
+              updateProjectDetails({ 
+                status: 'For Evaluation',
+                presentation_date: data.presentation_date 
+              });
               enableElements();
               setPresentationSchedule_modal.modal('hide');
               toastr.success('A presentation schedule has been set.');
@@ -611,6 +614,10 @@ const ProjectOptions = (() => {
           beforeDateTime: {
             rule: project_details.end_date,
             message: 'The evaluation date must be earlier than the end of the project timeline.'
+          },
+          afterDateTime: {
+            rule: project_details.presentation_date,
+            message: 'The evaluation date must be later than the presentation date.'
           }
         },
       },
@@ -654,7 +661,10 @@ const ProjectOptions = (() => {
               ajaxErrorHandler(res.message);
               enableElements();
             } else {
-              await updateStatus();
+              updateProjectDetails({ 
+                status: 'Pending',
+                evaluation: data 
+              });
               enableElements();
               setProjectEvaluation_modal.modal('hide');
               toastr.success('An evaluation has been saved.');
@@ -676,7 +686,6 @@ const ProjectOptions = (() => {
   }
 
   const initApproveProject = () => {
-
     const confirmBtn = $('#confirmApproveTheProject_btn');
 
     confirmBtn.on('click', async (e) => {
@@ -707,7 +716,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler(res.message);
             enableElements();
           } else {
-            await updateStatus();
+            updateProjectDetails({ status: 'Approved' });
             enableElements();
             approveProject_modal.modal('hide');
             toastr.success('The proposal has been approved.');
@@ -764,7 +773,7 @@ const ProjectOptions = (() => {
             cancelProposal_modal.modal('hide');
             toastr.warning(res.message);
           } else {
-            await updateStatus();
+            updateProjectDetails({ status: 'Cancelled' });
             cancelProposal_modal.modal('hide');
             toastr.success('The proposal has been submitted successfully.');
           }
@@ -806,33 +815,25 @@ const ProjectOptions = (() => {
     }
   }
 
-  const updateStatus = async () => {
-    await $.ajax({
-      url: `${ BASE_URL_API }/projects/${ project_details.id }`,
-      type: 'GET',
-      success: result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message);
-        } else {
-          const data = result.data;
-
-          ProjectDetails.loadDetails(data);
-          ProjectOptions.setOptions(data);
-
-          if ($('#activities_dt').length) {
-            AddProjectActivity.init(data);
-            ProjectActivities.init(data);
-          }
-        }
-      },
-      error: (xhr, status, error) => {
-        ajaxErrorHandler({
-          file: 'projects/projectProposalDetails.js',
-          fn: 'ProjectOptions.updateStatus()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-        });
+  const updateProjectDetails = (obj) => {
+    let updated = false;
+    
+    Object.entries(obj).forEach(([key, value]) => {
+      if (project_details.hasOwnProperty(key)) {
+        project_details[key] = value;
+        updated = true;
       }
     });
+
+    if (updated) {
+      ProjectDetails.loadDetails(project_details);
+      ProjectOptions.setOptions(project_details);
+
+      if ($('#activities_dt').length) {
+        AddProjectActivity.init(project_details);
+        ProjectActivities.init(project_details);
+      }
+    }
   }
 
   /**
