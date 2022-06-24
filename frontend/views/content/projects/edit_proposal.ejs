@@ -328,7 +328,7 @@
               <%# Financial Requirement Table %>
               <div class="table-responsive">
                 <table class="table table-bordered" id="financialRequirements_form">
-                  <thead class="text-center">
+                  <thead>
                     <th class="align-middle" style="width: 25%">Budget Item</th>
                     <th class="align-middle" style="width: 25%">Particulars</th>
                     <th class="align-middle" style="width: 15%">Quantity / Pieces</th>
@@ -336,7 +336,7 @@
                       <div>Estimated Cost</div>
                       <div class="small">(per qty/pcs)</div>
                     </th>
-                    <th class="align-middle" style="width: 15%">Total Amount</th>
+                    <th class="align-middle text-right" style="width: 15%">Total Amount</th>
                     <th style="width: 5%"></th>
                   </thead>
                   <tbody>
@@ -347,7 +347,7 @@
                         </div>
                       </td>
                     </tr>
-                    <tr id="overallAmount_row">
+                    <tr id="overallAmount_row" style="background-color: #f6f6f6">
                       <td colspan="4">
                         <div class="text-right font-weight-bold">Overall Amount</div>
                       </td>
@@ -362,17 +362,20 @@
             </div>
 
             <%# Evaluation Plan %>
-            <div id="evaluationPlan_stepperPane" class="content" role="tabpanel"
-              aria-labelledby="evaluationPlan_stepperHeaderBtn">
-
+            <div 
+              id="evaluationPlan_stepperPane" 
+              class="content" 
+              role="tabpanel"
+              aria-labelledby="evaluationPlan_stepperHeaderBtn"
+            >
               <div class="table-responsive">
                 <table class="table table-bordered" id="evaluationPlan_form">
-                  <thead class="vertical-align-middle text-center">
-                    <th style="width: 24%">Outcome</th>
-                    <th style="width: 24%">Indicator</th>
-                    <th style="width: 24%">Data Collection Method</th>
-                    <th style="width: 24%">Frequency</th>
-                    <th style="width: 4%"></th>
+                  <thead>
+                    <th class="align-middle" style="width: 24%">Outcome</th>
+                    <th class="align-middle" style="width: 24%">Indicator</th>
+                    <th class="align-middle" style="width: 24%">Data Collection Method</th>
+                    <th class="align-middle" style="width: 24%">Frequency</th>
+                    <th class="align-middle" style="width: 4%"></th>
                   </thead>
                   <tbody>
                     <tr>
@@ -488,24 +491,17 @@
               <h4 class="mb-3">II. Financial Requirements</h4>
               <div class="table-responsive mb-4">
                 <table class="table table-bordered">
-                  <thead class="text-center align-middle">
+                  <thead>
                     <th class="align-middle" style="width: 35%">Budget Item</th>
                     <th class="align-middle" style="width: 35%">Particulars</th>
-                    <th class="align-middle" style="width: 10%">Quantity / Pieces</th>
-                    <th class="align-middle" style="width: 10%">
+                    <th class="align-middle text-right" style="width: 10%">Quantity / Pieces</th>
+                    <th class="align-middle text-right" style="width: 10%">
                       <div>Estimated Cost</div>
                       <div class="small">(per qty/pcs)</div>
                     </th>
-                    <th class="vertical-middle" style="width: 10%">Total Amount</th>
+                    <th class="align-middle text-right" style="width: 10%">Total Amount</th>
                   </thead>
-                  <tbody id="projectDetailsConfirm_financialRequirements">
-                    <tr>
-                      <td colspan="4" class="text-right">
-                        <b>Overall Amount</b>
-                      </td>
-                      <td class="text-right">&#8369;0.00</td>
-                    </tr>
-                  </tbody>
+                  <tbody id="projectDetailsConfirm_financialRequirements"></tbody>
                 </table>
               </div>
 
@@ -513,7 +509,7 @@
               <h4 class="mb-3">III. Evaluation Plan</h4>
               <div class="table-responsive mb-4">
                 <table class="table table-bordered">
-                  <thead class="verticalcaretaddProject-align-middle text-center">
+                  <thead>
                     <th class="align-middle" style="width: 25%">Outcome</th>
                     <th class="align-middle" style="width: 25%">Indicator</th>
                     <th class="align-middle" style="width: 25%">Data Collection Method</th>

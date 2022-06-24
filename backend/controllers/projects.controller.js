@@ -26,6 +26,10 @@ exports.viewProposal = async (req, res) => {
         }
       },
       {
+        model: Project_Evaluations,
+        as: 'evaluation'
+      },
+      {
         model: Comments,
         as: 'comments',
         include: ['user']

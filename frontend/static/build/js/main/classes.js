@@ -2649,9 +2649,9 @@ class ProjectEvaluationForm {
     });
 
     pointsInput.on('keyup change', () => {
-      const points = parseFloat(pointsInput.val()) || 0;
+      const points = parseFloat(pointsInput.val()).toFixed(2) || 0;
       this.evaluators = this.evaluators.map(x =>
-        x.row_id === rowId ? { ...x, points: points } : x
+        x.row_id === rowId ? { ...x, points: parseFloat(points) } : x
       );
       getRemarks(points);
       this.#setAddBtnState();
@@ -2707,7 +2707,7 @@ class ProjectEvaluationForm {
         return y;
       }),
       average: {
-        points: averagePoints,
+        points: parseFloat(averagePoints),
         remarks: averagePoints >= 70 ? 'PASSED' : 'FAILED',
       } 
     }

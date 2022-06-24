@@ -262,7 +262,7 @@
         },
         start_date: {
           required: "Please select a date when the project will start.",
-          dateISO: "Your input is an invalid date",
+          dateISO: "Your input is an invalid date.",
           beforeDateTimeSelector: {
             rule: '#addProject_endDate',
             message: 'The start date must be earlier than end date.'
@@ -270,7 +270,7 @@
         },
         end_date: {
           required: "Please select a date when the project will end.",
-          dateISO: "Your input is an invalid date",
+          dateISO: "Your input is an invalid date.",
           afterDateTimeSelector: {
             rule: '#addProject_startDate',
             message: 'The end date must be later than the start date.'
@@ -483,7 +483,7 @@
 				});
 
 				financialRequirementRows += `
-					<tr class="font-weight-bold">
+					<tr class="font-weight-bold" style="background-color: #f6f6f6">
 						<td colspan="4" class="text-right">Overall Amount</td>
 						<td class="text-right">${ formatToPeso(overallAmount) }</td>
 					</tr>

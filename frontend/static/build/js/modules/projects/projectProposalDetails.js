@@ -140,9 +140,40 @@ const ProjectDetails = (() => {
         },
         '#projectDetails_body_timeFrame': () => {
           if (start_date && end_date) {
+            const getDuration = () => {
+              return moment(start_date).isSame(moment(end_date))
+                ? 'in the whole day'
+                : moment(start_date).to(moment(end_date), true)
+            }
             return `
-              <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
-              <div class="small text-muted">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+              <div class="ml-4 ml-lg-0 row">
+                <div class="pl-0 col-4 col-lg-2">
+                  <div class="font-weight-bold">Start Date:</div>
+                </div>
+                <div class="col-8 col-lg-10">
+                  <div>${ moment(start_date).format('MMMM D, YYYY (dddd)') }</div>
+                  <div class="small text-muted">${ fromNow(start_date) }</div>
+                </div>
+
+                <div class="col-12"><div class="mt-2"></div></div>
+
+                <div class="pl-0 col-4 col-lg-2">
+                  <div class="font-weight-bold">End Date:</div>
+                </div>
+                <div class="col-8 col-lg-10">
+                  <div>${ moment(end_date).format('MMMM D, YYYY (dddd)') }</div>
+                  <div class="small text-muted">${ fromNow(end_date) }</div>
+                </div>
+
+                <div class="col-12"><div class="mt-2"></div></div>
+
+                <div class="pl-0 col-4 col-lg-2">
+                  <div class="font-weight-bold">Duration:</div>
+                </div>
+                <div class="col-8 col-lg-10">
+                  <div>Approximately ${ getDuration() }</div>
+                </div>
+              </div>
             `
           } else return noContentTemplate('No dates have been set up.');
         },
@@ -210,7 +241,7 @@ const ProjectDetails = (() => {
           });
 
           financialRequirementRows += `
-            <tr class="font-weight-bold">
+            <tr class="font-weight-bold" style="background-color: #f6f6f6">
               <td colspan="4" class="text-right">Overall Amount</td>
               <td class="text-right">${ formatToPeso(overallAmount) }</td>
             </tr>
@@ -221,6 +252,80 @@ const ProjectDetails = (() => {
       });
 
       $('#projectDetails_navTabs').show();
+
+      if (data.evaluation) {
+        const { evaluation_date, evaluators } = data.evaluation;
+        
+        setHTMLContent({
+          '#projectDetails_body_evaluationDate': () => {
+            if (evaluation_date) {
+              return `
+                <div>${ moment(evaluation_date).format('MMMM DD, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(evaluation_date) }</div>
+              `
+            } else {
+              return `<div class="font-italic text-muted">No date has been set.</div>`
+            }
+          },
+          '#projectDetails_body_evaluationSummary': () => {
+            let rows = '';
+            let sumPoints = 0;
+            
+            const getRemarks = (points) => {
+              if (points >= 70 && points <= 100) {
+                return `<span class="font-weight-bold text-success text-uppercase">PASSED</span>`;
+              } else if (points < 70 && points >= 1) {
+                return `<span class="font-weight-bold text-danger text-uppercase">FAILED</span>`;
+              } else {
+                return '--';
+              }
+            }
+
+            evaluators.forEach(e => {
+              const { name, points } = e;
+              const realPoints = parseFloat(parseFloat(points).toFixed(2)) || 0;
+
+              const getPoints = () => {
+                return realPoints >= 1 && realPoints <= 100
+                  ? `${ realPoints.toFixed(2) }%`
+                  : '--'
+              }
+
+              rows += `
+                <tr>
+                  <td>${ name }</td>
+                  <td class="text-right">${ getPoints() }</td>
+                  <td class="text-center">${ getRemarks(realPoints) }</td>
+                </tr>
+              `
+
+              sumPoints += realPoints;
+            });
+
+            const averagePoints = sumPoints/evaluators.length;
+
+            const getAveragePoints = () => {
+              return averagePoints >= 1 && averagePoints <= 100
+                ? `${ averagePoints.toFixed(4) }%`
+                : '--' 
+            }
+
+            rows += `
+              <tr style="background: #f6f6f6">
+                <td class="text-right font-weight-bold">Average Points</td>
+                <td class="text-right font-weight-bold">${ getAveragePoints() }</td>
+                <td class="text-center">${ getRemarks(averagePoints) }</td>
+              </tr>
+            `
+
+            return rows;
+          }
+        });
+
+        $('#projectDetails_evaluationSummary_tab').show();
+      } else {
+        $('#projectDetails_evaluationSummary_tab').hide();
+      }
     }
   }
 
@@ -424,6 +529,7 @@ const ProjectOptions = (() => {
       validators: {
         presentation_date: {
           required: 'Please select a date for the presentation of the project.',
+          dateISO: 'Your input is not a valid date.',
           afterToday: 'The presentation date must be later than today.',
           beforeDateTime: {
             rule: project_details.end_date,
@@ -501,6 +607,7 @@ const ProjectOptions = (() => {
       validators: {
         evaluation_date: {
           required: 'Please select when the evaluation occured.',
+          dateISO: 'Your input is not a valid date.',
           beforeDateTime: {
             rule: project_details.end_date,
             message: 'The evaluation date must be earlier than the end of the project timeline.'
@@ -1475,6 +1582,7 @@ const ProjectActivities = (() => {
         },
         start_date: {
           required: 'Please select a start date', 
+          dateISO: 'Your input is an invalid date',
           sameOrAfterDateTime: {
             rule: project_details.start_date,
             message: 'The start date must be within the project timeline.'
@@ -1490,6 +1598,7 @@ const ProjectActivities = (() => {
         },
         end_date: {
           required: 'Please select a end date', 
+          dateISO: 'Your input is an invalid date',
           sameOrAfterDateTime: {
             rule: project_details.start_date,
             message: 'The end date must be within the project timeline.'
@@ -1666,14 +1775,12 @@ const ProjectActivities = (() => {
                     ` : ''
                 }
                 const getDuration = () => {
-                  if (moment(start_date).isSame(moment(end_date))) {
-                    return 'in the whole day';
-                  } else {
-                    return moment(start_date).to(moment(end_date), true);
-                  }
+                  return moment(start_date).isSame(moment(end_date))
+                    ? 'in the whole day'
+                    : moment(start_date).to(moment(end_date), true)
                 }
                 return `
-                  <div class="ml-2 ml-lg-0 row">
+                  <div class="ml-4 ml-lg-0 row">
                     <div class="pl-0 col-4 col-lg-2">
                       <div class="font-weight-bold">Start Date:</div>
                     </div>
@@ -1817,7 +1924,7 @@ const ProjectActivities = (() => {
       if (res.error) {
         ajaxErrorHandler(res.message);
       } else {
-        const data = res.data;
+        const { data } = res;
 
         ProjectDetails.init(data);
         ProjectOptions.init(data);

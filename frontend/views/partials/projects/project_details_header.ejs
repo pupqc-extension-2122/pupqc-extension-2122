@@ -27,7 +27,7 @@
       <div class="skeleton text" style="width: 5rem"></div>
     </div>
 
-    <%# {# Navigation Tabs #} %>
+    <%# Navigation Tabs %>
     <ul 
       class="nav nav-pills mt-4" 
       role="tablist" 
@@ -35,30 +35,61 @@
       style="display: none"
     >
 
-      <%# {# Summary Tab #} %>
+      <%# Summary Tab %>
       <li class="nav-item">
-        <a class="nav-link active" id="custom-content-below-summary-tab" data-toggle="pill"
-          href="#custom-content-below-summary" role="tab"
-          aria-controls="custom-content-below-summary">Summary</a>
+        <a 
+          class="nav-link active" 
+          id="projectDetails_summary_tab" 
+          data-toggle="pill"
+          href="#projectDetails_summary_pane" 
+          role="tab"
+          aria-controls="projectDetails_summary_pane"
+        >Summary</a>
       </li>
 
       <div class="nav-item pl-1"></div>
 
-      <%# {# Financial Requirements Tab #} %>
+      <%# Financial Requirements Tab %>
       <li class="nav-item">
-        <a class="nav-link" id="custom-content-below-financial-tab" data-toggle="pill"
-          href="#custom-content-below-financial" role="tab"
-          aria-controls="custom-content-below-financial">Financial Requirements</a>
+        <a 
+          class="nav-link" 
+          id="projectDetails_financial_tab" 
+          data-toggle="pill"
+          href="#projectDetails_financial_pane" 
+          role="tab"
+          aria-controls="projectDetails_financial_pane"
+        >Financial Requirements</a>
       </li>
 
       <div class="nav-item pl-1"></div>
 
-      <%# {# Evaluation Plan Tab #} %>
+      <%# Evaluation Plan Tab %>
       <li class="nav-item">
-        <a class="nav-link" id="custom-content-below-evaluation-tab" data-toggle="pill"
-          href="#custom-content-below-evaluation" role="tab"
-          aria-controls="custom-content-below-evaluation">Evaluation Plan</a>
+        <a 
+          class="nav-link" 
+          id="projectDetails_evaluationPlan_tab" 
+          data-toggle="pill"
+          href="#projectDetails_evaluationPlan_pane" 
+          role="tab"
+          aria-controls="projectDetails_evaluationPlan_pane"
+        >Evaluation Plan</a>
       </li>
+      
+      <div class="nav-item pl-1"></div>
+
+      <%# Evaluation Summary %>
+      <li class="nav-item">
+        <a 
+          class="nav-link" 
+          id="projectDetails_evaluationSummary_tab" 
+          data-toggle="pill"
+          href="#projectDetails_evaluationSummary_pane" 
+          role="tab"
+          aria-controls="projectDetails_evaluationSummary_pane"
+          style="display: none"
+        >Evaluation Summary</a>
+      </li>
+
     </ul>
   </div>
 </div>

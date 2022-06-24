@@ -40,10 +40,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: { notEmpty: true },
       set(val) {
-        this.setDataValue('evaluators', val.join(';'))
+        let data = JSON.stringify(val)
+        this.setDataValue('evaluators', data)
       },
       get() {
-        return this.getDataValue('evaluators').split(';')
+        return JSON.parse(this.getDataValue('evaluators'))
       }
     },
     average_points: {
