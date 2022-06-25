@@ -1930,6 +1930,7 @@ const ProjectComments = (() => {
   const user_id = getCookie('user');
   let project_details;
   let initialized = false;
+  let processing = false;
 
   /**
 	 * * Private Functions
@@ -1942,35 +1943,185 @@ const ProjectComments = (() => {
   const handleForm = () => {
     $app(formSelector).handleForm({
       validators: {},
-      onSubmit: async () => {
-        const fd = new FormData(form);
-        const body = fd.get('comment').trim();
+      onSubmit: () => onFormSubmit()
+    });
+  }
 
-        if (body === '') {
+  const onFormSubmit = async () => {
+    if (processing) return;
+    processing = true;
+
+    const fd = new FormData(form);
+    const body = fd.get('comment').trim();
+
+    if (body === '') {
+      resetForm();
+      processing = false;
+      return;
+    }
+
+    const submitBtn = $('#projectComments_postComment_btn');
+    submitBtn.attr('disabled', true);
+    submitBtn.html('<i class="fas fa-spinner fa-spin-pulse"></i>');
+
+    const enableElements = () => {
+      submitBtn.attr('disabled', false);
+      submitBtn.html('<i class="fas fa-share"></i>');
+      processing = false;
+    }
+
+    const data = { body: fd.get('comment') }
+
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/comments/add`,
+      type: 'POST',
+      data: data,
+      success: res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+          enableElements();
+        } else {
+          const newComment = { ...res.data };
+          project_details.comments.push(newComment);
+          addComment(newComment);
           resetForm();
-          return;
+          enableElements();
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectComments.handleForm().$.ajax',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+        enableElements();
+      }
+    });
+  }
+
+  const loadComments = () => {
+    const comments = project_details.comments;
+    comments.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    comments.forEach(c => addComment({ ...c }));
+  }
+
+  const removeComment = (commentId, commentBlock) => {
+    if (processing) return;
+    processing = true;
+
+    $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_details.id }/comments/${ commentId }`,
+      type: 'DELETE',
+      success: res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          commentBlock.remove();
+        }
+        processing = false;
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectProposalDetails.js',
+          fn: 'ProjectComments.removeComment().$.ajax',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+        processing = false;
+      }
+    });
+  }
+
+  const initEditComment = (commentId, commentBlock) => {
+
+    // Check if there are active edit blocks
+    const activeEditBodySection = container.find(`[data-comment-section="editBody"]`);
+    if (activeEditBodySection.length) {
+      const activeEditBlockId = activeEditBodySection.closest('[data-comment-block]').attr('data-comment-block');
+      const activeEditBlock = container.find(`[data-comment-block="${ activeEditBlockId }"]`);
+      activeEditBlock.find(`[data-comment-section="editBody"`).remove();
+      activeEditBlock.find(`[data-comment-section="displayBody"]`).show();
+    }
+
+    const bodySection = commentBlock.find(`[data-comment-section="body"]`);
+    const displayBodySection = bodySection.find(`[data-comment-section="displayBody"]`);
+
+    // Hide the display body section
+    displayBodySection.hide();
+
+    // Get the old comment
+    const oldBody = project_details.comments.find(x => x.id == commentId).body;
+    
+    // Append the form
+    bodySection.append(`
+      <div class="mt-1" data-comment-section="editBody">
+        <div class="form-group mr-3 mb-0 flex-grow-1">
+          <textarea 
+            class="form-control form-control-border comment" 
+            name="comment" 
+            data-comment-input="editBody"
+            cols="30" 
+            rows="1" 
+            placeholder="Edit your comment here ..."
+            data-autoresize
+          >${ oldBody }</textarea>
+        </div>
+        <div class="mt-1">
+          <button 
+            type="submit"
+            class="btn btn-sm btn-success" 
+            data-comment-btn="saveEdit"
+          >
+            <i class="fas fa-check mr-1"></i>
+            <span>Save</span>
+          </button>
+          <button 
+            type="submit"
+            class="btn btn-sm btn-negative" 
+            data-comment-btn="cancelEdit"
+          >
+            <i class="fas fa-times mr-1"></i>
+            <span>Cancel</span>
+          </button>
+        </div>
+      </div>
+    `);
+
+    // * Initiate buttons * //
+
+    const saveBtn = bodySection.find(`[data-comment-btn="saveEdit"]`);
+    const cancelBtn = bodySection.find(`[data-comment-btn="cancelEdit"]`);
+
+    if (saveBtn.length) {
+      saveBtn.on('click', async () => {
+        if (processing) return;
+        processing = true;
+
+        saveBtn.attr('disabled', true);
+        saveBtn.html('<i class="fas fa-spinner fa-spin-pulse"></i>');
+
+        const enableElements = () => {
+          saveBtn.attr('disabled', false);
+          saveBtn.html('<i class="fas fa-check"></i>');
+          processing = false;
         }
 
-        const data = { body: fd.get('comment') }
+        const newBody = bodySection.find(`[data-comment-input="editBody"]`).val();
 
         await $.ajax({
-          url: `${ BASE_URL_API }/projects/${ project_details.id }/comments/add`,
-          type: 'POST',
-          data: data,
+          url: `${ BASE_URL_API }/projects/${ project_details.id }/comments/${ commentId }`,
+          type: 'PUT',
+          data: { body: newBody },
           success: res => {
             if (res.error) {
               ajaxErrorHandler(res.message);
+              enableElements();
             } else {
-              console.log(res);
-              addComment({
-                body: data.body,
-                created_at: moment(),
-                user: {
-                  id: user_id,
-                  first_name: 'first_name',
-                  last_name: 'last_name'
-                }
-              });
+              saveBtn.tooltip('hide');
+              project_details.comments = project_details.comments.map(x => x.id == commentId ? { ...x, body: newBody} : x);
+              displayBodySection.find(`[data-comment-part="body"]`).html(newBody);
+              bodySection.find(`[data-comment-section="editBody"]`).remove();
+              displayBodySection.show();
+              processing = false;
             }
           },
           error: (xhr, status, error) => {
@@ -1979,16 +2130,20 @@ const ProjectComments = (() => {
               fn: 'ProjectComments.handleForm().$.ajax',
               details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
             });
+            enableElements();
           }
-        });
+        })
+      });
+    }
 
-        resetForm();
-      }
-    });
-  }
-
-  const loadComments = () => {
-    project_details.comments.forEach(c => addComment({ ...c }));
+    if (cancelBtn.length) {
+      cancelBtn.on('click', () => {
+        if (processing) return;
+        cancelBtn.tooltip('hide');
+        bodySection.find(`[data-comment-section="editBody"]`).remove();
+        displayBodySection.show();
+      });
+    }
   }
 
   /**
@@ -1998,42 +2153,100 @@ const ProjectComments = (() => {
   const init = (projectData) => {
     if (!initialized) {
       initialized = true;
-      project_details = projectData;
+      project_details = {
+        id: projectData.id,
+        comments: projectData.comments,
+      };
       handleForm();
       loadComments();
     }
   }
 
-  const addComment = ({ body, created_at, user }) => {
+  const addComment = ({ id, body, created_at, user }) => {
+    const blockId = uuid();
+
+    // Check if commented by user, if that's the case then add the buttons
     const isCommentedByUser = () => {
       return user.id == user_id 
         ? `
-          <div class="mt-1">
-            <div class="btn btn-light btn-sm py-0">Edit</div>
-            <div class="btn btn-light btn-sm py-0">Delete</div>
+          <div class="mt-2">
+            <span
+              role="button" 
+              class="btn border btn-negative btn-sm px-2 py-1"
+              data-comment-btn="edit"
+            >
+              <i class="fas fa-edit mr-1 text-info"></i>
+              <span>Edit</span>
+            </span>
+            <span
+              role="button" 
+              class="btn border btn-negative btn-sm px-2 py-1"
+              data-comment-btn="delete"
+            >
+              <i class="fas fa-trash-alt mr-1 text-danger"></i>
+              <span>Remove</span>
+            </span>
           </div>
         `
         : ''
     }
 
+    const getTime = () => {
+      const months = moment().diff(moment(created_at), 'months');
+      if (months >= 1) {
+        return `${ moment(created_at).format('MMMM DD, YYYY') }`;
+      }
+      return `<span data-toggle="tooltip" title="${ moment(created_at).format('MMMM DD, YYYY') }">${ fromNow(created_at) }</span>`;
+    }
+
+    // Create the comment template
     const comment = `
-      <div class="d-flex mb-3">
+      <div class="d-flex mt-3 mb-2" data-comment-block="${ blockId }">
         <div class="user-block mr-3">
           <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
           <!-- <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image"> -->
         </div>
-        <div class="flex-grow-1">
-          <a href="#" class="font-weight-bold text-black">${ user.first_name } ${ user.last_name }</a>
-          <div class="small text-muted">${ fromNow(created_at) }</div>
-          <div class="mt-2">
-            <div>${ body }</div>
+        <div class="flex-grow-1" data-comment-section="body">
+          <a href="${ BASE_URL_WEB }/profile/${ user.id }" class="font-weight-bold text-dark">${ user.first_name } ${ user.last_name }</a>
+          <div class="small text-muted" data-comment-part="time">${ getTime() }</div>
+          <div data-comment-section="displayBody">
+            <div>
+              <div class="mt-2" data-comment-part="body">${ body }</div>
+            </div>
             ${ isCommentedByUser() }
           </div>
         </div>
       </div>
     `
 
+    // Append the comment
     container.prepend(comment);
+
+    // * Initialize the buttons * //
+
+    const commentBlock = $(`[data-comment-block="${ blockId }"]`);
+
+    const editBtn = commentBlock.find(`[data-comment-btn="edit"]`);
+    const deleteBtn = commentBlock.find(`[data-comment-btn="delete"]`);
+
+    if (editBtn.length) {
+      editBtn.on('click', () => {
+        initEditComment(id, commentBlock);
+      });
+    }
+
+    if (deleteBtn.length) {
+      deleteBtn.on('click', () => {
+        removeComment(id, commentBlock);
+      });
+    }
+
+    // * Initialize the humanized time * //
+    const timeDisplay = commentBlock.find(`[data-comment-part="time"]`);
+    setInterval(() => {
+      const newTime = getTime();
+      if (timeDisplay.html() != newTime) timeDisplay.html(newTime);
+    }, 200);
   }
 
   /**

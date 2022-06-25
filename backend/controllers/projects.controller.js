@@ -561,13 +561,17 @@ exports.addComment = async (req, res) => {
     if (!project)
       return res.status(404).send({ error: true, message: 'Project Not Found' })
 
-    if (!project.status == 'For Review' && !project.status == 'For Revision')
-      return res.status(404).send({ error: true, message: 'Bad Request' })
+    // if (!project.status == 'For Review' && !project.status == 'For Revision')
+    //   return res.status(404).send({ error: true, message: 'Bad Request' })
 
     let comment = await Comments.create({
       body: req.body.body,
       project_id,
       user_id: req.auth.id
+    }).then(async result => {
+      return await Comments.findByPk(result.id, {
+        include: ['user']
+      })
     })
 
     if (comment) {
