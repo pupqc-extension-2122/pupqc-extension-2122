@@ -91,6 +91,16 @@ exports.createProject = async (req, res) => {
 
     let body = req.body
 
+    let project = await Projects.find({
+      where: {
+        title: body.title,
+        start_date: body.start_date
+      }
+    })
+
+    if (project)
+      return res.status(400).send({ error: true, message: 'This Project is already created' })
+
     let partners = await Partners.findAll({
       where: {
         id: [...body.partner_id]
@@ -401,8 +411,8 @@ exports.evaluateProposal = async (req, res) => {
 
     let project = await Projects.findByPk(project_id, { where: { status: 'For Evaluation' } })
     if (!project)
-      return res.status(404).send({error: true, message: 'Project not Found'})
-    
+      return res.status(404).send({ error: true, message: 'Project not Found' })
+
     let project_evaluation = await Project_Evaluations.create({
       project_id: project.id,
       project_title: project.title,
@@ -411,12 +421,12 @@ exports.evaluateProposal = async (req, res) => {
       average_points: body.average_points
     })
 
-    if (project_evaluation){
+    if (project_evaluation) {
       project.status = 'Pending'
       await project.save()
 
       res.send({
-        error:false,
+        error: false,
         message: 'Project Evaluation recorded'
       })
     }
@@ -557,7 +567,7 @@ exports.addComment = async (req, res) => {
     const project_id = req.params.project_id
 
     let project = await Projects.findByPk(project_id)
-    
+
     if (!project)
       return res.status(404).send({ error: true, message: 'Project Not Found' })
 
