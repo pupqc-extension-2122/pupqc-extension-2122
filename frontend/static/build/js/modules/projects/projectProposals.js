@@ -154,7 +154,7 @@ const ProjectProposals = (() => {
 	 * * Public Methods
 	 */
 
-  const reloadDataTable = () => dt.ajax.reload();
+  const reloadDataTable = async () => await dt.ajax.reload();
 
 	/**
 	 * * Init

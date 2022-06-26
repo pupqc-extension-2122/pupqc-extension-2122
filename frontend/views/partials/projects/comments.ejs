@@ -1,7 +1,18 @@
 <%# Comments %>
-<div class="card">
+<div class="card" id="commments_card" style="display: none;">
   <div class="card-header">
-    <div class="card-title">Comments</div>
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="card-title">
+        <i class="fas fa-comments mr-2 text-dark"></i>
+        <span>Discussion</span>
+      </div>
+      <div class="card-tools">
+        <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse"
+          data-toggle="tooltip" title="Collapse card">
+          <i class="fas fa-minus"></i>
+        </button>
+      </div>
+    </div>
   </div>
   <div class="card-body">
     
@@ -13,15 +24,15 @@
       </div>
       <div class="flex-grow-1 d-flex">
         <div class="form-group mr-3 mb-0 flex-grow-1">
-          <textarea 
+          <input
+            type="text" 
             class="form-control form-control-border comment" 
             name="comment" 
             id="projectComment_comment" 
             cols="30" 
             rows="1" 
             placeholder="Post a comment here ..."
-            data-autoresize
-          ></textarea>
+          />
         </div>
         <div>
           <button 
@@ -38,7 +49,25 @@
     </form>
 
     <%# Comments should appear below here %>
-    <div id="projectComments_commentsList"></div>
+    <div id="projectComments_commentsList">
+      <div class="text-center py-3 py-md-5 user-select-none" id="projectComments_commentsList_noComment" style="display: none">
+        <div class="row justify-content-center">
+          <div class="col-6 col-lg-3">
+            <img 
+              class="mb-3"
+              src="<%=BASE_URL%>/img/app/comment.svg" 
+              alt="Start a discussion" 
+              width="100%" 
+              draggable="false"
+              loading="lazy"
+            />
+          </div>
+          <div class="col-12">
+            <h5 class="text-dark mb-0" style="opacity: 75%">Be the first one to start a discussion!</h5>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </div>

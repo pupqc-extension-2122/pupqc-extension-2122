@@ -1,27 +1,29 @@
-'use strict';
-
 /**
  * ==============================================
- * * PARTNNERSHIP DETAILS
+ * * PARTNER DETAILS
  * ==============================================
  */
 
-const PartnershipDetails = (() => {
+'use strict';
+
+const PartnerDetails = (() => {
 
   /**
    * * Local Variables
    */
   
   const formSelector = '#editPartnership_form';
+  let dt;
+  let initialized = false;
 
-  let initialized = 0;
-
-   // ! Simulation
-  let data;
+  // Data Container
+  let partner;
 
   /**
    * * Private Methods
    */
+
+  const noContentTemplate = (message) => `<div class="text-muted font-italic">${message}</div>`;
 
   const handleForm = () => {
     $app(formSelector).handleForm({
@@ -46,78 +48,111 @@ const PartnershipDetails = (() => {
   }
 
   const initDataTable = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        
-        // Sample Data
-        data = [
-          {
-            file_name: 'MOA/MOU',
-            file_type: 'PDF',
-            upload_date: '05/14/2022',
-            file_size: '749KB',
-            status: 'Active'
-          }, {
-            file_name: 'MOA/MOU',
-            file_type: 'DOC',
-            upload_date: '01/20/2018',
-            file_size: '749KB',
-            status: 'Inactive'
-          },
-        ];
-        resolve();
-      }, 2500);
-    });
-
-    // Data Table
-    $('#documents_dt').DataTable({
-      data: data,
-      responsive: true,
-      language: DT_LANGUAGE,
-      columns: [
-        { 
-          data: 'file_name' 
+    dt = await $('#partnerMemos_dt').DataTable({
+      ...DT_CONFIG_DEFAULTS,
+      ajax: {
+        url: `${ BASE_URL_API }/partners/${ partner.id }/memos`,
+        // success: res => {
+        //   console.log(res)
+        // },
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'memo/partnerDetails.js',
+            fn: 'PartnerDetails.initDataTable()',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
         },
-        { 
-          data: 'file_type' 
-        },
-        {
-          data: null,
-          render: data => {
-            const uploadDate = data.upload_date;
-            return moment(uploadDate).format("dddd, MMMM Do YYYY, h:mm:ss a");
+        data: {
+          types: {
+            created_at: 'date',
+            representative_partner: 'string',
+            notarized_date: 'date',
+            end_date: 'date',
           }
-        },
-        { 
-          data: 'file_size' 
-        },
+        }
+      },
+      columns: [
         {
+          data: 'created_at',
+          visible: false,
+        }, {
+          data: 'representative_partner', 
+          width: '25%',
+        }, { 
           data: null, 
-          render: ({ status }) => {
-						const { theme, icon } = PARTNER_STATUS_STYLES[status];
-						return `
-							<div class="text-center">
-								<div class="badge badge-subtle-${ theme } px-2 py-1">
-									<i class="${ icon } fa-fw mr-1"></i>
-									<span>${ status }</span>
-								</div>
-							</div>
-						`;
-					}
+          width: '25%',
+          sortable: false, 
+          searchable: false,
+          render: (data, type, row) => {
+            const projects = data.projects;
+
+            const getShortProjectName = () => {
+              const name = projects[0].title;
+              return name.length > 100
+                ? `<span title="${ name }" data-toggle="tooltip">${ name.substring(0, 100) } ...</span>`
+                : name
+            }
+
+            if(projects.length > 1) {
+							return `
+								<div>${ getShortProjectName() }</div> 
+								<div class="small text-muted">and ${ projects.length - 1 } more.</div>
+							`
+						} else if(projects.length === 1) {
+							return getShortProjectName();
+						} else {
+							return `<div class="font-italic text-muted">No projects yet.</div>`
+						}
+          } 
+        }, { 
+          data: 'notarized_date',
+          width: '15%',
+          render: notarized_date => {
+            return `
+              <div class="text-nowrap">${ formatDateTime(notarized_date, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(notarized_date) }</div>
+            `
+          }
+        }, { 
+          data: 'end_date',
+          width: '15%',
+          render: end_date => {
+            return `
+              <div class="text-nowrap">${ formatDateTime(end_date, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(end_date) }</div>
+            `
+          }
+        }, {
+          data: null, 
+          sortable: false,
+          render: (data) => {
+            const validity_date = moment(data.end_date);
+            let status = validity_date.isAfter(moment()) ? 'Active' : 'Inactive'
+            const { theme, icon } = PARTNER_STATUS_STYLES[status];
+            return `
+              <div class="text-sm-center">
+                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                  <i class="${ icon } fa-fw mr-1"></i>
+                  <span>${ status }</span>
+                </div>
+              </div>
+            `;
+          }
         }, {
           data: null,
           render: data => {
             return `
-              <div class="dropdown text-center">
+              <div class="dropdown text-sm-center">
                 
                 <div class="btn btn-sm btn-negative" data-toggle="dropdown">
                     <i class="fas fa-ellipsis-h"></i>
+                    <span class="ml-1 ml-sm-0 d-sm-none">Options</span>
                 </div>
                 
                   <div class="dropdown-menu dropdown-menu-right">
                     <div class="dropdown-header">Options</div>
-                    <a href="" class="dropdown-item">
-                        <span>View document</span>
+                    <a href="${ BASE_URL_WEB }/m/memo/${ data.id }" class="dropdown-item">
+                        <span>View details</span>
                     </a>
                 </div>
               </div>
@@ -127,19 +162,43 @@ const PartnershipDetails = (() => {
       ]
     });
   }
+
+  const removeLoaders = () => {
+    $('#partnerDetails_header_loader').remove();
+    $('#partnerDetails_header').show();
+  }
+
   /**
    * * Public Methods
    */
+
+  const reloadDataTable = async () => dt.ajax.reload();
+
+  const loadHeaderDetails = () => {
+    const { name, address } = partner;
+
+    setHTMLContent({
+      '#partnerDetails_header_name': name || noContentTemplate('The name of partner was not set.'),
+      '#partnerDetails_header_address': address || noContentTemplate('The address was not set.'),
+    });
+  }
+
+  const loadDetails = () => {
+    loadHeaderDetails();
+  }
 
   /**
    * * Init
    */
 
-  const init = () => {
+  const init = async (partnerData) => {
     if (!initialized) {
-      initialized = 1;
-      initDataTable();
+      initialized = true;
+      partner = partnerData;
+      loadDetails();
       handleForm();
+      removeLoaders();
+      await initDataTable();
     }
   }
 
@@ -148,9 +207,33 @@ const PartnershipDetails = (() => {
    */
 
   return {
-    init
+    init,
+    reloadDataTable
   }
 
 })();
 
-PartnershipDetails.init();
+
+(async () => {
+  const partner_id = location.pathname.split('/')[3];
+  
+  await $.ajax({
+    url: `${ BASE_URL_API }/partners/${ partner_id }`,
+    type: 'GET',
+    success: res => {
+      if (res.error) {
+        ajaxErrorHandler(res.message);
+      } else {
+        console.log(res.data);
+        PartnerDetails.init(res.data);
+      }
+    },
+    error: (xhr, status, error) => {
+      ajaxErrorHandler({
+        file: 'memo/partnerDetails.js',
+        fn: 'onDOMLoad.$.ajax',
+        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+      }, 1);
+    }
+  })
+})();

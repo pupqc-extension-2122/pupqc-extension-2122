@@ -91,7 +91,7 @@ exports.createProject = async (req, res) => {
 
     let body = req.body
 
-    let project = await Projects.find({
+    let project = await Projects.findOne({
       where: {
         title: body.title,
         start_date: body.start_date
@@ -327,7 +327,7 @@ exports.submitForReviewProposal = async (req, res) => {
       return res.status(404).send({ error: true, message: 'Bad Request' })
 
     if (!project.activities.length)
-      return res.send({ error: true, message: 'Please include at least one project activity' })
+      return res.send({ warning: true, message: 'Please include at least one project activity' })
 
     if (!(project.status == 'Created' || project.status == 'For Revision'))
       return res.status(400).send({ error: true, message: 'Invalid action' })

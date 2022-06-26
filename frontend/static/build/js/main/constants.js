@@ -401,17 +401,17 @@ const PROJECT_EVALUATION_STATUS_STYLES = {
 
 // Project Monitoring Styles
 const PROJECT_MONITORING_STATUS_STYLES = {
-  'Finished': {
-    icon: 'fas fa-check',
-    theme: 'success'
+  'Ended': {
+    icon: 'fas fa-calendar-check',
+    theme: 'danger'
   },
   'On going': {
     icon: 'fas fa-hourglass',
     theme: 'warning'
   },
-  'Not yet started': {
+  'Soon': {
     icon: 'fas fa-calendar-day',
-    theme: 'info'
+    theme: 'light'
   },
   'No data': {
     icon: 'fas fa-question',

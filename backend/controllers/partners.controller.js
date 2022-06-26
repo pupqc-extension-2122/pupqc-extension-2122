@@ -116,7 +116,7 @@ exports.createPartner = async (req, res) => {
       if (new Date(partner.memos[0].end_date) > new Date()) {
         return res
           .status(400)
-          .send({ error: true, message: 'There is an existing memo for this Partnership' })
+          .send({ warning: true, message: 'There is an existing memo for this partner' })
       }
     }
 
@@ -142,4 +142,22 @@ exports.createPartner = async (req, res) => {
     console.log(err)
     res.send(err)
   }
+}
+
+
+exports.viewPartner = async (req, res) => {
+  let id = req.params.id
+
+  let partner = await Partners.findOne({
+    where: { id },
+  })
+
+  if (!partner)
+    return res.status(404).send({ error: true, message: 'Partner Not Found' })
+
+  res.send({
+    error: false,
+    data: partner
+  })
+
 }

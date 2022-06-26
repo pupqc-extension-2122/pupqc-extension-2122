@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const jwtMiddleware = require('../../utils/jwtMiddleware');
+const { Partners } = require('../../backend/sequelize/models');
 
 // Constants
 const PATH = 'content/memo/';
@@ -60,9 +61,17 @@ router.get('/partners', jwtMiddleware, (req, res) => {
 });
 
 
-// Partnership Details
-router.get('/partners/:partner_id', jwtMiddleware, (req, res) => {
+// Partner Details
+router.get('/partners/:partner_id', jwtMiddleware, async (req, res) => {
   const { roles, first_name, last_name } = req.auth;
+  const { partner_id } = req.params;
+
+  const partner = await Partners.findOne({
+    where: { id: partner_id }
+  });
+
+  if(!partner)
+    return res.status(404).send({ error: true, message: 'Page Not Found' });
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'partner_details', {
@@ -82,7 +91,7 @@ router.get('/memo/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
-    ? res.render(PATH + 'project_moa', {
+    ? res.render(PATH + 'memos', {
       document_title: 'MOA/MOU',
       active_sidebar_tab: 'MOA/MOU',
       name: `${ first_name } ${ last_name }`,
@@ -99,7 +108,7 @@ router.get('/memo/:memo_id', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief')
-    ? res.render(PATH + 'project_moa_details', {
+    ? res.render(PATH + 'memo_details', {
       document_title: 'MOA/MOU Details',
       active_sidebar_tab: 'MOA/MOU',
       name: `${ first_name } ${ last_name }`,

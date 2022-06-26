@@ -73,18 +73,6 @@
               <div class="mt-1" id="projectDetails_header_status">
                 <div class="skeleton text" style="width: 5rem"></div>
               </div>
-
-              <%# Presentation Schedule %>
-              <!-- <div class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
-                <div class="mr-2">
-                  <i class="fas fa-calendar-alt fa-fw text-info"></i>
-                </div>
-                <div>
-                  <div>The presentation is set on <span class="font-weight-bold">June 15, 2022</span></div>
-                  <div class="small text-muted">in 20 days</div>
-                </div>
-              </div> -->
-
             </div>
           </div>
         </div>
@@ -116,16 +104,17 @@
             <table class="table w-100" id="activities_dt">
               <thead>
                 <th class="sr-only">Date Created</th>
-                <th>Activity Title / Name</th>
-                <th>Topics</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>
+                <th class="align-middle">Activity Title / Name</th>
+                <th class="align-middle">Topics</th>
+                <th class="align-middle">Start Date</th>
+                <th class="align-middle">End Date</th>
+                <th class="align-middle">Status</th>
+                <th class="align-middle">
                   <span class="d-sm-none">Actions</span>
                 </th>
               </thead>
               <tbody>
-                <td colspan="5" class="text-center">
+                <td colspan="7" class="text-center">
                   <%- include('../../partials/loaders/dt_body') %>
                 </td>
               </tbody>
@@ -268,5 +257,5 @@
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
-<script src="<%=BASE_URL%>/js/modules/projects/projectComments.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/projectMain.js"></script>
 <script src="<%=BASE_URL%>/js/modules/projects/projectMonitoringDetails.js"></script>

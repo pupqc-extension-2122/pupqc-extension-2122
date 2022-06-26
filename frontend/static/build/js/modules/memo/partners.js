@@ -2,11 +2,11 @@
 
 /**
  * ==============================================
- * * PARTNERSHIPS
+ * * PARTNERS
  * ==============================================
  */
 
-const Partnerships = (() => {
+const Partners = (() => {
 
   /**
    * * Local Variables
@@ -25,47 +25,46 @@ const Partnerships = (() => {
         url: `${ BASE_URL_API }/partners/datatables`,
         // success: result => {
         //   console.log(result);
-        // }
+        // },
         error: (xhr, status, error) => {
-          ajaxErrorHandler(
-            {
-              file: 'memo/partners.js',
-              fn: 'Partnerships.initDataTable()',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-            }, 1);
+          ajaxErrorHandler({
+            file: 'memo/partners.js',
+            fn: 'Partnerships.initDataTable()',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
         },
         data: {
           types: {
             created_at: 'date',
             name: 'string',
-            status: 'string'
+            address: 'string',
           }
         }
       },
       columns: [
         {
-          data: 'created_at', visible: false
-        },
-        { 
-          data: 'name' 
-        },
-        {
-          data: null,
-          render: () => `[ERR]: No organization`
-        },
-        {
-          data: null, 
+          data: 'created_at', 
+          visible: false
+        }, { 
+          data: 'name',
+          width: '30%',
+          render: (data, type, row) => {
+            const partnerName = data.length > 100
+              ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
+              : data
+            return `<a href="${ BASE_URL_WEB }/m/partners/${ row.id }">${ partnerName }</a>`
+          }
+        }, {
+          data: 'address',
+          width: '40%',
+        }, {
+          data: 'created_at',
           render: data => {
-            const status = 'Active';
-            const { theme, icon } = PARTNER_STATUS_STYLES[status];
+            const created_at = data.created_at
             return `
-              <div class="text-sm-center">
-                <div class="badge badge-subtle-${ theme } px-2 py-1">
-                  <i class="${ icon } fa-fw mr-1"></i>
-                  <span>${ status }</span>
-                </div>
-              </div>
-            `;
+              <div>${ formatDateTime(created_at, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(created_at) }</div>
+            `
           }
         }, {
           data: null,
@@ -96,7 +95,7 @@ const Partnerships = (() => {
    * * Public Methods
    */
 
-  const reloadDataTable = () => dt.ajax.reload();
+  const reloadDataTable = async () => await dt.ajax.reload();
 
   /**
    * * Init
@@ -120,4 +119,4 @@ const Partnerships = (() => {
 
 })();
 
-Partnerships.init();
+Partners.init();

@@ -1,21 +1,19 @@
-'use strict';
-
 /**
  * ==============================================
- * * PROJECT MOA
+ * * MOA/MOU's
  * ==============================================
  */
 
-const ProjectMoa = (() => {
+'use strict';
+
+const Memos = (() => {
 
   /**
    * * Local Variables
    */
 
-  let initialized = 0;
-
-   // ! Simulation
-  let data;
+  let dt;
+  let initialized = false;
 
   /**
    * * Private Methods
@@ -140,110 +138,125 @@ const ProjectMoa = (() => {
           required: "MOA/MOU attachment is required.",
         }
       },
-      onSubmit: () => {
-        const fd = new FormData($('#addMemo_form')[0]);
-        const submitBtn = $('#submitMemo_btn'); 
+      onSubmit: () => onFormSubmit()
+    });
+  }
 
-        // Set elements to loading state
-        submitBtn.attr('disabled', true);
-        submitBtn.html(`
-          <span class="px-3">
-            <i class="fas fa-spinner fa-spin-pulse"></i>
-          </span>
-        `);
+  const onFormSubmit = async () => {
+    const fd = new FormData($('#addMemo_form')[0]);
+    const submitBtn = $('#submitMemo_btn'); 
 
-        const enableElements = async () => {
-          submitBtn.attr('disabled', false);
-          submitBtn.html('Submit');
+    // Set elements to loading state
+    submitBtn.attr('disabled', true);
+    submitBtn.html(`
+      <span class="px-3">
+        <i class="fas fa-spinner fa-spin-pulse"></i>
+      </span>
+    `);
+
+    const enableElements = async () => {
+      submitBtn.attr('disabled', false);
+      submitBtn.html('Submit');
+    }
+    
+    const data = {
+      name: fd.get('name'),
+      address: fd.get('address'),
+      representative_partner: fd.get('representative'),
+      representative_pup: fd.get('pup_REPD'),
+      organization_id: fd.get('organization'),
+      notarized_date: fd.get('notary_date'),
+      validity_date: fd.get('validity_date'),
+      duration: 3
+    }
+
+    await $.ajax({
+      url: `${ BASE_URL_API }/partners/create`,
+      type: 'POST',
+      data: data,
+      success: async result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+          enableElements();
+        } else {
+          await reloadDataTable();
+          enableElements();
+          $('#addMemo_modal').modal('hide');
+          toastr.success('A new MOA/MOU has been successfully added.');
         }
-        
-        const data = {
-          name: fd.get('name'),
-          address: fd.get('address'),
-          representative_partner: fd.get('representative'),
-          representative_pup: fd.get('pup_REPD'),
-          organization_id: fd.get('organization'),
-          notarized_date: fd.get('notary_date'),
-          validity_date: fd.get('validity_date'),
-          duration: 3
-        }
-
-        $.ajax({
-          url: `${ BASE_URL_API }/partners/create`,
-          type: 'POST',
-          data: data,
-          success: result => {
-            if (result.error) {
-              ajaxErrorHandler(result.message);
-              enableElements();
-            } else {
-              enableElements();
-              $('#addMemo_modal').modal('hide');
-              toastr.success('A new MOA/MOU has been successfully added.');
-            }
-          },
-          error: () => {
-            ajaxErrorHandler();
-            enableElements();
-          }
-        });
+      },
+      error: () => {
+        ajaxErrorHandler();
+        enableElements();
       }
     });
   }
 
   const initDataTable = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        
-        // Sample Data
-        data = [
-          {
-            partnership_name: 'Grain Foundation for PWDs Inc.',
-            partnership_representative: 'Executive Director Byung Min Lee',
-            notary_signed_date: '05/14/2022',
-            validity_date: '05/14/2023',
-            status: 'Active'
-          }, {
-            partnership_name: 'Kalinga Foundation',
-            partnership_representative: 'Executive Director Byung Min Lee',
-            notary_signed_date: '05/14/2019',
-            validity_date: '01/20/2021',
-            status: 'Inactive'
-          },
-        ];
-        resolve();
-      }, 2500);
-    });
-
-    // Data Table
-    $('#projectMOA_dt').DataTable({
-      data: data,
-      responsive: true,
-      language: DT_LANGUAGE,
+    dt = $('#projectMOA_dt').DataTable({
+      ...DT_CONFIG_DEFAULTS,
+      ajax: {
+        url: `${ BASE_URL_API }/memos/datatables`,
+        // success: res => {
+        //   console.log(res)
+        // },
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'memo/partners.js',
+            fn: 'Partnerships.initDataTable()',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
+        },
+        data: {
+          types: {
+            created_at: 'date',
+            partner_name: 'string',
+            representative_partner: 'string',
+            notarized_date: 'date',
+            end: 'date',
+          }
+        }
+      },
       columns: [
         { 
-          data: 'partnership_name' 
-        },
-        {
-          data: 'partnership_representative'
-        },
-        {
-          data: null,
-          render: data => {
-            const notarySignedDate = data.notary_signed_date;
-            return moment(notarySignedDate).format("dddd, MMMM Do YYYY, h:mm:ss a");
+          data: 'created_at',
+          visible: false,
+        }, {
+					data: 'partner_name',
+          width: '30%',
+          render: (data, type, row) => {
+            const partnerName = data.length > 100
+              ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
+              : data
+            return `<a href="${ BASE_URL_WEB }/m/memo/${ row.id }">${ partnerName }</a>`
           }
-        },
-        {
-          data: null,
+				}, {
+          data: 'representative_partner',
+          width: '20%',
+        }, {
+          data: 'notarized_date',
+          width: '20%',
           render: data => {
-            const validityDate = data.validity_date;
-            return moment(validityDate).format("dddd, MMMM Do YYYY, h:mm:ss a");
+            return `
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
+            `
           }
-        },
-        {
+        }, {
+          data: 'end_date',
+          width: '20%',
+          render: data => {
+            return `
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
+            `
+          }
+        }, {
           data: null, 
-          render: ({ status }) => {
+          sortable: false,
+          render: (data) => {
+            const validity_date = moment(data.end_date);
+            let status = validity_date.isAfter(moment()) ? 'Active' : 'Inactive'
             const { theme, icon } = PARTNER_STATUS_STYLES[status];
             return `
               <div class="text-sm-center">
@@ -283,13 +296,15 @@ const ProjectMoa = (() => {
    * * Public Methods
    */
 
+  const reloadDataTable = async () => await dt.ajax.reload();
+
   /**
    * * Init
    */
 
   const init = () => {
     if (!initialized) {
-      initialized = 1;
+      initialized = true;
       initializations();
       initDataTable();
       handleForm();
@@ -301,9 +316,10 @@ const ProjectMoa = (() => {
    */
 
   return {
-    init
+    init,
+    reloadDataTable
   }
 
 })();
 
-ProjectMoa.init();
+Memos.init();

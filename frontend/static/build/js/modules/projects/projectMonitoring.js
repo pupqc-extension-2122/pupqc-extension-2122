@@ -51,12 +51,11 @@ const ProjectMonitoring = (() => {
         }, {
 					data: 'title',
           width: '25%',
-          render: title => {
-            if (title.length > 100) {
-              return `<span title="${ title }" data-toggle="tooltip">${ title.substring(0, 100) } ...</span>`
-            } else {
-              return title;
-            }
+          render: (data, type, row) => {
+            const displayTitle = data.length > 100
+              ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
+              : data
+            return `<a href="${ BASE_URL_WEB }/p/monitoring/${ row.id }">${ displayTitle }</a>`
           }
 				}, {
           data: null,
@@ -76,7 +75,7 @@ const ProjectMonitoring = (() => {
               return `<div class="text-muted font-italic">No target groups.</div>`
             }
           }
-        },{
+        }, {
           data: null,
           render: data => {
             const start_date = data.start_date
@@ -85,7 +84,7 @@ const ProjectMonitoring = (() => {
               <div class="small text-muted">${ fromNow(start_date) }</div>
             `
           }
-        },{
+        }, {
           data: null,
           render: data => {
             const end_date = data.end_date
@@ -94,16 +93,16 @@ const ProjectMonitoring = (() => {
               <div class="small text-muted">${ fromNow(end_date) }</div>
             `
           }
-        },{
+        }, {
           data: null,
           render: data => {
             const { start_date, end_date } = data;
             const today = moment();
             let status;
             if (today.isBefore(start_date) && today.isBefore(end_date)) {
-              status = 'Not yet started';
+              status = 'Soon';
             } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
-              status = 'Finished';
+              status = 'Ended';
             } else if (today.isBetween(start_date, end_date)) {
               status = 'On going';
             } else {
@@ -154,7 +153,7 @@ const ProjectMonitoring = (() => {
  * * Public Methods
  */
 
-  const reloadDataTable = () => dt.ajax.reload();
+  const reloadDataTable = async () => await dt.ajax.reload();
 
   /**
  * * Init

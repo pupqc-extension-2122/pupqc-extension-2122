@@ -20,7 +20,7 @@
 <div class="content-header">
   <div class="container-fluid">
 
-    <!-- Breadcrumb -->
+    <%# Breadcrumb %>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/m">MOA/MOU</a></li>
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/m/partners">List of Partners</a></li>
@@ -29,15 +29,15 @@
 
     <div class="d-sm-flex align-items-sm-center justify-content-between">
 
-      <!-- Header & Subtitle -->
+      <%# Header & Subtitle %>
       <div class="flex-wrap mb-2 mb-md-0">
         <h1 class="m-0">Partnership Details</h1>
       </div>
       <div>
-        <!-- <button type="button" class="btn btn-default" id="daterange-btn">
+        <%# <button type="button" class="btn btn-default" id="daterange-btn">
           <i class="far fa-calendar-alt mr-1"></i>
           <span>Filter by date</span>
-        </button> -->
+        </button> %>
       </div>
     </div>
   </div>
@@ -50,9 +50,9 @@
     <div class="row">
       <div class="col-md-9">
         
-        <!-- Summary Card -->
-        <div class="card card-primary card-outline" id="partnershipDetailsCard">
-          <!-- <div class="card-header">
+        <%# Partner Details Header %>
+        <div class="card card-primary card-outline">
+          <%# <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
               <div class="card-title">Project Details</div>
 
@@ -62,41 +62,50 @@
                 </button>
               </div>
             </div>
-          </div> -->
+          </div> %>
 
-          <div class="card-body">
-            <div>
-
-              <!-- Partnership Name -->
-              <div class="row">
-                <div class="col-10">
-                  <h3>Grain Foundation for PWDs Inc.</h3>
-                </div>
-              </div>
-              
-              <!-- Address -->
-              <div>21 Don Fabian St., Commonwealth, Quezon City</div>
-
-              <!-- Organization -->
-              <div>Polytechnic University of the Philippines, Quezon City Branch</div>
-
-              <!-- Status -->
-              <div class="mt-1">
-                <div class="badge badge-subtle-success py-1 px-2">
-                  <i class="fas fa-check fa-fw mr-1"></i>
-                  <span>Active</span>
-                </div>
+          <div class="card-body" id="partnerDetails_header_loader">
+            <div class="row">
+              <div class="col-10">
+                <div class="skeleton h3"></div>
               </div>
             </div>
+            <div class="skeleton text" style="width: 50%"></div>
+            <div class="skeleton text" style="width: 5rem"></div>      
+          </div>
+
+          <div class="card-body" id="partnerDetails_header" style="display: none">
+
+            <%# Partner Name %>
+            <div class="row">
+              <div class="col-10">
+                <h3 id="partnerDetails_header_name"></h3>
+              </div>
+            </div>
+            
+            <%# Address %>
+            <div>
+              <i class="fas fa-location-dot fa-fw mr-1 text-dark" data-toggle="tooltip" title="Address"></i>
+              <span id="partnerDetails_header_address"></span>
+            </div>
+
+            <%# Status %>
+            <div class="mt-1">
+              <div class="badge badge-subtle-success py-1 px-2">
+                <i class="fas fa-check fa-fw mr-1"></i>
+                <span>Active</span>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Datatable Card -->
+        <%# Datatable Card %>
         <div class="card">
 
           <div class="card-header">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="card-title">List of Documents</h3>
+              <h3 class="card-title">List of MOA/MOU</h3>
               <div class="card-tools">
                 <button 
                   type="button" 
@@ -129,28 +138,28 @@
           </div>
 
           <div class="card-body">
-
-            <table class="table table-hover w-100" id="documents_dt">
-              <thead>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Date</th>
-                <th>File Size</th>
-                <th>Status</th>
-                <th></th>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="6" class="text-center">
-                    <div class="p-5 my-5">
-                      <div class="spinner-grow text-primary mb-2"></div>
-                      <div>Loading ... Please wait.</div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
+            <div class="table-responsive">
+              <table class="table w-100" id="partnerMemos_dt">
+                <thead>
+                  <th class="d-none">Date Created</th>
+                  <th class="align-middle">Name of Representative</th>
+                  <th class="align-middle">Projects</th>
+                  <th class="align-middle">Notary Signed Date</th>
+                  <th class="align-middle">Valid Until</th>
+                  <th class="align-middle">Status</th>
+                  <th class="align-middle">
+                    <span class="d-inline-block d-sm-none">Actions</span>
+                  </th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="6" class="text-center">
+                      <%- include('../../partials/loaders/dt_body') %>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -158,7 +167,7 @@
       
       <div class="col-md-3">
         
-        <!-- Options -->
+        <%# Options %>
         <div class="card">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -170,7 +179,7 @@
               </div>
             </div>
           </div>
-          <!-- /.card-header -->
+          <%# /.card-header %>
           <div class="card-body p-2">
                 <div class="dropdown-header">Partner details</div>
                 <a class="btn btn-negative btn-block text-left" href="" data-toggle="modal"
@@ -191,10 +200,10 @@
                 </button>
             </ul>
           </div>
-          <!-- /.card-body -->
+          <%# /.card-body %>
         </div>
 
-        <!-- Timeline -->
+        <%# Timeline %>
         <div class="timeline">
           <div class="time-label font-weight-light">
             <span class="bg-primary">History Logs</span>
@@ -280,9 +289,9 @@
           </button>
         </div>
         <div class="modal-body">
-          <!-- Form Card -->
+          <%# Form Card %>
           <form id="editPartnership_form">
-            <!-- Partnership Name -->
+            <%# Partnership Name %>
             <div class="col-12">
               <div class="form-group">
                 <label for="editPartneship_partnershipName">
@@ -294,7 +303,7 @@
               </div>
             </div>
 
-            <!-- Partner Address -->
+            <%# Partner Address %>
             <div class="col-12">
               <div class="form-group">
                 <label for="editPartneship_partnerAddress">
@@ -306,7 +315,7 @@
               </div>
             </div>
 
-            <!-- Organization -->
+            <%# Organization %>
             <div class="col-12">
               <div class="form-group" id="editPartnership_organization_grp">
                 <label for="editProject_cooperatingAgencies">
