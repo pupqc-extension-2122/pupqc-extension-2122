@@ -5,6 +5,7 @@ const {
   Project_Partners,
   Project_Activities,
   Project_Evaluations,
+  Project_History,
   Partners
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
@@ -15,7 +16,7 @@ const datatable = require('../../utils/datatableResponse')
 exports.viewProposal = async (req, res) => {
   let id = req.params.id
 
-  let proposal = await Projects.findOne({
+  let project = await Projects.findOne({
     where: { id },
     include: [
       {
@@ -33,18 +34,25 @@ exports.viewProposal = async (req, res) => {
         model: Comments,
         as: 'comments',
         include: ['user'],
-        order: [['created_at', 'ASC']]
+      },
+      {
+        model: Project_History,
+        as: 'history',
       }
+    ],
+    order: [
+      ['history', 'created_at', 'ASC'],
+      ['comments', 'created_at', 'ASC']
     ]
 
   })
 
-  if (!proposal)
+  if (!project)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
 
   res.send({
     error: false,
-    data: proposal
+    data: project
   })
 
 }
@@ -146,12 +154,21 @@ exports.createProject = async (req, res) => {
       financial_requirements: body.financial_requirements,
       evaluation_plans: body.evaluation_plans,
       project_partners: project_partners,
-      created_by: req.auth.id
+      created_by: req.auth.id,
+      history: [
+        {
+          current_value: 'Created'
+        }
+      ]
     }, {
       include: [
         {
           model: Project_Partners,
           as: 'project_partners'
+        },
+        {
+          model: Project_History,
+          as: 'history'
         }
       ]
     })
@@ -271,21 +288,28 @@ exports.cancelProposal = async (req, res) => {
 
   let id = req.params.id
 
-  let proposal = await Projects.findByPk(id)
+  let project = await Projects.findByPk(id)
 
-  if (!proposal)
+  if (!project)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
 
-  if (proposal.status != 'Pending')
+  if (project.status != 'Pending')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
-  proposal.status = 'Cancelled'
+  project.status = 'Cancelled'
 
-  await proposal.save()
+  await project.save()
+
+  let history = await Project_History.create({
+    project_id: project.id,
+    previous_value: 'Pending',
+    current_value: 'Cancelled'
+  })
 
   res.send({
     error: false,
-    message: 'Proposal cancelled successfully!'
+    message: 'Proposal cancelled successfully!',
+    data: history
   })
 }
 
@@ -295,21 +319,28 @@ exports.requestForRevision = async (req, res) => {
 
   let id = req.params.id
 
-  let proposal = await Projects.findByPk(id)
+  let project = await Projects.findByPk(id)
 
-  if (!proposal)
+  if (!project)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
 
-  if (proposal.status != 'For Review')
+  if (project.status != 'For Review')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
-  proposal.status = 'For Revision'
+  project.status = 'For Revision'
 
-  await proposal.save()
+  await project.save()
+
+  let history = await Project_History.create({
+    project_id: project.id,
+    previous_value: 'For Review',
+    current_value: 'For Revision'
+  })
 
   res.send({
     error: false,
-    message: 'Request for revision has been saved successfully!'
+    message: 'Request for revision has been saved successfully!',
+    data: history
   })
 }
 
@@ -335,9 +366,16 @@ exports.submitForReviewProposal = async (req, res) => {
     project.status = 'For Review'
     await project.save()
 
+    let history = await Project_History.create({
+      project_id: project.id,
+      previous_value: 'Created',
+      current_value: 'For Review'
+    })
+
     res.send({
       error: false,
-      message: 'Project Proposal is submitted For Review'
+      message: 'Project Proposal is submitted For Review',
+      data: history
     })
 
   } catch (error) {
@@ -364,9 +402,16 @@ exports.submitForEvaluationProposal = async (req, res) => {
     project.presentation_date = body.presentation_date
     await project.save()
 
+    let history = await Project_History.create({
+      project_id: project.id,
+      previous_value: 'For Review',
+      current_value: 'For Evaluation'
+    })
+
     res.send({
       error: false,
-      message: 'Project is now For Evaluation'
+      message: 'Project is now For Evaluation',
+      data: history
     })
 
   } catch (error) {
@@ -381,21 +426,28 @@ exports.approveProposal = async (req, res) => {
 
   let id = req.params.id
 
-  let proposal = await Projects.findByPk(id)
+  let project = await Projects.findByPk(id)
 
-  if (!proposal)
+  if (!project)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
 
-  if (proposal.status != 'Pending')
+  if (project.status != 'Pending')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
-  proposal.status = 'Approved'
+  project.status = 'Approved'
 
-  await proposal.save()
+  await project.save()
+
+  let history = await Project_History.create({
+    project_id: project.id,
+    previous_value: 'Pending',
+    current_value: 'Approved'
+  })
 
   res.send({
     error: false,
-    message: 'Proposal approved successfully!'
+    message: 'Proposal approved successfully!',
+    data: history
   });
 }
 
