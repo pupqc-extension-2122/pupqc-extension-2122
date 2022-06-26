@@ -19,17 +19,16 @@ module.exports = {
       },
       previous_value: {
         type: Sequelize.STRING,
-        allowNull: false
       },
       current_value: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

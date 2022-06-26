@@ -30,10 +30,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     previous_value: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true
-      }
     },
     current_value: {
       type: DataTypes.STRING,
