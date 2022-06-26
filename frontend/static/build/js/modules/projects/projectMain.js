@@ -2621,3 +2621,51 @@ const AddProjectActivity = (() => {
     init,
   }
 })();
+
+
+const ProjectHistory = (()=>{
+
+  /**
+   * * Local Variables
+   *
+   */
+
+  const timeline_title = $('#timeline_title')
+
+  /**
+   * * Private Functions
+   */
+
+  const showTimeline = (history) => {
+    const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[history.current_value]
+    const previous = history.previous_value != null
+      ? history.previous_value + ' <i class="fa-solid fa-arrow-right"></i> '
+      : ''
+    return (`
+    <div>
+      <i class="${icon} bg-${theme}"></i>
+      <div class="timeline-item">
+        <div class="timeline-body small">
+          <div class="font-weight-bold">${previous}${history.current_value}</div>
+          <div>${moment(history.created_at).format('MMMM D, YYYY (dddd)')}</div>
+        </div>
+      </div>
+    </div>
+    `)
+  }
+
+  /**
+   * * Init
+   */
+
+  const init = (history) => {
+    history.forEach(el => {
+      timeline_title.after(showTimeline(el))
+    })
+  }
+
+  return {
+    init
+  }
+
+})()

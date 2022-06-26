@@ -38,6 +38,7 @@
         }
 
         ProjectComments.init(data.project);
+        ProjectHistory.init(data.project.history)
       }
     },
     error: (xhr, status, error) => {
