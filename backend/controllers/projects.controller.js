@@ -121,6 +121,9 @@ exports.createProject = async (req, res) => {
     if (project)
       return res.status(400).send({ error: true, message: 'This Project is already created' })
 
+    if (new Date(req.body.start_date) > new Date(req.body.end_date))
+      return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
+
     let partners = await Partners.findAll({
       where: {
         id: [...body.partner_id]
@@ -569,6 +572,9 @@ exports.createProjectActivities = async (req, res) => {
 
     if (!project)
       return res.status(404).send({ error: true, message: 'Project not found' })
+
+    if (new Date(req.body.start_date) > new Date(req.body.end_date))
+      return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
 
     let data = await Project_Activities.create({ ...body, project_id: id })
 
