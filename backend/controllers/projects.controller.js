@@ -37,7 +37,7 @@ exports.viewProposal = async (req, res) => {
         include: [
           {
             model: Users,
-            as: 'users',
+            as: 'user',
             attributes: {
               exclude: [
                 'id',
@@ -654,7 +654,7 @@ exports.addComment = async (req, res) => {
         include: [
           {
             model: Users,
-            as: 'users',
+            as: 'user',
             attributes: {
               exclude: [
                 'id',
