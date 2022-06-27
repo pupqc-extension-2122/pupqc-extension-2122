@@ -4,10 +4,6 @@ const datatable = require('../../utils/datatableResponse')
 exports.viewMemo = async (req, res) => {
   try {
 
-    if (!req.auth.roles.includes('Chief')) {
-      return res.status(403).send({ error: true, message: 'Forbidden Action' })
-    }
-
     let id = req.params.id
 
     let data = await Memos.findByPk(id, {
@@ -31,6 +27,9 @@ exports.viewMemo = async (req, res) => {
 exports.updateMemo = async (req, res) => {
 
   try {
+
+    if (req.auth.roles.include('Chief') && !req.auth.roles.include('Admin'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const id = req.params.id
     const body = req.body
