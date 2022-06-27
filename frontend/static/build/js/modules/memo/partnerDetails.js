@@ -75,7 +75,7 @@ const PartnerDetails = (() => {
           types: {
             created_at: 'date',
             representative_partner: 'string',
-            notarized_date: 'date',
+            validity_date: 'date',
             end_date: 'date',
           }
         }
@@ -114,21 +114,21 @@ const PartnerDetails = (() => {
 						}
           } 
         }, { 
-          data: 'notarized_date',
+          data: 'validity_date',
           width: '15%',
-          render: notarized_date => {
+          render: data => {
             return `
-              <div class="text-nowrap">${ formatDateTime(notarized_date, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(notarized_date) }</div>
+              <div class="text-nowrap">${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, { 
           data: 'end_date',
           width: '15%',
-          render: end_date => {
+          render: data => {
             return `
-              <div class="text-nowrap">${ formatDateTime(end_date, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(end_date) }</div>
+              <div class="text-nowrap">${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, {
