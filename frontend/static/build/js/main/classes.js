@@ -103,7 +103,7 @@ class ProjectTeamForm {
               </h1>
               <div>
                 <div class="font-weight-bold mb-2">Remove team member field</div>
-                <p>You've already entered some data here!<br>Are you sure you want to remove this team member field?<br>Your inputs can not be saved.</p>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this team member field?<br>Your inputs will not be saved.</p>
               </div>
             </div>
           </div>
@@ -368,7 +368,7 @@ class TargetGroupsForm {
               <div>
                 <div class="font-weight-bold mb-2">Remove target group field</div>
                 <p>You've already entered some data here!<br>Are you sure you want to remove this target group
-                  field?<br>Your inputs can not be saved.</p>
+                  field?<br>Your inputs will not be saved.</p>
               </div>
             </div>
           </div>
@@ -918,7 +918,7 @@ class FinancialRequirementsForm {
               </h1>
               <div>
                 <div class="font-weight-bold mb-2">Remove budget item category group</div>
-                <p>Are you sure you want to remove the entire budget category group?<br>Your inputs can not be saved.</p>
+                <p>Are you sure you want to remove the entire budget category group?<br>Your inputs will not be saved.</p>
               </div>
             </div>
           </div>
@@ -950,7 +950,7 @@ class FinancialRequirementsForm {
               <div>
                 <div class="font-weight-bold mb-2">Remove budget item</div>
                 <p>You've already entered some data here!<br>Are you sure you want to remove this budget item?<br>Your
-                  inputs can not be saved.</p>
+                  inputs will not be saved.</p>
               </div>
             </div>
           </div>
@@ -1593,7 +1593,7 @@ class EvaluationPlanForm {
 							<div>
 								<div class="font-weight-bold mb-2">Remove evaluation plan row</div>
 								<p>You've already entered some data here!<br>Are you sure you want to remove this plan row?<br>Your inputs
-									can not be saved.</p>
+									will not be saved.</p>
 							</div>
 						</div>
 					</div>
@@ -1982,7 +1982,7 @@ class ProjectActivityForm {
               </h1>
               <div>
                 <div class="font-weight-bold mb-2">Remove topic field</div>
-                <p>You've already entered some data here!<br>Are you sure you want to remove this topic field?<br>Your inputs can not be saved.</p>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this topic field?<br>Your inputs will not be saved.</p>
               </div>
             </div>
           </div>
@@ -2017,7 +2017,7 @@ class ProjectActivityForm {
             </h1>
             <div>
               <div class="font-weight-bold mb-2">Remove outcome field</div>
-              <p>You've already entered some data here!<br>Are you sure you want to remove this outcome field?<br>Your inputs can not be saved.</p>
+              <p>You've already entered some data here!<br>Are you sure you want to remove this outcome field?<br>Your inputs will not be saved.</p>
             </div>
           </div>
         </div>
@@ -2474,7 +2474,7 @@ class ProjectEvaluationForm {
               </h1>
               <div>
                 <div class="font-weight-bold mb-2">Remove evaluator row</div>
-                <p>You've already entered some data here!<br>Are you sure you want to remove this row?<br>Your inputs can not be saved.</p>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this row?<br>Your inputs will not be saved.</p>
               </div>
             </div>
           </div>

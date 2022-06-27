@@ -79,9 +79,9 @@ const ProjectDetails = (() => {
             
             let status;
             if (today.isBefore(start_date) && today.isBefore(end_date))
-              status = 'Soon';
+              status = 'Upcoming';
             else if (today.isAfter(start_date) && today.isAfter(end_date))
-              status = 'Ended';
+              status = 'Concluded';
             else if (today.isBetween(start_date, end_date))
               status = 'On going';
             else
@@ -2020,9 +2020,9 @@ const ProjectActivities = (() => {
               const today = moment();
               let status;
               if (today.isBefore(start_date) && today.isBefore(end_date)) {
-                status = 'Soon';
+                status = 'Upcoming';
               } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
-                status = 'Ended';
+                status = 'Concluded';
               } else if (today.isBetween(start_date, end_date)) {
                 status = 'On going';
               } else {

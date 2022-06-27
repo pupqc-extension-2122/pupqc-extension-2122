@@ -403,7 +403,7 @@ const PROJECT_EVALUATION_STATUS_STYLES = {
 
 // Project Monitoring Styles
 const PROJECT_MONITORING_STATUS_STYLES = {
-  'Ended': {
+  'Concluded': {
     icon: 'fas fa-calendar-check',
     theme: 'danger'
   },
@@ -411,7 +411,7 @@ const PROJECT_MONITORING_STATUS_STYLES = {
     icon: 'fas fa-hourglass',
     theme: 'warning'
   },
-  'Soon': {
+  'Upcoming': {
     icon: 'fas fa-calendar-day',
     theme: 'light'
   },
