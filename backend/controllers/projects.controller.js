@@ -375,14 +375,14 @@ exports.submitForReviewProposal = async (req, res) => {
     if (!(project.status == 'Created' || project.status == 'For Revision'))
       return res.status(400).send({ error: true, message: 'Invalid action' })
 
-    project.status = 'For Review'
-    await project.save()
-
     let history = await Project_History.create({
       project_id: project.id,
-      previous_value: 'Created',
+      previous_value: project.status,
       current_value: 'For Review'
     })
+
+    project.status = 'For Review'
+    await project.save()
 
     res.send({
       error: false,
