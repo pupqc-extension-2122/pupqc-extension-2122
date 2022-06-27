@@ -12,9 +12,10 @@ $('[data-auth="logout"]').on('click', () => {
     success: res => {
       if(res.error) {
         toastr.error('Something went wrong. Please reload the page.');
-        console.error(`[ERR]: ${ res.message }`);
+        ajaxErrorHandler(res.message);
       } else {
         toastr.info('Logging out.');
+        localStorage.clear();
         setTimeout(() => location.replace(`${ BASE_URL_WEB }/login`), 750);
       }
     },

@@ -14,6 +14,8 @@ const ORIGIN = location.origin;
 const BASE_URL_WEB = ORIGIN;
 const BASE_URL_API = ORIGIN + '/api';
 
+const USER_DATA_KEY = 'user_data';
+
 // DataTable Language
 const DT_LANGUAGE = {
   emptyTable: `

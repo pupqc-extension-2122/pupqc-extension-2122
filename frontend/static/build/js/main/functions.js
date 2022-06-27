@@ -44,6 +44,33 @@ const formatToPeso = (value) => {
 	});
 	return formatter.format(value);
 }
+
+/**
+ * Format Name
+ */
+const formatName = (format = '', fullName = { firstName: '', middleName: '', lastName: '', suffixName: '' }) => {
+	const F = $.trim(fullName.firstName);
+	const L = $.trim(fullName.lastName);
+
+	let M = $.trim(fullName.middleName);
+	let S = $.trim(fullName.suffixName);
+
+	const Mi = !M ? '' : ` ${M.charAt(0)}.`;
+
+	M = !M ? '' : ` ${M}`;
+	S = !S ? '' : `, ${S}`;
+
+	const formats = {
+		"L, F M., S": L + ', ' + F + Mi + S,
+		"F M. L, S": F + Mi + ' ' + L + S
+	}
+
+	return format in formats ? formats[format] : () => {
+		DEV_MODE && console.error(`Format "${format}" for name is invalid`);
+		return '';
+	}
+}
+
 /**
  * Set the value of input elements
  * @param {*} param1 
