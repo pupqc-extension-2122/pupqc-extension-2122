@@ -210,6 +210,9 @@ exports.updateProject = async (req, res) => {
     const id = req.params.id
     const body = req.body
 
+    if (new Date(req.body.start_date) > new Date(req.body.end_date))
+      return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
+
     let partners = body.partner_id
 
     let current_project = await Projects.findByPk(id, {
@@ -603,6 +606,9 @@ exports.updateProjectActivities = async (req, res) => {
     const project_id = req.params.project_id
     const activity_id = req.params.activity_id
     const body = req.body
+
+    if (new Date(body.start_date) > new Date(body.end_date))
+      return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
 
     let data = await Project_Activities.findOne({
       where: {
