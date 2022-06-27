@@ -12,6 +12,7 @@ const ProjectProposals = (() => {
    * * Local Variables
 	 */
   
+  const user_roles = JSON.parse(getCookie('roles'));
   let initialized = 0;
   let dt;
 
@@ -107,7 +108,8 @@ const ProjectProposals = (() => {
 				}, {
 					data: null,
 					render: data => {
-            const editable = data.status == 'Created' || data.status == 'For Revision'
+            const editable = 
+              user_roles.includes('Extensionist') && (data.status == 'Created' || data.status == 'For Revision')
                 ? `
                   <a 
                     class="dropdown-item"
@@ -138,7 +140,7 @@ const ProjectProposals = (() => {
 										class="dropdown-item"
 										href="${ BASE_URL_WEB }/p/proposals/${ data.id }/activities" 
 									>
-										<span>${ data.status == 'Created' || data.status == 'For Revision' ? 'Manage' : 'View' } activities</span>
+										<span>${ user_roles.includes('Extensionist') && (data.status == 'Created' || data.status == 'For Revision') ? 'Manage' : 'View' } activities</span>
 									</a>
 								</div>
                 
