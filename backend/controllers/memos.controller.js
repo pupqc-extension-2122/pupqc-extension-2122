@@ -63,10 +63,6 @@ exports.updateMemo = async (req, res) => {
 exports.dataTableMemo = async (req, res) => {
   try {
 
-    if (!req.auth.roles.includes('Extensionist')) {
-      return res.status(403).send({ error: true, message: 'Forbidden Action' })
-    }
-
     let data = await datatable(Memos, req.query, { include: ['organization'] })
 
     res.send(data)

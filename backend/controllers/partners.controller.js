@@ -76,10 +76,6 @@ exports.datatableMemos = async (req, res) => {
 exports.datatablePartners = async (req, res) => {
   try {
 
-    if (!req.auth.roles.includes('Extensionist') && !req.auth.roles.includes('Chief')) {
-      return res.status(403).send({ error: true, message: 'Forbidden Action' })
-    }
-
     let data = await datatable(Partners, req.query, {})
 
     res.send(data)
