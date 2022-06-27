@@ -6,7 +6,8 @@ const {
   Project_Activities,
   Project_Evaluations,
   Project_History,
-  Partners
+  Partners,
+  Users
 } = require('../sequelize/models')
 const { Op } = require('sequelize')
 const datatable = require('../../utils/datatableResponse')
@@ -33,7 +34,18 @@ exports.viewProposal = async (req, res) => {
       {
         model: Comments,
         as: 'comments',
-        include: ['user'],
+        include: [
+          {
+            model: Users,
+            as: 'users',
+            attributes: {
+              exclude: [
+                'id',
+                'password'
+              ]
+            }
+          }
+        ],
       },
       {
         model: Project_History,
@@ -639,7 +651,18 @@ exports.addComment = async (req, res) => {
       user_id: req.auth.id
     }).then(async result => {
       return await Comments.findByPk(result.id, {
-        include: ['user']
+        include: [
+          {
+            model: Users,
+            as: 'users',
+            attributes: {
+              exclude: [
+                'id',
+                'password'
+              ]
+            }
+          }
+        ]
       })
     })
 
