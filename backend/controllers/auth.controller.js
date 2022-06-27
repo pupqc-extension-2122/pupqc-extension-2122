@@ -76,7 +76,8 @@ exports.login = async (req, res) => {
 
       res.send({
         error: false,
-        message: 'Login Success!'
+        message: 'Login Success!',
+        data: { id, email, first_name, middle_name, last_name, suffix_name }
       })
     } else {
       res.send({
