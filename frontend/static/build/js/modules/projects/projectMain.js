@@ -718,13 +718,13 @@ const ProjectOptions = (() => {
         evaluation_date: {
           required: 'Please select when the evaluation occured.',
           dateISO: 'Your input is not a valid date.',
-          beforeDateTime: {
+          sameOrbeforeDateTime: {
             rule: project.end_date,
-            message: 'The evaluation date must be earlier than the end of the project timeline.'
+            message: 'The evaluation date must be same or earlier than the end of the project timeline.'
           },
-          afterDateTime: {
+          sameOrAfterDateTime: {
             rule: project.presentation_date,
-            message: 'The evaluation date must be later than the presentation date.'
+            message: 'The evaluation date must be same or later than the presentation date.'
           }
         },
       },
