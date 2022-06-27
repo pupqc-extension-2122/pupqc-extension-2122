@@ -60,7 +60,8 @@
     $.ajax({
       url: `${ BASE_URL_API }/auth/login`,
       type: 'POST',
-      data: data,
+      contentType: 'application/json;charset=UTF-8',
+      data: JSON.stringify(data),
       success: res => {
         if(res.error) {
           

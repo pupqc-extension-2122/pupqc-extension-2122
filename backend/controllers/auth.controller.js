@@ -58,10 +58,19 @@ exports.login = async (req, res) => {
       let { id, email, first_name, middle_name, last_name, suffix_name } = user
       let roles = user.Roles.map(el => el.name)
       let data = { id, email, first_name, middle_name, last_name, suffix_name, roles }
+      let expiresIn
+      let expires
 
+      if (body.remember) {
+        expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 5)
+        expiresIn = '5y'
+      } else {
+        expiresIn = '7h'
+        expires = new Date(Date.now() + 1000 * 60 * 60 * 7)
+      }
 
-      let token = await jwt.sign(JSON.stringify(data), process.env.JWT_SECRET)
-      res.cookie('token', token, { httpOnly: true, signed: true })
+      let token = await jwt.sign(data, process.env.JWT_SECRET, { expiresIn })
+      res.cookie('token', token, { httpOnly: true, signed: true, expires })
       res.cookie('user', data.id)
       res.cookie('roles', JSON.stringify(roles))
 
