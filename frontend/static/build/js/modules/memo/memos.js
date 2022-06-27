@@ -212,8 +212,8 @@ const Memos = (() => {
             created_at: 'date',
             partner_name: 'string',
             representative_partner: 'string',
-            notarized_date: 'date',
-            end: 'date',
+            validity_date: 'date',
+            end_date: 'date',
           }
         }
       },
@@ -234,7 +234,7 @@ const Memos = (() => {
           data: 'representative_partner',
           width: '20%',
         }, {
-          data: 'notarized_date',
+          data: 'validity_date',
           width: '20%',
           render: data => {
             return `
