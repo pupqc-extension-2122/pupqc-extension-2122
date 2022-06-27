@@ -2539,11 +2539,9 @@ class ProjectEvaluationForm {
       let sum = this.evaluators.reduce((a, c) => a + c.points, 0);
       let average = (sum/this.evaluators.length) || 0;
       
-      if (average >= 1 && average <= 100) {
-        averagePoints.html(`${ average.toFixed(4) }%`);
-      } else {
-        averagePoints.html('--');
-      }
+      (average >= 1 && average <= 100)
+        ? averagePoints.html(`${ average.toFixed(4) }%`)
+        : averagePoints.html('--');
 
       if (average >= 70 && average <= 100) {
         remarks.html(`
@@ -2709,5 +2707,18 @@ class ProjectEvaluationForm {
         remarks: averagePoints >= 70 ? 'PASSED' : 'FAILED',
       } 
     }
+  }
+}
+
+
+class ActivityEvaluationForm {
+  constructor(tableForm) {
+    this.form = tableForm;
+    
+    this.#initializations();
+  }
+
+  #initializations = () => {
+
   }
 }

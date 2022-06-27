@@ -20,7 +20,7 @@
     <div class="d-flex align-items-center justify-content-between">
       <div>
         <h1 class="m-0">Project Monitoring</h1>
-        <div class="text-secondary">Monitor approved and on going projects here</div>
+        <div class="text-secondary">View and monitor approved proposals</div>
       </div>
       <div>
         <!-- <button type="button" class="btn btn-default float-right" id="daterange-btn">
@@ -95,7 +95,6 @@
 
     <%# DataTable Card %>
     <div class="card card-outline card-primary">
-
       <div class="card-header">
           <div class="d-flex align-items-center justify-content-between">
             <h3 class="card-title">List of approved projects to be monitored</h3>
@@ -128,32 +127,30 @@
             </div>
           </div>
       </div>
-
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table w-100" id="projectMonitoring_dt">
-              <thead>
-                <th class="d-none">Date Created</th>
-                <th class="align-middle">Project Title</th>
-                <th class="align-middle">Target Group(s)</th>
-                <th class="align-middle">Date Started</th>
-                <th class="align-middle">Date Ended</th>
-                <th class="align-middle text-sm-center">Status</th>
-                <th class="align-middle">
-                  <span class="d-inline-block d-sm-none">Actions</span>
-                </th>
-              </thead>
-              <tbody>
-                <tr>
-                  <td colspan="6" class="text-center">
-                    <%- include('../../partials/loaders/dt_body') %>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table w-100" id="projectMonitoring_dt">
+            <thead>
+              <th class="d-none">Date Created</th>
+              <th class="align-middle">Project Title</th>
+              <th class="align-middle">Target Group(s)</th>
+              <th class="align-middle">Date Started</th>
+              <th class="align-middle">Date Ended</th>
+              <th class="align-middle text-sm-center">Status</th>
+              <th class="align-middle">
+                <span class="d-inline-block d-sm-none">Actions</span>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="6" class="text-center">
+                  <%- include('../../partials/loaders/dt_body') %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
 
   </div>

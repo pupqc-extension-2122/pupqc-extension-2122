@@ -25,59 +25,128 @@
         <%# Activity Details %>
         <div id="projectActivityDetails" style="display: none;">
           <h4 id="projectActivityDetails_title"></h4>
+          
+          <%# Nav tabs %>
+          <ul class="nav nav-pills mb-2" id="projectActivityDetails_tabs" role="tablist" style="display: none">
+            <li class="nav-item" role="presentation">
+              <a 
+                class="nav-link active" 
+                id="projecr" 
+                data-toggle="tab" 
+                href="#projectActivityDetails_details_pane" 
+                role="tab" 
+                aria-controls="projectActivityDetails_details_pane" 
+                aria-selected="true"
+              >Details</a>
+            </li>
 
-          <div class="row">
+            <div class="nav-item pl-1"></div>
 
-            <div class="col-12">
-              <hr class="my-2">
+            <li class="nav-item" role="presentation">
+              <a 
+                class="nav-link" 
+                id="projectActivityDetails_postEvaluation_tab" 
+                data-toggle="tab" 
+                href="#projectActivityDetails_postEvaluation_pane" 
+                role="tab" 
+                aria-controls="projectActivityDetails_postEvaluation_pane" 
+                aria-selected="false"
+              >Post Evaluation</a>
+            </li>
+          </ul>
+
+          <%# Tab panes %>
+          <div class="tab-content" id="projectActivityDetails_panes">
+            
+            <%# Details %>
+            <div 
+              class="tab-pane active" 
+              id="projectActivityDetails_details_pane" 
+              role="tabpanel" 
+              aria-labelledby="projecr"
+            >
+              <div class="row">
+    
+                <div class="col-12">
+                  <hr class="my-2">
+                </div>
+    
+                <%# Topics %>
+                <dt class="col-md-2">
+                  <div class="mx-2">Topics</div>
+                </dt>
+                <dd class="col-md-10">
+                  <div class="mx-2" id="projectActivityDetails_topics"></div>
+                </dd>
+    
+                <div class="col-12">
+                  <hr class="my-2">
+                </div>
+    
+                <%# Outcomes %>
+                <dt class="col-md-2">
+                  <div class="mx-2">Outcomes</div>
+                </dt>
+                <dd class="col-md-10">
+                  <div class="mx-2" id="projectActivityDetails_outcomes"></div>
+                </dd>
+    
+                <div class="col-12">
+                  <hr class="my-2">
+                </div>
+    
+                <%# Timeframe %>
+                <dt class="col-md-2">
+                  <div class="mx-2">Time Frame</div>
+                </dt>
+                <dd class="col-md-10">
+                  <div class="mx-2" id="projectActivityDetails_timeframe"></div>
+                </dd>
+    
+                <div class="col-12">
+                  <hr class="my-2">
+                </div>
+    
+                <%# Summary/Details %>
+                <dt class="col-md-2">
+                  <div class="mx-2">Summary / Details</div>
+                </dt>
+                <dd class="col-md-10">
+                  <div class="mx-2" id="projectActivityDetails_details"></div>
+                </dd>
+    
+                <div class="col-12">
+                  <hr class="my-2">
+                </div>
+              </div>
             </div>
 
-            <%# Topics %>
-            <dt class="col-md-2">
-              <div class="mx-2">Topics</div>
-            </dt>
-            <dd class="col-md-10">
-              <div class="mx-2" id="projectActivityDetails_topics"></div>
-            </dd>
-
-            <div class="col-12">
-              <hr class="my-2">
-            </div>
-
-            <%# Outcomes %>
-            <dt class="col-md-2">
-              <div class="mx-2">Outcomes</div>
-            </dt>
-            <dd class="col-md-10">
-              <div class="mx-2" id="projectActivityDetails_outcomes"></div>
-            </dd>
-
-            <div class="col-12">
-              <hr class="my-2">
-            </div>
-
-            <%# Timeframe %>
-            <dt class="col-md-2">
-              <div class="mx-2">Time Frame</div>
-            </dt>
-            <dd class="col-md-10">
-              <div class="mx-2" id="projectActivityDetails_timeframe"></div>
-            </dd>
-
-            <div class="col-12">
-              <hr class="my-2">
-            </div>
-
-            <%# Summary/Details %>
-            <dt class="col-md-2">
-              <div class="mx-2">Summary / Details</div>
-            </dt>
-            <dd class="col-md-10">
-              <div class="mx-2" id="projectActivityDetails_details"></div>
-            </dd>
-
-            <div class="col-12">
-              <hr class="my-2">
+            <%# Activity Evaluation Grade %>
+            <div 
+              class="tab-pane" 
+              id="projectActivityDetails_postEvaluation_pane" 
+              role="tabpanel" 
+              aria-labelledby="projectActivityDetails_postEvaluation_tab"
+            >
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <th width="90%" class="align-middle">Criteria</th>
+                    <th width="10%" class="align-middle text-right">Rate</th>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="2" class="font-weight-bold" style="background: #f6f6f6">Speaker</td>
+                    </tr>
+                    <% for( let index = 0; index < 5; index++ ) { %>
+                      <tr>
+                        <td>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis quasi eligendi ad quos quisquam quia eaque placeat, voluptas corporis accusamus! Aliquid doloribus maiores ea neque?</td>
+                        <td class="text-right">2.5</td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

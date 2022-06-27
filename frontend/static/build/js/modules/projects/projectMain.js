@@ -30,7 +30,16 @@ const ProjectDetails = (() => {
 
   const loadActiveBreadcrumb = () => {
     const title = project.title;
-    $('#active_breadcrumb').html(() => title.length > 30 ? `${ title.substring(0, 30) } ...` : title);
+    $('#active_breadcrumb').html(() => title.length > 33 ? `${ title.substring(0, 30) } ...` : title);
+  }
+
+  const loadDocumentTitle = () => {
+    const projectTitle = project.title;
+    const documentTitle = projectTitle.length > 78
+      ? projectTitle.substring(0, 75) + ' ...' 
+      : projectTitle;
+
+      setDocumentTitle(`${ documentTitle } - ${ $('#activities_dt').length ? 'Project Activities' : 'Project Details' }`);
   }
 
   const loadHeaderDetails = () => {
@@ -88,8 +97,24 @@ const ProjectDetails = (() => {
           }
 
           // * For evaluation mode * //
-          else if (mode === 'Evaluation') {
-            return 'Evaluation'
+          else if (mode === 'Activity Evaluation') {
+            const status = 'Not yet graded';
+            const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
+            return `
+              <div class="badge badge-subtle-${theme} py-1 px-2">
+                <i class="${icon} fa-fw mr-1"></i>
+                <span>${status}</span>
+              </div>
+            `
+          }
+
+          else {
+            return `
+              <div class="badge badge-subtle-light py-1 px-2">
+                <i class="fas fa-question fa-fw mr-1"></i>
+                <span>[ERR]: No data</span>
+              </div>
+            `
           }
         }
       });
@@ -364,6 +389,7 @@ const ProjectDetails = (() => {
 
   const loadDetails = (projectData) => {
     if (projectData) project = projectData;
+    loadDocumentTitle();
     loadHeaderDetails();
     loadBodyDetails();
   }
@@ -1173,6 +1199,47 @@ const ProjectOptions = (() => {
       }
     }
 
+    // * For Activity Evaluation
+    else if (mode === 'Activity Evaluation') {
+
+      // Dictionary of options
+      optionsDict = [
+        {
+          id: 'View activities',
+          category: 'Project Activities',
+          template: `
+            <div
+              role="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="location.replace('${BASE_URL_WEB}/p/evaluation/${id}/activities')"
+            >
+              <i class="fas fa-list text-primary fa-fw mr-1"></i>
+              <span>View activities</span>
+            </div>
+          `
+        }, {
+          id: 'View project details',
+          category: 'Project Details',
+          template: `
+            <div
+              role="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="location.replace('${BASE_URL_WEB}/p/evaluation/${id}')"
+            >
+              <i class="fas fa-list text-primary fa-fw mr-1"></i>
+              <span>View project details</span>
+            </div>
+          `
+        },
+      ];
+
+      if (body.length) {
+        optionList.push('View activities');
+      } else if (activitiesDT.length) {
+        optionList.push('View project details');
+      }
+    }
+
     // Set the options based on status
     setHTMLContent(options, getOptionList(optionList));
   }
@@ -1598,6 +1665,7 @@ const ProjectActivities = (() => {
   const dtElem = $('#activities_dt');
   const viewModal = $('#projectActivityDetails_modal');
   const editModal = $('#editProjectActivity_modal');
+  const submitActivityEvaluation_modal = $('#submitActivityEvaluation_modal');
   const editFormSelector = '#editProjectActivity_form';
   const editForm = $(editFormSelector)[0];
   const user_roles = JSON.parse(getCookie('roles'));
@@ -2010,9 +2078,170 @@ const ProjectActivities = (() => {
           }
         ]
       }
+    } else if (mode === 'Activity Evaluation') {
+      dtOptions = {
+        ...DT_CONFIG_DEFAULTS,
+        ajax: {
+          url: `${ BASE_URL_API }/projects/${ project.id }/activities`,
+          // success: result => {
+          //   console.log(result);
+          // },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/PropojectMonitoringDetails.js',
+              fn: 'ProjectActivities.initDataTable',
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            }, 1);
+          },
+          data: {
+            types: {
+              created_at: 'date',
+              activity_name: 'string',
+              start_date: 'date',
+              end_date: 'date'
+            }
+          }
+        },
+        columns: [
+          {
+            data: 'created_at',
+            visible: false
+          }, {
+            data: 'activity_name',
+            width: '25%',
+            render: (data, type, row) => {
+              return `<span role="button" class="text-primary" onclick="ProjectActivities.initViewMode('${ row.id }')">${ data }</span>`
+            }
+          }, {
+            data: null,
+            sortable: false,
+            width: '22.5%',
+            render: data => {
+              const topics = data.topics;
+              const length = topics.length;
+              if (length > 1) {
+                return `
+                  <div>${ topics[0]}</div>
+                  <div class="small text-muted">and ${ length - 1 } more.</div>
+                `
+              } else if (length == 1) {
+                return topics[0]
+              } else {
+                return `<div class="text-muted font-italic">No topics.</div>`
+              }
+            }
+          }, {
+            data: 'start_date',
+            width: '22.5%',
+            render: (data, type, row) => {
+              const start_date = data;
+              const needEdit = () => {
+                return !moment(start_date).isBetween(
+                  moment(project.start_date), 
+                  moment(project.end_date),
+                  undefined,
+                  '[]'
+                )
+                  ? `
+                    <i 
+                      class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                      style="--fa-animation-duration: 1s;"
+                      data-toggle="tooltip" 
+                      title="The start date should be within the project timeline"
+                    ></i>
+                  ` : ''
+              }
+              return `
+                <div>${ needEdit() }${formatDateTime(start_date, 'Date')}</div>
+                <div class="small text-muted">${ fromNow(start_date) }</div>
+              `
+            }
+          }, {
+            data: 'end_date',
+            width: '22.5%',
+            render: (data, type, row) => {
+              const end_date = data;
+              const needEdit = () => {
+                return !moment(end_date).isBetween(
+                  moment(project.start_date), 
+                  moment(project.end_date),
+                  undefined,
+                  '[]'
+                )
+                  ? `
+                    <i 
+                      class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                      style="--fa-animation-duration: 1s;"
+                      data-toggle="tooltip" 
+                      title="The end date should be within the project timeline"
+                    ></i>
+                  ` : ''
+              }
+              return `
+                <div>${ needEdit() }${formatDateTime(end_date, 'Date')}</div>
+                <div class="small text-muted">${ fromNow(end_date) }</div>
+              `
+            }
+          }, {
+            data: null,
+            searchable: false,
+            sortable: false,
+            render: (data, type, row) => {
+              let status = 'Not yet graded';
+              const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
+              return `
+                <div class="text-center">
+                  <div class="badge badge-subtle-${ theme } px-2 py-1">
+                    <i class="${ icon } fa-fw mr-1"></i>
+                    <span>${ status }</span>
+                  </div>
+                </div>
+              `;
+            }
+          }, {
+            data: null,
+            render: data => {
+  
+              const submitEvaluationGrade = () => {
+                const status = 'Not yet graded';
+                return user_roles.includes('Extensionist') && status == 'Not yet graded'
+                  ? `
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      onclick="ProjectActivities.submitPostEvaluation('${ data.id }')"
+                    >
+                      <span>Submit post evaluation</span>
+                    </button>
+                  `
+                  : ''
+              }
+  
+              return `
+                <div class="dropdown text-sm-center">
+                  <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </div>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-header">Options</div>
+                    <button
+                      type="button"
+                      class="dropdown-item"
+                      onclick="ProjectActivities.initViewMode('${ data.id }')"
+                    >
+                      <span>View details</span>
+                    </button>
+                    ${ submitEvaluationGrade() }
+                  </div>
+                </div>
+              `;
+            }
+          }
+        ]
+      }
     }
 
-    dt = dtElem.DataTable(dtOptions);
+    if (dtOptions) dt = dtElem.DataTable(dtOptions);
   }
 
   const handleEditForm = () => {
@@ -2146,7 +2375,7 @@ const ProjectActivities = (() => {
   }
 
   const initViewMode = async (activity_id) => {
-    
+
     // Show the modal
     viewModal.modal('show');
     
@@ -2308,10 +2537,15 @@ const ProjectActivities = (() => {
         });
       }
     });
+
+    if (mode === 'Activity Evaluation') $('#projectActivityDetails_tabs').show();
   }
 
   const initEditMode = async (activity_id) => {
-    if (!(project.status === 'Created' || project.status === 'For Revision')) return;
+    if (
+      mode !== 'Proposal'
+      || !(project.status === 'Created' || project.status === 'For Revision')
+    ) return;
     
     // Show the modal
     editModal.modal('show');
@@ -2368,6 +2602,12 @@ const ProjectActivities = (() => {
     });
   }
   
+  const submitPostEvaluation = async (activity_id) => {
+    if (mode !== 'Activity Evaluation') return;
+
+    submitActivityEvaluation_modal.modal('show');
+  }
+
   /**
 	 * * Init
 	 */
@@ -2392,6 +2632,7 @@ const ProjectActivities = (() => {
     reloadDataTable,
     initViewMode,
     initEditMode,
+    submitPostEvaluation
   }
 })();
 
@@ -2635,7 +2876,9 @@ const ProjectHistory = (()=>{
    *
    */
 
-  const timeline_title = $('#timeline_title')
+  const timeline = $('#timeline');
+  const timeline_title = $('#timeline_title');
+  let initialized = false;
 
   /**
    * * Private Functions
@@ -2646,17 +2889,21 @@ const ProjectHistory = (()=>{
     const previous = history.previous_value != null
       ? history.previous_value + ' <i class="fa-solid fa-arrow-right"></i> '
       : ''
-    return (`
-    <div>
-      <i class="${icon} bg-${theme}"></i>
-      <div class="timeline-item">
-        <div class="timeline-body small">
-          <div class="font-weight-bold">${previous}${history.current_value}</div>
-          <div>${moment(history.created_at).format('MMMM D, YYYY (dddd)')}</div>
+    return `
+      <div>
+        <i class="${icon} bg-${theme}"></i>
+        <div class="timeline-item">
+          <div class="timeline-body small">
+            <div class="font-weight-bold">${previous}${history.current_value}</div>
+            <div>${moment(history.created_at).format('MMMM D, YYYY (dddd)')}</div>
+          </div>
         </div>
       </div>
-    </div>
-    `)
+    `
+  }
+
+  const removeLoaders = () => {
+    timeline.show();
   }
 
   /**
@@ -2672,9 +2919,13 @@ const ProjectHistory = (()=>{
    */
 
   const init = (history) => {
-    history.forEach(el => {
-      addToTimeline(el)
-    })
+    if (!initialized) {
+      initialized = true;
+      history.forEach(el => {
+        addToTimeline(el)
+      });
+      removeLoaders();
+    }
   }
 
   return {

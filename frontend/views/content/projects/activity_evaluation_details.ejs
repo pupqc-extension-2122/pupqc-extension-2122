@@ -1,24 +1,20 @@
-<%# ***** NOT YET FINALIZED AND NOT WORKING ****** %>
+<%# ***** Body ***** %>
 
-<%# ***** Styles ****** %>
-
-
-
-
-<%# ***** Body ****** %>
-
-<%# Content Header %>
+<%# Content Header (Page header) %>
 <div class="content-header">
   <div class="container-fluid">
+
+    <%# Breadcrumb %>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
-      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p/monitoring">Project Monitoring</a></li>
-      <li class="breadcrumb-item active" id="active_breadcrumb">Project Details</li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p/evaluation">Projects Evaluation</a></li>
+      <li class="breadcrumb-item active">Project Details</li>
     </ol>
+    
+    <%# Title %>
     <div class="d-flex align-items-center justify-content-between">
       <div>
         <h1 class="m-0">Project Details</h1>
-        <!-- <div class="text-secondary">Evaluate projects here</div> -->
       </div>
       <div>
         <!-- <button type="button" class="btn btn-default float-right" id="daterange-btn">
@@ -32,13 +28,13 @@
 </div>
 
 <%# Main Content %>
-<section class="content">
+<main class="content">
   <div class="container-fluid">
-
+  
     <div class="row">
 
       <div class="col-md-9">
-        
+
         <%- include('../../partials/projects/project_details_header') %>
         <%- include('../../partials/projects/project_details_body') %>
         <%- include('../../partials/projects/comments') %>
@@ -54,12 +50,13 @@
     </div>
 
   </div>
-</section>
+</main>
 
 
-<%# ***** Script ****** %>
+
+<%# ***** Scripts ***** %>
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/modules/projects/projectMain.js"></script>
-<script src="<%=BASE_URL%>/js/modules/projects/projectMonitoringDetails.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/activityEvaluationDetails.js"></script>

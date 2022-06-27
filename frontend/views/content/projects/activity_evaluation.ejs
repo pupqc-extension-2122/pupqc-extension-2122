@@ -15,12 +15,12 @@
   <div class="container-fluid">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
-      <li class="breadcrumb-item active">Project Evaluation</li>
+      <li class="breadcrumb-item active">Activity Evaluation</li>
     </ol>
     <div class="d-flex align-items-center justify-content-between">
       <div>
-        <h1 class="m-0">Project Evaluation</h1>
-        <div class="text-secondary">Monitor approved and on going projects here</div>
+        <h1 class="m-0">Activity Evaluation</h1>
+        <div class="text-secondary">Manage activity evaluation per projects</div>
       </div>
       <div>
         <!-- <button type="button" class="btn btn-default float-right" id="daterange-btn">
@@ -93,36 +93,53 @@
         
     </div>
 
-    <%# Datatable Card %>
+    <%# DataTable Card %>
     <div class="card card-outline card-primary">
-
       <div class="card-header">
-        <div class="d-flex align-items-center justify-content-between">
-          <h3 class="card-title">List of Projects</h3>
-          <div class="card-tools">
-            <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse" title="Collapse card">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-negative" data-card-widget="maximize" title="Maximize/minimize card">
-              <i class="fas fa-expand"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-negative" title="Reload card content">
-              <i class="fas fa-sync-alt"></i>
-            </button>
+          <div class="d-flex align-items-center justify-content-between">
+            <h3 class="card-title">List of projects for evaluation</h3>
+            <div class="card-tools">
+              <button 
+                type="button" 
+                class="btn btn-sm btn-negative" 
+                data-card-widget="collapse" 
+                title="Collapse card"
+              >
+                <i class="fas fa-minus"></i>
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-sm btn-negative" 
+                data-card-widget="maximize" 
+                title="Maximize/minimize card"
+              >
+                <i class="fas fa-expand"></i>
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-sm btn-negative"
+                data-toggle="tooltip" 
+                title="Reload table"
+                onclick="ProjectMonitoring.reloadDataTable()"
+              >
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
           </div>
-        </div>
       </div>
-
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table w-100" id="projectEvaluation_dt">
+          <table class="table w-100" id="activityEvaluation_dt">
             <thead>
-              <th>Project Title</th>
-              <th>Implementer</th>
-              <th>Target Beneficiaaries</th>
-              <th>Date Start</th>
-              <th>Status</th>
-              <th>Actions</th>
+              <th class="d-none">Date Created</th>
+              <th class="align-middle">Project Title</th>
+              <th class="align-middle">Target Group(s)</th>
+              <th class="align-middle">Date Started</th>
+              <th class="align-middle">Date Ended</th>
+              <th class="align-middle text-sm-center">Status</th>
+              <th class="align-middle">
+                <span class="d-inline-block d-sm-none">Actions</span>
+              </th>
             </thead>
             <tbody>
               <tr>
@@ -133,7 +150,6 @@
             </tbody>
           </table>
         </div>
-
       </div>
     </div>
 
@@ -160,4 +176,4 @@
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
-<script src="<%=BASE_URL%>/js/modules/projects/projectEvaluation.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/activityEvaluation.js"></script>

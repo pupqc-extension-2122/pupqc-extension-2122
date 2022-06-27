@@ -25,6 +25,15 @@ const PartnerDetails = (() => {
 
   const noContentTemplate = (message) => `<div class="text-muted font-italic">${message}</div>`;
 
+  const loadDocumentTitle = () => {
+    const partnerName = partner.name;
+    const documentTitle = partnerName.length > 75 
+      ? partnerName.substring(0, 75) + ' ...' 
+      : partnerName;
+
+    setDocumentTitle(`${ documentTitle } - Parner Details`);
+  }
+
   const handleForm = () => {
     $app(formSelector).handleForm({
       validators: {
@@ -183,7 +192,13 @@ const PartnerDetails = (() => {
     });
   }
 
+  const loadActiveBreadcrumb = () => {
+    const name = partner.name;
+    $('#active_breadcrumb').html(() => name.length > 33 ? `${ name.substring(0, 30) } ...` : name);
+  }
+
   const loadDetails = () => {
+    loadActiveBreadcrumb();
     loadHeaderDetails();
   }
 
@@ -195,6 +210,7 @@ const PartnerDetails = (() => {
     if (!initialized) {
       initialized = true;
       partner = partnerData;
+      loadDocumentTitle();
       loadDetails();
       handleForm();
       removeLoaders();

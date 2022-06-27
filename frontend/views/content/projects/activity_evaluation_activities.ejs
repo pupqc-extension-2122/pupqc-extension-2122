@@ -1,7 +1,5 @@
 <%# ***** Styles ***** %>
 
-<%# Daterange Picker %>
-<link rel="stylesheet" href="<%=BASE_URL%>/plugins/daterangepicker/daterangepicker.css">
 <%# DataTables %>
 <link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -11,15 +9,28 @@
 
 <%# ***** Body ***** %>
 
-<%- include('../../partials/loaders/content_header') %>
+<%# Main Header Loader %>
+<div class="content-header" id="contentHeader_loader">
+  <div class="container-fluid">
+    <div class="skeleton text my-2" style="width: 15rem"></div>
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="flex-grow-1">
+        <div class="skeleton h1 d-block" style="width: 8rem"></div>
+        <%# <div class="text-secondary">Evaluate projects here</div> %>
+      </div>
+      <div>
+        <div class="skeleton btn" style="width: 8rem"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<%# Content Header %>
-<div class="content-header" id="contentHeader" style="display: none">
+<%# Main Header %>
+<div class="content-header" style="display: none" id="contentHeader">
   <div class="container-fluid">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
-      <li class="breadcrumb-item active"><a href="<%=BASE_URL%>/p/proposals">Project Proposals</a></li>
-      <li class="breadcrumb-item active" id="active_breadcrumb">Project Details</li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>">Projects</a></li>
+      <li class="breadcrumb-item active">Project Evaluation</li>
     </ol>
     <div class="d-flex align-items-center justify-content-between">
       <div>
@@ -126,15 +137,13 @@
 <%# === Modals === %>
 
 <%- include('../../partials/projects/modals/project_activity_details') %>
+<%- include('../../partials/projects/modals/submit_activity_evaluation') %>
+
 
 
 
 <%# ***** Scripts ***** %>
 
-<%# InputMask %>
-<script src="<%=BASE_URL%>/plugins/inputmask/jquery.inputmask.min.js"></script>
-<%# daterangepicker %>
-<script src="<%=BASE_URL%>/plugins/daterangepicker/daterangepicker.js"></script>
 <%# Datatable and Plugins %>
 <script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -152,4 +161,4 @@
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/modules/projects/projectMain.js"></script>
-<script src="<%=BASE_URL%>/js/modules/projects/projectMonitoringDetails.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/activityEvaluationDetails.js"></script>

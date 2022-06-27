@@ -417,9 +417,40 @@
       },
       '#projectDetailsConfirm_timeFrame': () => {
         if (start_date && end_date) {
+          const getDuration = () => {
+            return moment(start_date).isSame(moment(end_date))
+              ? 'in the whole day'
+              : moment(start_date).to(moment(end_date), true)
+          }
           return `
-            <div>${formatDateTime(start_date, 'Date')} - ${formatDateTime(end_date, 'Date')}</div>
-            <div class="small">Approximately ${moment(start_date).to(moment(end_date), true)}.</div>
+            <div class="ml-4 ml-lg-0 row">
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Start Date:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>${ moment(start_date).format('MMMM D, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(start_date) }</div>
+              </div>
+
+              <div class="col-12"><div class="mt-2"></div></div>
+
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">End Date:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>${ moment(end_date).format('MMMM D, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(end_date) }</div>
+              </div>
+
+              <div class="col-12"><div class="mt-2"></div></div>
+
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Duration:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>Approximately ${ getDuration() }</div>
+              </div>
+            </div>
           `
         } else return noContentTemplate('No dates have been set up.');
       },
