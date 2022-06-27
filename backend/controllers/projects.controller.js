@@ -477,9 +477,16 @@ exports.evaluateProposal = async (req, res) => {
       project.status = 'Pending'
       await project.save()
 
+      let history = await Project_History.create({
+        project_id: project.id,
+        previous_value: 'For Evaluation',
+        current_value: 'Pending'
+      })
+
       res.send({
         error: false,
-        message: 'Project Evaluation recorded'
+        message: 'Project Evaluation recorded',
+        data: history
       })
     }
 

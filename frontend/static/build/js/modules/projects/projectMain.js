@@ -485,6 +485,7 @@ const ProjectOptions = (() => {
             forApproval_modal.modal('hide');
             updateProjectDetails({ status: 'For Review' });
             enableElements();
+            ProjectHistory.addToTimeline(res.data);
             toastr.success('The proposal has been submitted successfully.');
           }
         }, 
@@ -544,6 +545,7 @@ const ProjectOptions = (() => {
             forRevision_modal.modal('hide');
             enableElements();
             updateProjectDetails({ status: 'For Revision' });
+            ProjectHistory.addToTimeline(res.data);
             toastr.success('Your request of project revision has been successfully saved.');
           }
         }, 
@@ -650,6 +652,7 @@ const ProjectOptions = (() => {
                 status: 'For Evaluation',
                 presentation_date: data.presentation_date 
               });
+              ProjectHistory.addToTimeline(res.data)
               toastr.success('A presentation schedule has been set.');
             }
           },
@@ -801,6 +804,7 @@ const ProjectOptions = (() => {
             approveProject_modal.modal('hide');
             enableElements();
             updateProjectDetails({ status: 'Approved' });
+            ProjectHistory.addToTimeline(res.data);
             toastr.success('The proposal has been approved.');
           }
         },
@@ -860,6 +864,7 @@ const ProjectOptions = (() => {
             cancelProposal_modal.modal('hide');
             enableElements();
             updateProjectDetails({ status: 'Cancelled' });
+            ProjectHistory.addToTimeline(res.data)
             toastr.success('The proposal has been submitted successfully.');
           }
         }, 
@@ -2655,17 +2660,26 @@ const ProjectHistory = (()=>{
   }
 
   /**
+   * *Public Functions
+   */
+
+  const addToTimeline = (history) => {
+    timeline_title.after(showTimeline(history))
+  }
+
+  /**
    * * Init
    */
 
   const init = (history) => {
     history.forEach(el => {
-      timeline_title.after(showTimeline(el))
+      addToTimeline(el)
     })
   }
 
   return {
-    init
+    init,
+    addToTimeline
   }
 
 })()
