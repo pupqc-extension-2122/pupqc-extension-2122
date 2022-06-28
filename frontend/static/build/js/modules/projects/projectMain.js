@@ -1726,7 +1726,7 @@ const ProjectActivities = (() => {
       });
   
       editModal.on('show.bs.modal', (e) => {
-        if (project.status !== 'Created') e.preventDefault();
+        if (!(project.status === 'Created' || project.status === 'For Revision')) e.preventDefault();
       });
   
       editModal.on('shown.bs.modal', () => $(editFormSelector).valid());
@@ -2546,7 +2546,7 @@ const ProjectActivities = (() => {
       mode !== 'Proposal'
       || !(project.status === 'Created' || project.status === 'For Revision')
     ) return;
-    
+
     // Show the modal
     editModal.modal('show');
 

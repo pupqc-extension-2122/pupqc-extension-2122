@@ -76,7 +76,7 @@
           toastr.success('Success!', null, {"positionClass": "toast-top-center mt-3"});
           submitBtn.html(`<i class="fas fa-check"></i>`);
           submitBtn.removeClass('btn-primary').addClass('btn-success');
-          setTimeout(() => location.assign('/p'), 750);
+          setTimeout(() => location.assign('/p'), 250);
         }
       },
       error: (xhr, status, error) => {
