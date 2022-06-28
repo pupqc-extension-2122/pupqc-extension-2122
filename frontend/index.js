@@ -25,6 +25,7 @@ app.use(`/`, require('./routers/auth.route'));
 
 app.use(`/p/`, require('./routers/projects.route'));
 app.use(`/m/`, require('./routers/memo.route'));
+app.use(`/a/`, require('./routers/admin.route'));
 app.use(`/t/`, require('./routers/test.route'));
 
 module.exports = app

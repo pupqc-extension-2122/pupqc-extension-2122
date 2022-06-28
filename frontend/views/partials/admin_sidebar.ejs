@@ -1,0 +1,54 @@
+<%# Main Sidebar Container %>
+<aside class="main-sidebar main-sidebar-custom sidebar-light-primary">
+
+  <%# Brand Logo %>
+  <div class="brand-link">
+    <img src="<%=BASE_URL%>/img/PUPLogo.png" alt="AdminLTE Logo" class="brand-image img-circle" style="opacity: .8">
+    <span class="brand-text">PUPQC-EPMS</span>
+  </div>
+
+  <%# Sidebar %>
+  <div class="sidebar border-right">
+
+    <%- include('./user_panel') %>
+    <%- include('./sidebar_search') %>
+
+    <%# Sidebar Menu %>
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
+        data-accordion="false">
+
+        <%# Core %>
+        <li class="nav-header">CORE</li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/a/dashboard" 
+            class="nav-link<% if (active_sidebar_tab == "Dashboard") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-chart-pie"></i>
+            <p class="text">Dashboard</p>
+          </a>
+        </li>
+
+        <%# ADMIN %>
+        <li class="nav-header">ADMIN</li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/a/users" 
+            class="nav-link<% if (active_sidebar_tab == "Users") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-users-cog"></i>
+            <p class="text">Users</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+
+  <%# Sidebar Custom/Footer %>
+  <div class="sidebar-custom border-right d-flex align-items-center justify-content-between">
+    <a href="#" class="btn btn-sm btn-negative"><i class="fas fa-cogs"></i></a>
+  </div>
+
+</aside>

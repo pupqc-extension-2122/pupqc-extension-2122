@@ -1,0 +1,178 @@
+<%# ***** Styles ***** %>
+
+<%# DataTables %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
+
+<%# ***** Body ***** %>
+
+<%# Content Header %>
+<div class="content-header">
+  <div class="container-fluid">
+
+    <%# Breadcrumb %>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%BASE_URL%>/a">SysAdmin</a></li>
+      <li class="breadcrumb-item active">Users</li>
+    </ol>
+
+    <div class="d-sm-flex align-items-sm-center justify-content-between">
+
+      <%# Header & Subtitle %>
+      <div class="flex-wrap mb-2 mb-md-0">
+        <h1 class="m-0">Users</h1>
+        <div class="text-secondary">Manage users and their roles and access here</div>
+      </div>
+
+      <%# Buttons %>
+      <div>
+        <a href="<%=BASE_URL%>/a/users/register" class="btn btn-primary">
+          <i class="fas fa-plus mr-1"></i>
+          <span>Register a user</span>
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<%# Main Content %>
+<main class="content">
+  <div class="container-fluid">
+    
+    <%# Info Cards %>
+    <div class="row d-none">
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Messages</span>
+            <span class="info-box-number">1,410</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Bookmarks</span>
+            <span class="info-box-number">410</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Uploads</span>
+            <span class="info-box-number">13,648</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+
+          <div class="info-box-content">
+            <span class="info-box-text">Likes</span>
+            <span class="info-box-number">93,139</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Datatable %>
+    <div class="card card-outline card-primary">
+
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between">
+          <h3 class="card-title">List of users</h3>
+          <div class="card-tools">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              data-card-widget="collapse"
+              data-toggle="tooltip"
+              title="Collapse card"
+            >
+              <i class="fas fa-minus"></i>
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              data-card-widget="maximize"
+              data-toggle="tooltip"
+              title="Maximize/minimize card"
+            >
+              <i class="fas fa-expand"></i>
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              data-toggle="tooltip"
+              title="Reload table"
+              onclick="ProjectProposals.reloadDataTable()"
+            >
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table w-100" id="users_dt">
+            <thead>
+              <th class="d-none">Date Created</th>
+              <th class="align-middle">User Name</th>
+              <th class="align-middle">Email</th>
+              <th class="align-middle">Role</th>
+              <th class="align-middle">Date Added</th>
+              <th class="align-middle text-sm-center">Status</th>
+              <th class="align-middle">
+                <span class="d-inline-block d-sm-none">Actions</span>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" class="text-center">
+                  <%- include('../../partials/loaders/dt_body') %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+
+
+<%# ***** Scripts ***** %>
+
+<%# Datatable and Plugins %>
+<script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/jszip/jszip.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<%# Main %> 
+<script src="<%=BASE_URL%>/js/main.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/projectProposals.js"></script>
