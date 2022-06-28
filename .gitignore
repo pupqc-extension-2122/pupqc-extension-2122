@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Uploads
+uploads/memo/**
+uploads/project/**
+!uploads/memo/README.md
+!uploads/project/README.md

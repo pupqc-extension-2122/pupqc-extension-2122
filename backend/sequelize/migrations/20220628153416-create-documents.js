@@ -1,55 +1,37 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Memos', {
+    await queryInterface.createTable('Documents', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      partner_id: {
+      project_id: {
         type: Sequelize.UUID,
         references: {
           model: {
-            tableName: 'Partners'
+            tableName: 'Projects'
           },
           key: 'id'
         }
       },
-      partner_name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      organization_id: {
+      memo_id: {
         type: Sequelize.UUID,
         references: {
           model: {
-            tableName: 'Organizations'
+            tableName: 'Memos',
           },
           key: 'id'
         }
       },
-      duration: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      validity_date: {
-        type: Sequelize.DATEONLY,
-        allowNull: false
-      },
-      end_date: {
-        type: Sequelize.DATEONLY,
-      },
-      representative_pup: {
+      file_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      representative_partner: {
+      path: {
         type: Sequelize.STRING,
         allowNull: false
-      },
-      notarized_date: {
-        type: Sequelize.DATEONLY
       },
       created_at: {
         allowNull: false,
@@ -59,9 +41,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    })
+    });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Memos');
+    await queryInterface.dropTable('Documents');
   }
 };
