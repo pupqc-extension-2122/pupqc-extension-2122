@@ -22,7 +22,7 @@ router.get('/login', (req, res) => {
 router.get('/forgot-password', (req, res) => {
   res.render(PATH + 'forgot_password', {
     layout: './layouts/auth',
-    document_title: 'Login',
+    document_title: 'Forgot Password',
   });
 });
 
