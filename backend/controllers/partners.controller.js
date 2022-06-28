@@ -88,9 +88,9 @@ exports.datatablePartners = async (req, res) => {
 exports.createPartner = async (req, res) => {
   try {
 
-    // if (!req.auth.roles.includes('Extensionist')) {
-    //   return res.status(403).send({ error: true, message: 'Forbidden Action' })
-    // }
+    if (!req.auth.roles.includes('Extensionist')) {
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+    }
     const body = req.body
     const files = req.files
 

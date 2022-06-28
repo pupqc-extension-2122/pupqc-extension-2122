@@ -6,7 +6,7 @@ const jwtMiddleWare = require('../../utils/jwtMiddleware')
 const { uploadMemoDocument } = require('../../utils/multerHelper')
 
 // Apply JWT Extraction to all routes
-// router.use(jwtMiddleWare)
+router.use(jwtMiddleWare)
 
 // Routes
 router.get('/datatables', datatablePartners)

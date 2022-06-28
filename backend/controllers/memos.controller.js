@@ -29,8 +29,8 @@ exports.updateMemo = async (req, res) => {
 
   try {
 
-    // if (req.auth.roles.includes('Chief') && !req.auth.roles.includes('Admin'))
-    //   return res.status(403).send({ error: true, message: 'Forbidden Action' })
+    if (req.auth.roles.includes('Chief') && !req.auth.roles.includes('Admin'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const id = req.params.id
     const body = req.body

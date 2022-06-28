@@ -6,7 +6,7 @@ const {
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 const { uploadMemoDocument } = require('../../utils/multerHelper')
 
-// router.use(jwtMiddleWare)
+router.use(jwtMiddleWare)
 
 router.get('/datatables', dataTableMemo)
 router.get('/:id', viewMemo)
