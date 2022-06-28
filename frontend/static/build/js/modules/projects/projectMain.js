@@ -45,77 +45,110 @@ const ProjectDetails = (() => {
   const loadHeaderDetails = () => {
     loadActiveBreadcrumb();
     
-    if (header.length) {
-      setHTMLContent({
-        '#projectDetails_header_title': project.title,
-        '#projectDetails_header_implementer': () => {
+    if (!header.length) return;
+    
+    setHTMLContent({
+      '#projectDetails_header_title': project.title,
+      '#projectDetails_header_implementer': () => {
+        return `
+          <i class="fas fa-gears fa-fw mr-2 text-dark" data-toggle="tooltip" title="Implementer"></i>
+          <span>${ project.implementer || noContentTemplate('No implementer has been set up.') }</span>
+        `
+      },
+      '#projectDetails_header_timeframe': () => `
+        <i class="fas fa-calendar-alt fa-fw mr-2 text-dark" data-toggle="tooltip" title="Time Frame"></i>
+        <span>${formatDateTime(project.start_date, 'Date')} - ${formatDateTime(project.end_date, 'Date')}</span>
+      `,
+      '#projectDetails_header_status': () => {
+
+        // * For proposal mode * //
+        if (mode == 'Proposal') {
+          const status = project.status;
+          const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[status];
           return `
-            <i class="fas fa-gears fa-fw mr-2 text-dark" data-toggle="tooltip" title="Implementer"></i>
-            <span>${ project.implementer || noContentTemplate('No implementer has been set up.') }</span>
+            <div class="badge badge-subtle-${theme} py-1 px-2">
+              <i class="${icon} fa-fw mr-1"></i>
+              <span>${status}</span>
+            </div>
           `
-        },
-        '#projectDetails_header_timeframe': () => `
-          <i class="fas fa-calendar-alt fa-fw mr-2 text-dark" data-toggle="tooltip" title="Time Frame"></i>
-          <span>${formatDateTime(project.start_date, 'Date')} - ${formatDateTime(project.end_date, 'Date')}</span>
-        `,
-        '#projectDetails_header_status': () => {
-
-          // * For proposal mode * //
-          if (mode == 'Proposal') {
-            const status = project.status;
-            const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[status];
-            return `
-              <div class="badge badge-subtle-${theme} py-1 px-2">
-                <i class="${icon} fa-fw mr-1"></i>
-                <span>${status}</span>
-              </div>
-            `
-          } 
+        } 
+        
+        // * For monitoring mode * //
+        else if (mode === 'Monitoring') {
+          const { start_date, end_date } = project;
+          const today = moment();
           
-          // * For monitoring mode * //
-          else if (mode === 'Monitoring') {
-            const { start_date, end_date } = project;
-            const today = moment();
-            
-            let status;
-            if (today.isBefore(start_date) && today.isBefore(end_date))
-              status = 'Upcoming';
-            else if (today.isAfter(start_date) && today.isAfter(end_date))
-              status = 'Concluded';
-            else if (today.isBetween(start_date, end_date))
-              status = 'On going';
-            else
-              status = 'No data';
-  
-            const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
-            return `
-              <div class="badge badge-subtle-${theme} py-1 px-2">
-                <i class="${icon} fa-fw mr-1"></i>
-                <span>${status}</span>
-              </div>
-            `
-          }
+          let status;
+          if (today.isBefore(start_date) && today.isBefore(end_date))
+            status = 'Upcoming';
+          else if (today.isAfter(start_date) && today.isAfter(end_date))
+            status = 'Concluded';
+          else if (today.isBetween(start_date, end_date))
+            status = 'On going';
+          else
+            status = 'No data';
 
-          // * For evaluation mode * //
-          else if (mode === 'Activity Evaluation') {
-            const status = 'Not yet graded';
-            const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
-            return `
-              <div class="badge badge-subtle-${theme} py-1 px-2">
-                <i class="${icon} fa-fw mr-1"></i>
-                <span>${status}</span>
-              </div>
-            `
-          }
+          const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
+          return `
+            <div class="badge badge-subtle-${theme} py-1 px-2">
+              <i class="${icon} fa-fw mr-1"></i>
+              <span>${status}</span>
+            </div>
+          `
+        }
 
-          else {
-            return `
-              <div class="badge badge-subtle-light py-1 px-2">
-                <i class="fas fa-question fa-fw mr-1"></i>
-                <span>[ERR]: No data</span>
+        // * For evaluation mode * //
+        else if (mode === 'Activity Evaluation') {
+          const status = 'Not yet graded';
+          const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
+          return `
+            <div class="badge badge-subtle-${theme} py-1 px-2">
+              <i class="${icon} fa-fw mr-1"></i>
+              <span>${status}</span>
+            </div>
+          `
+        }
+
+        else {
+          return `
+            <div class="badge badge-subtle-light py-1 px-2">
+              <i class="fas fa-question fa-fw mr-1"></i>
+              <span>[ERR]: No data</span>
+            </div>
+          `
+        }
+      }
+    });
+
+    if (project.status == 'For Evaluation' && project.presentation_date) {
+      $('#projectDetails_header_status').after(() => {
+        const presentationDate = moment(project.presentation_date);
+        const formattedPresentationDate = presentationDate.format('MMMM D, YYYY (dddd)');
+        const humanizedPresentationDate = presentationDate.fromNow();
+        if (moment(presentationDate).isAfter(moment())) {
+          return `
+            <div id="presentationDate_notif" class="d-flex px-3 py-2 border border-info mt-3 rounded" style="background: #2b6cb022">
+              <div class="mr-2">
+                <i class="fas fa-calendar-alt fa-fw text-info"></i>
               </div>
-            `
-          }
+              <div>
+                <div>The presentation has been set on <span class="font-weight-bold">${ formattedPresentationDate }</span></div>
+                <div class="small text-muted">${ humanizedPresentationDate }</div>
+              </div>
+            </div>
+          `;
+        } else {
+          return `
+            <div id="presentationDate_notif" class="d-flex px-3 py-2 border border-warning mt-3 rounded" style="background: #fff1ec">
+              <div class="mr-2">
+                <i class="fas fa-calendar-alt fa-fw text-warning"></i>
+              </div>
+              <div>
+                <div>The presentation has been set on <span class="font-weight-bold">${ formattedPresentationDate }</span></div>
+                <div class="small text-muted">${ humanizedPresentationDate }</div>
+              </div>
+            </div>
+          `
         }
       });
     }
