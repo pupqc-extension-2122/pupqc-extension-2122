@@ -1,5 +1,6 @@
-const { Memos } = require('../sequelize/models')
+const { Memos, Documents } = require('../sequelize/models')
 const datatable = require('../../utils/datatableResponse')
+const fs = require('fs')
 
 exports.viewMemo = async (req, res) => {
   try {
@@ -28,11 +29,12 @@ exports.updateMemo = async (req, res) => {
 
   try {
 
-    if (req.auth.roles.include('Chief') && !req.auth.roles.include('Admin'))
-      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+    // if (req.auth.roles.includes('Chief') && !req.auth.roles.includes('Admin'))
+    //   return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const id = req.params.id
     const body = req.body
+    const files = req.files
 
     let memo = await Memos.findOne({ where: { id } })
 
@@ -47,6 +49,32 @@ exports.updateMemo = async (req, res) => {
     memo.notarized_date = body.notarized_date
 
     await memo.save()
+
+    let documents = await Documents.findAll({ where: { memo_id: id } })
+    let new_documents = files.map(el => el.originalname)
+    let old_documents = documents.map(el => el.file_name)
+
+    new_documents.forEach(async (el, index) => {
+      if (!old_documents.includes(el)) {
+        await Documents.create({
+          memo_id: id,
+          file_name: el,
+          path: files[index].path
+        })
+      }
+    })
+
+    documents.forEach(async (el) => {
+      fs.unlinkSync(el.path)
+      if (new_documents.includes(el.file_name)) {
+        let new_path = files.filter(row => row.originalname == el.file_name)[0].path
+        el.path = new_path
+        await el.save()
+      } else {
+        await el.destroy()
+      }
+    })
+
 
     res.send({
       error: false,

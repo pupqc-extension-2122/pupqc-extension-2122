@@ -1,6 +1,6 @@
 const { Op } = require('sequelize')
 const datatable = require('../../utils/datatableResponse')
-const { Partners, Memos } = require('../sequelize/models')
+const { Partners, Memos, Documents } = require('../sequelize/models')
 
 exports.countPartners = async (req, res) => {
   let all_count = await Partners.count()
@@ -88,10 +88,11 @@ exports.datatablePartners = async (req, res) => {
 exports.createPartner = async (req, res) => {
   try {
 
-    if (!req.auth.roles.includes('Extensionist')) {
-      return res.status(403).send({ error: true, message: 'Forbidden Action' })
-    }
+    // if (!req.auth.roles.includes('Extensionist')) {
+    //   return res.status(403).send({ error: true, message: 'Forbidden Action' })
+    // }
     const body = req.body
+    const files = req.files
 
     let [partner, created] = await Partners.findOrCreate({
       where: {
@@ -129,6 +130,16 @@ exports.createPartner = async (req, res) => {
     })
 
     if (memo) {
+      if (files.length) {
+        files.forEach(async (el) => {
+          await Documents.create({
+            memo_id: memo.id,
+            file_name: el.originalname,
+            path: el.path
+          })
+        })
+      }
+
       res
         .status(200)
         .send({ error: false, message: 'Partnership Added!' })
