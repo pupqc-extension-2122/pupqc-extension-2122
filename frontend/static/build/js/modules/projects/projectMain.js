@@ -751,7 +751,7 @@ const ProjectOptions = (() => {
         evaluation_date: {
           required: 'Please select when the evaluation occured.',
           dateISO: 'Your input is not a valid date.',
-          sameOrbeforeDateTime: {
+          sameOrBeforeDateTime: {
             rule: project.end_date,
             message: 'The evaluation date must be same or earlier than the end of the project timeline.'
           },
@@ -1322,9 +1322,7 @@ const ProjectOptions = (() => {
 
 const ProjectComments = (() => {
   
-  /**
-	 * * Local Variables
-	 */
+  // * Local Methods
 
   const container = $('#projectComments_commentsList');
   const formSelector = '#projectComment_form';
@@ -1333,12 +1331,11 @@ const ProjectComments = (() => {
   const user_id = getCookie('user');
   const noCommentDisplay = $('#projectComments_commentsList_noComment');
   let project;
+  let comments = [];
   let initialized = false;
   let processing = false;
 
-  /**
-	 * * Private Functions
-	 */
+  // * Private Methods
 
   const resetForm = () => {
     commentInput.val('').trigger('input');
@@ -1371,35 +1368,43 @@ const ProjectComments = (() => {
     const enableElements = () => {
       submitBtn.attr('disabled', false);
       submitBtn.html('<i class="fas fa-share"></i>');
-      processing = false;
     }
 
     const data = { body: fd.get('comment') }
+
+    const { blockId, commentBlock } = addComment({
+      id: '',
+      body: data.body,
+      created_at: moment().toISOString(),
+      user: User.getData()
+    });
+
+    resetForm();
+    enableElements();          
+    if (comments.length > 0) noCommentDisplay.hide();
 
     await $.ajax({
       url: `${ BASE_URL_API }/projects/${ project.id }/comments/add`,
       type: 'POST',
       data: data,
       success: res => {
+        processing = false;
         if (res.error) {
           ajaxErrorHandler(res.message);
-          enableElements();
+          removeComment(blockId, commentBlock);
         } else {
-          const newComment = { ...res.data };
-          project.comments.push(newComment);
-          addComment(newComment);
-          resetForm();
-          enableElements();          
-          if (project.comments.length > 0) noCommentDisplay.hide();
+          comments = comments.map(x => x.block_id == blockId 
+            ? { ...res.data, block_id: blockId } : x);
         }
       },
       error: (xhr, status, error) => {
+        processing = false;
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectComments.handleForm().$.ajax',
           details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
         });
-        enableElements();
+        removeComment(blockId, commentBlock);
       }
     });
   }
@@ -1410,26 +1415,36 @@ const ProjectComments = (() => {
     if (!comments.length) {
       noCommentDisplay.show();
     } else {
-      comments.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      // comments.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
       comments.forEach(c => addComment({ ...c }));
     }
   }
 
-  const removeComment = (commentId, commentBlock) => {
+  const removeComment = async (blockId, commentBlock) => {
     if (processing) return;
     processing = true;
 
-    $.ajax({
+    const commentId = comments.find(x => x.block_id == blockId).id;
+    if (!commentId) {
+      processing = false;
+      commentBlock.remove();
+      return;
+    }
+
+    commentBlock.hide();
+
+    await $.ajax({
       url: `${ BASE_URL_API }/projects/${ project.id }/comments/${ commentId }`,
       type: 'DELETE',
       success: res => {
         processing = false;
         if (res.error) {
           ajaxErrorHandler(res.message);
+          commentBlock.show();
         } else {
+          comments = comments.filter(x => x.id != commentId);
           commentBlock.remove();
-          project.comments = project.comments.filter(x => x.id != commentId);
-          if (project.comments.length === 0) noCommentDisplay.show();
+          if (comments.length === 0) noCommentDisplay.show();
         }
       },
       error: (xhr, status, error) => {
@@ -1438,13 +1453,18 @@ const ProjectComments = (() => {
           fn: 'ProjectComments.removeComment().$.ajax',
           details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
         });
+        commentBlock.show();
         processing = false;
       }
     });
   }
 
-  const initEditComment = (commentId, commentBlock) => {
+  const initEditComment = (blockId, commentBlock) => {
 
+    // Get the comment id
+    const commentId = comments.find(x => x.block_id === blockId).id;
+    if (!commentId) return;
+    
     // Check if there are active edit blocks
     const activeEditBodySection = container.find(`[data-comment-section="editBody"]`);
     if (activeEditBodySection.length) {
@@ -1462,7 +1482,7 @@ const ProjectComments = (() => {
 
     // Append the form
     bodySection.append(`
-      <div class="mt-1" data-comment-section="editBody">
+      <form class="mt-1" data-comment-section="editBody">
         <div class="form-group mr-3 mb-0 flex-grow-1">
           <input 
             type="text"
@@ -1490,16 +1510,21 @@ const ProjectComments = (() => {
             <span>Cancel</span>
           </button>
         </div>
-      </div>
+      </form>
     `);
     
     // * Initiate input * //
-    
+
+    const input = bodySection.find(`[data-comment-input="editBody"]`);
+
     // Get the old comment
-    const oldBody = project.comments.find(x => x.id == commentId).body;
+    const oldBody = comments.find(x => x.id == commentId).body;
 
     // Set the value
-    bodySection.find(`[data-comment-input="editBody"]`).val(oldBody);
+    input.val(oldBody);
+
+    // Set focus on input
+    input.focus();
 
     // * Initiate buttons * //
 
@@ -1518,42 +1543,40 @@ const ProjectComments = (() => {
           </span>
         `);
 
-        const enableElements = () => {
-          saveBtn.attr('disabled', false);
-          saveBtn.html(`
-            <span class="px-3">
-              <i class="fas fa-spinner fa-spin-pulse"></i>
-            </span>
-          `);
-          processing = false;
-        }
-
         const newBody = bodySection.find(`[data-comment-input="editBody"]`).val();
+        
+        saveBtn.tooltip('hide');
+        bodySection.find(`[data-comment-section="editBody"]`).remove();
+        displayBodySection.show();
+        
+        if (newBody === oldBody) {
+          processing = false;
+          return;
+        }
+        
+        displayBodySection.find(`[data-comment-part="body"]`).html(newBody);
 
         await $.ajax({
           url: `${ BASE_URL_API }/projects/${ project.id }/comments/${ commentId }`,
           type: 'PUT',
           data: { body: newBody },
           success: res => {
+            processing = false;
             if (res.error) {
               ajaxErrorHandler(res.message);
-              enableElements();
+              displayBodySection.find(`[data-comment-part="body"]`).html(oldBody);
             } else {
-              saveBtn.tooltip('hide');
-              project.comments = project.comments.map(x => x.id == commentId ? { ...x, body: newBody} : x);
-              displayBodySection.find(`[data-comment-part="body"]`).html(newBody);
-              bodySection.find(`[data-comment-section="editBody"]`).remove();
-              displayBodySection.show();
-              processing = false;
+              comments = comments.map(x => x.id == commentId ? { ...x, body: newBody} : x);
             }
           },
           error: (xhr, status, error) => {
+            processing = false;
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: 'ProjectComments.handleForm().$.ajax',
               details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
             });
-            enableElements();
+            displayBodySection.find(`[data-comment-part="body"]`).html(oldBody);
           }
         })
       });
@@ -1573,24 +1596,10 @@ const ProjectComments = (() => {
     $('#commments_card').show();
   }
 
-  /**
-	 * * Public Functions
-	 */
+  // * Public Methods
 
-  const init = (projectData) => {
-    if (!initialized) {
-      initialized = true;
-      project = {
-        id: projectData.id,
-        comments: projectData.comments,
-      };
-      handleForm();
-      loadComments();
-      removeLoaders();
-    }
-  }
-
-  const addComment = ({ id, body, created_at, user }) => {
+  const addComment = (commentObj) => {
+    const { body, created_at, user } = commentObj;
     const blockId = uuid();
 
     // Check if commented by user, if that's the case then add the buttons
@@ -1648,6 +1657,7 @@ const ProjectComments = (() => {
     `
 
     // Append the comment
+    comments.push({ ...commentObj, block_id: blockId });
     container.prepend(comment);
 
     // * Initialize the buttons * //
@@ -1658,14 +1668,12 @@ const ProjectComments = (() => {
     const deleteBtn = commentBlock.find(`[data-comment-btn="delete"]`);
 
     if (editBtn.length) {
-      editBtn.on('click', () => {
-        initEditComment(id, commentBlock);
-      });
+      editBtn.on('click', () => initEditComment(blockId, commentBlock));
     }
 
     if (deleteBtn.length) {
       deleteBtn.on('click', () => {
-        removeComment(id, commentBlock);
+        removeComment(blockId, commentBlock);
       });
     }
 
@@ -1675,11 +1683,29 @@ const ProjectComments = (() => {
       const newTime = getTime();
       if (timeDisplay.html() != newTime) timeDisplay.html(newTime);
     }, 200);
+
+    return {
+      blockId,
+      commentBlock
+    }
   }
 
-  /**
-	 * * On DOM Load
-	 */
+  // * Init
+
+  const init = (projectData) => {
+    if (!initialized) {
+      initialized = true;
+      project = {
+        id: projectData.id,
+        comments: projectData.comments,
+      };
+      handleForm();
+      loadComments();
+      removeLoaders();
+    }
+  }
+
+  // * Return Public Methods
 
   return {
     init,
