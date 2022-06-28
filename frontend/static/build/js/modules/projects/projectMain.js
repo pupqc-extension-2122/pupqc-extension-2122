@@ -1933,7 +1933,7 @@ const ProjectActivities = (() => {
         },
         columns: [
           {
-            data: 'created_at',
+            data: 'start_date',
             visible: false
           }, {
             data: 'activity_name',
@@ -2104,7 +2104,7 @@ const ProjectActivities = (() => {
         },
         columns: [
           {
-            data: 'created_at',
+            data: 'start_date',
             visible: false
           }, {
             data: 'activity_name',
