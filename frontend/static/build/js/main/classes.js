@@ -1925,6 +1925,7 @@ class ProjectActivityForm {
 							type="button" 
 							class="btn btn-sm btn-negative text-danger"
 							${removeBtn}="${formGroupId}"
+              data-toggle="tooltip"
 							title="Remove topic field"
 						>
 							<i class="fas fa-times"></i>
@@ -1955,7 +1956,8 @@ class ProjectActivityForm {
 							type="button" 
 							class="btn btn-sm btn-negative text-danger"
 							${removeBtn}="${formGroupId}"
-							title="Remove team member field"
+              data-toggle="tooltip"
+							title="Remove outcome field"
 						>
 							<i class="fas fa-times"></i>
 						</button>

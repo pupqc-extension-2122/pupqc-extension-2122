@@ -2571,8 +2571,8 @@ const ProjectActivities = (() => {
           setInputValue({
             '#editProjectActivity_activityId': activity_id,
             '#editProjectActivity_title': activity_name,
-            '#editProjectActivity_startDate': formatDateTime(start_date, 'MM/DD/YYYY'),
-            '#editProjectActivity_endDate': formatDateTime(end_date, 'MM/DD/YYYY'),
+            '#editProjectActivity_startDate': formatDateTime(start_date, 'YYYY-MM-DD'),
+            '#editProjectActivity_endDate': formatDateTime(end_date, 'YYYY-MM-DD'),
             '#editProjectActivity_details': details,
           });
 
