@@ -107,6 +107,7 @@ const ProjectProposals = (() => {
 					}
 				}, {
 					data: null,
+          width: '5%',
 					render: data => {
             const editable = 
               user_roles.includes('Extensionist') && (data.status == 'Created' || data.status == 'For Revision')
@@ -121,7 +122,7 @@ const ProjectProposals = (() => {
                 : ''
 
 						return `
-							<div class="dropdown text-sm-center">
+							<div class="dropdown text-center">
 
 								<div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
 									<i class="fas fa-ellipsis-h"></i>

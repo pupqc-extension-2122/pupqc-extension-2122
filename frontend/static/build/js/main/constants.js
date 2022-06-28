@@ -24,22 +24,8 @@ const DT_LANGUAGE = {
       <div class="text-secondary">Hey! We found no records here yet.</div>
     </div>
   `,
-  loadingRecords: `
-    <div class="text-center py-5 wait">
-      <div class="spinner-grow text-primary mb-3" role="status">
-        <span class="sr-only">Loading ...</span>
-      </div>
-      <div class="text-secondary">Making it ready ...</div>
-    </div>
-  `,
-  processing: `
-    <div class="text-center p-5 wait">
-      <div class="spinner-grow text-primary mb-3" role="status">
-        <span class="sr-only">Loading ...</span>
-      </div>
-      <div class="text-secondary">Processing, please wait ...</div>
-    </div>
-  `,
+  loadingRecords: `Loading...`,
+  processing: `Processing`,
   zeroRecords: `
     <div class="text-center p-5">
       <h3>No match found</h3>
@@ -104,6 +90,12 @@ const DT_CONFIG_DEFAULTS = {
     {
       targets: [-1],
       orderable: false,
+    }, { 
+      responsivePriority: 1, 
+      targets: 0 
+    }, { 
+      responsivePriority: 2, 
+      targets: -1 
     }
   ],
   autoWidth: false,

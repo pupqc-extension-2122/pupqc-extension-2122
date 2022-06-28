@@ -1945,7 +1945,7 @@ const ProjectActivities = (() => {
               }
   
               return `
-                <div class="dropdown text-sm-center">
+                <div class="dropdown text-center">
                   <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
                     <i class="fas fa-ellipsis-h"></i>
                   </div>
@@ -2099,6 +2099,7 @@ const ProjectActivities = (() => {
             }
           }, {
             data: null,
+            width: '5%',
             render: data => {
   
               const editOption = () => {
@@ -2116,7 +2117,7 @@ const ProjectActivities = (() => {
               }
   
               return `
-                <div class="dropdown text-sm-center">
+                <div class="dropdown text-center">
                   <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
                     <i class="fas fa-ellipsis-h"></i>
                   </div>
@@ -2259,6 +2260,7 @@ const ProjectActivities = (() => {
             }
           }, {
             data: null,
+            width: '5%',
             render: data => {
   
               const submitEvaluationGrade = () => {
@@ -2277,7 +2279,7 @@ const ProjectActivities = (() => {
               }
   
               return `
-                <div class="dropdown text-sm-center">
+                <div class="dropdown text-center">
                   <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
                     <i class="fas fa-ellipsis-h"></i>
                   </div>

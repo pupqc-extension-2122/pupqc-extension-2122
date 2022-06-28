@@ -110,7 +110,7 @@ const ProjectMonitoring = (() => {
             }
             const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
             return `
-              <div class="text-center">
+              <div class="text-sm-center">
                 <div class="badge badge-subtle-${ theme } px-2 py-1">
                   <i class="${ icon } fa-fw mr-1"></i>
                   <span>${ status }</span>
@@ -120,9 +120,10 @@ const ProjectMonitoring = (() => {
           }
         }, {
           data: null,
+          width: '5%',
           render: data => {
             return `
-              <div class="dropdown text-center">
+              <div class="dropdown textcenter">
                 <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
                   <i class="fas fa-ellipsis-h"></i>
                 </div>

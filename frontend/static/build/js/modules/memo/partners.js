@@ -68,15 +68,15 @@ const Partners = (() => {
           }
         }, {
           data: null,
+          width: '5%',
           render: data => {
             return `
               <div class="dropdown text-sm-center">
                 
-                <div class="btn btn-sm btn-negative" data-toggle="dropdown">
-                    <i class="fas fa-ellipsis-h"></i>
-                    <span class="ml-1 ml-sm-0 d-sm-none">Options</span>
+                <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                  <i class="fas fa-ellipsis-h"></i>
                 </div>
-                
+
                 <div class="dropdown-menu dropdown-menu-right">
                   <div class="dropdown-header">Options</div>
                   <a href="${ BASE_URL_WEB }/m/partners/${ data.id }" class="dropdown-item">

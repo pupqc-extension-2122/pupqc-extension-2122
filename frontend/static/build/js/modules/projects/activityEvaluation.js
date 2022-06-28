@@ -99,7 +99,7 @@ const ActivityEvaluation = (() => {
             let status = 'Not yet graded';
             const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
             return `
-              <div class="text-center">
+              <div class="text-sm-center">
                 <div class="badge badge-subtle-${ theme } px-2 py-1">
                   <i class="${ icon } fa-fw mr-1"></i>
                   <span>${ status }</span>
@@ -109,6 +109,7 @@ const ActivityEvaluation = (() => {
           }
         }, {
           data: null,
+          width: '5%',
           render: data => {
             return `
               <div class="dropdown text-center">
