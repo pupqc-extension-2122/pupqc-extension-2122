@@ -9,6 +9,7 @@ let app = express();
 app.use('/plugins', express.static('./frontend/static/plugins'));
 app.use('/img', express.static('./frontend/static/img'));
 app.use('/js', express.static('./frontend/static/dist/js'));
+app.use('/uploads', express.static('./uploads'))
 
 // * Middlewares
 app.use(express.json());
