@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.Documents, {foreignKey: 'memo_id', as: 'documents'})
       this.belongsToMany(models.Projects, { foreignKey: 'memo_id', through: models.Project_Partners, as: 'projects' })
       this.belongsTo(models.Partners, { foreignKey: 'partner_id', as: 'partner' })
       this.belongsTo(models.Organizations, { foreignKey: 'organization_id', as: 'organization' })
@@ -66,9 +67,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     notarized_date: {
       type: DataTypes.DATEONLY,
-    },
-    files: {
-      type: DataTypes.STRING
     },
   }, {
     sequelize,
