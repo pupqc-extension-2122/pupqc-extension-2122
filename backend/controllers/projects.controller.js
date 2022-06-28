@@ -40,7 +40,7 @@ exports.viewProposal = async (req, res) => {
             as: 'user',
             attributes: {
               exclude: [
-                'id',
+                // 'id',
                 'password'
               ]
             }
@@ -669,7 +669,7 @@ exports.addComment = async (req, res) => {
             as: 'user',
             attributes: {
               exclude: [
-                'id',
+                // 'id',
                 'password'
               ]
             }
