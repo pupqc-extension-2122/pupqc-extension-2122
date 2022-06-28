@@ -18,5 +18,14 @@ router.get('/login', (req, res) => {
 });
 
 
+// Forgot password
+router.get('/forgot-password', (req, res) => {
+  res.render(PATH + 'forgot_password', {
+    layout: './layouts/auth',
+    document_title: 'Login',
+  });
+});
+
+
 // Export module
 module.exports = router;
