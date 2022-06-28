@@ -1,37 +1,53 @@
 <%# Navbar %>
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand-sm navbar-white navbar-light">
 
-  <%# Left navbar links %>
-  <ul class="navbar-nav">
+  <ul class="navbar-nav navbar-no-expand">
     <li class="nav-item">
-      <a class="nav-link" data-widget="pushmenu" href="#" role="button">
-        <i class="fas fa-bars"></i>
-      </a>
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+            <i class="fas fa-bars"></i>
+        </a>
     </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a 
-        href="<%=BASE_URL%>/p" 
-        class="nav-link<% if (active_topbar_tab == "Projects") { %> active<% } %>"
-      >Projects</a>
+    
+    <li class="nav-item">
+      <button 
+        class="nav-link navbar-toggler border-0" 
+        type="button" 
+        data-toggle="collapse" 
+        data-target="#navbarCollapse"
+      >
+        <i class="fas fa-caret-down"></i>
+      </button>
     </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a 
-        href="<%=BASE_URL%>/m" 
-        class="nav-link<% if (active_topbar_tab == "MOA/MOU") { %> active<% } %>"
-      >MOA/MOU</a>
-    </li>
-    <% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a 
-          href="<%=BASE_URL%>/a" 
-          class="nav-link<% if (active_topbar_tab == "SysAdmin") { %> active<% } %>"
-        >SysAdmin</a>
-      </li>
-    <% } %>
   </ul>
+  
+  <%# Left navbar links %>
+  <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+    <ul class="navbar-nav mt-1 mt-sm-0">
+      <li class="nav-item d-sm-inline-block">
+        <a 
+          href="<%=BASE_URL%>/p" 
+          class="nav-link px-2 px-3<% if (active_topbar_tab == "Projects") { %> active<% } %>"
+        >Projects</a>
+      </li>
+      <li class="nav-item d-sm-inline-block">
+        <a 
+          href="<%=BASE_URL%>/m" 
+          class="nav-link px-2 px-3<% if (active_topbar_tab == "MOA/MOU") { %> active<% } %>"
+        >MOA/MOU</a>
+      </li>
+      <% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
+        <li class="nav-item d-sm-inline-block">
+          <a 
+            href="<%=BASE_URL%>/a" 
+            class="nav-link px-2 px-3<% if (active_topbar_tab == "SysAdmin") { %> active<% } %>"
+          >SysAdmin</a>
+        </li>
+      <% } %>
+    </ul>
+  </div>  
 
   <%# Right navbar links %>
-  <ul class="navbar-nav ml-auto">
+  <ul class="order-1 order-sm-3 navbar-nav navbar-no-expand ml-auto">
 
     <%# Notifications Dropdown Menu %>
     <li class="nav-item dropdown">
@@ -58,12 +74,12 @@
         <div class="dropdown-divider"></div>
 
         <%# <div id="notifications">
-                            <div class="text-center py-5 wait">
-                                <div class="spinner-border text-primary my-3" role="status">
-                                    <span class="sr-only">Loading ...</span>
-                                </div>
-                            </div>
-                        </div> %>
+            <div class="text-center py-5 wait">
+            <div class="spinner-border text-primary my-3" role="status">
+                <span class="sr-only">Loading ...</span>
+            </div>
+        </div>
+                    </div> %>
 
         <div id="notifications">
           <div class="dropdown-header">Unread</div>
