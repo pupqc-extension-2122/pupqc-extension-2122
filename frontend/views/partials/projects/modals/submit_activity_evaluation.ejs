@@ -1,7 +1,7 @@
 <%# Submit Activity  Modal %>
 <div class="modal fade" id="submitActivityEvaluation_modal">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
+    <form class="modal-content" id="submitActivityEvaluation_form">
       <div class="modal-header">
         <h4 class="modal-title">
           <i class="fas fa-list fa-fw mr-1"></i>
@@ -14,74 +14,21 @@
       <div class="modal-body">
         
         <div class="table-responsive">
-          <table class="table table-bordered">
+          <table class="table table-bordered" id="activityEvaluation_form">
             <thead>
-              <th class="align-middle" style="width: 85%">Criteria</th>
-              <th class="align-middle" style="width: 10%">Ave. Rate</th>
+              <th class="align-middle" style="width: 83%">Criteria</th>
+              <th class="align-middle" style="width: 12%">Ave. Rate</th>
               <th style="width: 5%"></th>
             </thead>
-            <tbody>
-              <% for( let index = 0; index < 3; index++ ) { %>
-                <tr style="background: #f6f6f6;">
-                  <td colspan="2">
-                    <input 
-                      type="text" 
-                      class="form-control form-control-border bg-transparent" 
-                      placeholder="Type the category here"
-                    />
-                  </td>
-                  <td class="text-center">
-                    <button class="btn btn-sm btn-negative">
-                      <i class="fas fa-trash-alt text-danger"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input 
-                      type="text" 
-                      class="form-control form-control-border bg-transparent" 
-                      placeholder="Type the criteria here"
-                    />
-                  </td>
-                  <td>
-                    <input 
-                      type="text" 
-                      class="form-control form-control-border bg-transparent" 
-                      placeholder="1 - 5"
-                    />
-                  </td>
-                  <td class="text-center">
-                    <button class="btn btn-sm btn-negative">
-                      <i class="fas fa-times text-danger"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3">
-                    <button class="btn btn-sm btn-success">
-                      <i class="fas fa-plus mr-1"></i>
-                      <span>Add Criteria</span>
-                    </button>
-                  </td>
-                </tr>
-              <% } %>
-              <tr>
-                <td class="text-center" colspan="3">
-                  <button class="btn btn-sm btn-success">
-                    <i class="fas fa-plus mr-1"></i>
-                    <span>Add Category</span>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
+            <tbody></tbody>
           </table>
         </div>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-negative" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>

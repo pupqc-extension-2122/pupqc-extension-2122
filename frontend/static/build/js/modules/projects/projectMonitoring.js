@@ -11,6 +11,7 @@ const ProjectMonitoring = (() => {
   /**
  * * Local Variables
  */
+  const dtElem = $('#projectMonitoring_dt');
   let dt;
   let initialized = 0;
 
@@ -19,7 +20,7 @@ const ProjectMonitoring = (() => {
  */
 
   const initDataTable = () => {
-    dt = $('#projectMonitoring_dt').DataTable({
+    dt = dtElem.DataTable({
       ...DT_CONFIG_DEFAULTS,
       ajax: {
         url: `${ BASE_URL_API }/projects/approved/datatables`,
@@ -41,7 +42,14 @@ const ProjectMonitoring = (() => {
             end_date: 'date',
             status: 'string'
           }
-        }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
       },
       columns: [
         {

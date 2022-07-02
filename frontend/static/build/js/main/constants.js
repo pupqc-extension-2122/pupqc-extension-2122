@@ -24,7 +24,11 @@ const DT_LANGUAGE = {
       <div class="text-secondary">Hey! We found no records here yet.</div>
     </div>
   `,
-  loadingRecords: `Loading...`,
+  loadingRecords: `
+    <div class="p-5 my-5 text-center">
+      <i class="fa-3x fa-solid fa-spinner fa-spin-pulse text-primary mb-3"></i>
+    </div>
+  `,
   processing: `Processing`,
   zeroRecords: `
     <div class="text-center p-5">

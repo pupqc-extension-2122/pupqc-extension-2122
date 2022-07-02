@@ -13,15 +13,16 @@ const ProjectProposals = (() => {
 	 */
   
   const user_roles = JSON.parse(getCookie('roles'));
-  let initialized = 0;
+  const dtElem = $('#projectProposals_dt');
   let dt;
+  let initialized = 0;
 
 	/**
 	 * * Private Methods
 	 */
 
 	const initDataTable = async () => {
-		dt = await $('#projectProposals_dt').DataTable({
+		dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
       ajax: {
         url: `${ BASE_URL_API }/projects/datatables`,
@@ -43,7 +44,14 @@ const ProjectProposals = (() => {
             end_date: 'date',
             status: 'string'
           }
-        }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
       },
 			columns: [
         {

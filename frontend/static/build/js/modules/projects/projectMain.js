@@ -1731,6 +1731,7 @@ const ProjectActivities = (() => {
   let dt;
   let editValidator;
   let PA_form;
+  let AE_form;
   let initialized = false;
   let processing = false; // For edit
 
@@ -1812,6 +1813,12 @@ const ProjectActivities = (() => {
         // Disable buttons
         $('#editProjectActivity_form_saveBtn').attr('disabled', true);
       });
+    }
+
+    // *** For Activity Evaluation *** //
+
+    if (mode === 'Activity Evaluation') {
+      initActivityEvaluation();
     }
   }
 
@@ -2425,6 +2432,27 @@ const ProjectActivities = (() => {
       }
     });
 
+  }
+
+  const initActivityEvaluation = () => {
+    $app('#submitActivityEvaluation_form').handleForm({
+      validators: {},
+      onSubmit: () => {
+
+        // Get data
+        const data = { 
+          evaluation: AE_form.getEvaluation()
+        }
+
+        console.log(data);
+      }
+    });
+
+    AE_form = new ActivityEvaluationForm($('#activityEvaluation_form'));
+
+    submitActivityEvaluation_modal.on('hidden.bs.modal', () => {
+      AE_form.resetForm();
+    });
   }
 
   /**

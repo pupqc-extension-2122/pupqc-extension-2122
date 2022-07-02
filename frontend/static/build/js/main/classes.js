@@ -828,7 +828,7 @@ class FinancialRequirementsForm {
       ${this.data.lineItemBudgetRowId}="${lineItemBudgetRowId}"
     > 
       <td>
-        <div class="form-group">
+        <div class="form-group mb-0">
           <input 
             type="text"
             class="form-control form-control-border"
@@ -838,7 +838,7 @@ class FinancialRequirementsForm {
         </div>
       </td>
       <td>
-        <div class="form-group">
+        <div class="form-group mb-0">
           <input 
             type="text" 
             class="form-control form-control-border"
@@ -848,7 +848,7 @@ class FinancialRequirementsForm {
         </div>
       </td>
       <td>
-        <div class="form-group">
+        <div class="form-group mb-0">
           <input 
             type="text" 
             class="form-control form-control-border"
@@ -858,7 +858,7 @@ class FinancialRequirementsForm {
         </div>
       </td>
       <td>
-        <div class="form-group">
+        <div class="form-group mb-0">
           <input 
             type="text" 
             class="form-control form-control-border"
@@ -1518,7 +1518,7 @@ class EvaluationPlanForm {
 		return `
       <tr ${planRowId}="${planId}">
         <td>
-          <div class="form-group">
+          <div class="form-group mb-0">
             <input 
               type="text" 
               class="form-control form-control-border"
@@ -1529,7 +1529,7 @@ class EvaluationPlanForm {
           </div>
         </td>
         <td>
-          <div class="form-group">
+          <div class="form-group mb-0">
             <input 
               type="text" 
               class="form-control form-control-border"
@@ -1540,7 +1540,7 @@ class EvaluationPlanForm {
           </div>
         </td>
         <td>
-          <div class="form-group">
+          <div class="form-group mb-0">
             <input 
               type="text" 
               class="form-control form-control-border"
@@ -1551,7 +1551,7 @@ class EvaluationPlanForm {
           </div>
         </td>
         <td>
-          <div class="form-group">
+          <div class="form-group mb-0">
             <input 
               type="text" 
               class="form-control form-control-border"
@@ -2421,7 +2421,7 @@ class ProjectEvaluationForm {
   #evaluatorRow = rowId => `
     <tr ${ this.data.rowId }="${ rowId }">
       <td>
-        <div class="form-group">
+        <div class="form-group mb-0">
           <input 
             type="text" 
             class="form-control form-control-border"
@@ -2432,7 +2432,7 @@ class ProjectEvaluationForm {
         </div>
       </td>
       <td>
-        <div class="form-group">
+        <div class="form-group mb-0">
           <input 
             type="text" 
             class="form-control form-control-border"
@@ -2716,11 +2716,332 @@ class ProjectEvaluationForm {
 class ActivityEvaluationForm {
   constructor(tableForm) {
     this.form = tableForm;
+
+    this.criterias = [];
+
+    // Object
+    // {
+    //   category_id: ''
+    //   category: '',
+    //   criterias: [
+    //     {
+    //       criteria_id: '',
+    //       criteria: ''
+    //       rate: 0
+    //     }
+    //   ]
+    // }
+
+    const dataPrefix = 'data-activity-evaluation-form-'
+
+    this.data = {
+
+      // Ids
+      category_id: `${ dataPrefix }category-id`,
+      criteria_id: `${ dataPrefix }criteria-id`,
+
+      // Components
+      row: `${ dataPrefix }row`,
+      btn: `${ dataPrefix }btn`,
+      input: `${ dataPrefix }input`,
+    }
     
     this.#initializations();
   }
 
-  #initializations = () => {
+  // * Template Literals
 
+  #categoryRow = (category_id) => `
+    <tr 
+      style="background: #f6f6f6;" 
+      ${ this.data.category_id }="${ category_id }"
+    >
+      <td colspan="2">
+        <div class="form-group mb-0">
+          <input 
+            type="text" 
+            name="category-${ category_id }"
+            class="form-control form-control-border bg-transparent" 
+            placeholder="Type the category here"
+            ${ this.data.input }="category"
+          />
+        </div>
+      </td>
+      <td class="text-center">
+        <button 
+          type="button"
+          class="btn btn-sm btn-negative"
+          ${ this.data.btn }="removeCategory"
+          data-toggle="tooltip" 
+          title="Remove category"
+        >
+          <i class="fas fa-trash-alt text-danger"></i>
+        </button>
+      </td>
+    </tr>
+  `
+
+  #addCategoryRow = () => `
+    <tr ${ this.data.row }="addCategory">
+      <td class="text-center" colspan="3">
+        <button 
+          type="button"
+          class="btn btn-sm btn-success" 
+          ${ this.data.btn }="addCategory"
+        >
+          <i class="fas fa-plus mr-1"></i>
+          <span>Add Category</span>
+        </button>
+      </td>
+    </tr>
+  `
+
+  #criteriaRow = (category_id, criteria_id) => `
+    <tr
+      ${ this.data.category_id }="${ category_id }"
+      ${ this.data.criteria_id }="${ criteria_id }"
+    >
+      <td>
+        <div class="form-group mb-0">
+          <input 
+            type="text" 
+            name="criteria-${ criteria_id }"
+            class="form-control form-control-border bg-transparent" 
+            placeholder="Type the criteria here"
+            ${ this.data.input }="criteria"
+          />
+        </div>
+      </td>
+      <td>
+        <div class="form-group mb-0">
+          <input 
+            type="text" 
+            name="rate-${ criteria_id }"
+            class="form-control form-control-border bg-transparent" 
+            placeholder="1 - 5"
+            ${ this.data.input }="rate"
+          />
+        </div>
+      </td>
+      <td class="text-center">
+        <button 
+          type="button"
+          class="btn btn-sm btn-negative" 
+          ${ this.data.btn }="removeCriteria"
+          data-toggle="tooltip" 
+          title="Remove criteria"
+        >
+          <i class="fas fa-times text-danger"></i>
+        </button>
+      </td>
+    </tr>
+  `
+
+  #addCriteriaRow = (category_id) => `
+    <tr 
+      ${ this.data.category_id }="${ category_id }"
+    >
+      <td colspan="3">
+        <button 
+          type="button"
+          class="btn btn-sm btn-success" 
+          ${ this.data.btn }="addCriteria"
+        >
+          <i class="fas fa-plus mr-1"></i>
+          <span>Add Criteria</span>
+        </button>
+      </td>
+    </tr>
+  `
+
+  // * Private Methods
+
+  #initializations = () => {
+    const tbl_body = this.form.find('tbody');
+    
+    tbl_body.append(this.#addCategoryRow());
+
+    const addCategory_btn = tbl_body.find(`[${ this.data.btn }="addCategory"]`);
+
+    addCategory_btn.on('click', () => this.addCategory());
+
+    // * Default Settings
+
+    this.addCategory();
+  }
+
+  // * Public Methods
+
+  addCategory = () => {
+    const category_id = uuid();
+    const tbl_body = this.form.find('tbody');
+    const addCategory_row = tbl_body.find(`[${ this.data.row }="addCategory"]`)
+    
+    // * Setup the object
+
+    this.criterias.push({
+      category_id: category_id,
+      category: '',
+      criterias: [],
+    });
+
+    // * Insert the initial rows in the DOM
+
+    addCategory_row.before(this.#categoryRow(category_id));
+    addCategory_row.before(this.#addCriteriaRow(category_id));
+    
+    // By default add a criteria
+    this.addCriteria(category_id);
+
+    // * Initialize the category input
+
+    const category_row = tbl_body
+      .children(`[${ this.data.category_id }="${ category_id }"]`)
+      .first()
+
+    const category_input = category_row.find(`[${ this.data.input }="category"]`)
+
+    category_input.rules('add', {
+      required: true,
+      notEmpty: true,
+      minlength: 3,
+      messages: {
+        required: 'The category is required.',
+        notEmpty: 'The category is required.',
+        minlength: 'Make sure you type the full category title.'
+      }
+    });
+
+    category_input.on('keyup change', () => {
+      this.criterias = this.criterias.map(x => x.category_id === category_id 
+        ? { ...x, category: category_input.val() } : x
+      )
+    });
+
+    // * Initialize the remove category button
+    
+    const removeCategory_btn = category_row.find(`[${ this.data.btn }="removeCategory"]`);
+
+    removeCategory_btn.on('click', () => {
+      alert(category_id);
+    });
+    
+    // * Initialize the Add Criteria button
+
+    const addCriteria_row = tbl_body
+      .children(`[${ this.data.category_id }="${ category_id }"]`)
+      .last()
+
+    const addCriteria_btn = addCriteria_row.find(`[${ this.data.btn }="addCriteria"]`)
+
+    addCriteria_btn.on('click', () => {
+      this.addCriteria(category_id);
+    });
+  }
+
+  addCriteria = (category_id) => {
+    const criteria_id = uuid();
+    const tbl_body = this.form.find('tbody');
+
+    // * Set the object
+
+    this.criterias.find(x => x.category_id === category_id).criterias.push({
+      criteria_id: criteria_id,
+      criteria: '',
+      rate: 0
+    });
+
+    // * Add the criteria from the DOM
+
+    const addCriteria_row = tbl_body
+      .children(`[${ this.data.category_id }="${ category_id }"]`)
+      .last()
+
+    addCriteria_row.before(this.#criteriaRow(category_id, criteria_id));
+    
+    // * Initiate the criteria input
+    
+    const criteria_row = tbl_body.find(`[${ this.data.criteria_id }="${ criteria_id }"]`);
+
+    const criteria_input = criteria_row.find(`[${ this.data.input }="criteria"]`);
+
+    criteria_input.rules('add', {
+      required: true,
+      notEmpty: true,
+      minlength: 3,
+      messages: {
+        required: 'The criteria is required.',
+        notEmpty: 'The criteria is required.',
+        minlength: 'Make sure you type the full criteria title.'
+      }
+    });
+
+    const getCategoryCriterias = () => this.criterias.find(x => x.category_id === category_id).criterias;
+
+    criteria_input.on('keyup change', () => {
+      let criterias = getCategoryCriterias();
+      criterias = criterias.map(x => x.criteria_id === criteria_id
+        ? { ...x, criteria: criteria_input.val() } : x
+      );
+      this.criterias = this.criterias.map(x => x.category_id == category_id
+        ? { ...x, criterias: criterias }  : x
+      );
+    });
+
+    // * Initiate the criteria input
+
+    const rate_input = criteria_row.find(`[${ this.data.input }="rate"]`);
+
+    rate_input.rules('add', {
+      required: true,
+      notEmpty: true,
+      number: true,
+      range: [1, 5],
+      messages: {
+        required: 'Required',
+        notEmpty: 'Required',
+        number: 'Invalid input',
+        range: 'Invalid value',
+      }
+    });
+
+    rate_input.on('keyup change', () => {
+      let criterias = getCategoryCriterias();
+      criterias = criterias.map(x => x.criteria_id === criteria_id
+        ? { ...x, rate: parseFloat(rate_input.val()) || 0 } : x
+      );
+      this.criterias = this.criterias.map(x => x.category_id == category_id
+        ? { ...x, criterias: criterias }  : x
+      );
+    });
+
+    // * Initialize buttons
+
+    const removeCriteria_btn = criteria_row.find(`[${ this.data.btn }="removeCriteria"]`);
+
+    removeCriteria_btn.on('click', () => {
+      this.removeCriteria(category_id, criteria_id);
+    });
+  }
+
+  removeCriteria = (category_id, criteria_id) => {
+    let c_criterias = this.criterias.find(x => x.category_id == category_id).criterias;
+    c_criterias = c_criterias.filter(x => x.criteria_id !== criteria_id);
+
+    this.criterias = this.criterias.map(x => x.category_id === category_id 
+      ? { ...x, criterias: c_criterias } : x
+    );
+
+    this.form.find('tbody').find(`[${ this.data.criteria_id }="${ criteria_id }"]`).remove();
+  }
+
+  resetForm = () => {
+    this.criterias = [];
+    this.form.find('tbody').empty();
+    this.#initializations();
+  }
+
+  getEvaluation = () => {
+    return this.criterias;
   }
 }
