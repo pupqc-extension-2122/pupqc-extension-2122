@@ -121,6 +121,7 @@ const ProjectDetails = (() => {
     });
 
     if (project.status == 'For Evaluation' && project.presentation_date) {
+      if ($('#presentationDate_notif').length) $('#presentationDate_notif').remove();
       $('#projectDetails_header_status').after(() => {
         const presentationDate = moment(project.presentation_date);
         const formattedPresentationDate = presentationDate.format('MMMM D, YYYY (dddd)');
@@ -144,7 +145,7 @@ const ProjectDetails = (() => {
                 <i class="fas fa-calendar-alt fa-fw text-warning"></i>
               </div>
               <div>
-                <div>The presentation has been set on <span class="font-weight-bold">${ formattedPresentationDate }</span></div>
+                <div>The presentation should have been completed on <span class="font-weight-bold">${ formattedPresentationDate }</span></div>
                 <div class="small text-muted">${ humanizedPresentationDate }</div>
               </div>
             </div>
@@ -629,7 +630,7 @@ const ProjectOptions = (() => {
   }
 
   const initForEvaluation = () => {
-    const isBadAction = () => project.status !== 'For Review';
+    const isBadAction = () => !(project.status === 'For Review' || project.status === 'For Evaluation');
     const formSelector = '#setPresentationSchedule_form';
     const form = $(formSelector);
     let validator;
@@ -1089,6 +1090,19 @@ const ProjectOptions = (() => {
             </button>
           `
         }, {
+          id: 'Re-sched presentation',
+          category: 'For Submission',
+          template: `
+            <button 
+              type="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('approveTheProposal')"
+            >
+              <i class="fas fa-calendar-alt fa-fw mr-1 text-warning"></i>
+              <span>Re-sched presentation</span>
+            </button>
+          `
+        }, {
           id: 'Cancel the proposal',
           category: 'For Submission',
           template: `
@@ -1182,6 +1196,7 @@ const ProjectOptions = (() => {
           },
           'For Evaluation': () => {
             optionList.push('Submit evaluation grade');
+            optionList.push('Re-sched presentation');
           },
           'Pending': () => {
             optionList.push('Approve the project');

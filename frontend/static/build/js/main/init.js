@@ -93,5 +93,13 @@
     $(this).css('z-index', zIndex);
     setTimeout(() => $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack'));
   });
+
+  $(document).on('hidden.bs.modal', '.modal', function(e) {
+    if ($('.modal.show').length) {
+      $('body').addClass('modal-open').css({
+        'padding-right': '17px',
+      });   
+    }
+  });
   
 })();

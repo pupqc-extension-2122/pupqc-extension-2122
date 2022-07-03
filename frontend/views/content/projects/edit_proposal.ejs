@@ -141,6 +141,62 @@
                   </div>
                 </div>
 
+                <%# Start Date %>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="editProject_startDate">
+                      <span>Start Date</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group date">
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="editProject_startDate" 
+                        name="start_date"
+                        placeholder="Please select a start date" 
+                        data-inputmask-alias="datetime"
+                        data-inputmask-inputformat="yyyy-mm-dd" 
+                        data-mask 
+                      />
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-primary" id="editProject_startDate_pickerBtn"
+                          data-toggle="tooltip" title="Select a start date">
+                          <i class="fa fa-calendar-day fa-fw"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <%# End Date %>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="editProject_endDate">
+                      <span>End Date</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group date">
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="editProject_endDate" 
+                        name="end_date"
+                        placeholder="Please select an end date" 
+                        data-inputmask-alias="datetime"
+                        data-inputmask-inputformat="yyyy-mm-dd" 
+                        data-mask 
+                      />
+                      <div class="input-group-append">
+                        <button type="button" class="btn btn-primary" id="editProject_endDate_pickerBtn"
+                          data-toggle="tooltip" title="Select an end date">
+                          <i class="fa fa-calendar-day fa-fw"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <%# Project Team %>
                 <div class="col-12">
                   <div class="form-group" id="editProject_projectTeam_grp">
@@ -195,62 +251,6 @@
                             <option disabled>No cooperating agencies yet.</option>
                           </select>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <%# Start Date %>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="editProject_startDate">
-                      <span>Start Date</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group date">
-                      <input 
-                        type="text" 
-                        class="form-control" 
-                        id="editProject_startDate" 
-                        name="start_date"
-                        placeholder="Please select a start date" 
-                        data-inputmask-alias="datetime"
-                        data-inputmask-inputformat="yyyy-mm-dd" 
-                        data-mask 
-                      />
-                      <div class="input-group-append">
-                        <button type="button" class="btn btn-primary" id="editProject_startDate_pickerBtn"
-                          data-toggle="tooltip" title="Select a start date">
-                          <i class="fa fa-calendar-day fa-fw"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <%# End Date %>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="editProject_endDate">
-                      <span>End Date</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group date">
-                      <input 
-                        type="text" 
-                        class="form-control" 
-                        id="editProject_endDate" 
-                        name="end_date"
-                        placeholder="Please select an end date" 
-                        data-inputmask-alias="datetime"
-                        data-inputmask-inputformat="yyyy-mm-dd" 
-                        data-mask 
-                      />
-                      <div class="input-group-append">
-                        <button type="button" class="btn btn-primary" id="editProject_endDate_pickerBtn"
-                          data-toggle="tooltip" title="Select an end date">
-                          <i class="fa fa-calendar-day fa-fw"></i>
-                        </button>
                       </div>
                     </div>
                   </div>
