@@ -22,10 +22,10 @@ module.exports = {
         allowNull: false
       },
       topics: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       outcomes: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
       start_date: {
         type: Sequelize.DATEONLY,

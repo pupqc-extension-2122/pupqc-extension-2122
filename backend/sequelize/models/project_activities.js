@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: { notEmpty: true },
     },
     topics: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: { notEmpty: true },
       set(val) {
@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     outcomes: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: { notEmpty: true },
       set(val) {
