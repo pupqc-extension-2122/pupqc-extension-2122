@@ -22,6 +22,26 @@ exports.datatableMemoUploads = async (req, res) => {
   }
 }
 
+exports.datatableProjectUploads = async (req, res) => {
+  try {
+
+    const id = req.params.id
+
+    const project = await Projects.findByPk(id)
+
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project not found' })
+
+    let data = await datatable(Documents, req.query, { where: { project_id: project.id } })
+
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.memoUploads = async (req, res) => {
 
   try {
