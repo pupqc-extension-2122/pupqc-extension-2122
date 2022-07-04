@@ -214,9 +214,11 @@ exports.createProject = async (req, res) => {
       })
     }
   } catch (err) {
-    req.files.forEach(el=>{
-      fs.unlinkSync(el.path)
-    })
+    if (typeof req.files != 'undefined') {
+      req.files.forEach(el => {
+        fs.unlinkSync(el.path)
+      })
+    }
     console.log(err)
     res.send(err)
   }
