@@ -2943,6 +2943,18 @@ class ActivityEvaluationForm {
 
     if (!$(`[${ this.data.modal }="removeCategory"]`).length) {
       $('body').append(this.#removeCategoryModal());
+
+      const modal = $(`[${ this.data.modal }="removeCategory"]`);
+
+      const confirmRemove_btn = $('#confirmRemoveCategory_btn');
+
+      confirmRemove_btn.on('click', () => {
+        const catgory_id = confirmRemove_btn.attr(`${ this.data.category_id }`);
+        this.removeCategory(catgory_id);
+        modal.modal('hide');
+      });
+
+      modal.on('hidden.bs.modal', () => confirmRemove_btn.attr(`${ this.data.criteria_id }`, ''));
     }
 
     if (!$(`[${ this.data.modal }="removeCriteria"]`).length) {
@@ -2991,6 +3003,12 @@ class ActivityEvaluationForm {
     // By default add a criteria
     this.addCriteria(category_id);
 
+    // * Disable the add category button by default
+
+    const addCategory_btn = addCategory_row.find(`[${ this.data.btn }="addCategory"]`);
+
+    addCategory_btn.attr('disabled', true);
+
     // * Initialize the category input
 
     const category_row = tbl_body
@@ -3013,7 +3031,8 @@ class ActivityEvaluationForm {
     category_input.on('keyup change', () => {
       this.evaluation = this.evaluation.map(x => x.category_id === category_id 
         ? { ...x, category: category_input.val() } : x
-      )
+      );
+      addCategory_btn.attr('disabled', !category_input.valid());
     });
 
     // * Initialize the remove category button
@@ -3031,6 +3050,7 @@ class ActivityEvaluationForm {
 
     removeCategory_btn.on('click', () => {
       if (isCategoryHasInputs()) {
+        $('#confirmRemoveCategory_btn').attr(`${ this.data.category_id }`, category_id);
         $(`[${ this.data.modal }="removeCategory"]`).modal('show');
       } else if (this.evaluation.length === 1) {
         toastr.warning('You must include at least one category and criteria');
@@ -3055,6 +3075,24 @@ class ActivityEvaluationForm {
   removeCategory = (category_id) => {
     this.evaluation = this.evaluation.filter(x => x.category_id != category_id);
     this.form.find('tbody').children(`[${ this.data.category_id }="${ category_id }"]`).remove();
+
+    if (this.evaluation.length === 0) this.addCategory();
+
+    const tbl_body = this.form.find('tbody');
+    const addCategory_btn = tbl_body
+      .find(`[${ this.data.row }="addCategory"]`)
+      .find(`[${ this.data.btn }="addCategory"]`)
+
+    addCategory_btn.attr('disabled', () => {
+      return this.evaluation.some(x => {
+        const category_input = tbl_body
+          .children(`[${ this.data.category_id }="${ x.category_id }"]`)
+          .first()
+          .find(`[${ this.data.input }="category"]`)
+
+        return category_input.val().trim() === '';
+      });
+    });
   }
 
   addCriteria = (category_id) => {
