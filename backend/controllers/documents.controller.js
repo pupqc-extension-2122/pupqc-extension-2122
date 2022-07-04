@@ -74,6 +74,9 @@ exports.memoUploads = async (req, res) => {
     }
 
   } catch (error) {
+    req.files.forEach(el=>{
+      fs.unlinkSync(el.path)
+    })
     console.log(error)
     res.send(error)
   }
@@ -110,6 +113,9 @@ exports.projectUploads = async (req, res) => {
     }
 
   } catch (error) {
+    req.files.forEach(el=>{
+      fs.unlinkSync(el.path)
+    })
     console.log(error)
     res.send(error)
   }
