@@ -19,7 +19,7 @@ const Partners = (() => {
    * * Private Methods
    */
 
-  const initDataTable = () => {
+  const initDataTable = async () => {
     dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
       ajax: {
