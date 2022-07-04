@@ -29,9 +29,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     file_name: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    mimetype: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     path: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
   }, {
     sequelize,
