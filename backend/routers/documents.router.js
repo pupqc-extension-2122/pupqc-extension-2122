@@ -1,12 +1,13 @@
 let router = require('express').Router()
 const {
-  memoUploads
+  memoUploads, projectUploads
 } = require('../controllers/documents.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
-const { uploadMemoDocument } = require('../../utils/multerHelper')
+const { uploadMemoDocument, uploadProjectDocument } = require('../../utils/multerHelper')
 
 router.use(jwtMiddleWare)
 
-router.post('/documents/memo/:id', uploadMemoDocument, memoUploads)
+router.post('/memo/:id', uploadMemoDocument, memoUploads)
+router.post('/project/:id', uploadProjectDocument, projectUploads)
 
 module.exports = router
