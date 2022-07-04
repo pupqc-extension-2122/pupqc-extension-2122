@@ -264,6 +264,7 @@ const $app = (selector) => {
 		});
 
 		return app.element.validate({
+      focusInvalid: true,
 			rules: validationRules,
 			messages: validationMessages,
 			errorElement: 'div',
@@ -301,6 +302,7 @@ const $app = (selector) => {
 					$(element).removeClass('is-invalid')
 				}
 			},
+      invalidHandler: (form, validator) => validator.focusInvalid(),
 			submitHandler: () => {
 				onSubmit();
 				return false
