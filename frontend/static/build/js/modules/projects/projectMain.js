@@ -1863,7 +1863,14 @@ const ProjectActivities = (() => {
               start_date: 'date',
               end_date: 'date'
             }
-          }
+          },
+          beforeSend: () => {
+            dtElem.find('tbody').html(`
+              <tr>
+                <td colspan="5">${ DT_LANGUAGE.loadingRecords }</td>
+              </tr>
+            `);
+          },
         },
         columns: [
           {
@@ -2010,7 +2017,14 @@ const ProjectActivities = (() => {
               start_date: 'date',
               end_date: 'date'
             }
-          }
+          },
+          beforeSend: () => {
+            dtElem.find('tbody').html(`
+              <tr>
+                <td colspan="5">${ DT_LANGUAGE.loadingRecords }</td>
+              </tr>
+            `);
+          },
         },
         columns: [
           {
@@ -2182,7 +2196,14 @@ const ProjectActivities = (() => {
               start_date: 'date',
               end_date: 'date'
             }
-          }
+          },
+          beforeSend: () => {
+            dtElem.find('tbody').html(`
+              <tr>
+                <td colspan="5">${ DT_LANGUAGE.loadingRecords }</td>
+              </tr>
+            `);
+          },
         },
         columns: [
           {

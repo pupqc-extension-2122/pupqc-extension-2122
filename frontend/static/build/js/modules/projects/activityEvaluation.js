@@ -12,6 +12,7 @@ const ActivityEvaluation = (() => {
  * * Local Variables
  */
   let dt;
+  const dtElem = $('#activityEvaluation_dt');
   let initialized = 0;
 
   /**
@@ -19,8 +20,8 @@ const ActivityEvaluation = (() => {
  */
 
   const initDataTable = () => {
-    dt = $('#activityEvaluation_dt').DataTable({
-      ...DT_CONFIG_DEFAULTS,
+    dt = await dtElem.DataTable({
+			...DT_CONFIG_DEFAULTS,
       ajax: {
         url: `${ BASE_URL_API }/projects/approved/datatables`,
         // success: result => {
@@ -41,7 +42,14 @@ const ActivityEvaluation = (() => {
             end_date: 'date',
             status: 'string'
           }
-        }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
       },
       columns: [
         {

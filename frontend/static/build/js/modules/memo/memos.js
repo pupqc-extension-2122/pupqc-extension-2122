@@ -13,6 +13,7 @@ const Memos = (() => {
    */
 
   let dt;
+  const dtElem = $('#projectMOA_dt');
   let initialized = false;
 
   /**
@@ -193,8 +194,8 @@ const Memos = (() => {
   }
 
   const initDataTable = async () => {
-    dt = $('#projectMOA_dt').DataTable({
-      ...DT_CONFIG_DEFAULTS,
+    dt = await dtElem.DataTable({
+			...DT_CONFIG_DEFAULTS,
       ajax: {
         url: `${ BASE_URL_API }/memos/datatables`,
         // success: res => {
@@ -215,7 +216,14 @@ const Memos = (() => {
             validity_date: 'date',
             end_date: 'date',
           }
-        }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
       },
       columns: [
         { 

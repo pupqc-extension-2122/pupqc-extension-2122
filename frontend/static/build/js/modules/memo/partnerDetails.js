@@ -14,6 +14,7 @@ const PartnerDetails = (() => {
   
   const formSelector = '#editPartnership_form';
   let dt;
+  const dtElem = $('#partnerMemos_dt');
   let initialized = false;
 
   // Data Container
@@ -57,8 +58,8 @@ const PartnerDetails = (() => {
   }
 
   const initDataTable = async () => {
-    dt = await $('#partnerMemos_dt').DataTable({
-      ...DT_CONFIG_DEFAULTS,
+    dt = await dtElem.DataTable({
+			...DT_CONFIG_DEFAULTS,
       ajax: {
         url: `${ BASE_URL_API }/partners/${ partner.id }/memos`,
         // success: res => {
@@ -78,7 +79,14 @@ const PartnerDetails = (() => {
             validity_date: 'date',
             end_date: 'date',
           }
-        }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
       },
       columns: [
         {

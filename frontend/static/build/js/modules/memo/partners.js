@@ -12,6 +12,7 @@ const Partners = (() => {
    * * Local Variables
    */
   let dt;
+  const dtElem = $('#partnerships_dt');
   let initialized = 0;
 
   /**
@@ -19,8 +20,8 @@ const Partners = (() => {
    */
 
   const initDataTable = () => {
-    dt = $('#partnerships_dt').DataTable({
-      ...DT_CONFIG_DEFAULTS,
+    dt = await dtElem.DataTable({
+			...DT_CONFIG_DEFAULTS,
       ajax: {
         url: `${ BASE_URL_API }/partners/datatables`,
         // success: result => {
@@ -39,7 +40,14 @@ const Partners = (() => {
             name: 'string',
             address: 'string',
           }
-        }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="4">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
       },
       columns: [
         {
