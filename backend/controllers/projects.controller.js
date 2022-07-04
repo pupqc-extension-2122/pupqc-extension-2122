@@ -158,12 +158,15 @@ exports.createProject = async (req, res) => {
       }
     ))
 
-    let documents = files.map(el => (
-      {
-        file_name: el.originalname,
-        path: el.path
-      }
-    ))
+    let documents = []
+    if (typeof files != 'undefined'){
+      documents = files.map(el => (
+        {
+          file_name: el.originalname,
+          path: el.path
+        }
+      ))
+    }
 
     let data = await Projects.create({
       title: body.title,
