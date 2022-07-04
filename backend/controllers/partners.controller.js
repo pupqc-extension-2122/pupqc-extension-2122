@@ -135,6 +135,7 @@ exports.createPartner = async (req, res) => {
           await Documents.create({
             memo_id: memo.id,
             file_name: el.originalname,
+            mimetype: el.mimetype,
             path: el.path
           })
         })

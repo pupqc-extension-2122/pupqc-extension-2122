@@ -159,10 +159,11 @@ exports.createProject = async (req, res) => {
     ))
 
     let documents = []
-    if (typeof files != 'undefined'){
+    if (typeof files != 'undefined') {
       documents = files.map(el => (
         {
           file_name: el.originalname,
+          mimetype: el.mimetype,
           path: el.path
         }
       ))

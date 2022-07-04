@@ -62,6 +62,7 @@ exports.memoUploads = async (req, res) => {
       {
         memo_id: memo.id,
         file_name: el.originalname,
+        mimetype: el.mimetype,
         path: el.path
       }
     ))
@@ -97,6 +98,7 @@ exports.projectUploads = async (req, res) => {
       {
         project_id: project.id,
         file_name: el.originalname,
+        mimetype: el.mimetype,
         path: el.path
       }
     ))
