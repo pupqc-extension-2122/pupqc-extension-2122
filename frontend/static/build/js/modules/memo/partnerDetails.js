@@ -70,7 +70,7 @@ const PartnerDetails = (() => {
             file: 'memo/partnerDetails.js',
             fn: 'PartnerDetails.initDataTable()',
             details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-          }, 1);
+          }, true);
         },
         data: {
           types: {
@@ -181,8 +181,15 @@ const PartnerDetails = (() => {
   }
 
   const removeLoaders = () => {
+    $('#contentHeader_loader').remove();
+    $('.content-header').show();
+
     $('#partnerDetails_header_loader').remove();
     $('#partnerDetails_header').show();
+
+    $('#options_loader').remove();
+    $('#options').show();
+    $('#options').removeAttr('id');
   }
 
   /**
@@ -248,7 +255,6 @@ const PartnerDetails = (() => {
       if (res.error) {
         ajaxErrorHandler(res.message);
       } else {
-        console.log(res.data);
         PartnerDetails.init(res.data);
       }
     },
@@ -257,7 +263,7 @@ const PartnerDetails = (() => {
         file: 'memo/partnerDetails.js',
         fn: 'onDOMLoad.$.ajax',
         details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-      }, 1);
+      }, true);
     }
-  })
+  });
 })();

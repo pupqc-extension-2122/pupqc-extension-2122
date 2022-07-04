@@ -1,12 +1,12 @@
-'use strict';
-
 /**
  * ==============================================
- * * PROJECT MOA DETAILS
+ * * MEMO DETAILS
  * ==============================================
  */
 
-const ProjectMoaDetails = (() => {
+'use strict';
+
+const MemoDetails = (() => {
 
   /**
    * * Local Variables
@@ -14,14 +14,53 @@ const ProjectMoaDetails = (() => {
 
   const formSelector = '#editMOA_form';
 
-  let initialized = 0;
-
-   // ! Simulation
-  let data;
+  let dt;
+  let memo;
+  let initialized = false;
 
   /**
    * * Private Methods
    */
+
+  const loadDocumentTitle = () => {
+    const memoName = memo.partner.name;
+    const documentTitle = memoName.length > 75 
+      ? memoName.substring(0, 75) + ' ...' 
+      : memoName;
+
+    setDocumentTitle(`${ documentTitle } - MOA/MOU Details`);
+  }
+
+  const loadActiveBreadcrumb = () => {
+    const memoName = memo.partner.name;
+    $('#active_breadcrumb').html(() => memoName.length > 33 ? `${ memoName.substring(0, 30) } ...` : memoName);
+  }
+
+  const loadHeaderDetails = () => {
+    loadActiveBreadcrumb();
+
+    const { 
+      representative_partner,
+      representative_pup,
+      validity_date,
+      end_date,
+      partner: p, 
+      organization: o 
+    } = memo;
+
+    setHTMLContent({
+      '#memoDetails_partnerName': p.name,
+      '#memoDetails_address': p.address,
+      '#memoDetails_organization': `${ o.name } <span class="mx-1">&bull;</span> ${ o.type }`,
+      '#memoDetails_representative': representative_partner,
+      '#memoDetails_pupRepresentative': representative_pup,
+      '#memoDetails_validity': `${ moment(validity_date).format('MMMM DD, YYYY') } - ${ moment(end_date).format('MMMM DD, YYYY') }`,
+    });
+  }
+
+  const loadDetails = () => {
+    loadHeaderDetails();
+  }
 
   const initializations = () => {
     // Notary Signed Date
@@ -85,35 +124,7 @@ const ProjectMoaDetails = (() => {
   }
 
   const initDataTable = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        
-        // Sample Data
-        data = [
-          {
-            file_name: 'MOA/MOU',
-            file_type: 'PDF',
-            upload_date: '05/14/2022',
-            file_size: '749KB',
-            status: 'Active'
-          }, {
-            file_name: 'MOA/MOU',
-            file_type: 'DOC',
-            upload_date: '09/24/2016',
-            file_size: '749KB',
-            status: 'Inactive'
-          },
-        ];
-
-        resolve();
-      }, 2500);
-    });
-
-    // Data Table
-    $('#documents_dt').DataTable({
-      data: data,
-      responsive: true,
-      language: DT_LANGUAGE,
+    dt = await $('#documents_dt').DataTable({
       columns: [
         { 
           data: 'file_name' 
@@ -171,6 +182,18 @@ const ProjectMoaDetails = (() => {
     });
   }
 
+  const removeLoaders = () => {
+    $('#contentHeader_loader').remove();
+    $('.content-header').show();
+
+    $('#memoDetails_header_loader').remove();
+    $('#memoDetails_header').show();
+
+    $('#options_loader').remove();
+    $('#options').show();
+    $('#options').removeAttr('id');
+  }
+
   /**
    * * Public Methods
    */
@@ -179,12 +202,16 @@ const ProjectMoaDetails = (() => {
    * * Init
    */
 
-  const init = () => {
+  const init = async (memoData) => {
     if (!initialized) {
-      initialized = 1;
+      initialized = true;
+      memo = memoData;
+      loadDocumentTitle();
       initializations();
-      initDataTable();
+      // initDataTable();
       handleForm();
+      loadDetails();
+      removeLoaders();
     }
   }
 
@@ -198,4 +225,28 @@ const ProjectMoaDetails = (() => {
 
 })();
 
-ProjectMoaDetails.init();
+(() => {
+  const memo_id = location.pathname.split('/')[3];
+
+  $.ajax({
+    url: `${ BASE_URL_API }/memos/${ memo_id }`,
+    type: 'GET',
+    success: res => {
+      if (res.error) {
+        ajaxErrorHandler(res.message, 1);
+      } else {
+        const { data } = res;
+        
+        console.log(data);
+        MemoDetails.init(data);
+      }
+    },
+    error: (xhr, status, error) => {
+      ajaxErrorHandler({
+        file: 'memo/memoDetails.js',
+        fn: 'onDOMLoad.$.ajax',
+        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+      }, true);
+    } 
+  });
+})();

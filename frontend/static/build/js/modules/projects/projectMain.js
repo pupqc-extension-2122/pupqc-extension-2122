@@ -408,7 +408,7 @@ const ProjectDetails = (() => {
 
   const removeLoaders = () => {
     $('#contentHeader_loader').remove();
-    $('#contentHeader').show();
+    $('.content-header').show();
 
     $('#projectDetails_options_card_loader').remove();
     $('#projectDetails_options_card').show();
