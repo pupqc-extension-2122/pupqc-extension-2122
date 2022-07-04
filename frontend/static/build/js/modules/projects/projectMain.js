@@ -153,6 +153,10 @@ const ProjectDetails = (() => {
         }
       });
     }
+
+    if (project.evaluation) {
+      if ($('#presentationDate_notif').length) $('#presentationDate_notif').remove();
+    }
   }
 
   const loadBodyDetails = () => {
@@ -753,11 +757,11 @@ const ProjectOptions = (() => {
           required: 'Please select when the evaluation occured.',
           dateISO: 'Your input is not a valid date.',
           sameOrBeforeDateTime: {
-            rule: project.end_date,
+            rule: () => project.end_date,
             message: 'The evaluation date must be same or earlier than the end of the project timeline.'
           },
           sameOrAfterDateTime: {
-            rule: project.presentation_date,
+            rule: () => project.presentation_date,
             message: 'The evaluation date must be same or later than the presentation date.'
           }
         },
@@ -2363,11 +2367,11 @@ const ProjectActivities = (() => {
           required: 'Please select a start date', 
           dateISO: 'Your input is an invalid date',
           sameOrAfterDateTime: {
-            rule: project.start_date,
+            rule: () => project.start_date,
             message: 'The start date must be within the project timeline.'
           },
           sameOrBeforeDateTime: {
-            rule: project.end_date,
+            rule: () => project.end_date,
             message: 'The start date must be within the project timeline.'
           },
           sameOrBeforeDateTimeSelector: {
@@ -2379,11 +2383,11 @@ const ProjectActivities = (() => {
           required: 'Please select a end date', 
           dateISO: 'Your input is an invalid date',
           sameOrAfterDateTime: {
-            rule: project.start_date,
+            rule: () => project.start_date,
             message: 'The end date must be within the project timeline.'
           },
           sameOrBeforeDateTime: {
-            rule: project.end_date,
+            rule: () => project.end_date,
             message: 'The end date must be within the project timeline.'
           },
           sameOrAfterDateTimeSelector: {
@@ -2847,11 +2851,11 @@ const AddProjectActivity = (() => {
           required: 'Please select a start date',
           dateISO: 'Your input is not a valid date',
           sameOrAfterDateTime: {
-            rule: project.start_date,
+            rule: () => project.start_date,
             message: 'The start date must be within the project timeline.'
           },
           sameOrBeforeDateTime: {
-            rule: project.end_date,
+            rule: () => project.end_date,
             message: 'The start date must be within the project timeline.'
           },
           sameOrBeforeDateTimeSelector: {
@@ -2863,11 +2867,11 @@ const AddProjectActivity = (() => {
           required: 'Please select a end date',
           dateISO: 'Your input is not a valid date',
           sameOrAfterDateTime: {
-            rule: project.start_date,
+            rule: () => project.start_date,
             message: 'The end date must be within the project timeline.'
           },
           sameOrBeforeDateTime: {
-            rule: project.end_date,
+            rule: () => project.end_date,
             message: 'The end date must be within the project timeline.'
           },
           sameOrAfterDateTimeSelector: {
