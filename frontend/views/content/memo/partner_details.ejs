@@ -169,49 +169,51 @@
       </div>
       
       <div class="col-md-3">
+        <div class="sticky-top">
 
-        <%- include('../../partials/loaders/options') %>
-        
-        <%# Options %>
-        <div class="card" id="options" style="display: none">
-          <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-              <h3 class="card-title">Options</h3>
-              <div class="card-tools">
-                <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
-                  <i class="fas fa-minus"></i>
+          <%- include('../../partials/loaders/options') %>
+          
+          <%# Options %>
+          <div class="card" id="options" style="display: none">
+            <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">Options</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-2">
+              <div class="dropdown-header">Partner details</div>
+                <button
+                  type="button"
+                  class="btn btn-negative btn-block text-left" 
+                  data-toggle="modal"
+                  data-target="#editPartnership_modal"
+                >
+                  <i class="fas fa-edit text-info fa-fw mr-1"></i>
+                  <span>Edit details</span>
+                </button>
+
+                <hr class="my-2">
+                <div class="dropdown-header">Documentation</div>
+                
+                <button 
+                  type="button"
+                  class="btn btn-negative btn-block text-left" 
+                  data-toggle="modal"
+                  data-target="#uploadDocument_modal"
+                >
+                  <i class="fas fa-file-upload text-primary fa-fw mr-1"></i>
+                  <span>Upload Document</span>
                 </button>
               </div>
             </div>
           </div>
-          <div class="card-body p-2">
-            <div class="dropdown-header">Partner details</div>
-              <button
-                type="button"
-                class="btn btn-negative btn-block text-left" 
-                data-toggle="modal"
-                data-target="#editPartnership_modal"
-              >
-                <i class="fas fa-edit text-info fa-fw mr-1"></i>
-                <span>Edit details</span>
-              </button>
 
-              <hr class="my-2">
-              <div class="dropdown-header">Documentation</div>
-              
-              <button 
-                type="button"
-                class="btn btn-negative btn-block text-left" 
-                data-toggle="modal"
-                data-target="#uploadDocument_modal"
-              >
-                <i class="fas fa-file-upload text-primary fa-fw mr-1"></i>
-                <span>Upload Document</span>
-              </button>
-            </div>
-          </div>
         </div>
-
       </div>
     </div>
   </div>
