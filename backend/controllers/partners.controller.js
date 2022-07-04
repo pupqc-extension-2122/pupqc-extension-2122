@@ -130,7 +130,7 @@ exports.createPartner = async (req, res) => {
     })
 
     if (memo) {
-      if (files.length) {
+      if (typeof files != 'undefined') {
         files.forEach(async (el) => {
           await Documents.create({
             memo_id: memo.id,
