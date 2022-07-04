@@ -34,7 +34,6 @@ exports.updateMemo = async (req, res) => {
 
     const id = req.params.id
     const body = req.body
-    const files = req.files
 
     let memo = await Memos.findOne({ where: { id } })
 
@@ -49,32 +48,6 @@ exports.updateMemo = async (req, res) => {
     memo.notarized_date = body.notarized_date
 
     await memo.save()
-
-    let documents = await Documents.findAll({ where: { memo_id: id } })
-    let new_documents = files.map(el => el.originalname)
-    let old_documents = documents.map(el => el.file_name)
-
-    new_documents.forEach(async (el, index) => {
-      if (!old_documents.includes(el)) {
-        await Documents.create({
-          memo_id: id,
-          file_name: el,
-          path: files[index].path
-        })
-      }
-    })
-
-    documents.forEach(async (el) => {
-      fs.unlinkSync(el.path)
-      if (new_documents.includes(el.file_name)) {
-        let new_path = files.filter(row => row.originalname == el.file_name)[0].path
-        el.path = new_path
-        await el.save()
-      } else {
-        await el.destroy()
-      }
-    })
-
 
     res.send({
       error: false,
