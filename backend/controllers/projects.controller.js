@@ -1,5 +1,6 @@
 const {
   Comments,
+  Documents,
   Memos,
   Projects,
   Project_Partners,
@@ -109,7 +110,8 @@ exports.createProject = async (req, res) => {
     if (!req.auth.roles.includes('Extensionist'))
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
-    let body = req.body
+    const body = req.body
+    const files = req.files
 
     let project = await Projects.findOne({
       where: {
@@ -156,6 +158,13 @@ exports.createProject = async (req, res) => {
       }
     ))
 
+    let documents = files.map(el => (
+      {
+        file_name: el.originalname,
+        path: el.path
+      }
+    ))
+
     let data = await Projects.create({
       title: body.title,
       implementer: body.implementer,
@@ -170,6 +179,7 @@ exports.createProject = async (req, res) => {
       evaluation_plans: body.evaluation_plans,
       project_partners: project_partners,
       created_by: req.auth.id,
+      documents: documents,
       history: [
         {
           current_value: 'Created'
@@ -184,6 +194,10 @@ exports.createProject = async (req, res) => {
         {
           model: Project_History,
           as: 'history'
+        },
+        {
+          model: Documents,
+          as: 'documents'
         }
       ]
     })
