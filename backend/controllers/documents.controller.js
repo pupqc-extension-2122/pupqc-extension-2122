@@ -1,15 +1,37 @@
-const { Documents, Memos } = require('../sequelize/models')
+const { Documents, Memos, Projects } = require('../sequelize/models')
+const { datatable } = require('../../utils/datatableResponse')
 const fs = require('fs')
+
+exports.datatableMemoUploads = async (req, res) => {
+  try {
+
+    const id = req.params.id
+
+    const memo = await Memos.findByPk(id)
+
+    if (!memo)
+      return res.status(404).send({ error: true, message: 'Memo not found' })
+
+    let data = await datatable(Documents, req.query, { where: { memo_id: memo.id } })
+
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
 
 exports.memoUploads = async (req, res) => {
 
   try {
 
-    if (!req.auth.includes('Extensionist'))
+    if (!req.auth.roles.includes('Extensionist'))
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const id = req.params.id
     const files = req.files
+    // console.log(req.files)
 
     const memo = await Memos.findByPk(id)
 
@@ -40,16 +62,16 @@ exports.projectUploads = async (req, res) => {
 
   try {
 
-    if (!req.auth.includes('Extensionist'))
+    if (!req.auth.roles.includes('Extensionist'))
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const id = req.params.id
     const files = req.files
 
-    const project = await Project.findByPk(id)
+    const project = await Projects.findByPk(id)
 
     if (!project)
-      return res.status(404).send({ error: true, message: 'Memo not found' })
+      return res.status(404).send({ error: true, message: 'Project not found' })
 
     const uploads = files.map(el => (
       {
@@ -74,7 +96,7 @@ exports.projectUploads = async (req, res) => {
 exports.deleteUploads = async (req, res) => {
   try {
 
-    if (!req.auth.includes('Extensionist'))
+    if (!req.auth.roles.includes('Extensionist'))
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
 
