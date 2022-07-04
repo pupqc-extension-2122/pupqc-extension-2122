@@ -13,7 +13,7 @@ const Partners = (() => {
    */
   let dt;
   const dtElem = $('#partnerships_dt');
-  let initialized = 0;
+  let initialized = false;
 
   /**
    * * Private Methods
@@ -109,10 +109,10 @@ const Partners = (() => {
    * * Init
    */
 
-  const init = () => {
+  const init = async () => {
     if (!initialized) {
-      initialized = 1;
-      initDataTable();
+      initialized = true;
+      await initDataTable();
     }
   }
 

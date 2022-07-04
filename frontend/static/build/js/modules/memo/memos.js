@@ -310,12 +310,12 @@ const Memos = (() => {
    * * Init
    */
 
-  const init = () => {
+  const init = async () => {
     if (!initialized) {
       initialized = true;
       initializations();
-      initDataTable();
       handleForm();
+      await initDataTable();
     }
   }
 

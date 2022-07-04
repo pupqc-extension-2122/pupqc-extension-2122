@@ -25,7 +25,7 @@
 
     <%# Breadcrumb %>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="#">MOA/MOU</a></li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/m">MOA/MOU</a></li>
       <li class="breadcrumb-item active">List of Partners</li>
     </ol>
 
@@ -109,7 +109,12 @@
               title="Maximize/minimize card">
               <i class="fas fa-expand"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-negative" title="Reload card content">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              title="Reload card content"
+              onclick="Partners.reloadDataTable()"
+            >
               <i class="fas fa-sync-alt"></i>
             </button>
           </div>
