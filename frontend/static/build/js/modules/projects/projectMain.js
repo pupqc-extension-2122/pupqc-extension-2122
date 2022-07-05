@@ -1963,8 +1963,7 @@ const ProjectActivities = (() => {
             render: data => {
   
               const editOption = () => {
-                return user_roles.includes('Extensionist') && (project.status == 'Created' || project.status == 'For Revision'
-  )
+                return user_roles.includes('Extensionist') && (project.status == 'Created' || project.status == 'For Revision')
                   ? `
                     <button
                       type="button"
@@ -3071,9 +3070,34 @@ const ProjectDocuments = (() => {
   
   const dtElem = $('#uploadedDocuments_dt');
   let dt;
+  let dropzone;
   let initialized = false;
 
   // * Private Methods
+
+  const initializations = () => {
+    initializeDropzone();
+  }
+
+  const initializeDropzone = async () => {
+
+    // Get the template HTML and remove it from the doument.
+    var previewNode = document.querySelector("#dropFiles_fileTemplate");
+    previewNode.id = "";
+    var previewTemplate = previewNode.parentNode.innerHTML;
+    previewNode.parentNode.removeChild(previewNode);
+
+    dropzone = await new Dropzone(document.querySelector('#dropFiles_container'), {
+      url: "/target-url", // Set the url
+      thumbnailWidth: 80,
+      thumbnailHeight: 80,
+      parallelUploads: 20,
+      previewTemplate: previewTemplate,
+      autoQueue: false, // Make sure the files aren't queued until manually added
+      previewsContainer: "#dropFiles_previews", // Define the container to display the previews
+      clickable: "#dropFiles_browse_btn" // Define the element that should be used as click trigger to select files.
+    });
+  }
 
   const initDataTable = async () => {
     // ! Simulation
@@ -3100,7 +3124,10 @@ const ProjectDocuments = (() => {
     ]
 
     dt = await dtElem.DataTable({
-      ...DT_CONFIG_DEFAULTS,
+      ...{
+        ...DT_CONFIG_DEFAULTS,
+        serverSide: false
+      },
       data: sampleData,
       columns: [
         {
@@ -3108,37 +3135,58 @@ const ProjectDocuments = (() => {
           visible: false
         }, {
           data: 'file_name',
+          width: '45%',
         }, {
           data: 'mimetype',
         }, {
           data: 'created_at',
+          width: '25%',
           render: (data) => {
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
-              <div>${ fromNow(data) }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, {
-          data: 'created_at',
-          // render: (data) => {
-          //   return `
-          //   <div class="dropdown text-center">
-          //     <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
-          //       <i class="fas fa-ellipsis-h"></i>
-          //     </div>
-          //     <div class="dropdown-menu dropdown-menu-right">
-          //       <div class="dropdown-header">Options</div>
-          //       <button
-          //         type="button"
-          //         class="dropdown-item"
-          //         onclick="ProjectActivities.initViewMode('${ data.id }')"
-          //       >
-          //         <span>Download</span>
-          //       </button>
-          //     </div>
-          //   </div>
-          //   `
-          // }
+          data: null,
+          width: '5%',
+          render: (data) => {
+            return `
+            <div class="dropdown text-center">
+              <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                <i class="fas fa-ellipsis-h"></i>
+              </div>
+              <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-header">Options</div>
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  onclick="ProjectActivities.initViewMode('${ data.id }')"
+                >
+                  <i class="fas fa-file fa-fw mr-1"></i>
+                  <span>View File</span>
+                </div>
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  onclick="ProjectActivities.initViewMode('${ data.id }')"
+                >
+                  <i class="fas fa-download fa-fw mr-1"></i>
+                  <span>Download</span>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  onclick="ProjectActivities.initViewMode('${ data.id }')"
+                >
+                  <i class="fas fa-trash-alt fa-fw mr-1"></i>
+                  <span>Delete</span>
+                </div>
+              </div>
+            </div>
+            `
+          }
         }
       ]
     });
@@ -3153,6 +3201,7 @@ const ProjectDocuments = (() => {
   const init = async () => {
     if (!initialized) {
       initialized = true;
+      initializations();
       await initDataTable();
     }
   }
