@@ -28,4 +28,12 @@ app.use(`/m/`, require('./routers/memo.route'));
 app.use(`/a/`, require('./routers/admin.route'));
 app.use(`/t/`, require('./routers/test.route'));
 
+// For 404
+app.use((req, res, next) => {
+  res.status(404).render('content/errors/404', {
+    layout: './layouts/error',
+    document_title: '404 - Page not found',
+  });
+})
+
 module.exports = app
