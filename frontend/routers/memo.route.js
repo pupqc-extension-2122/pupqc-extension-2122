@@ -77,7 +77,7 @@ router.get('/partners/:partner_id', jwtMiddleware, async (req, res) => {
   });
 
   if(!partner)
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'partner_details', {
@@ -119,7 +119,7 @@ router.get('/memo/:memo_id', jwtMiddleware, async (req, res) => {
   });
 
   if(!memo)
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'memo_details', {

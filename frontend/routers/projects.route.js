@@ -125,10 +125,10 @@ router.get('/proposals/:project_id/activities', jwtMiddleware, async (req, res) 
   });
 
   if(!project)
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
   
   if(project.status === 'Created' && roles.length === 1 && roles.includes('Chief'))
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_proposal_activities', {
@@ -153,7 +153,7 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, async (req, res) => {
   });
 
   if(!project || !(project.status == 'Created' || project.status == 'For Revision'))
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
 
   roles.includes('Extensionist')
     ? res.render(PATH + 'edit_proposal', {
@@ -195,7 +195,7 @@ router.get('/monitoring/:project_id', jwtMiddleware, async (req, res) => {
   });
 
   if(!project || project.status !== 'Approved')
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_monitoring_details', {
@@ -220,7 +220,7 @@ router.get('/monitoring/:project_id/activities', jwtMiddleware, async (req, res)
   });
 
   if(!project || project.status !== 'Approved')
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'project_monitoring_activities', {
