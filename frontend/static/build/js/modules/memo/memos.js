@@ -263,11 +263,10 @@ const Memos = (() => {
           data: null, 
           sortable: false,
           render: (data) => {
-            const validity_date = moment(data.end_date);
-            let status = validity_date.isAfter(moment()) ? 'Active' : 'Inactive'
-            const { theme, icon } = PARTNER_STATUS_STYLES[status];
+            const status = moment().isBetween(moment(data.validity_date), moment(data.end_date)) ? 'Active' : 'Inactive';
+            const { theme, icon } = MEMO_STATUS_STYLES[status];
             return `
-              <div class="text-sm-center">
+              <div class="text-center">
                 <div class="badge badge-subtle-${ theme } px-2 py-1">
                   <i class="${ icon } fa-fw mr-1"></i>
                   <span>${ status }</span>

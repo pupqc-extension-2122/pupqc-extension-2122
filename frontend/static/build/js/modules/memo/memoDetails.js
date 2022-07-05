@@ -56,7 +56,7 @@ const MemoDetails = (() => {
       '#memoDetails_header_organization': `${ o.name } <span class="mx-1">&bull;</span> ${ o.type }`,
       '#memoDetails_header_validity': `${ moment(validity_date).format('MMMM DD, YYYY') } - ${ moment(end_date).format('MMMM DD, YYYY') }`,
       '#memoDetails_header_status': () => {
-        const status = moment().isBetween(validity_date, end_date) ? 'Active' : 'Inactive';
+        const status = moment().isBetween(moment(validity_date), moment(end_date)) ? 'Active' : 'Inactive';
         const { theme, icon } = MEMO_STATUS_STYLES[status];
           return `
             <div class="badge badge-subtle-${ theme } px-2 py-1">
@@ -104,7 +104,7 @@ const MemoDetails = (() => {
           }
 
           const getStatus = () => {
-            const status = moment().isBetween(validity_date, end_date) ? 'Active' : 'Inactive';
+            const status = moment().isBetween(moment(validity_date), moment(end_date)) ? 'Active' : 'Inactive';
             const { theme, icon } = MEMO_STATUS_STYLES[status];
               return `
                 <div class="badge badge-subtle-${ theme } px-2 py-1">
