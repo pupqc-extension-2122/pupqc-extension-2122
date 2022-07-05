@@ -95,7 +95,10 @@ exports.datatableProposal = async (req, res) => {
 exports.datatableApprovedProposal = async (req, res) => {
   try {
 
-    let data = await datatable(Projects, req.query, { where: { status: 'Approved' }, include: ['memos', 'partners'] })
+    let data = await datatable(Projects, req.query, { 
+      where: { status: 'Approved' },
+      include: ['memos', 'partners', 'activities'] 
+    })
     res.send(data)
 
   } catch (error) {
