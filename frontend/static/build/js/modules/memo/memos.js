@@ -244,19 +244,25 @@ const Memos = (() => {
         }, {
           data: 'validity_date',
           width: '20%',
-          render: data => {
+          render: (data, type, row) => {
+            const getClass = () => 
+              moment().isAfter(data) && moment().isAfter(row.end_date)
+                ? 'text-danger' : 'text-muted';
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(data) }</div>
+              <div class="small ${ getClass() }">${ fromNow(data) }</div>
             `
           }
         }, {
           data: 'end_date',
           width: '20%',
-          render: data => {
+          render: (data, type, row) => {
+            const getClass = () =>
+              moment().isAfter(data) && moment().isAfter(row.validity_date)
+                ? 'text-danger' : 'text-muted';
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(data) }</div>
+              <div class="small ${ getClass() }">${ fromNow(data) }</div>
             `
           }
         }, {
