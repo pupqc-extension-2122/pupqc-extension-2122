@@ -22,6 +22,8 @@ const MemoDetails = (() => {
    * * Private Methods
    */
 
+  const noContentTemplate = (message) => `<div class="text-muted font-italic">${message}</div>`;
+
   const loadDocumentTitle = () => {
     const memoName = memo.partner.name;
     const documentTitle = memoName.length > 75 
@@ -41,7 +43,6 @@ const MemoDetails = (() => {
 
     const { 
       representative_partner,
-      representative_pup,
       validity_date,
       end_date,
       partner: p, 
@@ -49,17 +50,117 @@ const MemoDetails = (() => {
     } = memo;
 
     setHTMLContent({
-      '#memoDetails_partnerName': p.name,
-      '#memoDetails_address': p.address,
-      '#memoDetails_organization': `${ o.name } <span class="mx-1">&bull;</span> ${ o.type }`,
-      '#memoDetails_representative': representative_partner,
-      '#memoDetails_pupRepresentative': representative_pup,
-      '#memoDetails_validity': `${ moment(validity_date).format('MMMM DD, YYYY') } - ${ moment(end_date).format('MMMM DD, YYYY') }`,
+      '#memoDetails_header_partnerName': p.name,
+      '#memoDetails_header_address': p.address,
+      '#memoDetails_header_representative': representative_partner,
+      '#memoDetails_header_organization': `${ o.name } <span class="mx-1">&bull;</span> ${ o.type }`,
+      '#memoDetails_header_validity': `${ moment(validity_date).format('MMMM DD, YYYY') } - ${ moment(end_date).format('MMMM DD, YYYY') }`,
+      '#memoDetails_header_status': () => {
+        const status = moment().isBetween(validity_date, end_date) ? 'Active' : 'Inactive';
+        const { theme, icon } = MEMO_STATUS_STYLES[status];
+          return `
+            <div class="badge badge-subtle-${ theme } px-2 py-1">
+              <i class="${ icon } fa-fw mr-1"></i>
+              <span>${ status }</span>
+            </div>
+          `;
+      }
+    });
+  }
+
+  const loadBodyDetails = () => {
+    const {
+      representative_partner,
+      representative_pup,
+      notarized_date,
+      validity_date,
+      end_date,
+      partner: p, 
+      organization: o 
+    } = memo;
+
+    setHTMLContent({
+      '#memoDetails_body_partnerName': () => {
+        return `
+          <a href="${ BASE_URL_WEB }/m/partners/${ p.id }">${ p.name }</a>
+        `
+      },
+      '#memoDetails_body_partnerAddress': p.address,
+      '#memoDetails_body_representative': representative_partner,
+      '#memoDetails_body_pupREPDRepresentative': representative_pup,
+      '#memoDetails_body_organization': `${ o.name } <span class="mx-1">&bull;</span> ${ o.type }`,
+      '#memoDetails_body_notarySignedDate': () => {
+        return `
+          <div>${ moment(notarized_date).format('MMMM DD, YYYY (dddd)') }</div>
+          <div class="small text-muted">${ fromNow(notarized_date) }</div>
+        `
+      },
+      '#memoDetails_body_validity': () => {
+        if (validity_date && end_date) {
+          const getDuration = () => {
+            return moment(validity_date).isSame(moment(end_date))
+              ? 'in the whole day'
+              : moment(validity_date).to(moment(end_date), true)
+          }
+
+          const getStatus = () => {
+            const status = moment().isBetween(validity_date, end_date) ? 'Active' : 'Inactive';
+            const { theme, icon } = MEMO_STATUS_STYLES[status];
+              return `
+                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                  <i class="${ icon } fa-fw mr-1"></i>
+                  <span>${ status }</span>
+                </div>
+              `;
+          }
+
+          return `
+            <div class="ml-4 ml-lg-0 row">
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Effective on:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>${ moment(validity_date).format('MMMM D, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(validity_date) }</div>
+              </div>
+
+              <div class="col-12"><div class="mt-2"></div></div>
+
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Until:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>${ moment(end_date).format('MMMM D, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(end_date) }</div>
+              </div>
+
+              <div class="col-12"><div class="mt-2"></div></div>
+
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Duration:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>Approximately ${ getDuration() }</div>
+              </div>
+
+              <div class="col-12"><div class="mt-2"></div></div>
+
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Status:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>${ getStatus() }</div>
+              </div>
+            </div>
+          `
+        } else return noContentTemplate('No dates have been set up.');
+      }
     });
   }
 
   const loadDetails = () => {
     loadHeaderDetails();
+    loadBodyDetails();
   }
 
   const initializations = () => {
@@ -188,6 +289,9 @@ const MemoDetails = (() => {
 
     $('#memoDetails_header_loader').remove();
     $('#memoDetails_header').show();
+    
+    $('#memoDetails_body_loader').remove();
+    $('#memoDetails_body').show();
 
     $('#options_loader').remove();
     $('#options').show();

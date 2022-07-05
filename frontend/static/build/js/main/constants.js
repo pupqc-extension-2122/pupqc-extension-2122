@@ -381,6 +381,18 @@ const PARTNER_STATUS_STYLES = {
 	},
 }
 
+// Memo Status Styles
+const MEMO_STATUS_STYLES = {
+	'Active': {
+		icon: 'fas fa-check',
+		theme: 'success'
+	},
+	'Inactive': {
+		icon: 'fas fa-ban',
+		theme: 'danger'
+	},
+}
+
 // Project Evaluation Styles
 const PROJECT_EVALUATION_STATUS_STYLES = {
 	'Evaluated': {

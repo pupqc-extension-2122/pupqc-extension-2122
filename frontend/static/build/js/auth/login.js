@@ -10,26 +10,28 @@
   const loginForm = '#login_form';
   const emailInput = $('#loginForm_email');
   const passwordInput = $('#loginForm_password');
+  const rememberInput = $('#loginForm_rememberMe');
   const submitBtn = $('#loginForm_submitBtn');
 
-	const handleForm = () => {
-		$app(loginForm).handleForm({
-			validators: {
-				email: {
-					required: 'Email address is required.',
-					email: 'The input is not a valid email address.'
-				},
-				password: {
-					required: 'Password is required.'
-				}
-			},
-			onSubmit: () => onLoginFormSubmit()
-		})
-	}
+  const handleForm = () => {
+    $app(loginForm).handleForm({
+      validators: {
+        email: {
+          required: 'Email address is required.',
+          email: 'The input is not a valid email address.'
+        },
+        password: {
+          required: 'Password is required.'
+        }
+      },
+      onSubmit: () => onLoginFormSubmit()
+    })
+  }
 
   const disableElements = () => {
     emailInput.attr('disabled', true);
     passwordInput.attr('disabled', true);
+    rememberInput.attr('disabled', true);
     submitBtn.attr('disabled', true);
     submitBtn.html(`<i class="fas fa-spinner fa-spin-pulse"></i>`);
   }
@@ -37,6 +39,7 @@
   const enableElements = () => {
     emailInput.attr('disabled', false);
     passwordInput.attr('disabled', false);
+    rememberInput.attr('disabled', false);
     passwordInput.val('');
     submitBtn.attr('disabled', false);
     submitBtn.html(`
@@ -52,7 +55,7 @@
     const data = {
       email: fd.get('email'),
       password: fd.get('password'),
-      remember: $('#loginForm_rememberMe').is(":checked")
+      remember: rememberInput.is(":checked")
     }
     
     disableElements();
@@ -104,11 +107,11 @@
     });
   }
 
-	return {
-		init: () => {
-			handleForm(); 
-		}
-	}
+  return {
+    init: () => {
+      handleForm(); 
+    }
+  }
 })().init();
 
 
