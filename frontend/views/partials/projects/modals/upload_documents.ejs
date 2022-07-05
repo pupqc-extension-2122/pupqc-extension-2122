@@ -1,0 +1,98 @@
+<%# Upload Documents Modal %>
+<div class="modal fade" data-backdrop="static" id="uploadDocuments_modal">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content" id="submitActivityEvaluation_form">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fas fa-list fa-fw mr-1"></i>
+          <span>Upload documents</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <%# Document %>
+        <div class="">
+          <div class="form-group">
+            <div class="form-row">
+              <div class="col-10 col-md-9">
+                <div class="form-control" style="border-style: dashed !important;">
+                  Upload document here
+                </div>
+              </div>
+              <div class="col-2 col-md-3">
+                <button class="btn btn-success btn-block">
+                  <i class="fas fa-file-arrow-up fa-fw"></i>
+                  <span class="d-none d-md-inline-block ml-1">Choose file</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="uploaded_files">
+
+            <% for( let index = 0; index < 5; index++ ) { %>
+              <div class="d-flex mt-2">
+
+                <!-- Thumbnail -->
+                <div>
+                  <span class="preview"><img data-dz-thumbnail /></span>
+                </div>
+                
+                <!-- File & Progress -->
+                  <div class="flex-grow-1 border rounded p-3 mr-2">
+                    <div>
+                        <div class="" data-dz-name>Test</div>
+                        <!-- <strong class="text-danger font-weight-normal" data-dz-errormessage>There something wrong</strong> -->
+                    </div>
+                    <div>
+                        <p class="size" data-dz-size></p>
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                          <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                        </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Buttons -->
+                <div>
+                  <button 
+                      data-dz-remove 
+                      class="btn btn-negative cancel"
+                      data-toggle="tooltip"
+                      title="Cancel"
+                    >
+                      <i class="fas fa-times text-warning"></i>
+                    </button>
+                  <!-- <button 
+                      data-dz-remove 
+                      class="btn btn-negative delete"
+                      data-toggle="tooltip"
+                      title="Remove"
+                    >
+                    <i class="fas fa-trash-alt text-danger"></i>
+                  </button> -->
+                </div>
+              </div>  
+            <% } %>
+            
+          </div>
+          
+          <div class="mt-2">
+            <button class="btn btn-success">
+              <i class="fas fa-file-arrow-up mr-1"></i>
+              <span>Start Upload</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

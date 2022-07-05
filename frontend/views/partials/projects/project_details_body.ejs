@@ -196,6 +196,46 @@
         </div>
       </div>
 
+      <%# Documents Pane %>
+      <div 
+        class="tab-pane fade" 
+        id="projectDetails_documents_pane" 
+        role="tabpanel"
+        aria-labelledby="projectDetails_documents_tab"
+      >
+        <div class="d-flex mb-3">
+          <h4 class="mb-3 flex-grow-1">Documents</h4>
+          <div class="text-right">
+            <button class="btn btn-info" data-toggle="modal" data-target="#uploadDocuments_modal">
+              <i class="fas fa-upload mr-1"></i>
+              <span>Upload documents</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table" id="uploadedDocuments_dt">
+            <thead>
+              <th class="align-middle sr-only">Date created</th>
+              <th class="align-middle" width="45%">Name</th>
+              <th class="align-middle">Type</th>
+              <th class="align-middle" width="25%">Date added</th>
+              <th class="align-middle" width="8%">
+                <div class="sr-only">Options</div>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="5" class="text-center">
+                  <%- include('../../partials/loaders/dt_body') %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
       <%# Evaluation Summary Pane %>
       <div 
         class="tab-pane fade" 
@@ -246,11 +286,7 @@
             </tbody>
           </table>
         </div>
-
-        <p>Note: To be able to pass the evaluation, the project proposal should get at least 70% average points</p>
-
       </div>
-
     </div>
   </div>
 </div>

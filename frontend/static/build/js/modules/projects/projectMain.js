@@ -2349,7 +2349,7 @@ const ProjectActivities = (() => {
       }
     }
 
-    if (dtOptions) dt = dtElem.DataTable(dtOptions);
+    if (dtOptions) dt = await dtElem.DataTable(dtOptions);
   }
 
   const handleEditForm = () => {
@@ -3062,4 +3062,104 @@ const ProjectHistory = (()=>{
     addToTimeline
   }
 
-})()
+})();
+
+
+const ProjectDocuments = (() => {
+  
+  // * Local Variables
+  
+  const dtElem = $('#uploadedDocuments_dt');
+  let dt;
+  let initialized = false;
+
+  // * Private Methods
+
+  const initDataTable = async () => {
+    // ! Simulation
+    let sampleData = [
+      {
+        id: '1',
+        file_name: 'File 1',
+        path: '#',
+        mimetype: 'PDF',
+        created_at: '2022-06-20',
+      }, {
+        id: '2',
+        file_name: 'File 2',
+        path: '#',
+        mimetype: 'DOCX',
+        created_at: '2022-06-20',
+      }, {
+        id: '3',
+        file_name: 'File 3',
+        path: '#',
+        mimetype: 'JPEG',
+        created_at: '2022-06-20',
+      }, 
+    ]
+
+    dt = await dtElem.DataTable({
+      ...DT_CONFIG_DEFAULTS,
+      data: sampleData,
+      columns: [
+        {
+          data: 'created_at', 
+          visible: false
+        }, {
+          data: 'file_name',
+        }, {
+          data: 'mimetype',
+        }, {
+          data: 'created_at',
+          render: (data) => {
+            return `
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div>${ fromNow(data) }</div>
+            `
+          }
+        }, {
+          data: 'created_at',
+          // render: (data) => {
+          //   return `
+          //   <div class="dropdown text-center">
+          //     <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+          //       <i class="fas fa-ellipsis-h"></i>
+          //     </div>
+          //     <div class="dropdown-menu dropdown-menu-right">
+          //       <div class="dropdown-header">Options</div>
+          //       <button
+          //         type="button"
+          //         class="dropdown-item"
+          //         onclick="ProjectActivities.initViewMode('${ data.id }')"
+          //       >
+          //         <span>Download</span>
+          //       </button>
+          //     </div>
+          //   </div>
+          //   `
+          // }
+        }
+      ]
+    });
+  }
+
+  // * Public Methods
+
+  const reloadDataTable = async () => await dt.ajax.reload();
+
+  // * Init
+
+  const init = async () => {
+    if (!initialized) {
+      initialized = true;
+      await initDataTable();
+    }
+  }
+
+  // * Return Public Methods
+  return {
+    init,
+    reloadDataTable,
+  }
+})();

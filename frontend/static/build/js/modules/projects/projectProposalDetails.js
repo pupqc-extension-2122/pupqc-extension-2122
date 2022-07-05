@@ -30,7 +30,9 @@
         }
 
         ProjectComments.init(data.project);
-        ProjectHistory.init(data.project.history)
+        ProjectHistory.init(data.project.history);
+
+        ProjectDocuments.init();
       }
     },
     error: (xhr, status, error) => {
