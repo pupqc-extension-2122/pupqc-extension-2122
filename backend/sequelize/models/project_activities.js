@@ -69,6 +69,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: { notEmpty: true },
     },
+    evaluation: {
+      type: DataTypes.TEXT,
+      set(val){
+        this.setDataValue('evaluation', JSON.stringify(val))
+      },
+      get(){
+        return JSON.parse(this.getDataValue('evaluation'))
+      }
+    },
     status: {
       type: DataTypes.STRING,
       allowNull: false,

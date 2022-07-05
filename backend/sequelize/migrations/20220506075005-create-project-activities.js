@@ -39,6 +39,9 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
+      evaluation: {
+        type: Sequelize.TEXT,
+      },
       status: {
         type: Sequelize.STRING,
         allowNull: false
