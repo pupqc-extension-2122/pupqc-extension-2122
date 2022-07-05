@@ -19,6 +19,12 @@ const renderRoles = (roles) => {
   return roleTemplate;
 }
 
+const render404 = (res) => {
+  return res.status(404).render('content/errors/404', {
+    layout: './layouts/error',
+    document_title: '404 - Page not found',
+  });
+}
 
 // *** ROUTES *** //
 
@@ -40,7 +46,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -57,7 +63,7 @@ router.get('/partners', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -82,7 +88,7 @@ router.get('/partners/:partner_id', jwtMiddleware, async (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -99,7 +105,7 @@ router.get('/memo/', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -124,7 +130,7 @@ router.get('/memo/:memo_id', jwtMiddleware, async (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 

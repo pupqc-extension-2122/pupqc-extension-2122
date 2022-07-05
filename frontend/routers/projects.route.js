@@ -49,7 +49,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -66,7 +66,7 @@ router.get('/proposals', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -83,7 +83,7 @@ router.get('/create-proposal', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -111,7 +111,7 @@ router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -139,7 +139,7 @@ router.get('/proposals/:project_id/activities', jwtMiddleware, async (req, res) 
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -164,7 +164,7 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, async (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -181,7 +181,7 @@ router.get('/monitoring/', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -206,7 +206,7 @@ router.get('/monitoring/:project_id', jwtMiddleware, async (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -231,7 +231,7 @@ router.get('/monitoring/:project_id/activities', jwtMiddleware, async (req, res)
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -250,7 +250,7 @@ router.get('/evaluation/', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -267,7 +267,7 @@ router.get('/evaluation/:project_id', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
@@ -284,7 +284,7 @@ router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 

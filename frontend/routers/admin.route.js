@@ -65,7 +65,7 @@ router.get('/users', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 
