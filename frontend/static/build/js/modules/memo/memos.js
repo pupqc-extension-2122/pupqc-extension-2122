@@ -130,14 +130,14 @@ const Memos = (() => {
         validity_date: {
           required: "Please select the validity date.",
           notEmpty: "This field cannot be empty.",
-          afterDateTimeSelector: {
+          sameOrAfterDateTimeSelector: {
             rule: '#addMOA_notarySignedDate',
-            message: 'The validity date must be later than the notary date.' 
+            message: 'The validity date must be same or later than the notary date.' 
           }
         },
-        uploadDocument: {
-          required: "MOA/MOU attachment is required.",
-        }
+        // uploadDocument: {
+        //   required: "MOA/MOU attachment is required.",
+        // }
       },
       onSubmit: () => onFormSubmit()
     });
