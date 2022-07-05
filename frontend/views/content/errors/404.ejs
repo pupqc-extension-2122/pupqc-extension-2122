@@ -1,0 +1,26 @@
+<%# ***** Body ***** %>
+
+<div class="d-flex flex-column align-items-center justify-content-center vh-100 w-100 user-select-none">
+  <div>
+    <div class="row align-items-center justify-content-center">
+      <div class="col-md-6 d-flex justify-content-center">
+        <img class="w-100" src="<%=BASE_URL%>/img/app/404.svg" alt="Maintenance" draggable="false">
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-5">
+    <h3 class="d-inline-block text-nowrap text-danger">404</h3>
+    <h3 class="d-inline-block text-nowrap">Page not found</h3>
+    <p>Sorry, but we think you've been lost. Your requested page does not exist.</p>
+    <button type="button" class="btn btn-primary" onclick="history.back()">
+      <i class="fas fa-arrow-left fa-fw mr-1"></i>
+      <span>Go back</span>
+    </button>
+  </div>
+</div>
+
+
+<%# ***** Script ***** %>
+
+<%# Main %> 
+<script src="<%=BASE_URL%>/js/main.js"></script>

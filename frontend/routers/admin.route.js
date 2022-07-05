@@ -19,9 +19,20 @@ const renderRoles = (roles) => {
 }
 
 
+const render404 = (res) => {
+  return res.status(404).render('content/errors/404', {
+    layout: './layouts/error',
+    document_title: '404 - Page not found',
+  });
+}
+
 
 // Redirect
-router.get('/', jwtMiddleware, (req, res) => res.redirect(`/a/dashboard`));
+router.get('/', jwtMiddleware, (req, res) => {
+  req.auth.roles.includes('Admin')
+    ? res.redirect(`/a/dashboard`)
+    : render404(res)
+});
 
 
 // Dashboard
@@ -37,7 +48,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
       roles: roles,
       ...RENDER_OPTION_DEFAULTS
     })
-    : console.log('404')
+    : render404(res)
 });
 
 

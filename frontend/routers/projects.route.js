@@ -20,6 +20,14 @@ const renderRoles = (roles) => {
 }
 
 
+const render404 = (res) => {
+  return res.status(404).render('content/errors/404', {
+    layout: './layouts/error',
+    document_title: '404 - Page not found',
+  });
+}
+
+
 
 // *** ROUTES *** //
 
@@ -89,7 +97,7 @@ router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
   });
 
   if(!project)
-    return res.status(404).send({ error: true, message: 'Page Not Found' });
+    return render404(res);
 
   // if(project.status === 'Created' && roles.length === 1 && roles.includes('Chief'))
   //   return res.status(404).send({ error: true, message: 'Page Not Found' });
