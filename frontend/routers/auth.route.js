@@ -11,10 +11,19 @@ router.get('/', (req, res) => {
 
 // Login
 router.get('/login', (req, res) => {
-  res.render(PATH + 'login', {
-    layout: './layouts/auth',
-    document_title: 'Login',
-  });
+  if (req.cookies.roles) {
+    const roles = JSON.parse(req.cookies.roles);
+    if (roles.includes('Admin'))
+      res.redirect('/a');
+    else {
+      res.redirect('/p');
+    }
+  } else {
+    res.render(PATH + 'login', {
+      layout: './layouts/auth',
+      document_title: 'Login',
+    });
+  }
 });
 
 
