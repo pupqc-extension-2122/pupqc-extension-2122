@@ -255,8 +255,16 @@ router.get('/evaluation/', jwtMiddleware, (req, res) => {
 
 
 // Project Evaluation Details
-router.get('/evaluation/:project_id', jwtMiddleware, (req, res) => {
+router.get('/evaluation/:project_id', jwtMiddleware, async (req, res) => {
   const { roles, first_name, last_name } = req.auth;
+  const { project_id } = req.params;
+  
+  const project = await Projects.findOne({
+    where: { id: project_id }
+  });
+
+  if(!project || project.status !== 'Approved')
+    return render404(res);
 
   roles.includes('Extensionist') || roles.includes('Chief')
     ? res.render(PATH + 'activity_evaluation_details', {
