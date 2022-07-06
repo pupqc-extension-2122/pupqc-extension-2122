@@ -61,7 +61,7 @@ exports.memoUploads = async (req, res) => {
     const uploads = files.map(el => (
       {
         memo_id: memo.id,
-        file_name: 'uploads/memo/' + el.filename,
+        file_name: '/uploads/memo/' + el.filename,
         mimetype: el.mimetype,
         path: el.path
       }
@@ -100,7 +100,7 @@ exports.projectUploads = async (req, res) => {
     const uploads = files.map(el => (
       {
         project_id: project.id,
-        file_name: 'uploads/project/' + el.filename,
+        file_name: '/uploads/project/' + el.filename,
         mimetype: el.mimetype,
         path: el.path
       }
