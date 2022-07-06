@@ -3069,26 +3069,33 @@ const ProjectDocuments = (() => {
   // * Local Variables
   
   const dtElem = $('#uploadedDocuments_dt');
+  const uploadDocuments_modal = $('#uploadDocuments_modal');
+  let project;
   let dt;
-  let dropzone;
+  let dz; // For dropzone
   let initialized = false;
+  let processing = false;
 
   // * Private Methods
 
-  const initializations = () => {
-    initializeDropzone();
+  const initializations = async () => {
+    await initializeDropzone();
+    handleSubmitDocumentForm();
+    handleModal();
   }
 
   const initializeDropzone = async () => {
 
+    const startUpload_btn = $("#startUpload_btn");
+
     // Get the template HTML and remove it from the doument.
-    var previewNode = document.querySelector("#dropFiles_fileTemplate");
+    let previewNode = document.querySelector("#dropFiles_fileTemplate");
     previewNode.id = "";
-    var previewTemplate = previewNode.parentNode.innerHTML;
+    let previewTemplate = previewNode.parentNode.innerHTML;
     previewNode.parentNode.removeChild(previewNode);
 
-    dropzone = await new Dropzone(document.querySelector('#dropFiles_container'), {
-      url: "/target-url", // Set the url
+    dz = await new Dropzone(document.querySelector('#dropFiles_container'), {
+      url: `${ BASE_URL_API }/documents/project/${ project.id }`, // Set the url
       thumbnailWidth: 80,
       thumbnailHeight: 80,
       parallelUploads: 20,
@@ -3096,6 +3103,89 @@ const ProjectDocuments = (() => {
       autoQueue: false, // Make sure the files aren't queued until manually added
       previewsContainer: "#dropFiles_previews", // Define the container to display the previews
       clickable: "#dropFiles_browse_btn" // Define the element that should be used as click trigger to select files.
+    });
+
+    dz.on("addedfile", (file) => {
+    });
+
+    // Update the total progress bar
+    dz.on("totaluploadprogress", (progress) => {
+      $("#total_progress").css({ width: `${ progress }%` });
+      $("#total_progress_count").html(`${ progress.toFixed(2) }%`);
+    });
+
+    dz.on("uploadprogress", (file, progress, bytesSent) => {
+      $(file.previewElement)
+        .find(`[data-dz-uploadprogress-count]`)
+        .html(`${ progress.toFixed(2) }%`);
+
+      $(file.previewElement)
+        .find(`[data-dz-uploadprogress]`)
+        .removeClass()
+        .addClass(() => {
+          const getBgColor = () => {
+            if (progress >= 0 && progress <= 33) return 'bg-danger';
+            else if(progress > 33 && progress <= 66) return 'bg-warning';
+            else if(progress > 66 && progress < 100) return 'bg-info';
+            else if(progress === 100) return 'bg-success';
+          }
+          return `progress-bar progress-bar-striped progress-bar-animated ${ getBgColor() }`
+        })
+    });
+
+    dz.on("success", (file) => {
+      $(file.previewElement)
+        .find(`[data-dz-uploadprogress]`)
+        .removeClass('progress-bar-striped progress-bar-animated bg-warning')
+        .addClass('bg-success')
+        .html(`<i class="fas fa-check"></i>`);
+    });
+
+    dz.on("sending", (file) => {
+
+      // Show the total progress bar when upload starts
+      $("#total_progress_container").show();
+      
+      // And disable the start button
+      startUpload_btn.attr("disabled", true);
+      startUpload_btn.html(`
+        <span class="px-3">
+          <i class="fas fa-spinner fa-spin-pulse"></i>
+        </span>
+      `);
+    });
+    
+    // Hide the total progress bar when nothing's uploading anymore
+    dz.on("queuecomplete", (progress) => {
+      processing = false;
+
+      toastr.success('Your files has been successfully uploaded.');
+
+      startUpload_btn.attr("disabled", false);
+      startUpload_btn.html(`
+        <i class="fas fa-upload fa-fw mr-1"></i>
+        <span>Start Upload</span>
+      `);
+    });
+
+  }
+
+  const handleSubmitDocumentForm = () => {
+    $app('#submitActivityEvaluation_form').handleForm({
+      validators: {},
+      onSubmit: () => {
+        dz.enqueueFiles(dz.getFilesWithStatus(Dropzone.ADDED));
+      }
+    });
+  }
+
+  const handleModal = () => {
+    uploadDocuments_modal.on('hidden.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+      dz.removeAllFiles(true);
+      
+      $("#total_progress").css({ width: `0` });
+      $("#total_progress_count").html(`0.00%`);
     });
   }
 
@@ -3198,10 +3288,11 @@ const ProjectDocuments = (() => {
 
   // * Init
 
-  const init = async () => {
+  const init = async (projectData) => {
     if (!initialized) {
       initialized = true;
-      initializations();
+      project = projectData;
+      await initializations();
       await initDataTable();
     }
   }

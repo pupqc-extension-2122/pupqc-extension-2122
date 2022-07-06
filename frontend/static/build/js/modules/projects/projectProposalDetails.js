@@ -32,7 +32,7 @@
         ProjectComments.init(data.project);
         ProjectHistory.init(data.project.history);
 
-        ProjectDocuments.init();
+        ProjectDocuments.init(data.project);
       }
     },
     error: (xhr, status, error) => {
