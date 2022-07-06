@@ -3070,6 +3070,7 @@ const ProjectDocuments = (() => {
   
   const dtElem = $('#uploadedDocuments_dt');
   const uploadDocuments_modal = $('#uploadDocuments_modal');
+  const startUpload_btn = $("#startUpload_btn");
   let project;
   let dt;
   let dz; // For dropzone
@@ -3085,8 +3086,6 @@ const ProjectDocuments = (() => {
   }
 
   const initializeDropzone = async () => {
-
-    const startUpload_btn = $("#startUpload_btn");
 
     // Get the template HTML and remove it from the doument.
     let previewNode = document.querySelector("#dropFiles_fileTemplate");
@@ -3108,9 +3107,21 @@ const ProjectDocuments = (() => {
     dz.on("addedfile", (file) => {
     });
 
+    const getBgColor = (progress) => {
+      if (progress >= 0 && progress <= 33) return 'bg-danger';
+      else if(progress > 33 && progress <= 66) return 'bg-warning';
+      else if(progress > 66 && progress < 100) return 'bg-info';
+      else if(progress === 100) return 'bg-success';
+    }
+
     // Update the total progress bar
     dz.on("totaluploadprogress", (progress) => {
-      $("#total_progress").css({ width: `${ progress }%` });
+      $("#total_progress")
+        .css({ width: `${ progress }%` })
+        .removeClass()
+        .addClass(() => {
+          return `progress-bar progress-bar-striped progress-bar-animated ${ getBgColor(progress) }`
+        });
       $("#total_progress_count").html(`${ progress.toFixed(2) }%`);
     });
 
@@ -3123,14 +3134,8 @@ const ProjectDocuments = (() => {
         .find(`[data-dz-uploadprogress]`)
         .removeClass()
         .addClass(() => {
-          const getBgColor = () => {
-            if (progress >= 0 && progress <= 33) return 'bg-danger';
-            else if(progress > 33 && progress <= 66) return 'bg-warning';
-            else if(progress > 66 && progress < 100) return 'bg-info';
-            else if(progress === 100) return 'bg-success';
-          }
-          return `progress-bar progress-bar-striped progress-bar-animated ${ getBgColor() }`
-        })
+          return `progress-bar progress-bar-striped progress-bar-animated ${ getBgColor(progress) }`
+        });
     });
 
     dz.on("success", (file) => {
@@ -3141,7 +3146,8 @@ const ProjectDocuments = (() => {
         .html(`<i class="fas fa-check"></i>`);
     });
 
-    dz.on("sending", (file) => {
+    dz.on("sending", () => {
+      processing = true;
 
       // Show the total progress bar when upload starts
       $("#total_progress_container").show();
@@ -3161,6 +3167,11 @@ const ProjectDocuments = (() => {
 
       toastr.success('Your files has been successfully uploaded.');
 
+      $("#total_progress")
+        .removeClass('progress-bar-striped progress-bar-animated bg-warning')
+        .addClass('bg-success')
+        .html(`<i class="fas fa-check"></i>`);
+        
       startUpload_btn.attr("disabled", false);
       startUpload_btn.html(`
         <i class="fas fa-upload fa-fw mr-1"></i>
@@ -3259,19 +3270,19 @@ const ProjectDocuments = (() => {
                   <i class="fas fa-file fa-fw mr-1"></i>
                   <span>View File</span>
                 </div>
-                <div
+                <a
                   role="button"
+                  download="${ data.path }"
                   class="dropdown-item"
-                  onclick="ProjectActivities.initViewMode('${ data.id }')"
                 >
                   <i class="fas fa-download fa-fw mr-1"></i>
                   <span>Download</span>
-                </div>
+                </a>
                 <div class="dropdown-divider"></div>
                 <div
                   role="button"
                   class="dropdown-item"
-                  onclick="ProjectActivities.initViewMode('${ data.id }')"
+                  onclick="ProjectDocuments.deleteFile('${ data.id }')"
                 >
                   <i class="fas fa-trash-alt fa-fw mr-1"></i>
                   <span>Delete</span>
@@ -3289,6 +3300,28 @@ const ProjectDocuments = (() => {
 
   const reloadDataTable = async () => await dt.ajax.reload();
 
+  const deleteFile = async (document_id) => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/documents/${ document_id }`,
+      type: 'DELETE',
+      success: async (res) => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          await reloadDataTable();
+          toastr.info('A file has been deleted.');
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/projectMain.js',
+          fn: 'ProjectDocuments.deleteFile()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
+    });
+  }
+
   // * Init
 
   const init = async (projectData) => {
@@ -3304,5 +3337,6 @@ const ProjectDocuments = (() => {
   return {
     init,
     reloadDataTable,
+    deleteFile,
   }
 })();
