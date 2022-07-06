@@ -1,5 +1,5 @@
 const { Documents, Memos, Projects } = require('../sequelize/models')
-const { datatable } = require('../../utils/datatableResponse')
+const datatable = require('../../utils/datatableResponse')
 const fs = require('fs')
 
 exports.datatableMemoUploads = async (req, res) => {

@@ -8,7 +8,7 @@ const { uploadMemoDocument, uploadProjectDocument } = require('../../utils/multe
 router.use(jwtMiddleWare)
 
 router.get('/memo/:id/datatables', datatableMemoUploads)
-router.get('/memo/:id/datatables', datatableProjectUploads)
+router.get('/project/:id/datatables', datatableProjectUploads)
 router.post('/memo/:id', uploadMemoDocument, memoUploads)
 router.post('/project/:id', uploadProjectDocument, projectUploads)
 router.delete('/:id', deleteUploads)

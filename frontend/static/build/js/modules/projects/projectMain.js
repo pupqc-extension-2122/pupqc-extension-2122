@@ -3156,7 +3156,7 @@ const ProjectDocuments = (() => {
     });
     
     // Hide the total progress bar when nothing's uploading anymore
-    dz.on("queuecomplete", (progress) => {
+    dz.on("queuecomplete", async (progress) => {
       processing = false;
 
       toastr.success('Your files has been successfully uploaded.');
@@ -3166,6 +3166,8 @@ const ProjectDocuments = (() => {
         <i class="fas fa-upload fa-fw mr-1"></i>
         <span>Start Upload</span>
       `);
+
+      await reloadDataTable();
     });
 
   }
@@ -3190,35 +3192,36 @@ const ProjectDocuments = (() => {
   }
 
   const initDataTable = async () => {
-    // ! Simulation
-    let sampleData = [
-      {
-        id: '1',
-        file_name: 'File 1',
-        path: '#',
-        mimetype: 'PDF',
-        created_at: '2022-06-20',
-      }, {
-        id: '2',
-        file_name: 'File 2',
-        path: '#',
-        mimetype: 'DOCX',
-        created_at: '2022-06-20',
-      }, {
-        id: '3',
-        file_name: 'File 3',
-        path: '#',
-        mimetype: 'JPEG',
-        created_at: '2022-06-20',
-      }, 
-    ]
-
     dt = await dtElem.DataTable({
-      ...{
-        ...DT_CONFIG_DEFAULTS,
-        serverSide: false
+      ...DT_CONFIG_DEFAULTS,
+      ajax: {
+        url: `${ BASE_URL_API }/documents/project/${ project.id }/datatables`,
+        // success: result => {
+        //   console.log(result);
+        // },
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'projects/projectMain.js',
+            fn: 'ProjectDocuments.initDataTable',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
+        },
+        data: {
+          types: {
+            created_at: 'date',
+            activity_name: 'string',
+            start_date: 'date',
+            end_date: 'date'
+          }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="5">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
       },
-      data: sampleData,
       columns: [
         {
           data: 'created_at', 
