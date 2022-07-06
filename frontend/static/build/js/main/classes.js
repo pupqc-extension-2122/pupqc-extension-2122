@@ -1078,13 +1078,13 @@ class FinancialRequirementsForm {
 
 		// Change the overall amount in the DOM
 		overallAmountElem.html(formatToPeso(
-      overallAmount < MONEY_LIMIT && overallAmount > -MONEY_LIMIT
+      overallAmount < MONEY_LIMIT_LARGER && overallAmount > -MONEY_LIMIT_LARGER
         ? overallAmount 
-        : MONEY_LIMIT
+        : MONEY_LIMIT_LARGER
     ));
 
 		// Change the style of the overall amount if less than 0
-		overallAmount < 0 || overallAmount > MONEY_LIMIT
+		overallAmount < 0 || overallAmount > MONEY_LIMIT_LARGER
 			? overallAmountElem.addClass('text-danger')
 			: overallAmountElem.removeClass('text-danger');
 
@@ -1293,17 +1293,17 @@ class FinancialRequirementsForm {
 			// Change the total amount in the DOM
 			totalAmountElement.html(() => {
         let totalAmount;
-        if (total > MONEY_LIMIT)
-          totalAmount = MONEY_LIMIT
-        else if (total < -MONEY_LIMIT)
-          totalAmount = -MONEY_LIMIT
+        if (total > MONEY_LIMIT_LARGER)
+          totalAmount = MONEY_LIMIT_LARGER
+        else if (total < -MONEY_LIMIT_LARGER)
+          totalAmount = -MONEY_LIMIT_LARGER
         else
           totalAmount = total
         return formatToPeso(totalAmount);
       });
 
 			// Change the style if total amount is less than 0
-			total < 0 || total > MONEY_LIMIT
+			total < 0 || total > MONEY_LIMIT_LARGER
 				? totalAmountElement.addClass('text-danger')
 				: totalAmountElement.removeClass('text-danger');
 
