@@ -71,8 +71,8 @@ exports.login = async (req, res) => {
 
       let token = await jwt.sign(data, process.env.JWT_SECRET, { expiresIn })
       res.cookie('token', token, { httpOnly: true, signed: true, expires })
-      res.cookie('user', data.id)
-      res.cookie('roles', JSON.stringify(roles))
+      res.cookie('user', data.id, { expires })
+      res.cookie('roles', JSON.stringify(roles), { expires })
 
       res.send({
         error: false,
