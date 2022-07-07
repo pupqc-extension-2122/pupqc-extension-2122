@@ -66,12 +66,16 @@
 
 		// When next button has been clicked
 		nextBtn.on('click', () => {
-			// stepper.next();
 			if($(formSelector).valid()) {
 				if(currentStep == 0 && CA_form.getSelectedCooperatingAgencies().length == 0) {
 					toastr.warning('Please add at least one cooperating agency');
-				} else if(currentStep == 1 && FR_form.requirements.length == 0) {
-					toastr.warning('Please add at least one line item budget');
+        } else if (currentStep == 1) {
+          if (FR_form.requirements.length == 0)
+            toastr.warning('Please add at least one line item budget');
+          else if (FR_form.getFinancialRequirements().overallAmount > MONEY_LIMIT_LARGER)
+            toastr.warning('The overall amount is too much');
+          else 
+            stepper.next();
 				} else {
 					stepper.next();
 				}

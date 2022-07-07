@@ -790,6 +790,9 @@ class FinancialRequirementsForm {
 
 			// Container for total amount
 			budgetItemTotalAmount: 'data-budget-item-total-amount',
+
+      // For invalid feedback in total amount
+      budgetItemTotalAmountInvalidFeedback: 'data-budget-item-total-amount-invalid-feedback'
 		}
 
 		this.#initializations();
@@ -868,7 +871,12 @@ class FinancialRequirementsForm {
         </div>
       </td>
       <td class="text-right">
-        <span ${this.data.budgetItemTotalAmount}="${lineItemBudgetRowId}">&#8369;0.00</span>
+        <div ${this.data.budgetItemTotalAmount}="${lineItemBudgetRowId}">&#8369;0.00</div>
+        <div 
+          class="small text-danger" 
+          ${this.data.budgetItemTotalAmountInvalidFeedback}="${lineItemBudgetRowId}"
+          style="display: none"
+        ></div>
       </td>
       <td class="text-center">
         <button
@@ -1072,6 +1080,7 @@ class FinancialRequirementsForm {
 
 		// Get the overall amount element
 		const overallAmountElem = $('#overallAmount');
+		const overallAmountInvalidFeedbackElem = $('#overallAmount_invalidFeedback');
 
 		// Compute the overall amount
 		let overallAmount = this.requirements.reduce((a, c) => a += c.quantity * c.estimated_cost, 0);
@@ -1084,9 +1093,16 @@ class FinancialRequirementsForm {
     ));
 
 		// Change the style of the overall amount if less than 0
-		overallAmount < 0 || overallAmount > MONEY_LIMIT_LARGER
-			? overallAmountElem.addClass('text-danger')
-			: overallAmountElem.removeClass('text-danger');
+		if (overallAmount < 0) {
+			overallAmountElem.addClass('text-danger');
+      overallAmountInvalidFeedbackElem.html('Must be a positive value').show();
+    } else if (overallAmount > MONEY_LIMIT_LARGER) {
+			overallAmountElem.addClass('text-danger');
+      overallAmountInvalidFeedbackElem.html('Too much').show();
+    } else {
+			overallAmountElem.removeClass('text-danger');
+      overallAmountInvalidFeedbackElem.html('').hide();
+    }
 
 		return overallAmount;
 	}
@@ -1289,6 +1305,7 @@ class FinancialRequirementsForm {
 
 			// Get the total amount element
 			const totalAmountElement = this.#dataElement('budgetItemTotalAmount', budgetItemRowId);
+			const totalAmountInvalidFeedbackElem = this.#dataElement('budgetItemTotalAmountInvalidFeedback', budgetItemRowId);
 
 			// Change the total amount in the DOM
 			totalAmountElement.html(() => {
@@ -1303,9 +1320,16 @@ class FinancialRequirementsForm {
       });
 
 			// Change the style if total amount is less than 0
-			total < 0 || total > MONEY_LIMIT_LARGER
-				? totalAmountElement.addClass('text-danger')
-				: totalAmountElement.removeClass('text-danger');
+			if (total > MONEY_LIMIT_LARGER) {
+				totalAmountElement.addClass('text-danger');
+        totalAmountInvalidFeedbackElem.html('Too much').show();
+      } else if (total < 0) {
+				totalAmountElement.addClass('text-danger');
+        totalAmountInvalidFeedbackElem.html('Must be a positive value').show();
+      } else {
+				totalAmountElement.removeClass('text-danger');
+        totalAmountInvalidFeedbackElem.html('').hide();
+      }
 
 			// Get the overall amount
 			this.#getOverallAmount();
