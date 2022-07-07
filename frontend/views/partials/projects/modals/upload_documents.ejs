@@ -156,6 +156,52 @@
   </div>
 </div>
 
+<%# Rename File Modal %>
+<div class="modal fade" data-backdrop="static" id="renameFile_modal">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <form class="modal-content" id="renameFile_form">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fas fa-pen fa-fw mr-1"></i>
+          <span>Rename file</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="renameFile_fileName">
+            <span>File name</span>
+            <span class="text-danger">*</span>
+          </label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="renameFile_fileName"
+            name="file_name"
+            placeholder="Type the file name here"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-negative" 
+          data-dismiss="modal"
+        >Close</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+        >
+          <span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 <%# Confirm Delete Document Modal %>
 <div class="modal" id="deleteDocument_modal">
   <div class="modal-dialog modal-dialog-centered">

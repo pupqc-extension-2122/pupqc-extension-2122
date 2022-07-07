@@ -3074,6 +3074,7 @@ const ProjectDocuments = (() => {
   const totalProgressCount_elem = $("#total_progress_count");
   const startUpload_btn = $("#startUpload_btn");
   
+  const renameFile_modal = $('#renameFile_modal');
   const deleteDocument_modal = $('#deleteDocument_modal');
   
   let project;
@@ -3088,6 +3089,7 @@ const ProjectDocuments = (() => {
     await initializeDropzone();
     handleSubmitDocumentForm();
     handleUploadDocumentsModal();
+    handleRenameFileModal();
     handleDeletDocumentModal();
   }
 
@@ -3226,6 +3228,24 @@ const ProjectDocuments = (() => {
     });
   }
 
+  const handleRenameFileModal = () => {
+    $app('#renameFile_form').handleForm({
+      validators: {
+        file_name: {
+          required: 'The file name is required',
+          notEmpty: 'This field cannot be blank'
+        }
+      },
+      onSubmit: () => {
+        alert('Submitted');
+      }
+    });
+
+    renameFile_modal.on('hidden.bs.modal', () => {
+      $('#renameFile_form')[0].reset();
+    });
+  }
+
   const deleteFile = async (document_id) => {
     processing = true;
 
@@ -3245,7 +3265,6 @@ const ProjectDocuments = (() => {
       confirmBtn.attr('disabled', false);
       confirmBtn.html(`Yes, I'm sure.`);
     }
-
 
     await $.ajax({
       url: `${ BASE_URL_API }/documents/${ document_id }`,
@@ -3360,7 +3379,7 @@ const ProjectDocuments = (() => {
                 <div
                   role="button"
                   class="dropdown-item"
-                  onclick="ProjectActivities.initViewMode('${ data.id }')"
+                  onclick="ProjectDocuments.initRenameFile('${ data.id }', '${ data.file_name }')"
                 >
                   <i class="fas fa-pen fa-fw mr-1"></i>
                   <span>Rename</span>
@@ -3396,6 +3415,11 @@ const ProjectDocuments = (() => {
 
   const reloadDataTable = async () => await dt.ajax.reload();
 
+  const initRenameFile = (document_id, file_name) => {
+    $('#renameFile_fileName').val(file_name);
+    renameFile_modal.modal('show');
+  }
+
   const initDeleteFile = (document_id, file_name) => {
     deleteDocument_modal
       .find(`[data-delete-document-confirm-btn]`)
@@ -3421,6 +3445,7 @@ const ProjectDocuments = (() => {
   return {
     init,
     reloadDataTable,
+    initRenameFile,
     initDeleteFile,
   }
 })();
