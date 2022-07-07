@@ -3070,7 +3070,12 @@ const ProjectDocuments = (() => {
   
   const dtElem = $('#uploadedDocuments_dt');
   const uploadDocuments_modal = $('#uploadDocuments_modal');
+  const totalProgress_elem = $("#total_progress");
+  const totalProgressCount_elem = $("#total_progress_count");
   const startUpload_btn = $("#startUpload_btn");
+  
+  const deleteDocument_modal = $('#deleteDocument_modal');
+  
   let project;
   let dt;
   let dz; // For dropzone
@@ -3082,7 +3087,8 @@ const ProjectDocuments = (() => {
   const initializations = async () => {
     await initializeDropzone();
     handleSubmitDocumentForm();
-    handleModal();
+    handleUploadDocumentsModal();
+    handleDeletDocumentModal();
   }
 
   const initializeDropzone = async () => {
@@ -3104,9 +3110,6 @@ const ProjectDocuments = (() => {
       clickable: "#dropFiles_browse_btn" // Define the element that should be used as click trigger to select files.
     });
 
-    dz.on("addedfile", (file) => {
-    });
-
     const getBgColor = (progress) => {
       if (progress >= 0 && progress <= 33) return 'bg-danger';
       else if(progress > 33 && progress <= 66) return 'bg-warning';
@@ -3114,17 +3117,19 @@ const ProjectDocuments = (() => {
       else if(progress === 100) return 'bg-success';
     }
 
-    // Update the total progress bar
-    dz.on("totaluploadprogress", (progress) => {
-      $("#total_progress")
-        .css({ width: `${ progress }%` })
-        .removeClass()
-        .addClass(() => {
-          return `progress-bar progress-bar-striped progress-bar-animated ${ getBgColor(progress) }`
-        });
-      $("#total_progress_count").html(`${ progress.toFixed(2) }%`);
+    // * HANDLE GENERAL METHODS
+
+    dz.on("addedfile", (file) => {
     });
 
+    dz.on("reset", () => {
+      totalProgress_elem.css({ width: 0 }).html('');
+      totalProgressCount_elem.html('0.00%');
+    });
+
+    // * HANDLE PER FILE
+
+    // When a file has been uploading
     dz.on("uploadprogress", (file, progress, bytesSent) => {
       $(file.previewElement)
         .find(`[data-dz-uploadprogress-count]`)
@@ -3138,12 +3143,18 @@ const ProjectDocuments = (() => {
         });
     });
 
+    // When a file has been successfully uploaded
     dz.on("success", (file) => {
       $(file.previewElement)
         .find(`[data-dz-uploadprogress]`)
         .removeClass('progress-bar-striped progress-bar-animated bg-warning')
         .addClass('bg-success')
         .html(`<i class="fas fa-check"></i>`);
+    });
+
+    // When there's an error in uploading file
+    dz.on("error", (file, message) => {
+      console.trace(message)
     });
 
     dz.on("sending", () => {
@@ -3160,6 +3171,19 @@ const ProjectDocuments = (() => {
         </span>
       `);
     });
+
+    // * FOR TOTAL PROGRESS
+    
+    // Update the total progress bar
+    dz.on("totaluploadprogress", (progress) => {
+      totalProgress_elem
+        .css({ width: `${ progress }%` })
+        .removeClass()
+        .addClass(() => {
+          return `progress-bar progress-bar-striped progress-bar-animated ${ getBgColor(progress) }`
+        });
+      totalProgressCount_elem.html(`${ progress.toFixed(2) }%`);
+    });
     
     // Hide the total progress bar when nothing's uploading anymore
     dz.on("queuecomplete", async (progress) => {
@@ -3167,7 +3191,7 @@ const ProjectDocuments = (() => {
 
       toastr.success('Your files has been successfully uploaded.');
 
-      $("#total_progress")
+      totalProgress_elem
         .removeClass('progress-bar-striped progress-bar-animated bg-warning')
         .addClass('bg-success')
         .html(`<i class="fas fa-check"></i>`);
@@ -3192,13 +3216,76 @@ const ProjectDocuments = (() => {
     });
   }
 
-  const handleModal = () => {
+  const handleUploadDocumentsModal = () => {
     uploadDocuments_modal.on('hidden.bs.modal', (e) => {
       if (processing) e.preventDefault();
       dz.removeAllFiles(true);
       
       $("#total_progress").css({ width: `0` });
       $("#total_progress_count").html(`0.00%`);
+    });
+  }
+
+  const deleteFile = async (document_id) => {
+    processing = true;
+
+    const confirmBtn = deleteDocument_modal.find(`[data-delete-document-confirm-btn]`);
+
+    confirmBtn.attr('disabled', true);
+    confirmBtn.html(`
+      <span class="px-3">
+        <i class="fas fa-spinner fa-spin-pulse"></i>
+      </span>
+    `);
+
+    // For enabling elements
+    const enableElements = () => {
+
+      // Enable buttons
+      confirmBtn.attr('disabled', false);
+      confirmBtn.html(`Yes, I'm sure.`);
+    }
+
+
+    await $.ajax({
+      url: `${ BASE_URL_API }/documents/${ document_id }`,
+      type: 'DELETE',
+      success: async (res) => {
+        processing = false;
+        if (res.error) {
+          enableElements();
+          ajaxErrorHandler(res.message);
+        } else {
+          await reloadDataTable();
+          deleteDocument_modal.modal('hide');
+          enableElements();
+          toastr.info('A file has been deleted.');
+        }
+      },
+      error: (xhr, status, error) => {
+        processing = false;
+        enableElements();
+        ajaxErrorHandler({
+          file: 'projects/projectMain.js',
+          fn: 'ProjectDocuments.deleteFile()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
+    });
+  }
+
+  const handleDeletDocumentModal = () => {
+    const confirmBtn = deleteDocument_modal
+      .find(`[data-delete-document-confirm-btn]`)
+
+    confirmBtn.on('click', () => deleteFile(confirmBtn.attr(`data-delete-document-confirm-btn`)));
+
+    deleteDocument_modal.on('hide.bs.modal', (e) => {
+      if(processing) e.preventDefault();
+      deleteDocument_modal
+        .find(`[data-delete-document-confirm-btn]`)
+        .attr('data-delete-document-confirm-btn', '');
+      confirmBtn.attr(`data-delete-document-confirm-btn`, '');
     });
   }
 
@@ -3270,9 +3357,18 @@ const ProjectDocuments = (() => {
                   <i class="fas fa-file fa-fw mr-1"></i>
                   <span>View File</span>
                 </div>
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  onclick="ProjectActivities.initViewMode('${ data.id }')"
+                >
+                  <i class="fas fa-pen fa-fw mr-1"></i>
+                  <span>Rename</span>
+                </div>
                 <a
                   role="button"
-                  download="${ data.path }"
+                  href="${ BASE_URL_WEB }${ data.file_name }"
+                  download="${ data.file_name }"
                   class="dropdown-item"
                 >
                   <i class="fas fa-download fa-fw mr-1"></i>
@@ -3282,7 +3378,7 @@ const ProjectDocuments = (() => {
                 <div
                   role="button"
                   class="dropdown-item"
-                  onclick="ProjectDocuments.deleteFile('${ data.id }')"
+                  onclick="ProjectDocuments.initDeleteFile('${ data.id }', '${ data.file_name }')"
                 >
                   <i class="fas fa-trash-alt fa-fw mr-1"></i>
                   <span>Delete</span>
@@ -3300,26 +3396,14 @@ const ProjectDocuments = (() => {
 
   const reloadDataTable = async () => await dt.ajax.reload();
 
-  const deleteFile = async (document_id) => {
-    await $.ajax({
-      url: `${ BASE_URL_API }/documents/${ document_id }`,
-      type: 'DELETE',
-      success: async (res) => {
-        if (res.error) {
-          ajaxErrorHandler(res.message);
-        } else {
-          await reloadDataTable();
-          toastr.info('A file has been deleted.');
-        }
-      },
-      error: (xhr, status, error) => {
-        ajaxErrorHandler({
-          file: 'projects/projectMain.js',
-          fn: 'ProjectDocuments.deleteFile()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-        });
-      }
-    });
+  const initDeleteFile = (document_id, file_name) => {
+    deleteDocument_modal
+      .find(`[data-delete-document-confirm-btn]`)
+      .attr('data-delete-document-confirm-btn', document_id);
+    deleteDocument_modal
+      .find(`[data-delete-document-file-name]`)
+      .html(file_name);
+    deleteDocument_modal.modal('show');
   }
 
   // * Init
@@ -3337,6 +3421,6 @@ const ProjectDocuments = (() => {
   return {
     init,
     reloadDataTable,
-    deleteFile,
+    initDeleteFile,
   }
 })();
