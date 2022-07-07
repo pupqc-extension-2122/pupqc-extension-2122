@@ -165,7 +165,7 @@ exports.createProject = async (req, res) => {
     if (typeof files != 'undefined') {
       documents = files.map(el => (
         {
-          upload_path: '/uploads/project/' + el.filename,
+          upload_name: el.filename,
           file_name: el.originalname,
           mimetype: el.mimetype,
           path: el.path

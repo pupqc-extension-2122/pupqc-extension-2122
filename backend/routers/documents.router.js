@@ -1,12 +1,13 @@
 let router = require('express').Router()
 const {
-  memoUploads, projectUploads, deleteUploads, datatableMemoUploads, datatableProjectUploads
+  memoUploads, projectUploads, deleteUploads, datatableMemoUploads, datatableProjectUploads, downloadDocuments
 } = require('../controllers/documents.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 const { uploadMemoDocument, uploadProjectDocument } = require('../../utils/multerHelper')
 
 router.use(jwtMiddleWare)
 
+router.get('/:upload_name', downloadDocuments)
 router.get('/memo/:id/datatables', datatableMemoUploads)
 router.get('/memo/:id/datatables', datatableProjectUploads)
 router.post('/memo/:id', uploadMemoDocument, memoUploads)
