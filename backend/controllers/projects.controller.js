@@ -95,9 +95,9 @@ exports.datatableProposal = async (req, res) => {
 exports.datatableApprovedProposal = async (req, res) => {
   try {
 
-    let data = await datatable(Projects, req.query, { 
+    let data = await datatable(Projects, req.query, {
       where: { status: 'Approved' },
-      include: ['memos', 'partners', 'activities'] 
+      include: ['memos', 'partners', 'activities']
     })
     res.send(data)
 
@@ -165,7 +165,8 @@ exports.createProject = async (req, res) => {
     if (typeof files != 'undefined') {
       documents = files.map(el => (
         {
-          file_name: '/uploads/project/' + el.filename,
+          upload_path: '/uploads/project/' + el.filename,
+          file_name: el.originalname,
           mimetype: el.mimetype,
           path: el.path
         }
