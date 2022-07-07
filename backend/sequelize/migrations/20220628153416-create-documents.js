@@ -29,7 +29,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      upload_path: {
+      upload_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
