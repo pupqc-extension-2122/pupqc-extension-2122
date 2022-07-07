@@ -93,6 +93,8 @@
   <title><%= document_title %> | PUPQC Extension Project Management System</title>
 </head>
 
+<%- include('../partials/no_javascript') %>
+
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
   <div class="wrapper">
     
@@ -131,7 +133,6 @@
 
   <%# AdminLTE %>
   <script src="<%=BASE_URL%>/js/auth/user.js"></script>
-  <script src="<%=BASE_URL%>/js/auth/logout.js"></script>
 
 </body>
 </html>

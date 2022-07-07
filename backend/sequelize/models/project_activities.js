@@ -81,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: { notEmpty: true },
+      defaultValue: 'Not Yet Graded'
     }
   }, {
     sequelize,

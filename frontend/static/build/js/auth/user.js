@@ -4,6 +4,8 @@
  * ============================================================================
  */
 
+'use strict';
+
 const User = (() => {
 
   // * Local Variables
@@ -12,6 +14,15 @@ const User = (() => {
   let initialized = false;
 
   // * Private Methods
+
+  const initializations = () => {
+
+    // Check if cookies are present
+    if (getCookie('roles') === '' || getCookie('user') === '') logout();
+
+    // Logout
+    $('[data-auth="logout"]').on('click', () => logout());
+  }
   
   const setUserVariable = () => user = JSON.parse(localStorage.getItem(USER_DATA_KEY));
 
@@ -49,11 +60,35 @@ const User = (() => {
     });
   }
 
+  const logout = () => {
+    $.ajax({
+      url: `${ BASE_URL_API }/auth/logout`,
+      success: res => {
+        if(res.error) {
+          toastr.error('Something went wrong. Please reload the page.');
+          ajaxErrorHandler(res.message);
+        } else {
+          toastr.info('Logging out.');
+          localStorage.clear();
+          setTimeout(() => location.replace(`${ BASE_URL_WEB }/login`), 750);
+        }
+      },
+      error: () => {
+        toastr.error('Something went wrong. Please reload the page.', {
+          "timeOut": "0",
+          "extendedTimeOut": "0",
+        });
+        console.error(`[ERR]: Failed to call ajax.`);
+      }
+    });
+  }
+
   // * Init
   
   const init = () => {
     if (!initialized) {
       initialized = true;
+      initializations();
       setUserVariable();
     }
   }
@@ -64,7 +99,8 @@ const User = (() => {
     init,
     getData,
     setData,
-    getName
+    getName,
+    logout
   }
 })();
 

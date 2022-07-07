@@ -17,7 +17,8 @@ const {
   addComment,
   editComment,
   deleteComment,
-  evaluateProposal
+  evaluateProposal,
+  evaluateActivity
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 const { uploadProjectDocument } = require('../../utils/multerHelper')
@@ -52,4 +53,5 @@ router.delete('/:project_id/comments/:comment_id', deleteComment)
 
 // * For evaluations
 router.post('/:project_id/evaluate', evaluateProposal)
+router.post('/:project_id/activities/:activity_id/evaluate', evaluateActivity)
 module.exports = router

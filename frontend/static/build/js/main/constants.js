@@ -335,7 +335,9 @@ const TOOLTIP_OPTIONS = {
 const MAX_EMPTY_FIELDS = 10;
 
 // Max. Limit for currency values
-const MONEY_LIMIT = 999999999999;
+const MONEY_LIMIT = 9999999999;
+
+const MONEY_LIMIT_LARGER = 9999999999999;
 
 // Project Status Styles
 const PROJECT_PROPOSAL_STATUS_STYLES = {

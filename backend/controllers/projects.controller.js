@@ -95,7 +95,10 @@ exports.datatableProposal = async (req, res) => {
 exports.datatableApprovedProposal = async (req, res) => {
   try {
 
-    let data = await datatable(Projects, req.query, { where: { status: 'Approved' }, include: ['memos', 'partners'] })
+    let data = await datatable(Projects, req.query, { 
+      where: { status: 'Approved' },
+      include: ['memos', 'partners', 'activities'] 
+    })
     res.send(data)
 
   } catch (error) {
@@ -162,7 +165,7 @@ exports.createProject = async (req, res) => {
     if (typeof files != 'undefined') {
       documents = files.map(el => (
         {
-          file_name: el.originalname,
+          file_name: '/uploads/project/' + el.filename,
           mimetype: el.mimetype,
           path: el.path
         }
@@ -538,6 +541,45 @@ exports.evaluateProposal = async (req, res) => {
   }
 }
 
+exports.evaluateActivity = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Chief'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const project_id = req.params.project_id
+    const activity_id = req.params.activity_id
+    const body = req.body
+
+    let project = await Projects.findByPk(project_id, { where: { status: 'Approved' } })
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project not Found' })
+
+    let activity = await Project_Activities.findOne({
+      where: {
+        id: activity_id,
+        project_id: project.id
+      }
+    })
+
+    if (!activity)
+      return res.status(404).send({ error: true, message: 'Activity not Found' })
+
+    activity.evaluation = body.evaluation
+
+    await activity.save()
+
+    res.send({
+      error: false,
+      message: 'Activity Evaluation recorded',
+    })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 
 // ? Activities
 
@@ -602,7 +644,7 @@ exports.createProjectActivities = async (req, res) => {
     if (new Date(req.body.start_date) > new Date(req.body.end_date))
       return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
 
-    let data = await Project_Activities.create({ ...body, project_id: id })
+    let data = await Project_Activities.create({ ...body, project_id: project.id })
 
     if (data) {
       res.send({

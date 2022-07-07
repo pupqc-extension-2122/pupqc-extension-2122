@@ -4,10 +4,10 @@
  * ==============================================
  */
 
+'use strict';
+
 (() => {
   const form = '#forgotPassword_form';
-  const emailInput = $('#forgotPassword_email');
-  const submitBtn = $('#forgotPassword_submitBtn');
   const emailSent_modal = $('#emailSent_modal');
 
   const initializations = () => {
