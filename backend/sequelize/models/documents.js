@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Projects, {foreignKey: 'project_id', as: 'project'})
-      this.belongsTo(models.Memos, {foreignKey: 'memo_id', as: 'memo'})
+      this.belongsTo(models.Projects, { foreignKey: 'project_id', as: 'project' })
+      this.belongsTo(models.Memos, { foreignKey: 'memo_id', as: 'memo' })
     }
   }
   Documents.init({
@@ -30,6 +30,22 @@ module.exports = (sequelize, DataTypes) => {
     file_name: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    upload_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    document_type: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        let val = ''
+        if (this.getDataValue('project_id') != null)
+          val = 'project'
+        if (this.getDataValue('memo_id') != null)
+          val = 'memo'
+
+        return val
+      }
     },
     mimetype: {
       type: DataTypes.STRING,

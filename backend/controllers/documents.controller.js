@@ -2,6 +2,24 @@ const { Documents, Memos, Projects } = require('../sequelize/models')
 const datatable = require('../../utils/datatableResponse')
 const fs = require('fs')
 
+exports.downloadDocuments = async (req, res) => {
+  try {
+
+    const upload_name = req.params.upload_name
+
+    const data = await Documents.findOne({ where: { upload_name } })
+
+    if (!data)
+      return res.status(404).send({ error: true, message: 'Document not found' })
+
+    res.sendFile(data.path)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.datatableMemoUploads = async (req, res) => {
   try {
 
@@ -61,7 +79,8 @@ exports.memoUploads = async (req, res) => {
     const uploads = files.map(el => (
       {
         memo_id: memo.id,
-        file_name: '/uploads/memo/' + el.filename,
+        upload_name: el.filename,
+        file_name: el.originalname,
         mimetype: el.mimetype,
         path: el.path
       }
@@ -74,7 +93,7 @@ exports.memoUploads = async (req, res) => {
     }
 
   } catch (error) {
-    req.files.forEach(el=>{
+    req.files.forEach(el => {
       fs.unlinkSync(el.path)
     })
     console.log(error)
@@ -100,7 +119,8 @@ exports.projectUploads = async (req, res) => {
     const uploads = files.map(el => (
       {
         project_id: project.id,
-        file_name: '/uploads/project/' + el.filename,
+        upload_name: el.filename,
+        file_name: el.originalname,
         mimetype: el.mimetype,
         path: el.path
       }
@@ -113,7 +133,7 @@ exports.projectUploads = async (req, res) => {
     }
 
   } catch (error) {
-    req.files.forEach(el=>{
+    req.files.forEach(el => {
       fs.unlinkSync(el.path)
     })
     console.log(error)

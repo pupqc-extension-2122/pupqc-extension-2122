@@ -134,7 +134,8 @@ exports.createPartner = async (req, res) => {
         files.forEach(async (el) => {
           await Documents.create({
             memo_id: memo.id,
-            file_name: '/uploads/memo/' + el.filename,
+            upload_name: el.filename,
+            file_name: el.originalname,
             mimetype: el.mimetype,
             path: el.path
           })
