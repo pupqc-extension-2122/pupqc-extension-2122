@@ -18,30 +18,15 @@
     <%# Breadcrumb %>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%BASE_URL%>/a">SysAdmin</a></li>
-      <li class="breadcrumb-item active">Users</li>
+      <li class="breadcrumb-item active">Post Evaluation</li>
     </ol>
 
     <div class="d-sm-flex align-items-sm-center justify-content-between">
 
       <%# Header & Subtitle %>
       <div class="flex-wrap mb-2 mb-md-0">
-        <h1 class="m-0">Users</h1>
-        <div class="text-secondary">Manage users and their roles and access here</div>
-      </div>
-
-      <%# Buttons %>
-      <div>
-        <% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
-          <button 
-            type="button" 
-            class="btn btn-primary" 
-            data-toggle="modal"
-            data-target="#addUser_modal"
-          >
-            <i class="fas fa-plus mr-1"></i>
-            <span>Register a User</span>
-          </>
-        <% } %>
+        <h1 class="m-0">Post Evaluation</h1>
+        <div class="text-secondary">Manage post evaluation questions here</div>
       </div>
       
     </div>
@@ -95,77 +80,102 @@
         </div>
       </div>
     </div>
+    <div class="row">
 
-    <%# Datatable %>
-    <div class="card card-outline card-primary">
+      <div class="col-md-9">
 
-      <div class="card-header">
-        <div class="d-flex align-items-center justify-content-between">
-          <h3 class="card-title">List of users</h3>
-          <div class="card-tools">
-            <button 
-              type="button" 
-              class="btn btn-sm btn-negative" 
-              data-card-widget="collapse"
-              data-toggle="tooltip"
-              title="Collapse card"
-            >
-              <i class="fas fa-minus"></i>
-            </button>
-            <button 
-              type="button" 
-              class="btn btn-sm btn-negative" 
-              data-card-widget="maximize"
-              data-toggle="tooltip"
-              title="Maximize/minimize card"
-            >
-              <i class="fas fa-expand"></i>
-            </button>
-            <button 
-              type="button" 
-              class="btn btn-sm btn-negative" 
-              data-toggle="tooltip"
-              title="Reload table"
-              onclick="Users.reloadDataTable()"
-            >
-              <i class="fas fa-sync-alt"></i>
-            </button>
+        <div class="card card-outline card-primary">
+
+          <div class="card-header">
+            <div class="d-flex align-items-center justify-content-between">
+              <h3 class="card-title">Add a post evaluation question form</h3>
+              <div class="card-tools">
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-negative" 
+                  data-card-widget="goback" 
+                  data-toggle="tooltip"
+                  title="Go back"
+                >
+                  <i class="fas fa-arrow-left"></i>
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-negative" 
+                  data-card-widget="maximize"
+                  data-toggle="tooltip"
+                  title="Maximize/minimize card"
+                >
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+            </div>
           </div>
+    
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="activityEvaluation_form">
+                <thead>
+                  <th class="align-middle" style="width: 83%">Criteria</th>
+                  <th class="align-middle" style="width: 12%">Ave. Rate</th>
+                  <th style="width: 5%"></th>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+    
+          <div class="card-footer">
+            <div class="float-right">
+              <button 
+                type="button" 
+                class="btn btn-negative" 
+                data-card-widget="goback"
+              >
+                <span>Cancel</span>
+              </button>
+              <button type="submit" class="btn btn-primary" id="submitBtn" >
+                <span>Save</span>
+                <i class="fas fa-check ml-1"></i>
+              </button>
+            </div>
         </div>
+    
+        </div>
+
       </div>
 
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table w-100" id="users_dt">
-            <thead>
-              <th class="align-middle">User Name</th>
-              <th class="align-middle">Email</th>
-              <th class="align-middle">Role</th>
-              <th class="align-middle">Date Added</th>
-              <th class="align-middle text-sm-center">Status</th>
-              <th class="align-middle">
-                <span class="d-inline-block d-sm-none">Actions</span>
-              </th>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="6" class="text-center">
-                  <%- include('../../partials/loaders/dt_body') %>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="col-md-3">
+        <div class="sticky-top">
+          
+          <%# Options %>
+          <div class="card" id="options">
+            <div class="card-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">Options</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body p-2">
+              <div class="dropdown-header">Post Evaluation Questions</div>
+              <a class="btn btn-negative btn-block text-left" href="">
+                <i class="fas fa-edit text-info fa-fw mr-1"></i>
+                <span>Edit post evaluation</span>
+              </a>
+            </div>
+            
+          </div>
 
+        </div>
       </div>
     </div>
 
-  </div>
 </main>
-
-<%# Modals %>
-<%- include('../../partials/admin/modals/add_user') %>
-
 
 <%# ***** Scripts ***** %>
 
@@ -187,4 +197,4 @@
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
-<script src="<%=BASE_URL%>/js/modules/admin/users.js"></script>
+<script src="<%=BASE_URL%>/js/modules/admin/postEvaluation.js"></script>

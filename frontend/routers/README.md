@@ -222,5 +222,54 @@ routers
         </ul>
       </td>
     </tr>
+    <!-- Admin -->
+    <tr>
+      <td colspan="3"><b>System Admin</b></td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/a/dashboard</td>
+      <td>Dashboard - Admin page<br> Redirect if "{BASE_URL}/a"</td>
+      <td>
+        <ul>
+          <li>Admin</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/a/users</td>
+      <td>Users page</td>
+      <td>
+        <ul>
+          <li>Admin</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/a/budget-item-categories</td>
+      <td>Budget Item Categories page</td>
+      <td>
+        <ul>
+          <li>Admin</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/a/branches-campuses</td>
+      <td>Branches/Campuses page</td>
+      <td>
+        <ul>
+          <li>Admin</li>
+        </ul>
+      </td>
+    </tr>
+    <tr style="vertical-align: top;">
+      <td>{BASE_URL}/a/post-evaluation</td>
+      <td>Post Evaluation page</td>
+      <td>
+        <ul>
+          <li>Admin</li>
+        </ul>
+      </td>
+    </tr>
   </tbody>
 </table>

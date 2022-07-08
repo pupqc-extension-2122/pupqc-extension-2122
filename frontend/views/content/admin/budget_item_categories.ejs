@@ -18,15 +18,15 @@
     <%# Breadcrumb %>
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<%BASE_URL%>/a">SysAdmin</a></li>
-      <li class="breadcrumb-item active">Users</li>
+      <li class="breadcrumb-item active">Budget Item Categories</li>
     </ol>
 
     <div class="d-sm-flex align-items-sm-center justify-content-between">
 
       <%# Header & Subtitle %>
       <div class="flex-wrap mb-2 mb-md-0">
-        <h1 class="m-0">Users</h1>
-        <div class="text-secondary">Manage users and their roles and access here</div>
+        <h1 class="m-0">Budget Item Categories</h1>
+        <div class="text-secondary">Manage budget item categories here</div>
       </div>
 
       <%# Buttons %>
@@ -36,10 +36,10 @@
             type="button" 
             class="btn btn-primary" 
             data-toggle="modal"
-            data-target="#addUser_modal"
+            data-target="#addBudgetItemCategory_modal"
           >
             <i class="fas fa-plus mr-1"></i>
-            <span>Register a User</span>
+            <span>Add a budget item category</span>
           </>
         <% } %>
       </div>
@@ -101,7 +101,7 @@
 
       <div class="card-header">
         <div class="d-flex align-items-center justify-content-between">
-          <h3 class="card-title">List of users</h3>
+          <h3 class="card-title">List of budget item categories</h3>
           <div class="card-tools">
             <button 
               type="button" 
@@ -126,7 +126,7 @@
               class="btn btn-sm btn-negative" 
               data-toggle="tooltip"
               title="Reload table"
-              onclick="Users.reloadDataTable()"
+              onclick=""
             >
               <i class="fas fa-sync-alt"></i>
             </button>
@@ -136,11 +136,9 @@
 
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table w-100" id="users_dt">
+          <table class="table w-100" id="budget_item_categories_dt">
             <thead>
-              <th class="align-middle">User Name</th>
-              <th class="align-middle">Email</th>
-              <th class="align-middle">Role</th>
+              <th class="align-middle">Budget Item Category Name</th>
               <th class="align-middle">Date Added</th>
               <th class="align-middle text-sm-center">Status</th>
               <th class="align-middle">
@@ -149,7 +147,7 @@
             </thead>
             <tbody>
               <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="4" class="text-center">
                   <%- include('../../partials/loaders/dt_body') %>
                 </td>
               </tr>
@@ -164,8 +162,7 @@
 </main>
 
 <%# Modals %>
-<%- include('../../partials/admin/modals/add_user') %>
-
+<%- include('../../partials/admin/modals/add_budget_item_category') %>
 
 <%# ***** Scripts ***** %>
 
@@ -187,4 +184,4 @@
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
-<script src="<%=BASE_URL%>/js/modules/admin/users.js"></script>
+<script src="<%=BASE_URL%>/js/modules/admin/budgetItemCategories.js"></script>

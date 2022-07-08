@@ -84,7 +84,7 @@ const ActivityEvaluation = (() => {
             }
           }
         }, {
-          data: null,
+          data: 'start_date',
           render: data => {
             const start_date = data.start_date
             return `
@@ -93,7 +93,7 @@ const ActivityEvaluation = (() => {
             `
           }
         }, {
-          data: null,
+          data: 'end_date',
           render: data => {
             const end_date = data.end_date
             return `
