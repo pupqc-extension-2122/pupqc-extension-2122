@@ -1,6 +1,8 @@
 require('dotenv').config()
 const crypto = require('crypto')
+const ejs = require('ejs')
 const jwt = require('jsonwebtoken')
+const { sendMail } = require('../../utils/sendMail.js')
 const { Users, Roles } = require('../sequelize/models')
 
 exports.register = async (req, res) => {
@@ -115,13 +117,35 @@ exports.sendMagic = async (req, res) => {
 
   let info = encrypt(data)
 
-  res.send({ data: info })
+  magic_link = `${process.env.BASE_URL}/api/auth/magic?token=${info.encryptedData}&iv=${info.iv}&authTag=${info.authTag}`
+  browser = req.get('User-Agent')
+  date = new Date().toLocaleDateString('default', { month: 'long', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+
+  const template = await ejs.renderFile(__dirname + '/../emails/magic_link.ejs', {
+    magic_link,
+    browser,
+    date,
+    email: user.email
+  })
+
+  const text_form = `We have received a request for a magic link. Go to the link below to log in to your account.\n\n${magic_link}\n\nThis log in was requested using ${browser} at ${date}\n\nPUP EPMS Team`
+
+  let message_id = sendMail(user.email, text_form, template)
+
+  if (message_id)
+    res.send({ error: false, message: 'We have sent a log in link to your email. Please click the link to change your password.' })
 }
 
 exports.authMagic = async (req, res) => {
   const query = req.query
 
-  let decrypted = decrypt(JSON.parse(query.token))
+  const encrypted = {
+    iv: query.iv,
+    encryptedData: query.token,
+    authTag: query.authTag
+  }
+
+  let decrypted = decrypt(encrypted)
 
   let info = JSON.parse(decrypted)
 
