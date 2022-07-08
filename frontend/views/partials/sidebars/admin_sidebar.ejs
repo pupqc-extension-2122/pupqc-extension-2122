@@ -2,16 +2,13 @@
 <aside class="main-sidebar main-sidebar-custom sidebar-light-primary">
 
   <%# Brand Logo %>
-  <div class="brand-link">
-    <img src="<%=BASE_URL%>/img/PUPLogo.png" alt="AdminLTE Logo" class="brand-image img-circle" style="opacity: .8">
-    <span class="brand-text">PUPQC-EPMS</span>
-  </div>
+  <%- include('../sidebar_brand_logo') %>
 
   <%# Sidebar %>
   <div class="sidebar border-right">
 
-    <%- include('./user_panel') %>
-    <%- include('./sidebar_search') %>
+    <%- include('../user_panel') %>
+    <%- include('../sidebar_search') %>
 
     <%# Sidebar Menu %>
     <nav class="mt-2">

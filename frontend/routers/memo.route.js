@@ -6,7 +6,7 @@ const { Partners, Memos } = require('../../backend/sequelize/models');
 const PATH = 'content/memo/';
 const RENDER_OPTION_DEFAULTS = {
   active_topbar_tab: 'MOA/MOU',
-  sidebar: 'memo_sidebar',
+  sidebar: 'sidebars/memo_sidebar',
 }
 
 

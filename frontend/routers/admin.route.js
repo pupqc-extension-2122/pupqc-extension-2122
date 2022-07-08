@@ -5,7 +5,7 @@ const jwtMiddleware = require('../../utils/jwtMiddleware');
 const PATH = 'content/admin/';
 const RENDER_OPTION_DEFAULTS = {
   active_topbar_tab: 'SysAdmin',
-  sidebar: 'admin_sidebar',
+  sidebar: 'sidebars/admin_sidebar',
 }
 
 
