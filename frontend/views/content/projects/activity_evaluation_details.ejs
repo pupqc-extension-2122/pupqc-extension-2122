@@ -1,3 +1,11 @@
+<%# ***** Styles ****** %>
+
+<%# DataTables %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
 <%# ***** Body ***** %>
 
 <%- include('../../partials/loaders/content_header') %>
@@ -19,11 +27,7 @@
         <h1 class="m-0">Project Details</h1>
       </div>
       <div>
-        <!-- <button type="button" class="btn btn-default float-right" id="daterange-btn">
-          <i class="far fa-calendar-alt mr-1"></i>
-          <span>Date Range Picker</span>
-          <i class="fas fa-caret-down ml-1"></i>
-        </button> -->
+        <%# For buttons on the top right %>
       </div>
     </div>
   </div>
@@ -57,8 +61,27 @@
 </main>
 
 
+<%# === Modals === %> 
+<%- include('../../partials/projects/modals/upload_documents') %>
+
 
 <%# ***** Scripts ***** %>
+
+<%# Datatable and Plugins %>
+<script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/jszip/jszip.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<%# Dropzone %>
+<script src="<%=BASE_URL%>/plugins/dropzone/min/dropzone.min.js"></script>
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>

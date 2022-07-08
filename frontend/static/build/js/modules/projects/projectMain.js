@@ -3124,6 +3124,10 @@ const ProjectDocuments = (() => {
     dz.on("addedfile", (file) => {
     });
 
+    dz.on("removedfile", (file) => {
+      // toastr.info(`The file "${ file.upload.filename }" has been removed.`);
+    });
+
     dz.on("reset", () => {
       totalProgress_elem.css({ width: 0 }).html('');
       totalProgressCount_elem.html('0.00%');
@@ -3133,6 +3137,8 @@ const ProjectDocuments = (() => {
 
     // When a file has been uploading
     dz.on("uploadprogress", (file, progress, bytesSent) => {
+      processing = true;
+
       $(file.previewElement)
         .find(`[data-dz-uploadprogress-count]`)
         .html(`${ progress.toFixed(2) }%`);
@@ -3152,6 +3158,15 @@ const ProjectDocuments = (() => {
         .removeClass('progress-bar-striped progress-bar-animated bg-warning')
         .addClass('bg-success')
         .html(`<i class="fas fa-check"></i>`);
+
+      $(file.previewElement)
+        .find(`[data-dz-cancel-btn]`)
+        .remove();
+
+      const ok_btn = $(file.previewElement).find(`[data-dz-ok-btn]`)
+      
+      ok_btn.show();
+      ok_btn.on('click', () => ok_btn.tooltip('hide'));
     });
 
     // When there's an error in uploading file
@@ -3160,7 +3175,6 @@ const ProjectDocuments = (() => {
     });
 
     dz.on("sending", () => {
-      processing = true;
 
       // Show the total progress bar when upload starts
       $("#total_progress_container").show();
@@ -3174,8 +3188,12 @@ const ProjectDocuments = (() => {
       `);
     });
 
+    dz.on("canceled", (file) => {
+      toastr.info(`The file "${ file.upload.filename }" has been cancelled for uploading.`);
+    });
+
     // * FOR TOTAL PROGRESS
-    
+
     // Update the total progress bar
     dz.on("totaluploadprogress", (progress) => {
       totalProgress_elem
@@ -3183,7 +3201,8 @@ const ProjectDocuments = (() => {
         .removeClass()
         .addClass(() => {
           return `progress-bar progress-bar-striped progress-bar-animated ${ getBgColor(progress) }`
-        });
+        })
+        .html('');
       totalProgressCount_elem.html(`${ progress.toFixed(2) }%`);
     });
     
@@ -3219,8 +3238,11 @@ const ProjectDocuments = (() => {
   }
 
   const handleUploadDocumentsModal = () => {
-    uploadDocuments_modal.on('hidden.bs.modal', (e) => {
+    uploadDocuments_modal.on('hide.bs.modal', (e) => {
       if (processing) e.preventDefault();
+    });
+
+    uploadDocuments_modal.on('hidden.bs.modal', (e) => {
       dz.removeAllFiles(true);
       
       $("#total_progress").css({ width: `0` });
@@ -3346,6 +3368,13 @@ const ProjectDocuments = (() => {
         }, {
           data: 'file_name',
           width: '45%',
+          render: (data, type, row) => {
+            if (data.length > 39) {
+              return `<span data-toggle="tooltip" title="${ data }">${ data.substring(0, 35) } ...</span>`
+            } else {
+              return data;
+            }
+          }
         }, {
           data: 'mimetype',
         }, {
@@ -3371,14 +3400,6 @@ const ProjectDocuments = (() => {
                 <div
                   role="button"
                   class="dropdown-item"
-                  onclick="ProjectActivities.initViewMode('${ data.id }')"
-                >
-                  <i class="fas fa-file fa-fw mr-1"></i>
-                  <span>View File</span>
-                </div>
-                <div
-                  role="button"
-                  class="dropdown-item"
                   onclick="ProjectDocuments.initRenameFile('${ data.id }', '${ data.file_name }')"
                 >
                   <i class="fas fa-pen fa-fw mr-1"></i>
@@ -3386,7 +3407,7 @@ const ProjectDocuments = (() => {
                 </div>
                 <a
                   role="button"
-                  href="${ BASE_URL_WEB }${ data.file_name }"
+                  href="${ BASE_URL_API }/documents/${ data.upload_name }"
                   download="${ data.file_name }"
                   class="dropdown-item"
                 >
@@ -3447,5 +3468,6 @@ const ProjectDocuments = (() => {
     reloadDataTable,
     initRenameFile,
     initDeleteFile,
+    dz: () => dz
   }
 })();

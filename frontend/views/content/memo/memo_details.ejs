@@ -306,15 +306,6 @@
                     <button 
                       type="button" 
                       class="btn btn-sm btn-negative" 
-                      data-card-widget="collapse"
-                      data-toggle="tooltip"
-                      title="Collapse card"
-                    >
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button 
-                      type="button" 
-                      class="btn btn-sm btn-negative" 
                       data-card-widget="maximize"
                       data-toggle="tooltip"
                       title="Maximize/minimize card"
@@ -326,6 +317,7 @@
                       class="btn btn-sm btn-negative" 
                       data-toggle="tooltip"
                       title="Reload table"
+                      onclick="MemoDocuments.reloadDataTable()"
                     >
                       <i class="fas fa-sync-alt"></i>
                     </button>
@@ -334,19 +326,32 @@
               </div>
     
               <div class="card-body">
+                
+                <div class="form-group text-right">
+                  <button 
+                    class="btn btn-info" 
+                    data-toggle="modal" 
+                    data-target="#uploadMemoDocuments_modal"
+                  >
+                    <i class="fas fa-upload mr-1"></i>
+                    <span>Upload Document</span>
+                  </button>
+                </div>
+
                 <div class="table-responsive">
-                  <table class="table w-100" id="partnerMemos_dt">
+                  <table class="table w-100" id="uploadedDocuments_dt">
                     <thead>
-                      <th>Name</th>
-                      <th>Type</th>
-                      <th>Date</th>
-                      <th>File Size</th>
-                      <th>Status</th>
-                      <th></th>
+                      <th class="align-middle sr-only">Date created</th>
+                      <th class="align-middle" width="45%">Name</th>
+                      <th class="align-middle">Type</th>
+                      <th class="align-middle" width="25%">Date added</th>
+                      <th class="align-middle" width="8%">
+                        <div class="sr-only">Options</div>
+                      </th>
                     </thead>
                     <tbody>
                       <tr>
-                        <td colspan="6" class="text-center">
+                        <td colspan="5" class="text-center">
                           <%- include('../../partials/loaders/dt_body') %>
                         </td>
                       </tr>
@@ -408,203 +413,10 @@
   </div>
 </section>
 
-<%# Modals %>
 
-<%# Edit MOA/MOU Details %>
-<div class="modal fade" id="editMOA_modal">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Edit MOA/MOU Details</h4>
-        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <%# Form Card %>
-        <form class="form-row" id="editMOA_form">
-          <%# Partnership Name %>
-          <div class="col-12">
-            <div class="form-group">
-              <label for="editMOA_partnershipName">
-                <span>Name of Partner</span>
-                <span class="text-danger">*</span>
-              </label>
-              <input type="text" class="form-control" id="editMOA_partnershipName" name="name"
-                placeholder="Insert partnership name here ..." value="Grain Foundation for PWDs Inc.">
-            </div>
-          </div>
-
-          <%# Partner Address %>
-          <div class="col-12">
-            <div class="form-group">
-              <label for="editMOA_partnershipAddress">
-                <span>Partner Address</span>
-                <span class="text-danger">*</span>
-              </label>
-              <input type="text" class="form-control" id="editMOA_partnershipAddress" name="address"
-                placeholder="Insert partner address here ..." value="21 Don Fabian St., Commonwealth, Quezon City">
-            </div>
-          </div>
-
-          <%# Partnership Representative Name %>
-          <div class="col-12">
-            <div class="form-group">
-              <label for="editMOA_partnershipRepresentative">
-                <span>Name of Representative</span>
-                <span class="text-danger">*</span>
-              </label>
-              <input type="text" class="form-control" id="editMOA_partnershipRepresentative" name="representative"
-                placeholder="Insert partnership representative name here ..." value="Executive Director Byung Min Lee">
-            </div>
-          </div>
-
-          <%# PUP REPD Representative %>
-          <div class="col-12">
-            <div class="form-group">
-              <label for="editMOA_pupREPD">
-                <span>PUP REPD Representative</span>
-                <span class="text-danger">*</span>
-              </label>
-              <input type="text" class="form-control" id="editMOA_pupREPD" name="pup_REPD"
-                placeholder="Insert PUP REPD representative here ..." value="Dr. Anna Ruby P. Gapasin">
-            </div>
-          </div>
-
-          <%# Organization %>
-          <div class="col-12">
-            <div class="form-group" id="editMOA_organization_grp">
-              <label for="editMOA_organization">
-                <span>Organization</span>
-                <span class="text-danger">*</span>
-              </label>
-
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-md-8">
-                    <select 
-                      name="organization" 
-                      id="editMOA_organization_select" 
-                      class="form-control select2"
-                      style="width: 100%;"
-                    >
-                      <option selected>Polytechnic University of the Philippines, Quezon City Branch</option>
-                    </select>
-                  </div>
-                  <div class="col-md-4 text-right">
-                    <button class="btn btn-primary btn-sm" type="button">
-                      <i class="fas fa-plus mr-1"></i>
-                      <span>Add organization</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <%# Notary Signed Date %>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="editMOA_notarySignedDate">
-                <span>Notary Signed Date</span>
-                <span class="text-danger">*</span>
-              </label>
-              <div class="input-group date">
-                <input type="text" class="form-control" id="editMOA_notarySignedDate" name="notary_date"
-                  placeholder="Please select notary signed date" data-inputmask-alias="datetime"
-                  data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2023"/>
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-primary" id="editMOA_notarySignedDate_pickerBtn"
-                    data-toggle="tooltip" title="Select notary signed date">
-                    <i class="fa fa-calendar-day fa-fw"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <%# Validity Date %>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="editMOA_validityDate">
-                <span>Validity Date</span>
-                <span class="text-danger">*</span>
-              </label>
-              <div class="input-group date">
-                <input type="text" class="form-control" id="editMOA_validityDate" name="validity_date"
-                  placeholder="Please select validity date" data-inputmask-alias="datetime"
-                  data-inputmask-inputformat="mm/dd/yyyy" data-mask value="05/14/2026"/>
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-primary" id="editMOA_validityDate_pickerBtn"
-                    data-toggle="tooltip" title="Select validity date">
-                    <i class="fa fa-calendar-day fa-fw"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="submitPartnership_btn">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<%# Upload Document Modal %>
-<div class="modal fade" id="uploadDocumentRenewal_modal">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <form class="modal-content" id="uploadDocumentRenewal_form">
-      <div class="modal-header">
-        <h4 class="modal-title">
-          <span>Upload Document</span>
-        </h4>
-        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        
-        <%# Upload document %>
-        <div class="form-group">
-          <label for="document">
-            <span>Upload document here</span>
-            <span class="text-danger">*</span>
-          </label>
-          <div class="input-group">
-            <div class="custom-file">
-                <input 
-                    type="file" 
-                    class="custom-file-input" 
-                    id="uploadDocumentRenewal"
-                    name="uploadDocumentRenewal"
-                >
-                <label class="custom-file-label" for="uploadDocument">Choose file</label>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="modal-footer">
-        <button 
-          type="button" 
-          class="btn btn-negative" 
-          data-dismiss="modal"
-        >Cancel</button>
-        <button 
-          type="submit" 
-          class="btn btn-primary" 
-          id="uploadDocument_btn"
-        >
-          <span>Upload</span>
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+<%# === Modals === %>
+<%- include('../../partials/memo/modals/edit_memo_details') %>
+<%- include('../../partials/memo/modals/upload_documents') %>
 
 
 
@@ -633,6 +445,9 @@
 <script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<%# Dropzone %>
+<script src="<%=BASE_URL%>/plugins/dropzone/min/dropzone.min.js"></script>
+
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
