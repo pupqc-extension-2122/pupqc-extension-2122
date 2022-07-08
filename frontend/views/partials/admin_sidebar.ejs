@@ -41,6 +41,38 @@
             <p class="text">Users</p>
           </a>
         </li>
+
+        <%# Configurations %>
+        <li class="nav-header">CONFIGURATIONS</li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/a/budget-item-categories" 
+            class="nav-link<% if (active_sidebar_tab == "Budget Item Categories") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-money-bill-alt"></i>
+            <p class="text">Budget Item Categories</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/a/branches-campuses" 
+            class="nav-link<% if (active_sidebar_tab == "Branches/Campuses") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-sitemap"></i>
+            <p class="text">Branches/Campuses</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/a/post-evaluation" 
+            class="nav-link<% if (active_sidebar_tab == "Post Evaluation") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-list-alt"></i>
+            <p class="text">Post Evaluation</p>
+          </a>
+        </li>
       </ul>
     </nav>
 

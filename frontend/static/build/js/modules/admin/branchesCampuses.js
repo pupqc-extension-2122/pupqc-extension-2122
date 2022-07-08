@@ -1,12 +1,12 @@
 /**
  * ==============================================
- * * Users
+ * * Budget Item Categories
  * ==============================================
  */
 
   'use strict';
 
-  const Users = (() => {
+  const BranchesCampuses = (() => {
   /**
     * * Local Variables
     */
@@ -20,28 +20,19 @@
    */
 
   const handleForm = () => {
-    $app('#addUser_form').handleForm({
+    $app('#addBranchCampus_form').handleForm({
       validators: {
-        first_name: {
-          required: "First  name is required.",
+        branchCampus_name: {
+          required: "Branch/Campus name is required.",
           notEmpty: "This field cannot be blank.",
         },
-        last_name: {
-          required: "Last name is required.",
-          notEmpty: "This field cannot be blank.",
-        },
-        email:  {
-          required: "Email is required.",
-          email: 'The input is not a valid email address.',
-          notEmpty: "This field cannot be blank.",
-        },
-        role:  {
-          required: "Role is required.",
+        type: {
+          required: "Type is required.",
           notEmpty: "This field cannot be blank.",
         }
       },
       onSubmit: () => {
-        toastr.success("User has been registered successfully!");
+        toastr.success("Branch/Campus has been added successfully!");
       }
     });
   }
@@ -53,16 +44,14 @@
         // Sample Data
         data = [
           {
-            user_name: 'Edgardo S. Delmo',
-            email: 'chief@pupqc.com',
-            role: 'Chief',
+            branchCampus_name: 'Polytechnic University of the Philippines Quezon City',
+            type:'Branch',
             date_added: '07/05/2022',
             status: 'Active'
           }, {
-            user_name: 'Alma C. Fernandez',
-            email: 'extensionist@pupqc.com',
-            role: 'Extensionist',
-            date_added: '07/06/2022',
+            branchCampus_name: 'Polytechnic University of the Philippines Pulilan, Bulacan',
+            type:'Campus',
+            date_added: '07/05/2022',
             status: 'Active'
           },
         ];
@@ -71,19 +60,16 @@
     });
 
     // Data Table
-    $('#users_dt').DataTable({
+    $('#branches_campuses_dt').DataTable({
       data: data,
       responsive: true,
       language: DT_LANGUAGE,
       columns: [
         { 
-          data: 'user_name' 
+          data: 'branchCampus_name' 
         },
-        {
-          data: 'email'
-        },
-        {
-          data: 'role'
+        { 
+          data: 'type' 
         },
         {
           data: null,
@@ -119,13 +105,13 @@
                   <div class="dropdown-header">Options</div>
                   <a 
                     class="dropdown-item"
-                    href="${ BASE_URL_WEB }/a/user/${ data.id }" 
+                    href="${ BASE_URL_WEB }/a/branches-campuses/${ data.id }" 
                   >
                     <span>View details</span>
                   </a>
                   <a 
                     class="dropdown-item"
-                    href="${ BASE_URL_WEB }/a/edit-user/${ data.id }" 
+                    href="${ BASE_URL_WEB }/a/edit-branches-campuses/${ data.id }" 
                   >
                     <span>Edit details</span>
                   </a>
@@ -160,4 +146,4 @@
 
 })();
 
-Users.init();
+BranchesCampuses.init();

@@ -68,6 +68,53 @@ router.get('/users', jwtMiddleware, (req, res) => {
     : render404(res)
 });
 
+// Budget Item Categories
+router.get('/budget-item-categories', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Admin')
+    ? res.render(PATH + 'budget_item_categories', {
+      document_title: 'Budget Item Categories',
+      active_sidebar_tab: 'Budget Item Categories',
+      name: `${ first_name } ${ last_name }`,
+      role: renderRoles(roles),
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : render404(res)
+});
+
+// Branches/Campuses
+router.get('/branches-campuses', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Admin')
+    ? res.render(PATH + 'branches_campuses', {
+      document_title: 'Branches/Campuses',
+      active_sidebar_tab: 'Branches/Campuses',
+      name: `${ first_name } ${ last_name }`,
+      role: renderRoles(roles),
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : render404(res)
+});
+
+// Post Evaluation
+router.get('/post-evaluation', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Admin')
+    ? res.render(PATH + 'post_evaluation', {
+      document_title: 'Post Evaluation',
+      active_sidebar_tab: 'Post Evaluation',
+      name: `${ first_name } ${ last_name }`,
+      role: renderRoles(roles),
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : render404(res)
+});
 
 // Export module
 module.exports = router;

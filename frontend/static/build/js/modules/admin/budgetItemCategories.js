@@ -1,12 +1,12 @@
 /**
  * ==============================================
- * * Users
+ * * Budget Item Categories
  * ==============================================
  */
 
   'use strict';
 
-  const Users = (() => {
+  const BudgetItemCategories = (() => {
   /**
     * * Local Variables
     */
@@ -20,28 +20,15 @@
    */
 
   const handleForm = () => {
-    $app('#addUser_form').handleForm({
+    $app('#addBudgetItemCategory_form').handleForm({
       validators: {
-        first_name: {
-          required: "First  name is required.",
-          notEmpty: "This field cannot be blank.",
-        },
-        last_name: {
-          required: "Last name is required.",
-          notEmpty: "This field cannot be blank.",
-        },
-        email:  {
-          required: "Email is required.",
-          email: 'The input is not a valid email address.',
-          notEmpty: "This field cannot be blank.",
-        },
-        role:  {
-          required: "Role is required.",
+        category_name: {
+          required: "Budget item category  Name is required.",
           notEmpty: "This field cannot be blank.",
         }
       },
       onSubmit: () => {
-        toastr.success("User has been registered successfully!");
+        toastr.success("Budget item category has been added successfully!");
       }
     });
   }
@@ -53,17 +40,13 @@
         // Sample Data
         data = [
           {
-            user_name: 'Edgardo S. Delmo',
-            email: 'chief@pupqc.com',
-            role: 'Chief',
+            category_name: 'Utilities',
             date_added: '07/05/2022',
             status: 'Active'
           }, {
-            user_name: 'Alma C. Fernandez',
-            email: 'extensionist@pupqc.com',
-            role: 'Extensionist',
-            date_added: '07/06/2022',
-            status: 'Active'
+            category_name: 'Recreation and Entertainemnt',
+            date_added: '07/05/2022',
+            status: 'Inactive'
           },
         ];
         resolve();
@@ -71,19 +54,13 @@
     });
 
     // Data Table
-    $('#users_dt').DataTable({
+    $('#budget_item_categories_dt').DataTable({
       data: data,
       responsive: true,
       language: DT_LANGUAGE,
       columns: [
         { 
-          data: 'user_name' 
-        },
-        {
-          data: 'email'
-        },
-        {
-          data: 'role'
+          data: 'category_name' 
         },
         {
           data: null,
@@ -119,13 +96,13 @@
                   <div class="dropdown-header">Options</div>
                   <a 
                     class="dropdown-item"
-                    href="${ BASE_URL_WEB }/a/user/${ data.id }" 
+                    href="${ BASE_URL_WEB }/a/budget-item-categories/${ data.id }" 
                   >
                     <span>View details</span>
                   </a>
                   <a 
                     class="dropdown-item"
-                    href="${ BASE_URL_WEB }/a/edit-user/${ data.id }" 
+                    href="${ BASE_URL_WEB }/a/edit-budget-item-categories/${ data.id }" 
                   >
                     <span>Edit details</span>
                   </a>
@@ -160,4 +137,4 @@
 
 })();
 
-Users.init();
+BudgetItemCategories.init();
