@@ -2,9 +2,14 @@ const { src, dest, watch, series } = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
+const del = require('del');
 
 const BUILD_PATH = './frontend/static/build/';
 const DIST_PATH = './frontend/static/dist/';
+
+const clean = () => {
+  return del(DIST_PATH);
+}
 
 const mainJS = () => {
   return src([
@@ -48,5 +53,5 @@ const watchTask = () => {
   watch(BUILD_PATH + 'js/**/*.js', series(mainJS, authJS, modulesJS));
 }
 
-exports.watch = series(mainJS, authJS, modulesJS, watchTask);
-exports.compile_js = series(mainJS, authJS, modulesJS);
+exports.watch = series(clean, mainJS, authJS, modulesJS, watchTask);
+exports.compile_js = series(clean, mainJS, authJS, modulesJS);
