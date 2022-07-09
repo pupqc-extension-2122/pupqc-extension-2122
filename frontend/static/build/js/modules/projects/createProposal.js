@@ -251,18 +251,18 @@
       validators: {
         title: {
           required: "The title of the project is required.",
-          notEmpty: "This field cannot be empty.",
+          notEmpty: "This field cannot be blank.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full title of the project.'
+            message: 'Make sure you  enter the full title of the project.'
           }
         },
         implementer: {
           required: "The implementer is required.",
-          notEmpty: "This field cannot be empty.",
+          notEmpty: "This field cannot be blank.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full name of the implementer.'
+            message: 'Make sure you enter the full name of the implementer.'
           }
         },
         start_date: {
@@ -283,18 +283,18 @@
         },
         impact_statement: {
           required: "Please compose the impact statement here.",
-          notEmpty: "This field cannot be empty.",
+          notEmpty: "This field cannot be blank.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full details for the impact statement.'
+            message: 'Make sure you  enter the full details for the impact statement.'
           }
         },
         summary: {
           required: "Please compose the project summary here.",
-          notEmpty: "This field cannot be empty",
+          notEmpty: "This field cannot be blank.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full summary of the project'
+            message: 'Make sure you enter the full summary of the project.'
           }
         }
       },

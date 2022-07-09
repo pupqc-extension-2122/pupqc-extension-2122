@@ -216,7 +216,7 @@
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full title of the project.'
+            message: 'Make sure you  enter the full title of the project.'
           }
 				},
 				implementer: {
@@ -224,7 +224,7 @@
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full name of the implementer.'
+            message: 'Make sure you enter the full name of the implementer.'
           }
 				},
 				start_date: {
@@ -248,7 +248,7 @@
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full details for the impact statement.'
+            message: 'Make sure you enter the full details for the impact statement.'
           }
 				},
 				summary: {
@@ -256,7 +256,7 @@
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full summary of the project'
+            message: 'Make sure you  enter the full summary of the project'
           }
 				}
 			},

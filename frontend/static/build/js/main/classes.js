@@ -68,7 +68,7 @@ class ProjectTeamForm {
 						class="form-control" 
 						name="team_member-${formGroupId}" 
 						${this.data.teamMemberInput}="${formGroupId}"
-						placeholder="Type the name of a team member here ..."
+						placeholder="Enter the name of a team member here"
 					/>
 				</div>
 				<div>
@@ -212,8 +212,8 @@ class ProjectTeamForm {
       minlength: 5,
 			messages: { 
         required: 'A team member is required.',
-        notEmpty: 'This field cannot be blank',
-        minlength: "Make sure you type the member's full name.",
+        notEmpty: 'This field cannot be blank.',
+        minlength: "Make sure you enter the member's full name.",
       }
 		});
 
@@ -445,7 +445,7 @@ class TargetGroupsForm {
             class="form-control" 
             name="target_group-${formGroupId}" 
             ${this.data.targetGroupInput}="${formGroupId}"
-            placeholder="Type the name of the target group here ..."
+            placeholder="Enter the name of the target group here"
           />
         </div>
         <div>
@@ -505,8 +505,8 @@ class TargetGroupsForm {
       minlength: 5,
 			messages: { 
         required: 'The name of the target group is required.',
-        notEmpty: 'This field cannot be blank',
-        minlength: 'Make sure you type the full name of the target group',
+        notEmpty: 'This field cannot be blank.',
+        minlength: 'Make sure you enter the full name of the target group.',
       }
 		});
 
@@ -1246,7 +1246,7 @@ class FinancialRequirementsForm {
 				messages: { 
           required: 'Required',
           notEmpty: 'Cannot be blank',
-          minlength: 'Type the full details',
+          minlength: 'Enter the full details',
         } 
 			})
 		);
@@ -1740,7 +1740,7 @@ class EvaluationPlanForm {
         messages: {
 					required: 'Required',
           notEmpty: 'Cannot be blank',
-          minlength: 'Type the full details',
+          minlength: 'Enter the full details',
 				}
 			})
 		);
@@ -1941,7 +1941,7 @@ class ProjectActivityForm {
 							class="form-control" 
 							name="topic-${formGroupId}" 
 							${input}="${formGroupId}"
-							placeholder="Type the topic here ..."
+							placeholder="Enter the topic here ..."
 						/>
 					</div>
 					<div>
@@ -1972,7 +1972,7 @@ class ProjectActivityForm {
 							class="form-control" 
 							name="outcome-${formGroupId}" 
 							${input}="${formGroupId}"
-							placeholder="Type the outcome here ..."
+							placeholder="Enter the outcome here ..."
 						/>
 					</div>
 					<div>
@@ -2198,7 +2198,7 @@ class ProjectActivityForm {
 			messages: { 
         required: 'A topic is required.',
         notEmpty: 'This field cannot be blank.',
-        minlength: 'Make sure you type the full title of a topic.'
+        minlength: 'Make sure you enter the full title of a topic.'
       }
 		});
 
@@ -2311,7 +2311,7 @@ class ProjectActivityForm {
       messages: { 
         required: 'An outcome statement is required.',
         notEmpty: 'This field cannot be blank.',
-        minlength: 'Make sure you type the full details of an outcome.',
+        minlength: 'Make sure you enter the full details of an outcome.',
       }
 		});
 
@@ -2451,7 +2451,7 @@ class ProjectEvaluationForm {
             class="form-control form-control-border"
             name="name-${ rowId }"
             ${ this.data.input }="name"
-            placeholder="Type the name of the evaluator here ..."
+            placeholder="Enter the name of the evaluator here ..."
           />
         </div>
       </td>
@@ -2631,7 +2631,7 @@ class ProjectEvaluationForm {
       messages: {
         required: 'The name of the evaluator is required.',
         notEmpty: 'This field cannot be blank.',
-        minlength: 'Make sure you type the full name of the evaluator.',
+        minlength: 'Make sure you enter the full name of the evaluator.',
       }
     });
 
@@ -2787,7 +2787,7 @@ class ActivityEvaluationForm {
             type="text" 
             name="category-${ category_id }"
             class="form-control form-control-border bg-transparent" 
-            placeholder="Type the category here"
+            placeholder="Enter the category here"
             ${ this.data.input }="category"
           />
         </div>
@@ -2832,7 +2832,7 @@ class ActivityEvaluationForm {
             type="text" 
             name="criteria-${ criteria_id }"
             class="form-control form-control-border bg-transparent" 
-            placeholder="Type the criteria here"
+            placeholder="Enter the criteria here"
             ${ this.data.input }="criteria"
           />
         </div>
@@ -3048,7 +3048,7 @@ class ActivityEvaluationForm {
       messages: {
         required: 'The category is required.',
         notEmpty: 'The category is required.',
-        minlength: 'Make sure you type the full category title.'
+        minlength: 'Make sure you enter the full category title.'
       }
     });
 
@@ -3165,7 +3165,7 @@ class ActivityEvaluationForm {
       messages: {
         required: 'The criteria is required.',
         notEmpty: 'The criteria is required.',
-        minlength: 'Make sure you type the full criteria title.'
+        minlength: 'Make sure you enter the full criteria title.'
       }
     });
 
