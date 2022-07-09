@@ -2359,7 +2359,7 @@ const ProjectActivities = (() => {
           notEmpty: 'This field cannot be blank.',
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full title of the activity.'
+            message: 'Make sure you enter the full title of the activity.'
           }
         },
         start_date: {
@@ -2399,7 +2399,7 @@ const ProjectActivities = (() => {
           notEmpty: 'This field cannot be blank.',
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full summary or details of the activity.'
+            message: 'Make sure you enter the full summary or details of the activity.'
           }
         }
       },
@@ -2843,7 +2843,7 @@ const AddProjectActivity = (() => {
           notEmpty: 'This field cannot be blank.',
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full title of the activity.'
+            message: 'Make sure you enter the full title of the activity.'
           }
         },
         start_date: {
@@ -2883,7 +2883,7 @@ const AddProjectActivity = (() => {
           notEmpty: 'This field cannot be blank.',
           minlength: {
             rule: 5,
-            message: 'Make sure you type the full summary or details of the activity.'
+            message: 'Make sure you enter the full summary or details of the activity.'
           }
         }
       },

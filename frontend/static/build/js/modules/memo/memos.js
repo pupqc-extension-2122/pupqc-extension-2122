@@ -88,7 +88,7 @@ const Memos = (() => {
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: "Make sure you type the full name of the partner."
+            message: "Make sure you enter the full name of the partner."
           }
         },
         address: {
@@ -96,7 +96,7 @@ const Memos = (() => {
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: "Make sure you type the full address."
+            message: "Make sure you enter the full address."
           }
         },
         representative: {
@@ -104,7 +104,7 @@ const Memos = (() => {
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: "Make sure you type the name of the representative."
+            message: "Make sure you enter the name of the representative."
           }
         },
         organization:  {
@@ -116,7 +116,7 @@ const Memos = (() => {
           notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: "Make sure you type the full name of the PUP REPD representative."
+            message: "Make sure you enter the full name of the PUP REPD representative."
           }
         },
         notary_date: {
