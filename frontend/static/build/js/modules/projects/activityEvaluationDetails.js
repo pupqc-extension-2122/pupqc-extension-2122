@@ -24,22 +24,12 @@
         ProjectDetails.init(data);
         ProjectOptions.init(data);
 
-        const projectTitle = data.project.title;
-        const documentTitle = projectTitle.length > 75
-          ? projectTitle.substring(0, 75) + ' ...'
-          : projectTitle;
-
-        if ($('#activities_dt').length) {
-          ProjectActivities.init(data);
-          setDocumentTitle(`${documentTitle} - Project Activities`);
-        } else {
-          setDocumentTitle(`${documentTitle} - Project Details`);
-        }
+        if ($('#activities_dt').length) ProjectActivities.init(data);
 
         ProjectComments.init(data.project);
         ProjectHistory.init(data.project.history);
 
-        ProjectDocuments.init(data.project);
+        if ($('#projectDetails_body').length) ProjectDocuments.init(data.project);
       }
     },
     error: (xhr, status, error) => {

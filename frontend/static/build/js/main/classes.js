@@ -2747,10 +2747,10 @@ class ActivityEvaluationForm {
     // {
     //   category_id: ''
     //   category: '',
-    //   criterias: [
+    //   criteria: [
     //     {
-    //       criteria_id: '',
-    //       criteria: ''
+    //       criterion_id: '',
+    //       title: ''
     //       rate: 0
     //     }
     //   ]
@@ -2762,7 +2762,7 @@ class ActivityEvaluationForm {
 
       // Ids
       category_id: `${ dataPrefix }category-id`,
-      criteria_id: `${ dataPrefix }criteria-id`,
+      criterion_id: `${ dataPrefix }criterion-id`,
 
       // Components
       row: `${ dataPrefix }row`,
@@ -2821,19 +2821,19 @@ class ActivityEvaluationForm {
     </tr>
   `
 
-  #criteriaRow = (category_id, criteria_id) => `
+  #criterionRow = (category_id, criterion_id) => `
     <tr
       ${ this.data.category_id }="${ category_id }"
-      ${ this.data.criteria_id }="${ criteria_id }"
+      ${ this.data.criterion_id }="${ criterion_id }"
     >
       <td>
         <div class="form-group mb-0">
           <input 
             type="text" 
-            name="criteria-${ criteria_id }"
+            name="criterion-${ criterion_id }"
             class="form-control form-control-border bg-transparent" 
-            placeholder="Enter the criteria here"
-            ${ this.data.input }="criteria"
+            placeholder="Enter the criterion here"
+            ${ this.data.input }="criterion"
           />
         </div>
       </td>
@@ -2841,7 +2841,7 @@ class ActivityEvaluationForm {
         <div class="form-group mb-0">
           <input 
             type="text" 
-            name="rate-${ criteria_id }"
+            name="rate-${ criterion_id }"
             class="form-control form-control-border bg-transparent" 
             placeholder="1 - 5"
             ${ this.data.input }="rate"
@@ -2852,7 +2852,7 @@ class ActivityEvaluationForm {
         <button 
           type="button"
           class="btn btn-sm btn-negative" 
-          ${ this.data.btn }="removeCriteria"
+          ${ this.data.btn }="removeCriterion"
           data-toggle="tooltip" 
           title="Remove criteria"
         >
@@ -2862,7 +2862,7 @@ class ActivityEvaluationForm {
     </tr>
   `
 
-  #addCriteriaRow = (category_id) => `
+  #addCriterionRow = (category_id) => `
     <tr 
       ${ this.data.category_id }="${ category_id }"
     >
@@ -2870,7 +2870,7 @@ class ActivityEvaluationForm {
         <button 
           type="button"
           class="btn btn-sm btn-success" 
-          ${ this.data.btn }="addCriteria"
+          ${ this.data.btn }="addCriterion"
         >
           <i class="fas fa-plus mr-1"></i>
           <span>Add Criteria</span>
@@ -2914,8 +2914,8 @@ class ActivityEvaluationForm {
     </div>
   `
 
-  #removeCriteriaModal = () => `
-    <div class="modal" ${ this.data.modal }="removeCriteria">
+  #removeCriterionModal = () => `
+    <div class="modal" ${ this.data.modal }="removeCriterion">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -2942,7 +2942,7 @@ class ActivityEvaluationForm {
               class="btn btn-danger" 
               id="confirmRemoveCriteria_btn"
               ${ this.data.category_id }=""
-              ${ this.data.criteria_id }=""
+              ${ this.data.criterion_id }=""
             >Yes, I'm sure.</button>
           </div>
         </div>
@@ -2978,26 +2978,25 @@ class ActivityEvaluationForm {
         modal.modal('hide');
       });
 
-      modal.on('hidden.bs.modal', () => confirmRemove_btn.attr(`${ this.data.criteria_id }`, ''));
+      modal.on('hidden.bs.modal', () => confirmRemove_btn.attr(`${ this.data.criterion_id }`, ''));
     }
 
-    if (!$(`[${ this.data.modal }="removeCriteria"]`).length) {
-      $('body').append(this.#removeCriteriaModal());
+    if (!$(`[${ this.data.modal }="removeCriterion"]`).length) {
+      $('body').append(this.#removeCriterionModal());
 
-      const modal = $(`[${ this.data.modal }="removeCriteria"]`);
+      const modal = $(`[${ this.data.modal }="removeCriterion"]`);
 
       const confirmRemove_btn = $('#confirmRemoveCriteria_btn');
 
       confirmRemove_btn.on('click', () => {
         const catgory_id = confirmRemove_btn.attr(`${ this.data.category_id }`);
-        const criteria_id = confirmRemove_btn.attr(`${ this.data.criteria_id }`);
-        this.removeCriteria(catgory_id, criteria_id);
+        const criterion_id = confirmRemove_btn.attr(`${ this.data.criterion_id }`);
+        this.removeCriterion(catgory_id, criterion_id);
         modal.modal('hide');
       });
 
-      modal.on('hidden.bs.modal', () => confirmRemove_btn.attr(`${ this.data.criteria_id }`, ''));
+      modal.on('hidden.bs.modal', () => confirmRemove_btn.attr(`${ this.data.criterion_id }`, ''));
     }
-
 
     // * Default Settings
 
@@ -3006,7 +3005,7 @@ class ActivityEvaluationForm {
 
   // * Public Methods
 
-  addCategory = () => {
+  addCategory = (data) => {
     const category_id = uuid();
     const tbl_body = this.form.find('tbody');
     const addCategory_row = tbl_body.find(`[${ this.data.row }="addCategory"]`)
@@ -3016,16 +3015,16 @@ class ActivityEvaluationForm {
     this.evaluation.push({
       category_id: category_id,
       category: '',
-      criterias: [],
+      criteria: [],
     });
 
     // * Insert the initial rows in the DOM
 
     addCategory_row.before(this.#categoryRow(category_id));
-    addCategory_row.before(this.#addCriteriaRow(category_id));
+    addCategory_row.before(this.#addCriterionRow(category_id));
     
     // By default add a criteria
-    this.addCriteria(category_id);
+    if (!data) this.addCriterion(category_id);
 
     // * Disable the add category button by default
 
@@ -3065,11 +3064,11 @@ class ActivityEvaluationForm {
 
     const isCategoryHasInputs = () =>
       category_input.val().trim() != '' ||
-        this.evaluation.find(x => x.category_id == category_id).criterias.some(c => {
-          const criteria_row = tbl_body.find(`[${ this.data.criteria_id }="${ c.criteria_id }"]`);
-          const criteria_input = criteria_row.find(`[${ this.data.input }="criteria"]`).val().trim();
+        this.evaluation.find(x => x.category_id == category_id).criteria.some(c => {
+          const criteria_row = tbl_body.find(`[${ this.data.criterion_id }="${ c.criterion_id }"]`);
+          const criterion_input = criteria_row.find(`[${ this.data.input }="criterion"]`).val().trim();
           const rate_input = criteria_row.find(`[${ this.data.input }="rate"]`).val().trim();
-          return (criteria_input != '' || rate_input != '');
+          return (criterion_input != '' || rate_input != '');
         });
 
     removeCategory_btn.on('click', () => {
@@ -3085,15 +3084,21 @@ class ActivityEvaluationForm {
     
     // * Initialize the Add Criteria button
 
-    const addCriteria_row = tbl_body
+    const addCriterion_row = tbl_body
       .children(`[${ this.data.category_id }="${ category_id }"]`)
       .last()
 
-    const addCriteria_btn = addCriteria_row.find(`[${ this.data.btn }="addCriteria"]`)
+    const addCriterion_btn = addCriterion_row.find(`[${ this.data.btn }="addCriterion"]`)
 
-    addCriteria_btn.on('click', () => {
-      this.addCriteria(category_id);
+    addCriterion_btn.on('click', () => {
+      this.addCriterion(category_id);
     });
+
+    if (data) {
+      category_input.val(data.category).trigger('change');
+
+      data.criteria.forEach(c => this.addCriterion(category_id, c))
+    }
   }
 
   removeCategory = (category_id) => {
@@ -3119,65 +3124,65 @@ class ActivityEvaluationForm {
     });
   }
 
-  addCriteria = (category_id) => {
-    const criteria_id = uuid();
+  addCriterion = (category_id, data) => {
+    const criterion_id = uuid();
     const tbl_body = this.form.find('tbody');
 
     // * Set the object
 
-    this.evaluation.find(x => x.category_id === category_id).criterias.push({
-      criteria_id: criteria_id,
-      criteria: '',
+    this.evaluation.find(x => x.category_id === category_id).criteria.push({
+      criterion_id: criterion_id,
+      criterion: '',
       rate: 0
     });
 
     // * Add the criteria from the DOM
 
-    const addCriteria_row = tbl_body
+    const addCriterion_row = tbl_body
       .children(`[${ this.data.category_id }="${ category_id }"]`)
       .last()
 
-    addCriteria_row.before(this.#criteriaRow(category_id, criteria_id));
+    addCriterion_row.before(this.#criterionRow(category_id, criterion_id));
 
     // * Initiate the add criteria button
     
-    const addCriteria_btn = addCriteria_row.find(`[${ this.data.btn }="addCriteria"]`);
+    const addCriterion_btn = addCriterion_row.find(`[${ this.data.btn }="addCriterion"]`);
 
-    addCriteria_btn.attr('disabled', true);
+    addCriterion_btn.attr('disabled', true);
 
     // *** Initiate the inputs *** //
     
-    const criteria_row = tbl_body.find(`[${ this.data.criteria_id }="${ criteria_id }"]`);
+    const criteria_row = tbl_body.find(`[${ this.data.criterion_id }="${ criterion_id }"]`);
     
-    const criteria_input = criteria_row.find(`[${ this.data.input }="criteria"]`);
+    const criterion_input = criteria_row.find(`[${ this.data.input }="criterion"]`);
     const rate_input = criteria_row.find(`[${ this.data.input }="rate"]`);
     
     const setAddCriteriaBtnState = () => {
-      addCriteria_btn.attr('disabled', !(criteria_input.valid() && rate_input.valid()))
+      addCriterion_btn.attr('disabled', !(criterion_input.valid() && rate_input.valid()))
     }
 
     // * Initiate the criteria input
 
-    criteria_input.rules('add', {
+    criterion_input.rules('add', {
       required: true,
       notEmpty: true,
       minlength: 3,
       messages: {
-        required: 'The criteria is required.',
-        notEmpty: 'The criteria is required.',
+        required: 'The criterion is required.',
+        notEmpty: 'This field cannot be blank.',
         minlength: 'Make sure you enter the full criteria title.'
       }
     });
 
-    const getCategoryCriterias = () => this.evaluation.find(x => x.category_id === category_id).criterias;
+    const getCategoryCriterias = () => this.evaluation.find(x => x.category_id === category_id).criteria;
 
-    criteria_input.on('keyup change', () => {
-      let criterias = getCategoryCriterias();
-      criterias = criterias.map(x => x.criteria_id === criteria_id
-        ? { ...x, criteria: criteria_input.val() } : x
+    criterion_input.on('keyup change', () => {
+      let criteria = getCategoryCriterias();
+      criteria = criteria.map(x => x.criterion_id === criterion_id
+        ? { ...x, criterion: criterion_input.val() } : x
       );
       this.evaluation = this.evaluation.map(x => x.category_id == category_id
-        ? { ...x, criterias: criterias }  : x
+        ? { ...x, criteria: criteria }  : x
       );
       setAddCriteriaBtnState();
     });
@@ -3198,63 +3203,68 @@ class ActivityEvaluationForm {
     });
 
     rate_input.on('keyup change', () => {
-      let criterias = getCategoryCriterias();
-      criterias = criterias.map(x => x.criteria_id === criteria_id
+      let criteria = getCategoryCriterias();
+      criteria = criteria.map(x => x.criterion_id === criterion_id
         ? { ...x, rate: parseFloat(rate_input.val()) || 0 } : x
       );
       this.evaluation = this.evaluation.map(x => x.category_id == category_id
-        ? { ...x, criterias: criterias }  : x
+        ? { ...x, criteria: criteria }  : x
       );
       setAddCriteriaBtnState();
     });
 
     // * Initialize buttons
 
-    const removeCriteria_btn = criteria_row.find(`[${ this.data.btn }="removeCriteria"]`)
+    const removeCriterion_btn = criteria_row.find(`[${ this.data.btn }="removeCriterion"]`)
 
-    removeCriteria_btn.on('click', () => {
-      if (criteria_input.val().trim() !== '' || rate_input.val().trim() !== '') {
+    removeCriterion_btn.on('click', () => {
+      if (criterion_input.val().trim() !== '' || rate_input.val().trim() !== '') {
         const confirmRemove_btn = $('#confirmRemoveCriteria_btn');
         confirmRemove_btn.attr(`${ this.data.category_id }`, category_id);
-        confirmRemove_btn.attr(`${ this.data.criteria_id }`, criteria_id);
-        $(`[${ this.data.modal }="removeCriteria"]`).modal('show');
+        confirmRemove_btn.attr(`${ this.data.criterion_id }`, criterion_id);
+        $(`[${ this.data.modal }="removeCriterion"]`).modal('show');
       } else {
-        const criterias = this.evaluation.find(x => x.category_id === category_id).criterias;
-        if (criterias.length === 1) {
+        const criteria = this.evaluation.find(x => x.category_id === category_id).criteria;
+        if (criteria.length === 1) {
           toastr.warning('You must include at least one criteria per category');
         } else {
-          this.removeCriteria(category_id, criteria_id);
+          this.removeCriterion(category_id, criterion_id);
         }
       }
     });
+
+    if (data) {
+      criterion_input.val(data.criterion).trigger('change');
+      rate_input.val(data.rate).trigger('change');
+    }
   }
 
-  removeCriteria = (category_id, criteria_id) => {
-    let c_criterias = this.evaluation.find(x => x.category_id == category_id).criterias;
-    c_criterias = c_criterias.filter(x => x.criteria_id !== criteria_id);
+  removeCriterion = (category_id, criterion_id) => {
+    let c_criteria = this.evaluation.find(x => x.category_id == category_id).criteria;
+    c_criteria = c_criteria.filter(x => x.criterion_id !== criterion_id);
 
     this.evaluation = this.evaluation.map(x => x.category_id === category_id 
-      ? { ...x, criterias: c_criterias } : x
+      ? { ...x, criteria: c_criteria } : x
     );
 
-    this.form.find('tbody').find(`[${ this.data.criteria_id }="${ criteria_id }"]`).remove();
+    this.form.find('tbody').find(`[${ this.data.criterion_id }="${ criterion_id }"]`).remove();
 
-    if (c_criterias.length === 0) this.addCriteria(category_id);
+    if (c_criteria.length === 0) this.addCriterion(category_id);
 
     const tbl_body = this.form.find('tbody');
 
-    const addCriteria_row = tbl_body
+    const addCriterion_row = tbl_body
       .children(`[${ this.data.category_id }="${ category_id }"]`)
       .last()
 
-    const addCriteria_btn = addCriteria_row.find(`[${ this.data.btn }="addCriteria"]`);
+    const addCriterion_btn = addCriterion_row.find(`[${ this.data.btn }="addCriterion"]`);
     
-    addCriteria_btn.attr('disabled', () => {
-      return c_criterias.some(x => {
-        const criteria_row = tbl_body.find(`[${ this.data.criteria_id }="${ x.criteria_id }"]`);
-        const criteria_input = criteria_row.find(`[${ this.data.input }="criteria"]`);
+    addCriterion_btn.attr('disabled', () => {
+      return c_criteria.some(x => {
+        const criteria_row = tbl_body.find(`[${ this.data.criterion_id }="${ x.criterion_id }"]`);
+        const criterion_input = criteria_row.find(`[${ this.data.input }="criterion"]`);
         const rate_input = criteria_row.find(`[${ this.data.input }="rate"]`);
-        return !criteria_input.valid() || !rate_input.valid();
+        return !criterion_input.valid() || !rate_input.valid();
       });
     });
   }
@@ -3265,11 +3275,20 @@ class ActivityEvaluationForm {
     this.#initializations();
   }
 
+  setEvaluation = (data) => {
+    this.evaluation.forEach(e  => {
+      this.evaluation = this.evaluation.filter(x => x.category_id != e.category_id);
+      this.form.find('tbody').children(`[${ this.data.category_id }="${ e.category_id }"]`).remove();
+    });
+
+    data.forEach(c => this.addCategory(c));
+  }
+
   getEvaluation = () => {
     let evaluation = [...this.evaluation];
     evaluation.forEach(x => {
       delete x.category_id;
-      x.criterias.forEach(y => delete y.criteria_id);
+      x.criteria.forEach(y => delete y.criterion_id);
     });
     return evaluation;
   }

@@ -2540,20 +2540,38 @@ const ProjectActivities = (() => {
   }
 
   const initActivityEvaluation = () => {
-    $app('#submitActivityEvaluation_form').handleForm({
+    $app('#activityEvaluation_form').handleForm({
       validators: {},
-      onSubmit: () => {
+      onSubmit: async () => {
 
         // Get data
         const data = { 
           evaluation: AE_form.getEvaluation()
         }
 
-        console.log(data);
+        const fd = new FormData($('#activityEvaluation_form')[0]);
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ fd.get('activity_id') }`,
+          type: 'PUT',
+          data: data,
+          success: (res) => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              toastr.success('An activity has been successfully evaluated');
+            }
+          }
+        });
       }
     });
 
     AE_form = new ActivityEvaluationForm($('#activityEvaluation_form'));
+
+    // submitActivityEvaluation_modal.on('hide.bs.modal', (e) => {
+    //   e.preventDefault();
+    //   $('#cancelSubmitEvaluationActivity_modal').modal('show');
+    // });
 
     submitActivityEvaluation_modal.on('hidden.bs.modal', () => {
       AE_form.resetForm();
@@ -2798,6 +2816,8 @@ const ProjectActivities = (() => {
   
   const submitPostEvaluation = async (activity_id) => {
     if (mode !== 'Activity Evaluation') return;
+
+    $('#activityEvaluation_activityId').val(activity_id);
 
     submitActivityEvaluation_modal.modal('show');
   }
