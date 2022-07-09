@@ -1,0 +1,247 @@
+<%# ***** Styles ***** %>
+
+<%# Select2 %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/select2/css/select2.min.css">
+<%# DataTables %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
+
+<%# ***** Body ***** %>
+
+<%# Content Header %>
+<div class="content-header">
+  <div class="container-fluid">
+
+    <%# Breadcrumb %>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%BASE_URL%>/a">SysAdmin</a></li>
+      <li class="breadcrumb-item active">Profile</li>
+    </ol>
+
+    <div class="d-sm-flex align-items-sm-center justify-content-between">
+
+      <%# Header & Subtitle %>
+      <div class="flex-wrap mb-2 mb-md-0">
+        <h1 class="m-0">My Profile</h1>
+        <div class="text-secondary">Manage your profile here</div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<%# Main Content %>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+
+        <!-- Profile Image -->
+        <div class="card card-primary card-outline">
+          <div class="card-body box-profile">
+            <div class="text-center">
+              <img class="profile-user-img img-fluid img-circle"
+                src="<%=BASE_URL%>/img/PUPLogo.png"
+                alt="User profile picture">
+            </div>
+
+            <h5 class="my-2 text-center">Vanessah O. Buenavetura</h5>
+
+            <p class="text-muted text-center">System Admin</p>
+
+            <ul class="list-group list-group-unbordered mb-3">
+              <li class="list-group-item">
+                <i class="fas fa-envelope text-primary"></i>
+                <a class="text-secondary ml-2"> extension.pupqc@gmail.com</a>
+              </li>
+            </ul>
+
+            <a href="#" class="btn btn-primary btn-block" data-auth="logout"><b>Log out</b></a>
+          </div>
+          <!-- /.card-body -->
+        </div>
+      </div>
+      <!-- /.col -->
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header p-2">
+            <ul class="nav nav-pills">
+              <li class="nav-item"><a class="nav-link active" href="#information" data-toggle="tab">Personal Information</a></li>
+              <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Account Settings</a></li>
+            </ul>
+          </div><!-- /.card-header -->
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="active tab-pane" id="information">
+                <form class="form-horizontal">
+                  <div class="form-group row">
+                    <label for="addUser_firstName">
+                      <span>First Name</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="addUser_firstName" 
+                      name="first_name"
+                      placeholder="Enter the first name here"
+                    />
+                  </div>
+                  <div class="form-group row">
+                    <label for="addUser_middleName">
+                      <span>Middle Name</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="addUser_middleName" 
+                      name="middle_name"
+                      placeholder="Enter the middle name here"
+                    />
+                  </div>
+                  <div class="form-group row">
+                    <label for="addUser_lastName">
+                      <span>Last Name</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="addUser_lastName" 
+                      name="last_name"
+                      placeholder="Enter the last name here"
+                    />
+                  </div>
+                  <div class="form-group row">
+                    <label for="addUser_suffixName">
+                      <span>Suffix Name</span>
+                    </label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="addUser_suffixName" 
+                      name="suffix_name"
+                      placeholder="Enter the suffix name here"
+                    />
+                  </div>
+                  <div class="form-group row">
+                    <label for="addUser_email">
+                      <span>Email</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <input 
+                      type="email" 
+                      class="form-control" 
+                      id="addUser_email" 
+                      name="email"
+                      placeholder="Enter the email address here"
+                    />
+                  </div>
+                  <div class="form-group row">
+                    <div class="float-right">
+                      <button 
+                        type="button" 
+                        class="btn btn-negative" 
+                        data-card-widget=""
+                      >
+                        <span>Cancel</span>
+                      </button>
+                      <button type="submit" class="btn btn-primary" id="submitBtn" >
+                        <span>Save</span>
+                        <i class="fas fa-check ml-1"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- /.tab-pane -->
+
+              <div class="tab-pane" id="settings">
+                <form class="form-horizontal">
+                  <div class="form-group row">
+                    <label for="change_password">
+                      <span>Change Password</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <input 
+                        type="password" 
+                        class="form-control" 
+                        id="" 
+                        name="password"
+                        placeholder="Enter your password here" 
+                        autocomplete="false"
+                      >
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="change_password">
+                      <span>Confirm Password</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <input 
+                        type="password" 
+                        class="form-control" 
+                        id="" 
+                        name="password"
+                        placeholder="Re-enter your password here" 
+                        autocomplete="false"
+                      >
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="float-right">
+                      <button 
+                        type="button" 
+                        class="btn btn-negative" 
+                        data-card-widget=""
+                      >
+                        <span>Cancel</span>
+                      </button>
+                      <button type="submit" class="btn btn-primary" id="submitBtn" >
+                        <span>Save</span>
+                        <i class="fas fa-check ml-1"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div><!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div><!-- /.container-fluid -->
+</section>
+
+
+<%# ***** Scripts ***** %>
+
+<%# Select2 %>
+<script src="<%=BASE_URL%>/plugins/select2/js/select2.full.min.js"></script>
+<%# Datatable and Plugins %>
+<script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/jszip/jszip.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<%# Main %> 
+<script src="<%=BASE_URL%>/js/main.js"></script>
+<script src="<%=BASE_URL%>/js/modules/admin/users.js"></script>
