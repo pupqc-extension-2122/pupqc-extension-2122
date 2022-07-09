@@ -205,12 +205,16 @@
       >
         <div class="d-flex mb-3">
           <h4 class="mb-3 flex-grow-1">Documents</h4>
-          <div class="text-right">
-            <button class="btn btn-info" data-toggle="modal" data-target="#uploadDocuments_modal">
-              <i class="fas fa-upload mr-1"></i>
-              <span>Upload documents</span>
-            </button>
-          </div>
+          
+          <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+            <div class="text-right">
+              <button class="btn btn-info" data-toggle="modal" data-target="#uploadDocuments_modal">
+                <i class="fas fa-upload mr-1"></i>
+                <span>Upload documents</span>
+              </button>
+            </div>
+          <% } %>  
+        
         </div>
 
         <div class="table-responsive">

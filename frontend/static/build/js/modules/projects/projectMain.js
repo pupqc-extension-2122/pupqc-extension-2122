@@ -574,54 +574,76 @@ const ProjectOptions = (() => {
   }
 
   const initForRevision = () => {
-    const isBadAction = () => project.status != 'For Review';
-    const confirmBtn = $('#confirmRequestForRevision_btn');
+    const isBadAction = () => !(
+      project.status === 'For Review'
+      || project.status === 'Pending'
+    );
     
-    confirmBtn.on('click', async () => {
-      if (isBadAction()) return;
-
-      processing = true;
-      
-      // Disable elements
-      confirmBtn.attr('disabled', true);
-      confirmBtn.html(`
-        <span class="px-3">
-          <i class="fas fa-spinner fa-spin-pulse"></i>
-        </span>
-      `);
-      
-      // Enable elements function
-      const enableElements = () => {
-        confirmBtn.attr('disabled', false);
-        confirmBtn.html('Yes, please!');
-      }
-
-      await $.ajax({
-        url: `${ BASE_URL_API }/projects/revise/${ project.id }`,
-        type: 'PUT',
-        success: async res => {
-          processing = false;
-
-          if (res.error) {
-            enableElements();
-            toastr.warning(res.message);
-          } else {
-            forRevision_modal.modal('hide');
-            enableElements();
-            updateProjectDetails({ status: 'For Revision' });
-            ProjectHistory.addToTimeline(res.data);
-            toastr.success('Your request of project revision has been successfully saved.');
+    $app('#requestForRevision_form').handleForm({
+      validators: {
+        remarks: {
+          required: 'Please type your remarks.',
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full details of your remarks'
           }
-        }, 
-        error: (xhr, status, error) => {
-          ajaxErrorHandler({
-            file: 'projects/projectProposalDetails.js',
-            fn: `ProjectOptions.initForRevision(): confirmBtn.on('click', ...)`,
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-          });
-          enableElements();
         }
-      });
+      },
+      onSubmit: async () => {
+        if (isBadAction()) return;
+        processing = true;
+
+        const confirmBtn = $('#confirmRequestForRevision_btn');
+        
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+        
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Yes, please!');
+        }
+
+        const fd = new FormData($('#requestForRevision_form')[0]);
+
+        const data = {
+          remarks: fd.remarks.trim()
+        }
+  
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/revise/${ project.id }`,
+          type: 'PUT',
+          data: data,
+          success: async res => {
+            processing = false;
+  
+            if (res.error) {
+              enableElements();
+              toastr.warning(res.message);
+            } else {
+              forRevision_modal.modal('hide');
+              enableElements();
+              updateProjectDetails({ status: 'For Revision' });
+              ProjectHistory.addToTimeline(res.data);
+              toastr.success('Your request of project revision has been successfully saved.');
+            }
+          }, 
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: `ProjectOptions.initForRevision(): confirmBtn.on('click', ...)`,
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+            enableElements();
+          }
+        });
+      }
     });
 
     forRevision_modal.on('show.bs.modal', (e) => {
@@ -893,54 +915,77 @@ const ProjectOptions = (() => {
   }
 
   const initCancelProposal = () => {
-    const isBadAction = () => project.status !== 'Pending';
+    const isBadAction = () => !(
+      project.status === 'For Review'
+      || project.status === 'For Evaluation'
+      || project.status === 'Pending'
+    );
     const confirmBtn = $('#confirmCancelTheProposal_btn');
 
-    confirmBtn.on('click', async () => {
-      if (isBadAction()) return;
-
-      processing = true;
-
-      // Disable elements
-      confirmBtn.attr('disabled', true);
-      confirmBtn.html(`
-        <span class="px-3">
-          <i class="fas fa-spinner fa-spin-pulse"></i>
-        </span>
-      `);
-
-      // Enable elements function
-      const enableElements = () => {
-        confirmBtn.attr('disabled', false);
-        confirmBtn.html('Yes, please!');
-      }
-
-      await $.ajax({
-        url: `${ BASE_URL_API }/projects/cancel/${ project.id }`,
-        type: 'PUT',
-        success: async res => {
-          processing = false;
-          
-          if (res.error) {
-            ajaxErrorHandler(res.message);
-            enableElements();
-          } else {
-            cancelProposal_modal.modal('hide');
-            enableElements();
-            updateProjectDetails({ status: 'Cancelled' });
-            ProjectHistory.addToTimeline(res.data)
-            toastr.success('The proposal has been submitted successfully.');
+    $app('#cancelProposal_form').handleForm({
+      validators: {
+        remarks: {
+          required: 'Please type your remarks.',
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full details of your remarks'
           }
-        }, 
-        error: (xhr, status, error) => {
-          ajaxErrorHandler({
-            file: 'projects/projectProposalDetails.js',
-            fn: `ProjectOptions.initCancelProposal(): confirmBtn.on('click', ...)`,
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-          });
-          enableElements();
         }
-      });
+      },
+      onSubmit: async () => {
+        if (isBadAction()) return;
+
+        processing = true;
+
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Yes, please!');
+        }
+
+        const fd = new FormData($('#cancelProposal_form')[0]);
+
+        const data = {
+          remarks: fd.remarks.trim()
+        }
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/cancel/${ project.id }`,
+          type: 'PUT',
+          data: data,
+          success: async res => {
+            processing = false;
+            
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+              enableElements();
+            } else {
+              cancelProposal_modal.modal('hide');
+              enableElements();
+              updateProjectDetails({ status: 'Cancelled' });
+              ProjectHistory.addToTimeline(res.data)
+              toastr.success('The proposal has been submitted successfully.');
+            }
+          }, 
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: `ProjectOptions.initCancelProposal(): confirmBtn.on('click', ...)`,
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+            enableElements();
+          }
+        });
+      }
     });
 
     cancelProposal_modal.on('show.bs.modal', (e) => {
@@ -1081,6 +1126,19 @@ const ProjectOptions = (() => {
             </button>
           `
         }, {
+          id: 'Undo submission',
+          category: 'For Submission',
+          template: `
+            <button 
+              type="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('undoSubmission')"
+            >
+              <i class="fas fa-undo fa-fw text-warning mr-1"></i>
+              <span>Undo submission</span>
+            </button>
+          `
+        }, {
           id: 'Submit evaluation grade',
           category: 'For Submission',
           template: `
@@ -1185,6 +1243,13 @@ const ProjectOptions = (() => {
         optionsTemplate = {
           'Created': () => revisingOptions(),
           'For Revision': () => revisingOptions(),
+          'For Review': () => {
+            optionList.push('Undo submission');
+            optionList.push('Cancel the proposal');
+          },
+          'For Evaluation': () => {
+            optionList.push('Cancel the proposal');
+          },
           'Pending': () => {
             optionList.push('Cancel the proposal');
           },
@@ -1204,6 +1269,7 @@ const ProjectOptions = (() => {
           },
           'Pending': () => {
             optionList.push('Approve the project');
+            optionList.push('Request for revision');
           }
         }
         if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
@@ -3068,6 +3134,8 @@ const ProjectDocuments = (() => {
   
   // * Local Variables
   
+  const user_roles = JSON.parse(getCookie('roles'));
+
   const dtElem = $('#uploadedDocuments_dt');
   const uploadDocuments_modal = $('#uploadDocuments_modal');
   const totalProgress_elem = $("#total_progress");
@@ -3348,9 +3416,8 @@ const ProjectDocuments = (() => {
         data: {
           types: {
             created_at: 'date',
-            activity_name: 'string',
-            start_date: 'date',
-            end_date: 'date'
+            file_name: 'string',
+            mimetype: 'date',
           }
         },
         beforeSend: () => {
@@ -3390,41 +3457,55 @@ const ProjectDocuments = (() => {
           data: null,
           width: '5%',
           render: (data) => {
+            const renameOption = () => {
+              return user_roles.includes('Extensionist')
+                ? `
+                  <div
+                    role="button"
+                    class="dropdown-item"
+                    onclick="ProjectDocuments.initRenameFile('${ data.id }', '${ data.file_name }')"
+                  >
+                    <i class="fas fa-pen fa-fw mr-1"></i>
+                    <span>Rename</span>
+                  </div>
+                ` : ''
+            }
+
+            const deleteOption = () => {
+              return user_roles.includes('Extensionist')
+                ? `
+                  <div class="dropdown-divider"></div>
+                  <div
+                    role="button"
+                    class="dropdown-item"
+                    onclick="ProjectDocuments.initDeleteFile('${ data.id }', '${ data.file_name }')"
+                  >
+                    <i class="fas fa-trash-alt fa-fw mr-1"></i>
+                    <span>Delete</span>
+                  </div>
+                ` : ''
+            }
+
             return `
-            <div class="dropdown text-center">
-              <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
-                <i class="fas fa-ellipsis-h"></i>
-              </div>
-              <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">Options</div>
-                <div
-                  role="button"
-                  class="dropdown-item"
-                  onclick="ProjectDocuments.initRenameFile('${ data.id }', '${ data.file_name }')"
-                >
-                  <i class="fas fa-pen fa-fw mr-1"></i>
-                  <span>Rename</span>
+              <div class="dropdown text-center">
+                <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                  <i class="fas fa-ellipsis-h"></i>
                 </div>
-                <a
-                  role="button"
-                  href="${ BASE_URL_API }/documents/${ data.upload_name }"
-                  download="${ data.file_name }"
-                  class="dropdown-item"
-                >
-                  <i class="fas fa-download fa-fw mr-1"></i>
-                  <span>Download</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <div
-                  role="button"
-                  class="dropdown-item"
-                  onclick="ProjectDocuments.initDeleteFile('${ data.id }', '${ data.file_name }')"
-                >
-                  <i class="fas fa-trash-alt fa-fw mr-1"></i>
-                  <span>Delete</span>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-header">Options</div>
+                  ${ renameOption() }
+                  <a
+                    role="button"
+                    href="${ BASE_URL_API }/documents/${ data.upload_name }"
+                    download="${ data.file_name }"
+                    class="dropdown-item"
+                  >
+                    <i class="fas fa-download fa-fw mr-1"></i>
+                    <span>Download</span>
+                  </a>
+                  ${ deleteOption() }
                 </div>
               </div>
-            </div>
             `
           }
         }
@@ -3457,8 +3538,10 @@ const ProjectDocuments = (() => {
     if (!initialized) {
       initialized = true;
       project = projectData;
-      await initializations();
-      await initDataTable();
+      if (user_roles.includes('Extensionist')) {
+        initializations();
+      }
+      initDataTable();
     }
   }
 

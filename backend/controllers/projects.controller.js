@@ -73,16 +73,20 @@ exports.viewProposal = async (req, res) => {
 exports.datatableProposal = async (req, res) => {
   try {
 
-    let options = { where: { created_by: req.auth.id } }
+    let options;
 
     if (req.auth.roles.includes('Admin'))
       options = {}
 
+    else if (req.auth.roles.includes('Extensionist'))
+      options = { where: { created_by: req.auth.id } };
+
     else if (req.auth.roles.includes('Chief'))
       options = { where: { status: { [Op.not]: 'Created' } } }
 
+    options.include = ['memos', 'partners'];
 
-    let data = await datatable(Projects, req.query, { include: ['memos', 'partners'] })
+    let data = await datatable(Projects, req.query, options)
 
     res.send(data)
 
