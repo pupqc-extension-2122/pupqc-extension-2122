@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false, validate: { notEmpty: true },
       primaryKey: true,
     },
+    SO_number: {
+      type: DataTypes.STRING,
+      validate: { notEmpty: true }
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false, validate: { notEmpty: true }
