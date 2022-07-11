@@ -2,7 +2,6 @@
 const {
   Model
 } = require('sequelize');
-const { Sequelize } = require('.');
 module.exports = (sequelize, DataTypes) => {
   class Project_History extends Model {
     /**
@@ -45,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: { notEmpty: true }
     },
     author_id: {
-      type: Sequelize.UUID
+      type: DataTypes.UUID
     },
   }, {
     sequelize,

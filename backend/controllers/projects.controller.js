@@ -241,6 +241,7 @@ exports.updateProject = async (req, res) => {
 
     const id = req.params.id
     const body = req.body
+    const allowed_status = ['Created', 'For Revision']
 
     if (new Date(req.body.start_date) > new Date(req.body.end_date))
       return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
@@ -248,8 +249,16 @@ exports.updateProject = async (req, res) => {
     let partners = body.partner_id
 
     let current_project = await Projects.findByPk(id, {
-      include: ['project_partners']
+      where: {
+        status: {
+          [Op.in]: allowed_status
+        }
+      },
+      include: ['project_partners'],
     })
+
+    if (!current_project)
+      return res.status(404).send({ error: true, message: 'Project is either not found or not available for updates' })
 
     let current_partners = current_project.project_partners.map(el => {
       return ({ id: el.id, partner_id: el.partner_id })
@@ -337,15 +346,17 @@ exports.cancelProposal = async (req, res) => {
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
   const id = req.params.id
-  const body = req.body
 
-  let project = await Projects.findByPk(id)
+  let project = await Projects.findByPk(id, {
+    where: {
+      status: {
+        [Op.notIn]: ['Approved', 'Cancelled', 'Created']
+      }
+    }
+  })
 
   if (!project)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
-
-  if (project.status != 'Pending')
-    return res.status(400).send({ error: true, message: 'Bad Request' })
 
   const previous_value = project.status
 
@@ -373,8 +384,15 @@ exports.requestForRevision = async (req, res) => {
 
   const id = req.params.id
   const body = req.body
+  const allowed_status = ['Pending', 'For Review']
 
-  let project = await Projects.findByPk(id)
+  let project = await Projects.findByPk(id, {
+    where: {
+      status: {
+        [Op.in]: allowed_status
+      }
+    }
+  })
 
   if (!project)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
@@ -393,6 +411,7 @@ exports.requestForRevision = async (req, res) => {
     current_value: 'For Revision',
     previous_value,
     author_id: req.auth.id,
+    remarks: body.remarks
   })
 
   res.send({
@@ -567,6 +586,36 @@ exports.evaluateProposal = async (req, res) => {
   }
 }
 
+exports.reschedulePresentation = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Chief'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const project_id = req.params.project_id
+    const body = req.body
+
+    let project = await Projects.findByPk(project_id, { where: { status: 'For Evaluation' } })
+
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project not Found' })
+
+
+    project.presentation_date = body.presentation_date
+    await project.save()
+
+    res.send({
+      error: false,
+      message: 'Project Presentation Date Updated',
+    })
+
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.evaluateActivity = async (req, res) => {
   try {
 
@@ -697,6 +746,7 @@ exports.updateProjectActivities = async (req, res) => {
     const project_id = req.params.project_id
     const activity_id = req.params.activity_id
     const body = req.body
+    const allowed_status = ['Created', 'For Review']
 
     if (new Date(body.start_date) > new Date(body.end_date))
       return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
@@ -704,8 +754,18 @@ exports.updateProjectActivities = async (req, res) => {
     let data = await Project_Activities.findOne({
       where: {
         id: activity_id,
-        project_id
-      }
+        project_id,
+      },
+      include: [
+        {
+          model: Projects,
+          where: {
+            status: {
+              [Op.in]: allowed_status
+            }
+          }
+        }
+      ]
     })
 
     if (!data)
