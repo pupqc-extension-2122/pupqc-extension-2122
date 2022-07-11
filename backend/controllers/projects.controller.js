@@ -190,7 +190,8 @@ exports.createProject = async (req, res) => {
       documents: documents,
       history: [
         {
-          current_value: 'Created'
+          current_value: 'Created',
+          author_id: req.auth.id
         }
       ]
     }, {
@@ -352,7 +353,7 @@ exports.cancelProposal = async (req, res) => {
     project_id: project.id,
     current_value: 'Cancelled',
     previous_value,
-    remarks: body.remarks
+    author_id: req.auth.id,
   })
 
   res.send({
@@ -367,6 +368,7 @@ exports.requestForRevision = async (req, res) => {
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
   const id = req.params.id
+  const body = req.body
 
   let project = await Projects.findByPk(id)
 
@@ -386,6 +388,7 @@ exports.requestForRevision = async (req, res) => {
     project_id: project.id,
     current_value: 'For Revision',
     previous_value,
+    author_id: req.auth.id,
   })
 
   res.send({
@@ -423,7 +426,7 @@ exports.submitForReviewProposal = async (req, res) => {
     let history = await Project_History.create({
       project_id: project.id,
       current_value: 'For Review',
-      previous_value,
+      previous_value
     })
 
     res.send({
@@ -462,7 +465,7 @@ exports.submitForEvaluationProposal = async (req, res) => {
       project_id: project.id,
       current_value: 'For Evaluation',
       previous_value,
-      remarks: body.remarks
+      author_id: req.auth.id,
     })
 
     res.send({
@@ -503,6 +506,7 @@ exports.approveProposal = async (req, res) => {
     project_id: project.id,
     current_value: 'Approved',
     previous_value,
+    author_id: req.auth.id,
     remarks: body.remarks
   })
 
