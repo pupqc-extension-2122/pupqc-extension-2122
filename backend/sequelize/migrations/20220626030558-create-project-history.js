@@ -24,6 +24,18 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      remarks: {
+        type: Sequelize.TEXT
+      },
+      author_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: {
+            tableName: 'Users'
+          },
+          key: 'id'
+        }
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

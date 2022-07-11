@@ -194,7 +194,8 @@ exports.createProject = async (req, res) => {
       documents: documents,
       history: [
         {
-          current_value: 'Created'
+          current_value: 'Created',
+          author_id: req.auth.id
         }
       ]
     }, {
@@ -335,7 +336,8 @@ exports.cancelProposal = async (req, res) => {
   if (!req.auth.roles.includes('Extensionist'))
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
-  let id = req.params.id
+  const id = req.params.id
+  const body = req.body
 
   let project = await Projects.findByPk(id)
 
@@ -345,14 +347,17 @@ exports.cancelProposal = async (req, res) => {
   if (project.status != 'Pending')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
+  const previous_value = project.status
+
   project.status = 'Cancelled'
 
   await project.save()
 
   let history = await Project_History.create({
     project_id: project.id,
-    previous_value: 'Pending',
-    current_value: 'Cancelled'
+    current_value: 'Cancelled',
+    previous_value,
+    author_id: req.auth.id,
   })
 
   res.send({
@@ -366,7 +371,8 @@ exports.requestForRevision = async (req, res) => {
   if (!req.auth.roles.includes('Chief'))
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
-  let id = req.params.id
+  const id = req.params.id
+  const body = req.body
 
   let project = await Projects.findByPk(id)
 
@@ -376,14 +382,17 @@ exports.requestForRevision = async (req, res) => {
   if (project.status != 'For Review')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
+  const previous_value = project.status
+
   project.status = 'For Revision'
 
   await project.save()
 
   let history = await Project_History.create({
     project_id: project.id,
-    previous_value: 'For Review',
-    current_value: 'For Revision'
+    current_value: 'For Revision',
+    previous_value,
+    author_id: req.auth.id,
   })
 
   res.send({
@@ -400,6 +409,7 @@ exports.submitForReviewProposal = async (req, res) => {
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const id = req.params.id
+    const body = req.body
 
     let project = await Projects.findByPk(id, { include: ['activities'] })
 
@@ -409,17 +419,19 @@ exports.submitForReviewProposal = async (req, res) => {
     if (!project.activities.length)
       return res.send({ warning: true, message: 'Please include at least one project activity' })
 
-    if (!(project.status == 'Created' || project.status == 'For Revision'))
+    if (!(project.status == 'Created' || !project.status == 'For Revision'))
       return res.status(400).send({ error: true, message: 'Invalid action' })
 
-    let history = await Project_History.create({
-      project_id: project.id,
-      previous_value: project.status,
-      current_value: 'For Review'
-    })
+    const previous_value = project.status
 
     project.status = 'For Review'
     await project.save()
+
+    let history = await Project_History.create({
+      project_id: project.id,
+      current_value: 'For Review',
+      previous_value
+    })
 
     res.send({
       error: false,
@@ -447,14 +459,17 @@ exports.submitForEvaluationProposal = async (req, res) => {
     if (!project)
       return res.status(404).send({ error: true, message: 'Project not found' })
 
+    const previous_value = project.status
+
     project.status = 'For Evaluation'
     project.presentation_date = body.presentation_date
     await project.save()
 
     let history = await Project_History.create({
       project_id: project.id,
-      previous_value: 'For Review',
-      current_value: 'For Evaluation'
+      current_value: 'For Evaluation',
+      previous_value,
+      author_id: req.auth.id,
     })
 
     res.send({
@@ -473,7 +488,8 @@ exports.approveProposal = async (req, res) => {
   if (!req.auth.roles.includes('Chief'))
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
-  let id = req.params.id
+  const id = req.params.id
+  const body = req.body
 
   let project = await Projects.findByPk(id)
 
@@ -483,14 +499,19 @@ exports.approveProposal = async (req, res) => {
   if (project.status != 'Pending')
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
+  const previous_value = project.status
+
   project.status = 'Approved'
+  project.SO_number = body.SO_number
 
   await project.save()
 
   let history = await Project_History.create({
     project_id: project.id,
-    previous_value: 'Pending',
-    current_value: 'Approved'
+    current_value: 'Approved',
+    previous_value,
+    author_id: req.auth.id,
+    remarks: body.remarks
   })
 
   res.send({

@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { Sequelize } = require('.');
 module.exports = (sequelize, DataTypes) => {
   class Project_History extends Model {
     /**
@@ -12,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.belongsTo(models.Projects, { foreignKey: 'project_id', as: 'project' })
+      this.belongsTo(models.Users, {foreignKey: 'author_id', as: 'author'})
     }
   }
   Project_History.init({
@@ -37,6 +39,13 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         notEmpty: true
       }
+    },
+    remarks: {
+      type: DataTypes.TEXT,
+      validate: { notEmpty: true }
+    },
+    author_id: {
+      type: Sequelize.UUID
     },
   }, {
     sequelize,
