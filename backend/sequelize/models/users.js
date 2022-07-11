@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.Projects, { foreignKey: 'created_by', as: 'projects' })
       this.hasMany(models.Comments, { foreignKey: 'user_id', as: 'comments' })
-      this.belongsToMany(models.Roles, { foreignKey: 'user_id', through: 'User_Roles' })
+      this.hasMany(models.User_Roles, {foreignKey: 'user_id', as: 'user_roles'})
+      this.belongsToMany(models.Roles, { foreignKey: 'user_id', through: 'User_Roles', as: 'roles' })
     }
 
     verify(password) {
@@ -62,6 +63,8 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'Users',
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
+    paranoid: true,
     hooks: {
       beforeCreate: async (user, options) => {
         return user.password = await bcrypt.hash(user.password, 12)
