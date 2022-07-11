@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: { notEmpty: true }
     },
     author_id: {
-      type: Sequelize.UUID
+      type: DataTypes.UUID
     },
   }, {
     sequelize,
