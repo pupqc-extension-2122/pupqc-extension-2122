@@ -582,6 +582,36 @@ exports.evaluateProposal = async (req, res) => {
   }
 }
 
+exports.reschedulePresentation = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Chief'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const project_id = req.params.project_id
+    const body = req.body
+
+    let project = await Projects.findByPk(project_id, { where: { status: 'For Evaluation' } })
+
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project not Found' })
+
+
+    project.presentation_date = body.presentation_date
+    await project.save()
+
+    res.send({
+      error: false,
+      message: 'Project Presentation Date Updated',
+    })
+
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.evaluateActivity = async (req, res) => {
   try {
 
