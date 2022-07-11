@@ -145,12 +145,7 @@
   }
 
   const initProjectTeamForm = () => {
-    PT_form = new ProjectTeamForm('#addProject_projectTeam_grp', {
-      buttons: {
-        add: '#addTeamMember_btn',
-        // clear: '#clearProjectTeamEmptyFields_btn'
-      }
-    });
+    PT_form = new ProjectTeamForm();
   }
 
   const initTargetGroupForm = () => {

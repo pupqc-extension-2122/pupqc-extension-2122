@@ -11,294 +11,189 @@
 
 
 class ProjectTeamForm {
-	constructor(selector, params = {
-		buttons: {
-			add: '',
-		}
-	}) {
+  constructor(form = $(`[data-form="projectTeam"]`)) {
+    this.form = form;
 
-		// *** Defaults *** //
+    this.team_members = [];
 
-		const FORM = `[data-form="projectTeam"]`;
-		const BUTTONS = {
-			ADD: `[data-team-member-btn="add"]`,
-		}
+    // Object 
+    // {
+    //   member_id: '',
+    //   name: '',
+    //   role: ''
+    // }
 
-		// *** Setting up properties *** //
+    const dataPrefix = 'data-project-team-';
 
-		this.form = $(selector || FORM);
-		this.projectTeam = [];
+    this.data = {
+      member_id: `${ dataPrefix }member-id`,
 
-		const { buttons: btn } = params;
+      container: `${ dataPrefix }container`,
+      input: `${ dataPrefix }input`,
+      btn: `${ dataPrefix }btn`,
+      modal: `${ dataPrefix }modal`,
+    }
 
-		this.btn = {
-			add: this.form.find(btn.add || BUTTONS.ADD),
-		}
-
-		this.data = {
-
-			// Form group id
-			formGroupId: 'data-team-member-form-group-id',
-
-			// Input(s)
-			teamMemberInput: 'data-team-member-input',
-
-			// Remove form group button
-			removeFormGroupBtn: 'data-team-member-remove-form-group-btn',
-
-			// Modal
-			modal: 'data-team-member-modal'
-		}
-
-		this.#initializations();
-	}
-
-	/**
-	 * * Template Literals
-	 * o--/[=================>
-	 */
-
-	#addTeamMemberFormGroup = formGroupId => `
-    <div class="form-group mb-2" ${this.data.formGroupId}="${formGroupId}">
-			<div class="d-flex align-items-center">
-				<div class="px-2 mr-2">●</div>
-				<div class="w-100 mr-2">
-					<input 
-						type="text" 
-						class="form-control" 
-						name="team_member-${formGroupId}" 
-						${this.data.teamMemberInput}="${formGroupId}"
-						placeholder="Enter the name of a team member here"
-					/>
-				</div>
-				<div>
-					<button 
-            type="button" 
-            class="btn btn-sm btn-negative text-danger"
-            ${this.data.removeFormGroupBtn}="${formGroupId}"
-						data-toggle="tooltip"
-            title="Remove team member field"
-          >
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  `
-
-	#removeTeamMemberFieldModal = `
-    <div class="modal" id="removeTeamMemberField_modal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Confirmation</h4>
-            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="d-flex">
-              <h1 class="mr-3 display-4">
-                <i class="fas fa-exclamation-triangle text-warning"></i>
-              </h1>
-              <div>
-                <div class="font-weight-bold mb-2">Remove team member field</div>
-                <p>You've already entered some data here!<br>Are you sure you want to remove this team member field?<br>Your inputs will not be saved.</p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-            <button 
-              type="button" 
-              class="btn btn-danger" 
-              id="confirmRemoveTeamMemberField_btn"
-              data-remove-target-group-field-id=""
-            >Yes, I'm sure.</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-
-	/**
-	 * * Private Methods
-	 * o--/[=================>
-	 */
-
-	#initializations = () => {
-
-		// *** Initialize the buttons *** //
-
-		const { add: addBtn } = this.btn;
-
-		// For add button
-		addBtn.on('click', () => this.addTeamMember());
-
-		// *** For Remove Team Member Field Modal *** //
-
-		if (!$('#removeTeamMemberField_modal').length) {
-
-			// Append the Remove Target Group Field Modal to the DOM
-			$('body').append(this.#removeTeamMemberFieldModal);
-
-			// Initialize the modal
-
-			const confirmRemoveModal = $('#removeTeamMemberField_modal');
-			const confirmRemoveBtn = $('#confirmRemoveTeamMemberField_btn');
-			const confirmRemoveBtnData = 'data-remove-team-member-field-id';
-
-			// When remove target group field modal will hide, reset the button attirbute value
-			confirmRemoveModal.on('hide.bs.modal', () => confirmRemoveBtn.attr(confirmRemoveBtnData, ''));
-
-			// When confirming to remove target group field
-			confirmRemoveBtn.on('click', () => {
-
-				// Get the form group id from the attribute and remove the team member
-				this.removeTeamMember(confirmRemoveBtn.attr(confirmRemoveBtnData));
-
-				// Hide the modal
-				confirmRemoveModal.modal('hide');
-			});
-		}
-
-		// *** Default settings *** //
-
-		// Append a blank field
-		this.addTeamMember();
-	}
-
-	#dataElement = (dataAttr, value) => this.form.find(`[${this.data[dataAttr]}="${value}"]`);
-
-  #setAddBtnState = () => {
-    this.btn.add.attr('disabled',
-      this.projectTeam.some(e => {
-        const val = this.#dataElement('teamMemberInput', e.id).val().trim();
-        return !(val && val.length >= 5);  
-      })
-    );
+    this.#initializations();
   }
 
-	/**
-	 * * Public Methods
-	 * o--/[=================>
-	 */
+  // * Template Literals
 
-	addTeamMember = (data = '') => {
+  #buttonsContainer = () => `
+    <div class="text-right text-md-left" ${ this.data.container }="buttons">
+      <button 
+        type="button" 
+        class="btn btn-sm btn-success" 
+        ${ this.data.btn }="addMember"
+      >
+        <i class="fas fa-plus mr-1"></i>
+        <span>Add team member</span>
+      </button>
+    </div>
+  `
 
-		// *** Create and insert the row into the DOM *** //
+  #addMemberRow = (member_id) => `
+    <div 
+      class="d-flex align-items-baseline align-items-md-center mb-1"
+      ${ this.data.member_id }="${ member_id }"
+    >
+      <div class="px-2">●</div>
 
-		// Generate a unique id
-		const formGroupId = uuid();
+      <div class="form-row flex-grow-1 mx-2">
+        <div class="col-md-8 pl-0 pr-0 pr-md-1">
+          <div class="form-group mb-1">
+            <input 
+              type="text" 
+              class="form-control"
+              name="name-${ member_id }"
+              ${ this.data.input }="name"
+              placeholder="Enter the team member's name"
+            />
+          </div>
+        </div>
+        <div class="col-md-4 pr-0 pl-0 pl-md-1">
+          <div class="form-group mb-1">
+            <input 
+              type="text" 
+              class="form-control"
+              name="role-${ member_id }"
+              ${ this.data.input }="role"
+              placeholder="Enter the team member's role"
+            />
+          </div>
+        </div>
+      </div>
 
-		// Push a target group object
-		this.projectTeam.push({
-			id: formGroupId,
-			team_member: ''
-		});
+      <div>
+        <button 
+          type="button"
+          class="btn btn-negative btn-sm"
+          ${ this.data.btn }="removeMember"
+          data-toggle="tooltip"
+          title="Remove member"
+        >
+          <i class="fas fa-times text-danger"></i>
+        </button>
+      </div>
+    </div>
+  `
 
-		// Append the form group before the last child (or add button)
-		this.form.children().last().before(this.#addTeamMemberFormGroup(formGroupId));
+  // * Private Methods
 
-		// *** Add the input validators *** //
+  #initializations = () => {
 
-		// Initiate the input
-		const input = this.#dataElement('teamMemberInput', formGroupId);
+    this.form.append(this.#buttonsContainer());
 
-		// Add validation to the input
-		input.rules('add', {
-			required: true,
-      notEmpty: true,
-      minlength: 5,
-			messages: { 
-        required: 'A team member is required.',
-        notEmpty: 'This field cannot be blank.',
-        minlength: "Make sure you enter the member's full name.",
-      }
-		});
+    const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
+    const addMember_btn = btns_container.find(`[${ this.data.btn }="addMember"]`);
 
-		// *** Initiate the inputs *** //
+    addMember_btn.on('click', () => this.addMember());
+    addMember_btn.attr('disabled', false);
 
-		// Get the team member if input changes
-		input.on('keyup change', () => {
-      this.projectTeam = this.projectTeam.map(t =>
-				t.id == formGroupId ? { ...t, team_member: input.val() } : t
-			);
-      this.#setAddBtnState();
+    this.addMember();
+  }
+
+  // * Public Methods
+
+  addMember = () => {
+    const member_id = uuid();
+
+    // Create object
+    this.team_members.push({
+      member_id: member_id,
+      name: '',
+      role: ''
     });
 
-		// *** Initiate the buttons *** //
+    // Add member row in DOM
+    const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
+    btns_container.before(this.#addMemberRow(member_id));
 
-    this.#setAddBtnState();
+    // Initiate the inputs
 
-		const removeFormGroupBtn = this.#dataElement('removeFormGroupBtn', formGroupId);
+    const member_row = this.form.find(`[${ this.data.member_id }="${ member_id }"]`);
+    const name_input = member_row.find(`[${ this.data.input }="name"]`);
+    const role_input = member_row.find(`[${ this.data.input }="role"]`);
 
-		// Initiate the remove form group button
-		removeFormGroupBtn.on('click', () => {
-			if (input.val().trim()) {
+    name_input.rules('add', {
+      required: true,
+      notEmpty: true,
+      minlength: 5,
+      messages: {
+        required: `The team member's name is required.`,
+        notEmpty: `This field cannot be blank.`,
+        minlength: `Make sure you type the full name of the team member.`
+      }
+    });
 
-				// Set the form group id in the data attribute of the modal
-				$('#confirmRemoveTeamMemberField_btn').attr('data-remove-team-member-field-id', formGroupId);
+    name_input.on('keyup change', () => {
+      this.team_members.map(m => m.member_id === member_id
+        ? { ...m, name: name_input.val() } : m
+      )
+    });
 
-				// Show the confirmation modal
-				$('#removeTeamMemberField_modal').modal('show');
+    role_input.on('keyup change', () => {
+      this.team_members.map(m => m.member_id === member_id
+        ? { ...m, role: role_input.val() } : m
+      )
+    });
 
-			}
-			else if (this.projectTeam.length === 1) toastr.warning('You must input at least one team member.');
-			else this.removeTeamMember(formGroupId);
-		});
+    // Initiate the buttons
 
-		// *** If has data *** //
+    const removeMember_btn = member_row.find(`[${ this.data.btn }="removeMember"]`);
+    removeMember_btn.on('click', () => {
+      if (this.team_members.length === 1) {
+        toastr.warning('You must include at least one team member');
+      } else {
+        this.removeMember(member_id);
+      }
+    });
+  }
 
-		// Set the initial value of the input if it has
-		data && input.val(data).trigger('change');
-	}
+  removeMember = (member_id) => {
+    if (!member_id) {
+      console.error(`'member_id' param is missing for removeMember()`);
+      return;
+    }
 
-	removeTeamMember = formGroupId => {
+    this.team_members = this.team_members.filter(t => t.member_id != member_id);
+    this.form.find(`[${ this.data.member_id }="${ member_id }"]`).remove();
+  }
 
-		// Immediately hide the tooltip from the remove button
-		this.#dataElement('removeFormGroupBtn', formGroupId).tooltip('hide');
+  getTeamMembers = () => {
+    let teamMembers = {...this.team_members};
+    teamMembers.forEach(t => delete t.member_id);
+    return teamMembers;
+  } 
 
-		// Remove the target group object based on id
-		this.projectTeam = this.projectTeam.filter(x => x.id != formGroupId);
+  setTeamMembers = (data) => {
+    if (!data) {
+      console.error(`Data is required for setTeamMembers()`);
+      return;
+    }
 
-		// Remove the element from the DOM
-		this.#dataElement('formGroupId', formGroupId).remove();
-
-		// If there are no target group, add new field by default
-		this.projectTeam.length === 0 && this.addTeamMember();
-
-    this.#setAddBtnState();
-	}
-
-	setTeamMembers = (data, method = 'reset') => {
-		if (data && data.length) {
-			const fn = {
-				'reset': () => {
-
-					// Remove all preset form groups
-					this.projectTeam.forEach(({ id }) => {
-
-						// Immediately hide the tooltip from the remove button
-						this.#dataElement('removeFormGroupBtn', id).tooltip('hide');
-
-						// Remove the target group object based on id
-						this.projectTeam = this.projectTeam.filter(x => x.id != id);
-
-						// Remove the element from the DOM
-						this.#dataElement('formGroupId', id).remove();
-					});
-
-					// Return a new form groups
-					data.forEach(d => this.addTeamMember(d));
-				},
-				'append': () => data.forEach(d => this.addTeamMember(d)),
-			}
-			fn[method]();
-		} else console.error('No data has been fetched');
-	}
-
-	getTeamMembers = () => [...this.projectTeam].map(x => x.team_member);
+    // TODO: read the data and create member rows
+  }
 }
 
 
