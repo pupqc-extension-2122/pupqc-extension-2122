@@ -2,7 +2,6 @@
 const {
   Model
 } = require('sequelize');
-const { Sequelize } = require('.');
 module.exports = (sequelize, DataTypes) => {
   class Project_History extends Model {
     /**
