@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       }
     },
+    remarks: {
+      type: DataTypes.TEXT,
+      validate: { notEmpty: true }
+    },
   }, {
     sequelize,
     modelName: 'Project_History',

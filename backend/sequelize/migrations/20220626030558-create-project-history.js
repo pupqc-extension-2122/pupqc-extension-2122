@@ -24,6 +24,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      remarks: {
+        type: Sequelize.TEXT
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
