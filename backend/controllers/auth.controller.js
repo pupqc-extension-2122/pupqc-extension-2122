@@ -43,6 +43,7 @@ exports.login = async (req, res) => {
     ],
     include: {
       model: Roles,
+      as: 'roles',
       attributes: ['name'],
       through: {
         attributes: []
