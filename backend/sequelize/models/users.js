@@ -12,16 +12,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasOne(models.User_Verifications, {foreignKey: 'user_id', as: 'verification'})
+      this.hasOne(models.User_Verifications, { foreignKey: 'user_id', as: 'verification' })
       this.hasMany(models.Projects, { foreignKey: 'created_by', as: 'projects' })
       this.hasMany(models.Comments, { foreignKey: 'user_id', as: 'comments' })
-      this.hasMany(models.Project_History, {foreignKey: 'author_id', as: 'history_updates'})
-      this.hasMany(models.User_Roles, {foreignKey: 'user_id', as: 'user_roles'})
+      this.hasMany(models.Project_History, { foreignKey: 'author_id', as: 'history_updates' })
+      this.hasMany(models.User_Roles, { foreignKey: 'user_id', as: 'user_roles' })
       this.belongsToMany(models.Roles, { foreignKey: 'user_id', through: 'User_Roles', as: 'roles' })
     }
 
     verify(password) {
-      return bcrypt.compareSync(password, this.password)
+      if (this.password)
+        return bcrypt.compareSync(password, this.password)
+      else
+        return false
     }
   }
   Users.init({
@@ -56,7 +59,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
       validate: { notEmpty: true },
     },
     verified: {
@@ -73,7 +75,8 @@ module.exports = (sequelize, DataTypes) => {
     paranoid: true,
     hooks: {
       beforeCreate: async (user, options) => {
-        return user.password = await bcrypt.hash(user.password, 12)
+        if (user.password != null)
+          return user.password = await bcrypt.hash(user.password, 12)
       }
     }
   });
