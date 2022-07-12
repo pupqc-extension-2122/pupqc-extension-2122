@@ -90,7 +90,7 @@ class ProjectTeamForm {
           class="btn btn-negative btn-sm"
           ${ this.data.btn }="removeMember"
           data-toggle="tooltip"
-          title="Remove member"
+          title="Remove team member field"
         >
           <i class="fas fa-times text-danger"></i>
         </button>
@@ -147,7 +147,7 @@ class ProjectTeamForm {
     const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
     const addMember_btn = btns_container.find(`[${ this.data.btn }="addMember"]`);
     addMember_btn.on('click', () => this.addMember());
-    addMember_btn.attr('disabled', false);
+    addMember_btn.attr('disabled', true);
 
     if (!$(`[${ this.data.modal }="removeMember"]`).length) {
       
@@ -155,6 +155,16 @@ class ProjectTeamForm {
       $('body').append(this.#removeMemberModal());
 
       const removeMember_modal = $('body').find(`[${ this.data.modal }="removeMember"]`);
+
+      // Handle modal events
+
+      removeMember_modal.on('show.bs.modal', (e) => {
+        if (!removeMember_modal.attr(this.data.member_id)) e.preventDefault();
+      });
+
+      removeMember_modal.on('hide.bs.modal', () => {
+        removeMember_modal.attr(this.data.member_id, '');
+      });
 
       // Initialize the remove button
       const confirmRemove_btn = removeMember_modal.find(`[${ this.data.btn }="confirmRemove"]`);
@@ -166,16 +176,40 @@ class ProjectTeamForm {
 
         // Call the remove member method
         this.removeMember(member_id);
-      })
+
+        // Hide the modal after remove
+        removeMember_modal.modal('hide');
+      });
     }
 
     // By default, add a member
     this.addMember();
   }
 
+  #hasInvalidInput = () => {
+    return this.team_members.some(({ member_id }) => {
+      const member_row = this.form.find(`[${ this.data.member_id }="${ member_id }"]`);
+      const name = member_row.find(`[${ this.data.input }="name"]`).val().trim();
+      const role = member_row.find(`[${ this.data.input }="role"]`).val().trim();
+
+      if(name.replace(/\s+/g, '') === '') return true;
+      if(name.length < 5) return true;
+
+      if(role.length !== 0 && role.length < 5) return true;
+
+      return false;
+    });
+  }
+
+  #toggleAddMemberBtn = () => {
+    const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
+    const addMember_btn = btns_container.find(`[${ this.data.btn }="addMember"]`);
+    addMember_btn.attr('disabled', this.#hasInvalidInput());
+  }
+
   // * Public Methods
 
-  addMember = () => {
+  addMember = (data) => {
     const member_id = uuid();
 
     // Create object
@@ -188,6 +222,8 @@ class ProjectTeamForm {
     // Add member row in DOM
     const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
     btns_container.before(this.#addMemberRow(member_id));
+
+    this.#toggleAddMemberBtn();
 
     // Initiate the inputs
 
@@ -202,7 +238,7 @@ class ProjectTeamForm {
       messages: {
         required: `The team member's name is required.`,
         notEmpty: `This field cannot be blank.`,
-        minlength: `Make sure you type the full name of the team member.`
+        minlength: `Make sure you type the full name of the team member.`,
       }
     });
 
@@ -211,21 +247,25 @@ class ProjectTeamForm {
       minlength: 5,
       messages: {
         notEmpty: `This field cannot be blank.`,
-        minlength: `Make sure you type the full title on the role.`
+        minlength: `Make sure you type the full title on the role.`,
       }
-    })
+    });
 
     name_input.on('keyup change', () => {
-      this.team_members.map(m => m.member_id === member_id
-        ? { ...m, name: name_input.val() } : m
-      )
+      this.team_members = this.team_members.map(m => m.member_id === member_id
+        ? { ...m, name: name_input.val().replace(/\s+/g, ' ').trim() } : m
+      );
+      this.#toggleAddMemberBtn();
     });
 
     role_input.on('keyup change', () => {
-      this.team_members.map(m => m.member_id === member_id
-        ? { ...m, role: role_input.val() } : m
-      )
+      this.team_members = this.team_members.map(m => m.member_id === member_id
+        ? { ...m, role: role_input.val().replace(/\s+/g, ' ').trim() } : m
+      );
+      this.#toggleAddMemberBtn();
     });
+
+    initInputs();
 
     // Initiate the buttons
 
@@ -234,7 +274,9 @@ class ProjectTeamForm {
     const removeMember_btn = member_row.find(`[${ this.data.btn }="removeMember"]`);
     removeMember_btn.on('click', () => {
       if (hasInputs()) {
-        toastr.warning('Has inputs')
+        const removeMember_modal = $('body').find(`[${ this.data.modal }="removeMember"]`);
+        removeMember_modal.attr(this.data.member_id, member_id);
+        removeMember_modal.modal('show');
       } else if (this.team_members.length === 1) {
         toastr.warning('You must include at least one team member');
       } else {
@@ -242,6 +284,11 @@ class ProjectTeamForm {
         this.removeMember(member_id);
       }
     });
+
+    if (data) {
+      name_input.val(data.name).trigger('change');
+      role_input.val(data.role).trigger('change');
+    }
   }
 
   removeMember = (member_id) => {
@@ -252,10 +299,14 @@ class ProjectTeamForm {
 
     this.team_members = this.team_members.filter(t => t.member_id != member_id);
     this.form.find(`[${ this.data.member_id }="${ member_id }"]`).remove();
+
+    this.#toggleAddMemberBtn();
+
+    if (this.team_members.length === 0) this.addMember();
   }
 
   getTeamMembers = () => {
-    let teamMembers = {...this.team_members};
+    let teamMembers = [...this.team_members];
     teamMembers.forEach(t => delete t.member_id);
     return teamMembers;
   } 
@@ -266,7 +317,10 @@ class ProjectTeamForm {
       return;
     }
 
-    // TODO: read the data and create member rows
+    this.team_members = [];
+    this.form.find(`[${ this.data.member_id }]`).remove();
+
+    data.forEach(d => this.addMember(d));
   }
 }
 
@@ -488,6 +542,8 @@ class TargetGroupsForm {
 				t.id == formGroupId ? { ...t, target_group: input.val() } : t
 			);
     });
+
+    initInputs();
 
 		// *** Initiate the buttons *** //
 

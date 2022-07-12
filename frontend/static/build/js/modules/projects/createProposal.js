@@ -388,7 +388,7 @@
       '#projectDetailsConfirm_projectTeam': () => {
         if (pt.length) {
           let list = '<ul class="mb-0">';
-          pt.forEach(p => list += `<li>${p}</li>`);
+          pt.forEach(p => list += `<li>${p.name}${ p.role ? ` - ${ p.role }` : '' }</li>`);
           list += '</ul>';
           return list;
         }

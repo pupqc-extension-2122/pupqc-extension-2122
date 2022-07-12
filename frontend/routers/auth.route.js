@@ -1,4 +1,3 @@
-const jwtMiddleware = require('../../utils/jwtMiddleware');
 const router = require('express').Router();
 const PATH = 'auth/';
 

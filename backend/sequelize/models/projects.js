@@ -57,10 +57,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: { notEmpty: true },
       set(val) {
-        this.setDataValue('team_members', val.join(';'))
+        let data = JSON.stringify(val)
+        this.setDataValue('team_members', data)
       },
       get() {
-        return this.getDataValue('team_members').split(';')
+        return JSON.parse(this.getDataValue('team_members'))
       }
     },
     start_date: {

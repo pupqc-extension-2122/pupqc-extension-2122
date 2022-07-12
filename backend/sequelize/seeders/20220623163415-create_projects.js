@@ -17,7 +17,18 @@ module.exports = {
         title: 'New Project',
         implementer: 'Grace Lopez',
         target_groups: ['Project 1', 'Group 2'].join(';'),
-        team_members: ['New 1', 'Member 2'].join(';'),
+        team_members: JSON.stringify([
+          {
+            name: 'Member 1',
+            role: 'Role 1',
+          }, {
+            name: 'Member 2',
+            role: 'Role 2',
+          }, {
+            name: 'Member No Role',
+            role: '',
+          }
+        ]),
         start_date: '2022-05-01',
         end_date: '2022-05-30',
         impact_statement: 'Reformation of New',

@@ -101,5 +101,11 @@
       });   
     }
   });
-  
+
+  /** 
+   * * Replace white spaces in inputs 
+   */
+
+  initInputs();
+
 })();

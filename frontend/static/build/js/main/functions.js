@@ -100,7 +100,6 @@ const getCookie = (cname) => {
   return "";
 }
 
-
 /**
  * Ajax Error handler
  */
@@ -159,7 +158,6 @@ const ajaxErrorHandler = (errMsg = '', onDOMLoad = 0) => {
   }
 }
 
-
 /**
  * Set Session Alert
  */
@@ -171,13 +169,26 @@ const setSessionAlert = (redirectURL, alert = { theme: "", message: "" }) => {
 	location.assign(redirectURL);
 }
 
-
 /**
  * Set Document Title
  */
 const setDocumentTitle = (message, withTail = 1) => {
   document.title = `${ message }${ withTail ? ' | PUPQC Extension Management System' : '' }`;
 }
+
+/**
+ * Remove whitespaces on inputs
+ */
+const initInputs = () => {
+  $('input').on('keyup', function() {
+    $(this).val($(this).val().replace(/\s+/g, ' '));
+  });
+  
+  $('input, textarea').on('change', function() {
+    $(this).val($(this).val().trim());
+  });
+}
+
 
 /** 
  * ? Moments Custom Functions 
