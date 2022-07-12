@@ -54,7 +54,7 @@ class ProjectTeamForm {
 
   #addMemberRow = (member_id) => `
     <div 
-      class="d-flex align-items-baseline align-items-md-center mb-1"
+      class="d-flex align-items-baseline mb-1"
       ${ this.data.member_id }="${ member_id }"
     >
       <div class="px-2">●</div>
@@ -98,18 +98,78 @@ class ProjectTeamForm {
     </div>
   `
 
+  #removeMemberModal = () => `
+    <div 
+      class="modal" 
+      ${ this.data.modal }="removeMember"
+      ${ this.data.member_id }=""
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex">
+              <h1 class="mr-3 display-4">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+              </h1>
+              <div>
+                <div class="font-weight-bold mb-2">Remove team member field</div>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this team member field?<br>Your inputs will not be saved.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+            <button 
+              type="button" 
+              class="btn btn-danger" 
+              ${ this.data.btn }="confirmRemove"
+            >Yes, I'm sure.</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+
   // * Private Methods
 
   #initializations = () => {
 
+    // Append the buttons container in the DOM
     this.form.append(this.#buttonsContainer());
 
+    // Initialize the add button
     const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
     const addMember_btn = btns_container.find(`[${ this.data.btn }="addMember"]`);
-
     addMember_btn.on('click', () => this.addMember());
     addMember_btn.attr('disabled', false);
 
+    if (!$(`[${ this.data.modal }="removeMember"]`).length) {
+      
+      // Append the modal in the body
+      $('body').append(this.#removeMemberModal());
+
+      const removeMember_modal = $('body').find(`[${ this.data.modal }="removeMember"]`);
+
+      // Initialize the remove button
+      const confirmRemove_btn = removeMember_modal.find(`[${ this.data.btn }="confirmRemove"]`);
+
+      confirmRemove_btn.on('click', () => {
+        
+        // Get the member_id on the modal
+        const member_id = removeMember_modal.attr(this.data.member_id);
+
+        // Call the remove member method
+        this.removeMember(member_id);
+      })
+    }
+
+    // By default, add a member
     this.addMember();
   }
 
@@ -146,6 +206,15 @@ class ProjectTeamForm {
       }
     });
 
+    role_input.rules('add', {
+      notEmpty: true,
+      minlength: 5,
+      messages: {
+        notEmpty: `This field cannot be blank.`,
+        minlength: `Make sure you type the full title on the role.`
+      }
+    })
+
     name_input.on('keyup change', () => {
       this.team_members.map(m => m.member_id === member_id
         ? { ...m, name: name_input.val() } : m
@@ -160,11 +229,16 @@ class ProjectTeamForm {
 
     // Initiate the buttons
 
+    const hasInputs = () => name_input.val().trim() !== '' || role_input.val().trim() !== '';
+
     const removeMember_btn = member_row.find(`[${ this.data.btn }="removeMember"]`);
     removeMember_btn.on('click', () => {
-      if (this.team_members.length === 1) {
+      if (hasInputs()) {
+        toastr.warning('Has inputs')
+      } else if (this.team_members.length === 1) {
         toastr.warning('You must include at least one team member');
       } else {
+        removeMember_btn.tooltip('hide');
         this.removeMember(member_id);
       }
     });

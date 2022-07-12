@@ -8,9 +8,8 @@
 
 (() => {
 
-  /**
-   * * Local Variables
-   */
+  // * Local Variables
+
   const formSelector = '#addProject_form';
   let stepper;
   let PT_form; // Project Team Form
@@ -21,9 +20,7 @@
   let lineItemBudget_list;
   let cooperatingAgencies_list;
 
-  /**
-   * * Functions
-   */
+  // * Private Methods
 
   const initializations = async () => {
 
@@ -122,7 +119,7 @@
   }
 
   const getPartners = async (params) => {
-    console.log(params);
+    // console.log(params);
     await $.ajax({
       url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
       type: 'GET',
@@ -533,9 +530,7 @@
     $('#addProject_form').show();
   }
 
-  /**
-   * * On DOM load
-   */
+  // * Initialize
 
   return {
     init: async () => {
