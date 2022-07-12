@@ -2,6 +2,7 @@ const { src, dest, watch, series } = require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser');
 const concat = require('gulp-concat');
+const replace = require('gulp-replace');
 const del = require('del');
 
 const BUILD_PATH = './frontend/static/build/';
@@ -28,6 +29,7 @@ const mainJS = () => {
   ])
     .pipe(sourcemaps.init())
     .pipe(terser())
+    .pipe(replace(/\s+/g, ' '))
     .pipe(concat('main.js'))
     .pipe(sourcemaps.write('./jsmaps'))
     .pipe(dest(DIST_PATH + 'js/'))
@@ -37,6 +39,7 @@ const authJS = () => {
   return src(BUILD_PATH + 'js/auth/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
+    .pipe(replace(/\s+/g, ' '))
     .pipe(sourcemaps.write('../jsmaps/'))
     .pipe(dest(DIST_PATH + 'js/auth/'))
 }
@@ -45,6 +48,7 @@ const modulesJS = () => {
   return src(BUILD_PATH + 'js/modules/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
+    .pipe(replace(/\s+/g, ' '))
     .pipe(sourcemaps.write('../jsmaps/'))
     .pipe(dest(DIST_PATH + 'js/modules/'))
 }
