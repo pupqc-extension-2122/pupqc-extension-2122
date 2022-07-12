@@ -11,5 +11,6 @@ app.use('/projects', require('./routers/projects.router'));
 app.use('/memos', require('./routers/memos.router'));
 app.use('/organizations', require('./routers/organizations.router'))
 app.use('/documents', require('./routers/documents.router'))
+app.use('/users', require('./routers/users.router'))
 
 module.exports = app
