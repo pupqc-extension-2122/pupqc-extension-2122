@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     is_used: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: '0'
     },
   }, {
     sequelize,
