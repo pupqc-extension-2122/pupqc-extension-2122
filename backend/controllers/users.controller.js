@@ -1,5 +1,6 @@
 const ejs = require('ejs')
 const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 const { sendMail } = require('../../utils/sendMail.js')
 const { Users } = require('../sequelize/models')
 
@@ -134,7 +135,7 @@ exports.changePassword = async (req, res) => {
     if (!verify)
       return res.status(401).send({ error: true, message: 'Unauthorized' })
 
-    user.password = body.new_password
+    user.password = await bcrypt.hash(body.new_password, 12)
     await user.save()
 
     res.send({ error: false, message: 'Password has been changed successfully' })
