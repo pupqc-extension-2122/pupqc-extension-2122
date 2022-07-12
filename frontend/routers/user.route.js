@@ -8,7 +8,6 @@ const RENDER_OPTION_DEFAULTS = {
   sidebar: 'sidebars/admin_sidebar',
 }
 
-
 const renderRoles = (roles) => {
   let roleTemplate = '';
   roles.forEach((role, index) => {
@@ -16,14 +15,6 @@ const renderRoles = (roles) => {
     if (index < roles.length - 1) roleTemplate += ', ';
   });
   return roleTemplate;
-}
-
-
-const render404 = (res) => {
-  return res.status(404).render('content/errors/404', {
-    layout: './layouts/error',
-    document_title: '404 - Page not found',
-  });
 }
 
 // Profile
