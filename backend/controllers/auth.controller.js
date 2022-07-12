@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const ejs = require('ejs')
 const jwt = require('jsonwebtoken')
 const { sendMail } = require('../../utils/sendMail.js')
-const { Users, Roles } = require('../sequelize/models')
+const { User_Verifications, Users, Roles } = require('../sequelize/models')
 
 exports.register = async (req, res) => {
   const user = req.body
@@ -27,6 +27,9 @@ exports.test = (req, res) => {
 
 exports.login = async (req, res) => {
   const body = req.body
+  let verification
+  let verified = false
+  let match = false
 
   let user = await Users.findOne({
     where: {
@@ -39,7 +42,8 @@ exports.login = async (req, res) => {
       'middle_name',
       'last_name',
       'suffix_name',
-      'password'
+      'password',
+      'verified'
     ],
     include: {
       model: Roles,
@@ -51,47 +55,59 @@ exports.login = async (req, res) => {
     }
   })
 
-  if (!user) {
-    res.send({
-      error: true,
-      message: 'User not found!'
-    })
-  } else {
-    let verified = user.verify(body.password)
-    if (verified) {
+  if (!user) return res.send({ error: true, message: 'User not found!' })
 
-      let { id, email, first_name, middle_name, last_name, suffix_name } = user
-      let roles = user.roles.map(el => el.name)
-      let data = { id, email, first_name, middle_name, last_name, suffix_name, roles }
-      let expiresIn
-      let expires
-
-      if (body.remember) {
-        expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 5)
-        expiresIn = '5y'
-      } else {
-        expiresIn = '7h'
-        expires = new Date(Date.now() + 1000 * 60 * 60 * 7)
-      }
-
-      let token = await jwt.sign(data, process.env.JWT_SECRET, { expiresIn })
-      res.cookie('token', token, { httpOnly: true, signed: true, expires })
-      res.cookie('user', data.id, { expires })
-      res.cookie('roles', JSON.stringify(roles), { expires })
-
-      res.send({
-        error: false,
-        message: 'Login Success!',
-        data: { id, email, first_name, middle_name, last_name, suffix_name }
-      })
-    } else {
-      res.send({
-        error: true,
-      })
-    }
+  else if (!user.verified) {
+    verification = await User_Verifications.findOne({ where: { user_id: user.id } })
+    verified = verification.verify(body.password)
   }
 
+  else
+    match = user.verify(body.password)
+
+
+  if (match || verified) {
+
+    let { id, email, first_name, middle_name, last_name, suffix_name } = user
+    let roles = user.roles.map(el => el.name)
+    let data = { id, email, first_name, middle_name, last_name, suffix_name, roles }
+    let expiresIn
+    let expires
+
+    data.first_time = verified
+
+    if (verified) {
+      user.verified = true
+      await user.save()
+
+      verification.is_used = true
+      await verification.save()
+    }
+
+    if (body.remember) {
+      expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 5)
+      expiresIn = '5y'
+    } else {
+      expiresIn = '7h'
+      expires = new Date(Date.now() + 1000 * 60 * 60 * 7)
+    }
+
+    let token = await jwt.sign(data, process.env.JWT_SECRET, { expiresIn })
+    res.cookie('token', token, { httpOnly: true, signed: true, expires })
+    res.cookie('user', data.id, { expires })
+    res.cookie('roles', JSON.stringify(roles), { expires })
+
+    return res.send({
+      error: false,
+      message: 'Login Success!',
+      data
+    })
+  }
+
+  res.send({ error: true, message: 'Authentication failed' })
+
 }
+
 
 exports.logout = (req, res) => {
   res.clearCookie('token')
