@@ -1362,6 +1362,8 @@ class FinancialRequirementsForm {
       this.#setAddBudgetItemBtn(lineItemBudgetId);
 		});
 
+    initInputs();
+
 		// *** Initialize the buttons *** //
 
     this.#setAddBudgetItemBtn(lineItemBudgetId);
@@ -1804,6 +1806,8 @@ class EvaluationPlanForm {
       this.#setAddBtnState();
     });
 
+    initInputs();
+
 		// *** Initiate the buttons *** //
 
     this.#setAddBtnState();
@@ -2227,6 +2231,8 @@ class ProjectActivityForm {
       }
 		});
 
+    initInputs();
+
 		// *** Enable buttons *** //
 
     this.#setAddTopicBtnState();
@@ -2339,6 +2345,8 @@ class ProjectActivityForm {
         minlength: 'Make sure you enter the full details of an outcome.',
       }
 		});
+
+    initInputs();
 
 		// *** Enable buttons *** //
 
@@ -2703,6 +2711,8 @@ class ProjectEvaluationForm {
       getRemarks(points);
       this.#setAddBtnState();
     });
+
+    initInputs();
     
     this.#getAveragePoints();
 
@@ -3082,6 +3092,8 @@ class ActivityEvaluationForm {
       );
       addCategory_btn.attr('disabled', !category_input.valid());
     });
+
+    initInputs();
 
     // * Initialize the remove category button
     
