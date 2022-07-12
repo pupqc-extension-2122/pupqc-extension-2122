@@ -107,3 +107,30 @@ exports.deleteUser = async (req, res) => {
 
   }
 }
+
+exports.changePassword = async (req, res) => {
+  try {
+
+    const id = req.params.id
+    const body = req.body
+
+    const user = await Users.findByPk(id)
+
+    if (!user)
+      return res.status(404).send({ error: true, message: 'User not found' })
+
+    let verify = await user.verify(body.old_password)
+
+    if (!verify)
+      return res.status(401).send({ error: true, message: 'Unauthorized' })
+
+    user.password = body.new_password
+    await user.save()
+
+    res.send({ error: false, message: 'Password has been changed successfully' })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
