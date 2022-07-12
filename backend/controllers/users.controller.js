@@ -1,5 +1,6 @@
 const ejs = require('ejs')
 const crypto = require('crypto')
+const bcrypt = require('bcrypt')
 const { sendMail } = require('../../utils/sendMail.js')
 const { Users } = require('../sequelize/models')
 
@@ -13,7 +14,7 @@ exports.viewUser = async (req, res) => {
 
     const id = req.params.id
 
-    const user = await Users.findByPk(id)
+    const user = await Users.findByPk(id, { attributes: { exclude: ['password'] } })
 
     if (!user)
       return res.status(404).send({ error: true, message: 'User not found' })
@@ -122,10 +123,9 @@ exports.deleteUser = async (req, res) => {
 exports.changePassword = async (req, res) => {
   try {
 
-    const id = req.params.id
     const body = req.body
 
-    const user = await Users.findByPk(id)
+    const user = await Users.findByPk(req.auth.id)
 
     if (!user)
       return res.status(404).send({ error: true, message: 'User not found' })
@@ -135,7 +135,7 @@ exports.changePassword = async (req, res) => {
     if (!verify)
       return res.status(401).send({ error: true, message: 'Unauthorized' })
 
-    user.password = body.new_password
+    user.password = await bcrypt.hash(body.new_password, 12)
     await user.save()
 
     res.send({ error: false, message: 'Password has been changed successfully' })
