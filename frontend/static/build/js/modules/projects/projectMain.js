@@ -459,10 +459,8 @@ const ProjectDetails = (() => {
 
 const ProjectOptions = (() => {
 
-  /**
-   * * Local Variables
-   */
-
+  // * * * LOCAL VARIABLES * * * //
+  
   const body = $('#projectDetails_body');
   const activitiesDT = $('#activities_dt');
   const options = '#projectDetails_options';
@@ -478,13 +476,12 @@ const ProjectOptions = (() => {
   const forApproval_modal = $('#confirmSubmitForApproval_modal');
   const forRevision_modal = $('#confirmRequestForRevision_modal');
   const setPresentationSchedule_modal = $('#setPresentationSchedule_modal');
+  const reschedPresentationSchedule_modal = $('#reschedPresentationSchedule_modal');
   const setProjectEvaluation_modal = $('#setProjectEvaluation_modal');
   const approveProject_modal = $('#confirmApproveTheProject_modal');
   const cancelProposal_modal = $('#confirmCancelTheProposal_modal');
-
-  /**
-   * * Private Methods
-   */
+  
+  // * * * PRIVATE METHODS * * * //
 
   const updateProjectDetails = async obj => {
     let updated = false;
@@ -613,7 +610,7 @@ const ProjectOptions = (() => {
         const fd = new FormData($('#requestForRevision_form')[0]);
 
         const data = {
-          remarks: fd.remarks.trim()
+          remarks: fd.get('remarks').trim()
         }
   
         await $.ajax({
@@ -652,6 +649,8 @@ const ProjectOptions = (() => {
 
     forRevision_modal.on('hide.bs.modal', (e) => {
       if (processing) e.preventDefault();
+
+      $('#requestForRevision_form')[0].reset();
     });
   }
 
@@ -752,6 +751,122 @@ const ProjectOptions = (() => {
           }
         });
       }
+    });
+  }
+
+  const initReschedulePresentation = () => {
+    const isBadAction = () => !(project.status === 'For Evaluation');
+
+    const formSelector = '#reschedPresentationSchedule_form';
+    const form = $(formSelector);
+    let validator;
+
+    // Initialize Date Input
+    $app('#reschedPresentation_date').initDateInput({
+      button: '#reschedPresentation_date_pickerBtn'
+    });
+
+    validator = $app(formSelector).handleForm({
+      validators: {
+        presentation_date: {
+          required: 'Please select a date for the presentation of the project.',
+          dateISO: 'Your input is not a valid date.',
+          notSameDate: {
+            rule: () => project.presentation_date,
+            message: 'The presentation date is still the same.',
+          },
+          afterToday: 'The presentation date must be later than today.',
+          beforeDateTime: {
+            rule: project.end_date,
+            message: 'The presentation date must be earlier than the end of the project timeline'
+          }
+        },
+        remarks: {
+          required: 'Please type your remarks.',
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full details of your remarks'
+          }
+        }
+      },
+      onSubmit: async () => {
+        if (isBadAction()) return;
+
+        processing = true;
+
+        const confirmBtn = $('#reschedPresentationSchedule_btn');
+
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+        
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Yes, please!');
+        }
+
+        // Get Data
+        const fd = new FormData(form[0]);
+        const data = {
+          presentation_date: fd.get('presentation_date'),
+          remarks: fd.get('remarks').trim().replace(/\s+/g, ' '),
+        }
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/${ project.id }/reschedule`,
+          type: 'PUT',
+          data: data,
+          success: async res => {
+            processing = false;
+
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+              enableElements();
+            } else {
+              reschedPresentationSchedule_modal.modal('hide');
+              enableElements();
+              updateProjectDetails({ 
+                status: 'For Evaluation',
+                presentation_date: data.presentation_date 
+              });
+              ProjectHistory.addToTimeline(res.data)
+              toastr.success('A presentation schedule has been set.');
+            }
+          },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: `ProjectOptions.initForEvaluation(): confirmBtn.on('click', ...)`,
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+            enableElements();
+          }
+        });
+      }
+    });
+
+    // Handle show modal
+    reschedPresentationSchedule_modal.on('show.bs.modal', (e) => {
+      
+      // Prevent showing the modal if status is not "For Evaluation"
+      if (isBadAction()) e.preventDefault();
+      
+      // Set the presentation schedule
+      $('#reschedPresentation_date')
+        .val(() => project.presentation_date)
+        .trigger('change');
+    });
+
+    // Reset the form after hidden
+    reschedPresentationSchedule_modal.on('hidden.bs.modal', () => {
+      validator.resetForm();
+      form[0].reset();
     });
   }
 
@@ -955,7 +1070,7 @@ const ProjectOptions = (() => {
         const fd = new FormData($('#cancelProposal_form')[0]);
 
         const data = {
-          remarks: fd.remarks.trim()
+          remarks: fd.get('remarks').trim().replace(/\s+/g, ' '),
         }
 
         await $.ajax({
@@ -1014,14 +1129,13 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Chief')) {
       initForRevision();
       initForEvaluation();
+      initReschedulePresentation();
       initProjectEvaluation();
       initApproveProject();
     }
   }
 
-  /**
-   * * Public Methods
-   */
+  // * * * PUBLIC METHODS * * * //
 
   const setOptions = (data) => {
 
@@ -1158,7 +1272,7 @@ const ProjectOptions = (() => {
             <button 
               type="button"
               class="btn btn-negative btn-block text-left" 
-              onclick="ProjectOptions.triggerOption('approveTheProposal')"
+              onclick="ProjectOptions.triggerOption('reschedulePresentation')"
             >
               <i class="fas fa-calendar-alt fa-fw mr-1 text-warning"></i>
               <span>Re-sched presentation</span>
@@ -1372,6 +1486,7 @@ const ProjectOptions = (() => {
 
     if (user_roles.includes('Chief')) {
       optionFunc.approveTheProposal = () => setPresentationSchedule_modal.modal('show');
+      optionFunc.reschedulePresentation = () => reschedPresentationSchedule_modal.modal('show');
       optionFunc.requestForRevision = () => forRevision_modal.modal('show');
       optionFunc.submitEvaluationGrade = () => setProjectEvaluation_modal.modal('show');
       optionFunc.approveTheProject = () => approveProject_modal.modal('show');
@@ -1380,9 +1495,7 @@ const ProjectOptions = (() => {
     if (typeof optionFunc[option] !== "undefined") optionFunc[option]();
   };
 
-  /**
-   * * Init
-   */
+  // * * * INIT * * * //
 
   const init = (data) => {
     if (!initialized) {
@@ -1392,10 +1505,8 @@ const ProjectOptions = (() => {
       initSubmissions();
     }
   }
-  
-  /**
-   * * Return Public Methods
-   */
+
+  // * * * RETURN INIT & PUBLIC METHODS * * * //
 
   return {
     init,
@@ -3085,31 +3196,63 @@ const AddProjectActivity = (() => {
 
 const ProjectHistory = (()=>{
 
-  /**
-   * * Local Variables
-   *
-   */
+  // * Local variables
 
   const timeline = $('#timeline');
   const timeline_title = $('#timeline_title');
   let initialized = false;
 
-  /**
-   * * Private Functions
-   */
+  // * Private Methods
 
   const showTimeline = (history) => {
-    const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[history.current_value]
+    const getAuthor = () => {
+      let { author, author_id } = history;
+      if (!author_id && !author) return '<span class="font-italic">Unknown</span>';
+      if(author_id && !author && author_id === getCookie('user')) {
+        author = User.getData();
+      }
+      const { first_name: F, middle_name: M, last_name: L, suffix_name: S } = author;
+      return formatName('F M. L, S', {
+        firstName: F,
+        middleName: M,
+        lastName: L,
+        suffixName: S,
+      });
+    }
+
+    const getRemarks = () => {
+      const { remarks } = history;
+      if (remarks) {
+        return `
+          <div class="mt-2">
+            <div class="font-weight-bold">Remarks</div>
+            <div>${ remarks }</div>
+          </div>
+        `
+      }
+      return '';
+    }
+    const { theme, icon } = PROJECT_HISTORY_STYLES[history.current_value]
     const previous = history.previous_value != null
-      ? history.previous_value + ' <i class="fa-solid fa-arrow-right"></i> '
+      ? `
+        <span>${ history.previous_value }</span>
+        <i class="fa-solid fa-caret-right mx-1"></i>
+      `
       : ''
     return `
       <div>
         <i class="${icon} bg-${theme}"></i>
         <div class="timeline-item">
+          <div class="timeline-header">
+            <div class="small font-weight-bold">
+              ${previous}
+              <span>${history.current_value}</span>
+            </div>
+          </div>
           <div class="timeline-body small">
-            <div class="font-weight-bold">${previous}${history.current_value}</div>
             <div>${moment(history.created_at).format('MMMM D, YYYY (dddd)')}</div>
+            <div>By: ${ getAuthor() }</div>
+            ${ getRemarks() }
           </div>
         </div>
       </div>
@@ -3120,24 +3263,18 @@ const ProjectHistory = (()=>{
     timeline.show();
   }
 
-  /**
-   * *Public Functions
-   */
-
+  // * Public Methods
+  
   const addToTimeline = (history) => {
     timeline_title.after(showTimeline(history))
   }
 
-  /**
-   * * Init
-   */
+  // * Init
 
   const init = (history) => {
     if (!initialized) {
       initialized = true;
-      history.forEach(el => {
-        addToTimeline(el)
-      });
+      history.forEach(el => addToTimeline(el));
       removeLoaders();
     }
   }
@@ -3146,7 +3283,6 @@ const ProjectHistory = (()=>{
     init,
     addToTimeline
   }
-
 })();
 
 

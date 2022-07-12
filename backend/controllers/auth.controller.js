@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
     if (verified) {
 
       let { id, email, first_name, middle_name, last_name, suffix_name } = user
-      let roles = user.Roles.map(el => el.name)
+      let roles = user.roles.map(el => el.name)
       let data = { id, email, first_name, middle_name, last_name, suffix_name, roles }
       let expiresIn
       let expires

@@ -319,6 +319,14 @@ const CUSTOM_VALIDATIONS = [
 				: moment(value).isSameOrAfter(moment(params));
 		},
 		defaultMessage: 'It must after an indicated date and time'
+	}, {
+		ruleName: "notSameDate",
+		handler: (value, element, params) => {
+			return !params
+				? true
+				: !moment(value).isSame(moment(params));
+		},
+		defaultMessage: 'It must not be equal to a value'
 	}
 ]
 
@@ -371,6 +379,14 @@ const PROJECT_PROPOSAL_STATUS_STYLES = {
 		icon: 'fas fa-times',
 		theme: 'danger'
 	},
+}
+
+const PROJECT_HISTORY_STYLES = {
+  ...PROJECT_PROPOSAL_STATUS_STYLES,
+  'Re-sched Presentation': {
+    icon: 'fas fa-calendar-day',
+		theme: 'warning'
+  }
 }
 
 // Partner Status Styles

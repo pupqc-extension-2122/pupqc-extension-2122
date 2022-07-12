@@ -30,16 +30,14 @@ const render404 = (res) => {
 router.get('/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Admin')
-    ? res.render(PATH + 'user_profile', {
-      document_title: 'My Profile',
-      active_sidebar_tab: '',
-      name: `${ first_name } ${ last_name }`,
-      role: renderRoles(roles),
-      roles: roles,
-      ...RENDER_OPTION_DEFAULTS
-    })
-    : render404(res)
+  res.render(PATH + 'user_profile', {
+    document_title: 'My Profile',
+    active_sidebar_tab: '',
+    name: `${ first_name } ${ last_name }`,
+    role: renderRoles(roles),
+    roles: roles,
+    ...RENDER_OPTION_DEFAULTS
+  })
 });
 
 // Export module

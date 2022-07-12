@@ -51,6 +51,17 @@ exports.viewProposal = async (req, res) => {
       {
         model: Project_History,
         as: 'history',
+        include: [
+          {
+            model: Users,
+            as: 'author',
+            attributes: {
+              exclude: [
+                'password'
+              ]
+            }
+          }
+        ]
       }
     ],
     order: [
@@ -346,6 +357,7 @@ exports.cancelProposal = async (req, res) => {
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
   const id = req.params.id
+  const body = req.body
 
   let project = await Projects.findByPk(id, {
     where: {
@@ -369,6 +381,7 @@ exports.cancelProposal = async (req, res) => {
     current_value: 'Cancelled',
     previous_value,
     author_id: req.auth.id,
+    remarks: body.remarks,
   })
 
   res.send({
@@ -397,7 +410,7 @@ exports.requestForRevision = async (req, res) => {
   if (!project)
     return res.status(404).send({ error: true, message: 'Proposal Not Found' })
 
-  if (project.status != 'For Review')
+  if (!allowed_status.includes(project.status))
     return res.status(400).send({ error: true, message: 'Bad Request' })
 
   const previous_value = project.status
@@ -438,7 +451,7 @@ exports.submitForReviewProposal = async (req, res) => {
     if (!project.activities.length)
       return res.send({ warning: true, message: 'Please include at least one project activity' })
 
-    if (!(project.status == 'Created' || !project.status == 'For Revision'))
+    if (!(project.status == 'Created' || project.status == 'For Revision'))
       return res.status(400).send({ error: true, message: 'Invalid action' })
 
     const previous_value = project.status
@@ -447,6 +460,7 @@ exports.submitForReviewProposal = async (req, res) => {
     await project.save()
 
     let history = await Project_History.create({
+      author_id: req.auth.id,
       project_id: project.id,
       current_value: 'For Review',
       previous_value
@@ -599,16 +613,25 @@ exports.reschedulePresentation = async (req, res) => {
 
     if (!project)
       return res.status(404).send({ error: true, message: 'Project not Found' })
-
-
+      
     project.presentation_date = body.presentation_date
     await project.save()
+    
+    const previous_value = project.status
+      
+    let history = await Project_History.create({
+      project_id: project.id,
+      current_value: 'Re-sched Presentation',
+      previous_value: previous_value,
+      author_id: req.auth.id,
+      remarks: body.remarks
+    })
 
     res.send({
       error: false,
+      data: history,
       message: 'Project Presentation Date Updated',
     })
-
 
   } catch (error) {
     console.log(error)
