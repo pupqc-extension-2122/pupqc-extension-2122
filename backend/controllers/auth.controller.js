@@ -27,6 +27,7 @@ exports.test = (req, res) => {
 
 exports.login = async (req, res) => {
   const body = req.body
+  let verification
   let verified = false
   let match = false
 
@@ -55,10 +56,10 @@ exports.login = async (req, res) => {
   })
 
   if (!user)
-    res.send({ error: true, message: 'User not found!' })
+    return res.send({ error: true, message: 'User not found!' })
 
   else if (!user.verified) {
-    let verification = await User_Verifications.findOne({ where: { user_id: user.id } })
+    verification = await User_Verifications.findOne({ where: { user_id: user.id } })
     verified = verification.verify(body.password)
   }
 
@@ -75,9 +76,12 @@ exports.login = async (req, res) => {
     let expires
 
     data.first_time = verified
-    if(verified){
+    if (verified) {
       user.verified = true
       await user.save()
+
+      verification.is_used = true
+      await verification.save()
     }
 
     if (body.remember) {
@@ -98,9 +102,9 @@ exports.login = async (req, res) => {
       message: 'Login Success!',
       data
     })
-  } else {
-    return res.send({ error: true, message: 'Authentication failed'})
   }
+  
+  res.send({ error: true, message: 'Authentication failed' })
 }
 
 exports.logout = (req, res) => {
