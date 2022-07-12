@@ -13,7 +13,7 @@ exports.viewUser = async (req, res) => {
 
     const id = req.params.id
 
-    const user = await Users.findByPk(id)
+    const user = await Users.findByPk(id, { attributes: { exclude: ['password'] } })
 
     if (!user)
       return res.status(404).send({ error: true, message: 'User not found' })
