@@ -29,7 +29,6 @@ const mainJS = () => {
   ])
     .pipe(sourcemaps.init())
     .pipe(terser())
-    .pipe(replace(/\s+/g, ' '))
     .pipe(concat('main.js'))
     .pipe(sourcemaps.write('./jsmaps'))
     .pipe(dest(DIST_PATH + 'js/'))
@@ -39,7 +38,6 @@ const authJS = () => {
   return src(BUILD_PATH + 'js/auth/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
-    .pipe(replace(/\s+/g, ' '))
     .pipe(sourcemaps.write('../jsmaps/'))
     .pipe(dest(DIST_PATH + 'js/auth/'))
 }
@@ -48,7 +46,6 @@ const modulesJS = () => {
   return src(BUILD_PATH + 'js/modules/**/*.js')
     .pipe(sourcemaps.init())
     .pipe(terser())
-    .pipe(replace(/\s+/g, ' '))
     .pipe(sourcemaps.write('../jsmaps/'))
     .pipe(dest(DIST_PATH + 'js/modules/'))
 }
@@ -58,4 +55,37 @@ const watchTask = () => {
 }
 
 exports.watch = series(clean, mainJS, authJS, modulesJS, watchTask);
-exports.compile_js = series(clean, mainJS, authJS, modulesJS);
+
+exports.compile_js = series(
+  clean, 
+  () => {
+    return src([
+
+      // Constants
+      BUILD_PATH + 'js/main/constants.js',
+  
+      // Functions
+      BUILD_PATH + 'js/main/functions.js',
+  
+      // Classes
+      BUILD_PATH + 'js/main/classes.js',
+  
+      // Initializations
+      BUILD_PATH + 'js/main/init.js',
+    ])
+      .pipe(terser())
+      .pipe(replace(/\s+/g, ' '))
+      .pipe(concat('main.js'))
+      .pipe(dest(DIST_PATH + 'js/'))
+  },
+  () => {
+    return src(BUILD_PATH + 'js/auth/**/*.js')
+      .pipe(terser())
+      .pipe(replace(/\s+/g, ' '))
+      .pipe(dest(DIST_PATH + 'js/auth/'))
+  }, 
+  () => {
+    return src(BUILD_PATH + 'js/modules/**/*.js')
+      .pipe(terser())
+      .pipe(dest(DIST_PATH + 'js/modules/'))
+  });
