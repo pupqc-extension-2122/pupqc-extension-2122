@@ -13,11 +13,11 @@
 
 <%# Content Header %>
 <div class="content-header">
-  <div class="container-fluid">
+  <div class="container">
 
     <%# Breadcrumb %>
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%BASE_URL%>/a">SysAdmin</a></li>
+      <li class="breadcrumb-item"><a href="<%BASE_URL%>/me">Me</a></li>
       <li class="breadcrumb-item active">Profile</li>
     </ol>
 
@@ -35,120 +35,159 @@
 
 <%# Main Content %>
 <section class="content">
-  <div class="container-fluid">
+  <div class="container">
     <div class="row">
-      <div class="col-md-3">
+      
+      <div class="col-md-4 col-lg-3">
+        <div class="sticky-top">
 
-        <!-- Profile Image -->
-        <div class="card card-primary card-outline">
-          <div class="card-body box-profile">
-            <div class="text-center">
-              <img class="profile-user-img img-fluid img-circle"
-                src="<%=BASE_URL%>/img/PUPLogo.png"
-                alt="User profile picture">
+          <%# Profile Image %>
+          <div class="card card-primary card-outline">
+            <div class="card-body box-profile">
+              <div class="text-center mb-3">
+                <img 
+                  class="profile-user-img img-fluid img-circle border-success"
+                  src="<%=BASE_URL%>/img/PUPLogo.png"
+                  alt="Profile Picture"
+                  draggable="false"
+                />
+              </div>
+  
+              <h5 class="my-2 text-center" id="userProfile_name"></h5>
+              
+              <div class="text-muted text-center" id="userProfile_roles"></div>
+              <div class="text-muted text-center" id="userProfile_email"></div>
+              
+              <div class="mt-3">
+                <button type="button" class="btn btn-primary btn-block" data-auth="logout">
+                  <i class="fas fa-sign-out-alt mr-1"></i>
+                  <span>Log out</span>
+                </button>
+              </div>
             </div>
-
-            <h5 class="my-2 text-center">Vanessah O. Buenavetura</h5>
-
-            <p class="text-muted text-center">System Admin</p>
-
-            <ul class="list-group list-group-unbordered mb-3">
-              <li class="list-group-item">
-                <i class="fas fa-envelope text-primary"></i>
-                <a class="text-secondary ml-2"> extension.pupqc@gmail.com</a>
-              </li>
-            </ul>
-
-            <a href="#" class="btn btn-primary btn-block" data-auth="logout"><b>Log out</b></a>
           </div>
-          <!-- /.card-body -->
+        
         </div>
       </div>
-      <!-- /.col -->
-      <div class="col-md-9">
+      
+      <div class="col-md-8 col-lg-9">
         <div class="card">
-          <div class="card-header p-2">
-            <ul class="nav nav-pills">
-              <li class="nav-item"><a class="nav-link active" href="#information" data-toggle="tab">Personal Information</a></li>
-              <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Account Settings</a></li>
-            </ul>
-          </div><!-- /.card-header -->
+          <div class="card-header py-2">
+            <div class="d-flex align-items-center justify-content-between">
+
+              <ul class="nav nav-pills">
+                <li class="nav-item">
+                  <a 
+                    class="nav-link active" 
+                    href="#information" 
+                    data-toggle="tab"
+                  >Personal Information</a>
+                </li>
+          
+                <div class="nav-item pl-1"></div>
+          
+                <li class="nav-item">
+                  <a 
+                    class="nav-link" 
+                    href="#settings" 
+                    data-toggle="tab"
+                  >Account Settings</a>
+                </li>
+              </ul>
+  
+              <div class="card-tools">
+                <!-- <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse"
+                  title="Collapse card">
+                  <i class="fas fa-minus"></i>
+                </button> -->
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-negative" 
+                  data-card-widget="maximize"
+                  data-toggle="tooltip"
+                  title="Maximize/minimize card"
+                >
+                  <i class="fas fa-expand"></i>
+                </button>
+              </div>
+
+            </div>
+          </div>
           <div class="card-body">
             <div class="tab-content">
-              <div class="active tab-pane" id="information">
+
+              <%# Personal Information %>
+              <div class="tab-pane fade active show" id="information">
+                <h3 class="mb-3">Update your Personal Information</h3>
+
                 <form class="form-horizontal">
-                  <div class="form-group row">
-                    <label for="addUser_firstName">
+                  <div class="form-group">
+                    <label for="editUserInfo_firstName">
                       <span>First Name</span>
                       <span class="text-danger">*</span>
                     </label>
                     <input 
                       type="text" 
                       class="form-control" 
-                      id="addUser_firstName" 
+                      id="editUserInfo_firstName" 
                       name="first_name"
                       placeholder="Enter the first name here"
                     />
                   </div>
-                  <div class="form-group row">
-                    <label for="addUser_middleName">
+                  <div class="form-group">
+                    <label for="editUserInfo_middleName">
                       <span>Middle Name</span>
                     </label>
                     <input 
                       type="text" 
                       class="form-control" 
-                      id="addUser_middleName" 
+                      id="editUserInfo_middleName" 
                       name="middle_name"
                       placeholder="Enter the middle name here"
                     />
                   </div>
-                  <div class="form-group row">
-                    <label for="addUser_lastName">
+                  <div class="form-group">
+                    <label for="editUserInfo_lastName">
                       <span>Last Name</span>
                       <span class="text-danger">*</span>
                     </label>
                     <input 
                       type="text" 
                       class="form-control" 
-                      id="addUser_lastName" 
+                      id="editUserInfo_lastName" 
                       name="last_name"
                       placeholder="Enter the last name here"
                     />
                   </div>
-                  <div class="form-group row">
-                    <label for="addUser_suffixName">
+                  <div class="form-group">
+                    <label for="editUserInfo_suffixName">
                       <span>Suffix Name</span>
                     </label>
                     <input 
                       type="text" 
                       class="form-control" 
-                      id="addUser_suffixName" 
+                      id="editUserInfo_suffixName" 
                       name="suffix_name"
                       placeholder="Enter the suffix name here"
                     />
                   </div>
-                  <div class="form-group row">
-                    <label for="addUser_email">
+                  <div class="form-group">
+                    <label for="editUserInfo_email">
                       <span>Email</span>
                       <span class="text-danger">*</span>
                     </label>
                     <input 
                       type="email" 
                       class="form-control" 
-                      id="addUser_email" 
+                      id="editUserInfo_email" 
                       name="email"
                       placeholder="Enter the email address here"
+                      disabled
+                      readonly
                     />
                   </div>
-                  <div class="form-group row">
+                  <div class="form-group">
                     <div class="float-right">
-                      <button 
-                        type="button" 
-                        class="btn btn-negative" 
-                        data-card-widget=""
-                      >
-                        <span>Cancel</span>
-                      </button>
                       <button type="submit" class="btn btn-primary" id="submitBtn" >
                         <span>Save</span>
                         <i class="fas fa-check ml-1"></i>
@@ -157,29 +196,57 @@
                   </div>
                 </form>
               </div>
-              <!-- /.tab-pane -->
 
-              <div class="tab-pane" id="settings">
+              <%# Account Settings %>
+              <div class="tab-pane fade" id="settings">
+                <h3 class="mb-3">Update your password</h3>
+
                 <form class="form-horizontal">
-                  <div class="form-group row">
-                    <label for="change_password">
-                      <span>Change Password</span>
+
+                  <%# Old Password %>
+                  <div class="form-group">
+                    <label for="account_oldPassword">
+                      <span>Old Password</span>
                       <span class="text-danger">*</span>
                     </label>
                     <div class="input-group">
                       <input 
                         type="password" 
                         class="form-control" 
-                        id="" 
+                        id="account_oldPassword" 
                         name="password"
                         placeholder="Enter your password here" 
                         autocomplete="false"
                       >
                     </div>
                   </div>
-                  <div class="form-group row">
-                    <label for="change_password">
-                      <span>Confirm Password</span>
+
+                  <div class="form-group text-right">
+                    <a href="#">Forgot your password?</a>
+                  </div>
+
+                  <%# New Password %>
+                  <div class="form-group">
+                    <label for="account_newPassword">
+                      <span>New Password</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                      <input 
+                        type="password" 
+                        class="form-control" 
+                        id="account_newPassword" 
+                        name="password"
+                        placeholder="Enter your password here" 
+                        autocomplete="false"
+                      >
+                    </div>
+                  </div>
+
+                  <%# Confirm New Password %>
+                  <div class="form-group">
+                    <label for="account_confirmNewPassword">
+                      <span>Confirm New Password</span>
                       <span class="text-danger">*</span>
                     </label>
                     <div class="input-group">
@@ -187,21 +254,15 @@
                         type="password" 
                         class="form-control" 
                         id="" 
-                        name="password"
+                        name="account_confirmNewPassword"
                         placeholder="Re-enter your password here" 
                         autocomplete="false"
                       >
                     </div>
                   </div>
-                  <div class="form-group row">
+                  
+                  <div class="form-group">
                     <div class="float-right">
-                      <button 
-                        type="button" 
-                        class="btn btn-negative" 
-                        data-card-widget=""
-                      >
-                        <span>Cancel</span>
-                      </button>
                       <button type="submit" class="btn btn-primary" id="submitBtn" >
                         <span>Save</span>
                         <i class="fas fa-check ml-1"></i>
@@ -210,17 +271,12 @@
                   </div>
                 </form>
               </div>
-              <!-- /.tab-pane -->
             </div>
-            <!-- /.tab-content -->
-          </div><!-- /.card-body -->
+          </div>
         </div>
-        <!-- /.card -->
       </div>
-      <!-- /.col -->
     </div>
-    <!-- /.row -->
-  </div><!-- /.container-fluid -->
+  </div>
 </section>
 
 
@@ -244,4 +300,5 @@
 
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
-<script src="<%=BASE_URL%>/js/modules/admin/users.js"></script>
+<script src="<%=BASE_URL%>/js/auth/user.js"></script>
+<script src="<%=BASE_URL%>/js/modules/user/profile.js"></script>

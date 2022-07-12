@@ -1,0 +1,239 @@
+<nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+  <div class="container">
+
+    <span class="navbar-brand mr-3">
+      <img 
+        src="<%=BASE_URL%>/img/PUPLogo.png" 
+        class="brand-image img-circle bg-light border" 
+        style="opacity: .8; width: 24px; height: 24px"
+      />
+      <span class="brand-text">PUPQC-EPMS</span>
+    </span>
+
+    <%# Left navbar links %>
+    <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+      <ul class="navbar-nav mt-1 mt-sm-0">
+        <li class="nav-item d-sm-inline-block">
+          <a 
+            href="<%=BASE_URL%>/p" 
+            class="nav-link px-2 px-3"
+          >Projects</a>
+        </li>
+        <li class="nav-item d-sm-inline-block">
+          <a 
+            href="<%=BASE_URL%>/m" 
+            class="nav-link px-2 px-3"
+          >MOA/MOU</a>
+        </li>
+        <% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
+          <li class="nav-item d-sm-inline-block">
+            <a 
+              href="<%=BASE_URL%>/a" 
+              class="nav-link px-2 px-3"
+            >SysAdmin</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+
+    <%# Right navbar links %>
+    <ul class="order-2 order-md-3 navbar-nav navbar-no-expand ml-auto">
+        
+      <%# Notifications Dropdown Menu %>
+      <li class="nav-item dropdown">
+        <a href="" class="nav-link" data-toggle="dropdown">
+          <i class="far fa-bell"></i>
+          <span class="badge badge-primary navbar-badge" id="notifCounter">3</span>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right" style="max-height: 25em; overflow-y: auto">
+          <div class="px-3 py-2">
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <h4 class="text-left d-inline-block m-0 mr-2">
+                  <span id="test">Notifications</span>
+                </h4>
+                <div class="small">You have a total of 3 notifications</div>
+              </div>
+              <div class="badge badge-primary badge-sm notif-badge" id="notifCounterForDropdown">3
+              </div>
+            </div>
+            <div class="small text-muted" id="totalNotifications"></div>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <%# <div id="notifications">
+              <div class="text-center py-5 wait">
+              <div class="spinner-border text-primary my-3" role="status">
+                  <span class="sr-only">Loading ...</span>
+              </div>
+          </div>
+                      </div> %>
+
+          <div id="notifications">
+            <div class="dropdown-header">Unread</div>
+            <a href="#" class="dropdown-item d-flex align-items-center justify-content-between">
+              <div class="nav-icon">
+                <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
+                  style="height: 2.5rem; width: 2.5rem">
+                  <i class="fas fa-envelope" style="font-size: 17.5px"></i>
+                </div>
+              </div>
+              <div class="flex-wrap">
+                <div class="text-wrap font-weight-bold" style="line-height: 1.25">
+                  <span class="text-primary">&#9679;</span>
+                  <span>4 lorem impsum dolor sit amet consectetur</span>
+                </div>
+                <div class="small">
+                  <i class="far fa-clock mr-1"></i>
+                  <span>3 mins ago</span>
+                </div>
+              </div>
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="dropdown-header">Past notifications</div>
+            <a href="#" class="dropdown-item d-flex align-items-center">
+              <div class="nav-icon">
+                <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
+                  style="height: 2.5rem; width: 2.5rem">
+                  <i class="fas fa-envelope" style="font-size: 17.5px"></i>
+                </div>
+              </div>
+              <div class="flex-wrap">
+                <div class="text-wrap" style="line-height: 1.25">
+                  <span>4 lorem impsum dolor sit amet consectetur</span>
+                </div>
+                <div class="small">
+                  <i class="far fa-clock mr-1"></i>
+                  <span>3 mins ago</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="dropdown-item d-flex align-items-center">
+              <div class="nav-icon">
+                <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
+                  style="height: 2.5rem; width: 2.5rem">
+                  <i class="fas fa-envelope" style="font-size: 17.5px"></i>
+                </div>
+              </div>
+              <div class="flex-wrap">
+                <div class="text-wrap" style="line-height: 1.25">
+                  <span>4 lorem impsum dolor sit amet consectetur</span>
+                </div>
+                <div class="small">
+                  <i class="far fa-clock mr-1"></i>
+                  <span>3 mins ago</span>
+                </div>
+              </div>
+            </a>
+            <a href="#" class="dropdown-item d-flex align-items-center">
+              <div class="nav-icon">
+                <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
+                  style="height: 2.5rem; width: 2.5rem">
+                  <i class="fas fa-envelope" style="font-size: 17.5px"></i>
+                </div>
+              </div>
+              <div class="flex-wrap">
+                <div class="text-wrap" style="line-height: 1.25">
+                  <span>4 lorem impsum dolor sit amet consectetur aside</span>
+                </div>
+                <div class="small">
+                  <i class="far fa-clock mr-1"></i>
+                  <span>3 mins ago</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div>
+      </li>
+
+      <%# User Dropdown %>
+      <li class="nav-item dropdown">
+        <a href="" class="nav-link" data-toggle="dropdown" role="button">
+          <i class="fas fa-user-circle"></i>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right py-1">
+
+          <div class="user-dropdown d-flex align-items-center p-3">
+            <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
+            <%# <img class="img-circle" src="../../dist/img/user1-128x128.jpg" style="max-height: 3.5rem; max-width: 3.5rem;" alt="User Avatar"> %>
+            <div class="mt-2 ml-2">
+              <div class="font-weight-bold h5 m-0"><%= name %></div>
+              <div class="text-secondary small"><%= role %></div>
+            </div>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <div class="dropdown-header">Account Settings</div>
+
+          <a href="<%=BASE_URL%>/me" class="dropdown-item d-flex align-items-center">
+            <div class="nav-icon">
+              <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
+                style="height: 2.5rem; width: 2.5rem">
+                <i class="fas fa-user m-0" style="font-size: 17.5px"></i>
+              </div>
+            </div>
+            <div>
+              <div class="text-wrap font-weight-bold" style="line-height: 1.25">Profile</div>
+              <div class="small">View and manage your profile</div>
+            </div>
+          </a>
+          <a href="" class="dropdown-item d-flex align-items-center">
+            <div class="nav-icon">
+              <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
+                style="height: 2.5rem; width: 2.5rem">
+                <i class="fas fa-cog m-0" style="font-size: 17.5px"></i>
+              </div>
+            </div>
+            <div>
+              <div class="text-wrap font-weight-bold" style="line-height: 1.25">Settings</div>
+              <div class="small">Configure and edit your settings</div>
+            </div>
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <div class="dropdown-header">Session</div>
+
+          <div 
+            role="button" 
+            class="dropdown-item d-flex align-items-center" 
+            data-auth="logout"
+          >
+            <div class="nav-icon">
+              <div class="d-flex align-items-center justify-content-center bg-secondary rounded-circle mr-2"
+                style="height: 2.5rem; width: 2.5rem">
+                <i class="fas fa-sign-out-alt m-0" style="font-size: 17.5px"></i>
+              </div>
+            </div>
+            <div>
+              <div class="text-wrap font-weight-bold" style="line-height: 1.25">Log out</div>
+              <div class="small">End your session</div>
+            </div>
+          </a>
+        </div>
+      </li>
+      
+      <li class="nav-item">
+        <button 
+          class="nav-link navbar-toggler border-0" 
+          type="button" 
+          data-toggle="collapse" 
+          data-target="#navbarCollapse"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+      </li>
+
+    </ul>
+  </div>
+</nav>
