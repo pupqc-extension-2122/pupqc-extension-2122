@@ -87,7 +87,6 @@
           } else {
             setTimeout(() => location.assign('/p'), 250);
           }
-
         }
       },
       error: (xhr, status, error) => {

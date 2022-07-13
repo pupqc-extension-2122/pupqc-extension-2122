@@ -180,11 +180,11 @@ const setDocumentTitle = (message, withTail = 1) => {
  * Remove whitespaces on inputs
  */
 const initInputs = () => {
-  $('input').on('keyup', function() {
+  $('input[type="text"], input[type="email"]').on('keyup', function() {
     $(this).val($(this).val().replace(/\s+/g, ' '));
   });
   
-  $('input, textarea').on('change', function() {
+  $('input[type="text"], input[type="email"], textarea').on('change', function() {
     $(this).val($(this).val().trim());
   });
 }

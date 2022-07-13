@@ -1,5 +1,3 @@
-<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
-
 <%# Add Memo Modal %>
 <div class="modal fade" id="addMemo_modal" data-backdrop="static">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -34,14 +32,14 @@
           <%# Partnership Name %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMOA_partnershipName">
+              <label for="addMemo_partnershipName">
                 <span>Name of Partner</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMOA_partnershipName" 
+                id="addMemo_partnershipName" 
                 name="name"
                 placeholder="Enter the partnership name here"
               />
@@ -51,14 +49,14 @@
           <%# Partner Address %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMOA_partnerAddress">
+              <label for="addMemo_partnerAddress">
                 <span>Partner Address</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMOA_partnerAddress" 
+                id="addMemo_partnerAddress" 
                 name="address"
                 placeholder="Enter the partner address here"
               />
@@ -68,14 +66,14 @@
           <%# Partnership Representative Name %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMOA_partnershipRepresentative">
+              <label for="addMemo_partnershipRepresentative">
                 <span>Name of Representative</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMOA_partnershipRepresentative" 
+                id="addMemo_partnershipRepresentative" 
                 name="representative"
                 placeholder="Enter the partnership representative name here"
               />
@@ -85,31 +83,31 @@
           <%# PUP REPD Representative %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMOA_pupREPD">
+              <label for="addMemo_pupREPD">
                 <span>Name of PUP REPD Representative</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMOA_pupREPD" 
+                id="addMemo_pupREPD" 
                 name="pup_REPD"
                 placeholder="Enter the PUP REPD representative here"
               />
             </div>
           </div>
   
-          <%# Organization %>
+          <%# Branch/Campus / Organization %>
           <div class="col-12">
-            <div class="form-group" id="addMOA_organization_grp">
-              <label for="addMOA_organization">
-                <span>Organization</span>
+            <div class="form-group" id="addMemo_organization_grp">
+              <label for="addMemo_organization">
+                <span>Branch/Campus</span>
                 <span class="text-danger">*</span>
               </label>
   
               <div class="form-group">
-                <div class="form-row">
-                  <div class="col-md-9">
+                <div class="d-flex">
+                  <div class="flex-grow-1 mr-1">
                     <select 
                       name="organization" 
                       id="addMemo_organization_select" 
@@ -119,10 +117,14 @@
                       <option disabled>No organizations yet.</option>
                     </select>
                   </div>
-                  <div class="col-md-3 text-md-right">
-                    <button class="btn btn-primary btn-sm" type="button">
-                      <i class="fas fa-plus mr-1"></i>
-                      <span>Add organization</span>
+                  <div>
+                    <button 
+                      class="btn btn-primary" 
+                      type="button"
+                      data-toggle="tooltip"
+                      title="Add organization"
+                    >
+                      <i class="fas fa-plus"></i>
                     </button>
                   </div>
                 </div>
@@ -131,9 +133,9 @@
           </div>
   
           <%# Notary Signed Date %>
-          <div class="col-6">
+          <div class="col-12">
             <div class="form-group">
-              <label for="addMOA_notarySignedDate">
+              <label for="addMemo_notarySignedDate">
                 <span>Notary Signed Date</span>
                 <span class="text-danger">*</span>
               </label>
@@ -141,37 +143,9 @@
                 <input 
                   type="text" 
                   class="form-control" 
-                  id="addMOA_notarySignedDate" 
+                  id="addMemo_notarySignedDate" 
                   name="notary_date"
                   placeholder="Please select notary signed date" 
-                  data-inputmask-alias="datetime"
-                  data-inputmask-inputformat="yyyy-mm-dd" 
-                  data-mask 
-                />
-                <div class="input-group-append">
-                  <button type="button" class="btn btn-primary" id="addMOA_notarySignedDate_pickerBtn"
-                    data-toggle="tooltip" title="Select notary signed date">
-                    <i class="fa fa-calendar-day fa-fw"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <%# Validity Date %>
-          <div class="col-6">
-            <div class="form-group">
-              <label for="addMOA_validityDate">
-                <span>Validity Date</span>
-                <span class="text-danger">*</span>
-              </label>
-              <div class="input-group date">
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="addMOA_validityDate" 
-                  name="validity_date"
-                  placeholder="Please select validity date" 
                   data-inputmask-alias="datetime"
                   data-inputmask-inputformat="yyyy-mm-dd" 
                   data-mask 
@@ -180,9 +154,9 @@
                   <button 
                     type="button" 
                     class="btn btn-primary" 
-                    id="addMOA_validityDate_pickerBtn"
+                    id="addMemo_notarySignedDate_pickerBtn"
                     data-toggle="tooltip" 
-                    title="Select validity date"
+                    title="Select notary signed date"
                   >
                     <i class="fa fa-calendar-day fa-fw"></i>
                   </button>
@@ -191,26 +165,66 @@
             </div>
           </div>
   
-          <%# Upload Document %>
-          <!-- <div class="col-12">
+          <%# Effective on/Validity Date %>
+          <div class="col-md-6">
             <div class="form-group">
-              <label for="document">
-                  <span>Upload document here</span>
-                  <span class="text-danger">*</span>
+              <label for="addMemo_validityDate">
+                <span>Effective on</span>
+                <span class="text-danger">*</span>
               </label>
-              <div class="input-group">
-                  <div class="custom-file">
-                      <input 
-                        type="file" 
-                        class="custom-file-input" 
-                        id="uploadDocument"
-                        name="uploadDocument"
-                      >
-                      <label class="custom-file-label" for="uploadDocument">Choose file</label>
-                  </div>
+              <div class="input-group date">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="addMemo_validityDate" 
+                  name="validity_date"
+                  placeholder="Please select effectivity date" 
+                  data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="yyyy-mm-dd" 
+                  data-mask 
+                />
+                <div class="input-group-append">
+                  <button 
+                    type="button" 
+                    class="btn btn-primary" 
+                    id="addMemo_validityDate_pickerBtn"
+                    data-toggle="tooltip" 
+                    title="Select effectivity date"
+                  >
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
               </div>
             </div>
-          </div> -->
+          </div>
+
+          <%# Duration %>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="addMemo_duration">
+                <span>Duration</span>
+                <span class="small">(in years)</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="addMemo_duration" 
+                name="duration"
+                placeholder="Enter the duration here"
+              />
+            </div>
+          </div>
+
+          <%# Valid Until %>
+          <div class="col-12">
+            <div class="form-group">
+              <span class="font-weight-bold">Valid until: </span>
+              <span id="addMemo_validUntil">
+                <span class="font-italic text-muted">Please select an effectivity date and duration.</span>
+              </span>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -221,5 +235,3 @@
     </form>
   </div>
 </div>
-
-<% } %>

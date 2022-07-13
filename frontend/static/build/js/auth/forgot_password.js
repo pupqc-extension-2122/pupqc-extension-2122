@@ -36,9 +36,29 @@
       email: fd.get('email'),
     }
 
-    console.log(data);
-
-    emailSent_modal.modal('show');
+    $.ajax({
+      url: `${ BASE_URL_API }/auth/magic`,
+      type: 'POST',
+      data: data,
+      success: res => {
+        console.log(res);
+        if (res.error) {
+          toastr.warning('Email does not exist', null, {
+            "positionClass": "toast-top-center mt-3"
+          });
+        } else {
+          emailSent_modal.modal('show');
+        }
+      },
+      error: xhr => {
+        console.log(xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText);
+        // toastr.error('Something went wrong. Please reload the page.', {
+        //   "timeOut": "0",
+        //   "extendedTimeOut": "0",
+        // });
+        // console.error(`[ERR]: Failed to call ajax.`);
+      }
+    });
   }
 
   return {

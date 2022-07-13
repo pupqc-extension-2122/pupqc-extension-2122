@@ -175,7 +175,9 @@
 
 <%# Modals %>
 
-<%- include('../../partials/memo/modals/add_memo') %>
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+  <%- include('../../partials/memo/modals/add_memo') %>
+<% } %>
 
 
 <%# ***** Scripts ***** %>
@@ -208,3 +210,7 @@
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/modules/memo/memos.js"></script>
+
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+  <script src="<%=BASE_URL%>/js/modules/memo/addMemo.js"></script>
+<% } %>
