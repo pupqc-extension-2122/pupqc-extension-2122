@@ -54,9 +54,31 @@
     })
   }
 
+  const handleForm = () => {
+    $app('#editUser_form').handleForm({
+        validators: {
+          first_name: {
+            required: "First  name is required.",
+            notEmpty: "This field cannot be blank.",
+          },
+          last_name: {
+            required: "Last name is required.",
+            notEmpty: "This field cannot be blank.",
+          },
+          email:  {
+            required: "Email is required.",
+            email: 'The input is not a valid email address.',
+            notEmpty: "This field cannot be blank.",
+          }
+        },
+      onSubmit: () => onFormSubmit()
+    });
+  }
+
   return {
     init: () => {
       loadUserData();
+      handleForm();
     }
   }
 })().init();

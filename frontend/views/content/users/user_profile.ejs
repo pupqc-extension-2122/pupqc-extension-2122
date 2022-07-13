@@ -120,7 +120,7 @@
               <div class="tab-pane fade active show" id="information">
                 <h3 class="mb-3">Update your Personal Information</h3>
 
-                <form class="form-horizontal">
+                <form class="form-horizontal" id="editUser_form">
                   <div class="form-group">
                     <label for="editUserInfo_firstName">
                       <span>First Name</span>
@@ -201,7 +201,7 @@
               <div class="tab-pane fade" id="settings">
                 <h3 class="mb-3">Update your password</h3>
 
-                <form class="form-horizontal">
+                <form class="form-horizontal" id="settings_form">
 
                   <%# Old Password %>
                   <div class="form-group">
@@ -214,7 +214,7 @@
                         type="password" 
                         class="form-control" 
                         id="account_oldPassword" 
-                        name="password"
+                        name="old_password"
                         placeholder="Enter your password here" 
                         autocomplete="false"
                       >
@@ -236,7 +236,7 @@
                         type="password" 
                         class="form-control" 
                         id="account_newPassword" 
-                        name="password"
+                        name="new_password"
                         placeholder="Enter your password here" 
                         autocomplete="false"
                       >
@@ -253,8 +253,8 @@
                       <input 
                         type="password" 
                         class="form-control" 
-                        id="" 
-                        name="account_confirmNewPassword"
+                        id="account_confirmNewPassword" 
+                        name="confirm_newPassword"
                         placeholder="Re-enter your password here" 
                         autocomplete="false"
                       >
@@ -263,7 +263,8 @@
                   
                   <div class="form-group">
                     <div class="float-right">
-                      <button type="submit" class="btn btn-primary" id="submitBtn" >
+                      <button type="submit" class="btn btn-primary" id="submitBtn" data-toggle="modal" 
+                      data-target="#confirmChangePasswordModal">
                         <span>Save</span>
                         <i class="fas fa-check ml-1"></i>
                       </button>
@@ -302,3 +303,4 @@
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/auth/user.js"></script>
 <script src="<%=BASE_URL%>/js/modules/user/profile.js"></script>
+<script src="<%=BASE_URL%>/js/modules/user/settings.js"></script>
