@@ -166,15 +166,15 @@ exports.createProject = async (req, res) => {
       ]
     })
 
-    if (!partners.length)
-      return res.status(400).send({ error: true, message: 'Partnership not found' })
-
-    let project_partners = partners.map(el => (
-      {
-        partner_id: el.id,
-        memo_id: el.memos[0].id
-      }
-    ))
+    let project_partners = []
+    if (partners.length) {
+      project_partners = partners.map(el => (
+        {
+          partner_id: el.id,
+          memo_id: el.memos[0].id
+        }
+      ))
+    }
 
     let documents = []
     if (typeof files != 'undefined') {
@@ -613,12 +613,12 @@ exports.reschedulePresentation = async (req, res) => {
 
     if (!project)
       return res.status(404).send({ error: true, message: 'Project not Found' })
-      
+
     project.presentation_date = body.presentation_date
     await project.save()
-    
+
     const previous_value = project.status
-      
+
     let history = await Project_History.create({
       project_id: project.id,
       current_value: 'Re-sched Presentation',
