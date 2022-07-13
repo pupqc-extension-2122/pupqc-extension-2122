@@ -2,7 +2,7 @@ const router = require('express').Router();
 const jwtMiddleware = require('../../utils/jwtMiddleware');
 
 // Constants
-const PATH = 'content/users/';
+const PATH = 'content/user_info/';
 
 const renderRoles = (roles) => {
   let roleTemplate = '';
@@ -17,7 +17,7 @@ const renderRoles = (roles) => {
 router.get('/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  res.render(PATH + 'user_profile', {
+  res.render(PATH + 'profile', {
     layout: './layouts/user',
     document_title: 'My Profile',
     name: `${ first_name } ${ last_name }`,

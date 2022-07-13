@@ -6,17 +6,15 @@
 
   'use strict';
 
-  const Users = (() => {
-  /**
-    * * Local Variables
-    */
+const Users = (() => {
+  
+  // * Local Variables
+
   let dt;
   const dtElem = $('#users_dt');
   let initialized = false;
 
-  /**
-   * * Private Methods
-   */
+  // * Private Methods 
 
   const initDataTable = async () => {
     dt = await dtElem.DataTable({
@@ -37,13 +35,12 @@
           types: {
             created_at: 'date',
             email: 'string',
-            status: 'string'
           }
         },
         beforeSend: () => {
           dtElem.find('tbody').html(`
             <tr>
-              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+              <td colspan="7">${ DT_LANGUAGE.loadingRecords }</td>
             </tr>
           `);
         },
@@ -54,18 +51,18 @@
           visible: false,
         }, {
 					data: null,
-          width: '30%',
+          width: '25%',
           render: (data, type, row) => {
             const userName = (format = 'F M. L, S') => {
               return formatName(format, {
-                firstName: data.first_name,
+                firstName : data.first_name,
                 middleName: data.middle_name,
-                lastName: data.last_name,
+                lastName  : data.last_name,
                 suffixName: data.suffix_name
               });
             }
             
-            userName.length > 100
+            return userName.length > 100
               ? `<span title="${ userName }" data-toggle="tooltip">${ userName.substring(0, 100) } ...</span>`
               : userName
           }
@@ -74,21 +71,15 @@
           width: '25%',
         }, {
           data: null,
-          width: '25%',
+          width: '15%',
           sortable: false,
           render: data => {
-            const roles = data.roles;
-            const length = roles.length;
-            if (length > 1) {
-              return `
-                <div>${ roles[0]}</div>
-                <div class="small text-muted">and ${ length - 1 } more.</div>
-              `
-            } else if (length == 1) {
-              return roles[0]
-            } else {
-              return `<div class="text-muted font-italic">No roles.</div>`
-            }
+            let roles = '';
+            data.roles.forEach((role, i) => {
+              roles += role.name;
+              if(i < data.roles.length-1) roles += ', '; 
+            });
+            return roles;
           }
         }, {
           data: 'created_at',
@@ -100,19 +91,27 @@
             `
           }
         }, {
-          data: null, 
+          data: null,
+          class: 'text-center', 
           sortable: false,
           render: (data) => {
-            const status = moment().isBetween(moment(data.validity_date), moment(data.end_date)) ? 'Active' : 'Inactive';
-            const { theme, icon } = PARTNER_STATUS_STYLES[status];
-            return `
-              <div class="text-center">
-                <div class="badge badge-subtle-${ theme } px-2 py-1">
-                  <i class="${ icon } fa-fw mr-1"></i>
-                  <span>${ status }</span>
+            return data.verified 
+              ? `
+                <div class="text-center">
+                  <div class="badge badge-subtle-success px-2 py-1">
+                    <i class="fas fa-check fa-fw mr-1"></i>
+                    <span>Verified</span>
+                  </div>
                 </div>
-              </div>
-            `;
+              `
+              : `
+                <div class="text-center">
+                  <div class="badge badge-subtle-danger px-2 py-1">
+                    <i class="fas fa-ban fa-fw mr-1"></i>
+                    <span>Not Verified</span>
+                  </div>
+                </div>
+              ` 
           }
         }, {
           data: null,
@@ -166,14 +165,12 @@
     });
   }
 
-  /**
-   * * Public Methods
-   */
+  // * Public Methods
 
+  const reloadDataTable = async () =>  await dt.ajax.reload();
 
-  /**
-   * * Init
-   */
+  // * Init
+
   const init = () => {
     if (!initialized) {
       initialized = 1;
@@ -182,10 +179,12 @@
     }
   }
 
-  return {
-    init
-  }
+  // * Return Public Methods
 
+  return {
+    init,
+    reloadDataTable,
+  }
 })();
 
 Users.init();

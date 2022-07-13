@@ -1,138 +1,136 @@
-<% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
-  <%# Add User Modal %>
-  <div class="modal fade" id="addUser_modal" data-backdrop="static">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <form class="modal-content" id="addUser_form">
-        <div class="modal-header">
-          <h4 class="modal-title">Register a User</h4>
-          <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        
-        <div class="modal-body">
+<%# Add User Modal %>
+<div class="modal fade" id="addUser_modal" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <form class="modal-content" id="addUser_form">
+      <div class="modal-header">
+        <h4 class="modal-title">Register a User</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
 
-          <%# Form Groups %>
-          <div class="row" id="addUser_formGroups">
+        <%# Form Groups %>
+        <div class="row" id="addUser_formGroups">
 
-            <%# First Name %>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="addUser_firstName">
-                  <span>First Name</span>
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="addUser_firstName" 
-                  name="first_name"
-                  placeholder="Enter the first name here"
-                />
-              </div>
+          <%# First Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="addUser_firstName">
+                <span>First Name</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="addUser_firstName" 
+                name="first_name"
+                placeholder="Enter the first name here"
+              />
             </div>
+          </div>
 
-            <%# Middle Name %>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="addUser_middleName">
-                  <span>Middle Name</span>
-                </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="addUser_middleName" 
-                  name="middle_name"
-                  placeholder="Enter the middle name here"
-                />
-              </div>
+          <%# Middle Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="addUser_middleName">
+                <span>Middle Name</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="addUser_middleName" 
+                name="middle_name"
+                placeholder="Enter the middle name here"
+              />
             </div>
+          </div>
 
-            <%# Last Name %>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="addUser_lastName">
-                  <span>Last Name</span>
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="addUser_lastName" 
-                  name="last_name"
-                  placeholder="Enter the last name here"
-                />
-              </div>
+          <%# Last Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="addUser_lastName">
+                <span>Last Name</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="addUser_lastName" 
+                name="last_name"
+                placeholder="Enter the last name here"
+              />
             </div>
+          </div>
 
-            <%# Suffix Name %>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="addUser_suffixName">
-                  <span>Suffix Name</span>
-                </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="addUser_suffixName" 
-                  name="suffix_name"
-                  placeholder="Enter the suffix name here"
-                />
-              </div>
+          <%# Suffix Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="addUser_suffixName">
+                <span>Suffix Name</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="addUser_suffixName" 
+                name="suffix_name"
+                placeholder="Enter the suffix name here"
+              />
             </div>
-            
-            <%# Email %>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="addUser_email">
-                  <span>Email</span>
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="email" 
-                  class="form-control" 
-                  id="addUser_email" 
-                  name="email"
-                  placeholder="Enter the email address here"
-                />
-              </div>
+          </div>
+          
+          <%# Email %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="addUser_email">
+                <span>Email</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="addUser_email" 
+                name="email"
+                placeholder="Enter the email address here"
+              />
             </div>
+          </div>
 
-            <%# Role %>
-            <div class="col-md-6">
-              <div class="form-group" id="addUser_role_grp">
-                <label for="addUser_role">
-                  <span>Role</span>
-                  <span class="text-danger">*</span>
-                </label>
-    
-                <div class="form-group">
-                  <div class="form-row">
-                    <div class="col-12">
-                      <select 
-                        name="role" 
-                        id="addUser_role_select" 
-                        class="form-control select2"
-                        style="width: 100%;"
-                      > 
-                        <option>Director</option>
-                        <option>Chief</option>
-                        <option>Extensionist</option>
-                        <option>System Admin</option>
-                      </select>
-                    </div>
+          <%# Role %>
+          <div class="col-12">
+            <div class="form-group" id="addUser_role_grp">
+              <label for="addUser_role">
+                <span>Role</span>
+                <span class="text-danger">*</span>
+              </label>
+  
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-12">
+                    <select 
+                      name="role" 
+                      id="addUser_role_select" 
+                      class="form-control select2"
+                      style="width: 100%;"
+                    > 
+                      <option>Director</option>
+                      <option>Chief</option>
+                      <option>Extensionist</option>
+                      <option>System Admin</option>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
+
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="submitUser_btn">Submit</button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submitUser_btn">Submit</button>
+      </div>
+    </form>
   </div>
-<% } %>
+</div>
