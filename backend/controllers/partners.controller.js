@@ -127,6 +127,7 @@ exports.createPartner = async (req, res) => {
       representative_pup: body.representative_pup,
       representative_partner: body.representative_partner,
       notarized_date: body.notarized_date,
+      witnesses: body.witnesses
     })
 
     if (memo) {
