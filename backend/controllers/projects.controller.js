@@ -350,6 +350,41 @@ exports.updateProject = async (req, res) => {
   }
 }
 
+exports.updateMonitoring = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Extensionist'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const id = req.params.id
+    const body = req.body
+
+    let project = await Projects.findByPk(id, { where: { status: 'Approved' } })
+
+    if (!project)
+      return res.status(404).send({ error: true, message: 'Project not found' })
+
+    const previous_dates = [project.start_date, project.end_date]
+
+    project.start_date = body.start_date
+    project.end_date = body.end_date
+    await project.save()
+
+    let remarks = Comments.create({
+      project_id: project.id,
+      body: `<p>The schedule of this project was changed from <strong>${previous_dates[0]} - ${previous_dates[1]}</strong> to <strong>${body.start_date} - ${body.end_date}</strong></p><p>REMARKS: ${body.remarks}</p>`,
+      user_id: req.auth.id
+    })
+
+    if (project && remarks)
+      res.send({ error: false, message: 'Project Schedule Updated' })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 // ? For Submission
 
 exports.cancelProposal = async (req, res) => {
@@ -606,10 +641,10 @@ exports.reschedulePresentation = async (req, res) => {
     if (!req.auth.roles.includes('Chief'))
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
-    const project_id = req.params.project_id
+    const id = req.params.id
     const body = req.body
 
-    let project = await Projects.findByPk(project_id, { where: { status: 'For Evaluation' } })
+    let project = await Projects.findByPk(id, { where: { status: 'For Evaluation' } })
 
     if (!project)
       return res.status(404).send({ error: true, message: 'Project not Found' })
