@@ -3,8 +3,23 @@ const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 const { sendMail } = require('../../utils/sendMail.js')
 const { Users } = require('../sequelize/models')
+const { datatable } = require('../../utils/datatableResponse')
 
+exports.datatableUsers = async (req, res) => {
+  try {
 
+    if (!req.auth.roles.includes('Admin'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const data = await datatable(Users, req.query, { include: ['roles'], attributes: { exclude: ['password'] } })
+
+    res.send(data)
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
 
 exports.viewUser = async (req, res) => {
   try {
