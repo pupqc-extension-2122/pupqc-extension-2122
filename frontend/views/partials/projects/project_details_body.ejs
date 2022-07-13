@@ -16,19 +16,18 @@
 </div>
 
 <%# Project Details Body %>
-<div class="card" id="projectDetails_body" style="display: none">
-  <div class="card-body">
+<%# Tab Content %>
+<div class="tab-content" id="projectDetails_body" style="display: none">
 
-    <%# Tab Content %>
-    <div class="tab-content" id="custom-content-below-tabContent">
-
-      <%# Summary Pane %>
-      <div 
-        class="tab-pane fade show active" 
-        id="projectDetails_summary_pane" 
-        role="tabpanel"
-        aria-labelledby="projectDetails_summary_tab"
-      >
+  <%# Summary Pane %>
+  <div 
+    class="tab-pane fade show active" 
+    id="projectDetails_summary_pane" 
+    role="tabpanel"
+    aria-labelledby="projectDetails_summary_tab"
+  >
+    <div class="card">
+      <div class="card-body">
         <h4 class="mb-3">Project Summary</h4>
 
         <dl class="row">
@@ -134,14 +133,18 @@
           </div>
         </dl>
       </div>
+    </div>
+  </div>
 
-      <%# Financial Requirements Pane %>
-      <div 
-        class="tab-pane fade show" 
-        id="projectDetails_financial_pane" 
-        role="tabpanel"
-        aria-labelledby="projectDetails_financial_tab"
-      >
+  <%# Financial Requirements Pane %>
+  <div 
+    class="tab-pane fade show" 
+    id="projectDetails_financial_pane" 
+    role="tabpanel"
+    aria-labelledby="projectDetails_financial_tab"
+  >
+    <div class="card">
+      <div class="card-body">
         <h4 class="mb-3">Financial Requirements</h4>
 
         <div class="table-responsive">
@@ -164,14 +167,18 @@
           </table>
         </div>
       </div>
+    </div>
+  </div>
 
-      <%# Evaluation Plan Pane %>
-      <div 
-        class="tab-pane fade" 
-        id="projectDetails_evaluationPlan_pane" 
-        role="tabpanel"
-        aria-labelledby="projectDetails_evaluationPlan_tab"
-      >
+  <%# Evaluation Plan Pane %>
+  <div 
+    class="tab-pane fade" 
+    id="projectDetails_evaluationPlan_pane" 
+    role="tabpanel"
+    aria-labelledby="projectDetails_evaluationPlan_tab"
+  >
+    <div class="card">
+      <div class="card-body">
         <h4 class="mb-3">Evaluation Plan</h4>
 
         <div class="table-responsive">
@@ -195,22 +202,53 @@
           </table>
         </div>
       </div>
+    </div>
+  </div>
 
-      <%# Documents Pane %>
-      <div 
-        class="tab-pane fade" 
-        id="projectDetails_documents_pane" 
-        role="tabpanel"
-        aria-labelledby="projectDetails_documents_tab"
-      >
+  <%# Documents Pane %>
+  <div 
+    class="tab-pane fade" 
+    id="projectDetails_documents_pane" 
+    role="tabpanel"
+    aria-labelledby="projectDetails_documents_tab"
+  >
+    <div class="card">
+      
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between">
+          <h3 class="card-title">List of Documents</h3>
+          <div class="card-tools">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              data-card-widget="maximize"
+              data-toggle="tooltip"
+              title="Maximize/minimize card"
+            >
+              <i class="fas fa-expand"></i>
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              data-toggle="tooltip"
+              title="Reload table"
+              onclick="ProjectDocuments.reloadDataTable()"
+            >
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
         <div class="d-flex mb-3">
-          <h4 class="mb-3 flex-grow-1">Documents</h4>
+          <h4 class="mb-3 flex-grow-1">Upload your documents</h4>
           
           <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
             <div class="text-right">
               <button class="btn btn-info" data-toggle="modal" data-target="#uploadDocuments_modal">
                 <i class="fas fa-upload mr-1"></i>
-                <span>Upload documents</span>
+                <span>Upload</span>
               </button>
             </div>
           <% } %>  
@@ -239,15 +277,18 @@
         </div>
       </div>
 
+    </div>
+  </div>
 
-      <%# Evaluation Summary Pane %>
-      <div 
-        class="tab-pane fade" 
-        id="projectDetails_evaluationSummary_pane" 
-        role="tabpanel"
-        aria-labelledby="projectDetails_evaluationSummary_tab"
-      >
-
+  <%# Evaluation Summary Pane %>
+  <div 
+    class="tab-pane fade" 
+    id="projectDetails_evaluationSummary_pane" 
+    role="tabpanel"
+    aria-labelledby="projectDetails_evaluationSummary_tab"
+  >
+    <div class="card">
+      <div class="card-body">
         <h4 class="mb-3">Summary of Project Evaluation</h4>
 
         <%# Date of Presentation %>
