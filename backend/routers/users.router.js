@@ -6,7 +6,7 @@ const jwtMiddleWare = require('../../utils/jwtMiddleware')
 
 router.use(jwtMiddleWare)
 
-router.get('/datatable', datatableUsers)
+router.get('/datatables', datatableUsers)
 router.get('/:id', viewUser)
 router.post('/create', createUser)
 router.put('/change_password', changePassword)
