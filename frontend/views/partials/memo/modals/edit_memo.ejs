@@ -1,9 +1,9 @@
-<%# Add Memo Modal %>
-<div class="modal fade" id="addMemo_modal" data-backdrop="static">
+<%# Edit Memo Modal %>
+<div class="modal fade" id="editMemo_modal" data-backdrop="static">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <form class="modal-content" id="addMemo_form">
+    <form class="modal-content" id="editMemo_form">
       <div class="modal-header">
-        <h4 class="modal-title">Add MOA/MOU</h4>
+        <h4 class="modal-title">Edit MOA/MOU</h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
@@ -11,7 +11,7 @@
       <div class="modal-body">
           
         <%# Form Group Loader %>
-        <div id="addMemo_formGroups_loader">
+        <div id="editMemo_formGroups_loader">
           <div class="form-group">
             <div class="skeleton text" style="width: 8rem"></div>
             <div class="skeleton input"></div>
@@ -27,19 +27,19 @@
         </div>
 
         <%# Form Groups %>
-        <div class="row" id="addMemo_formGroups" style="display: none">
+        <div class="row" id="editMemo_formGroups" style="display: none">
 
-          <%# Partnership Name %>
+          <%# Partner Name %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMemo_partnershipName">
+              <label for="editMemo_partnerName">
                 <span>Name of Partner</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMemo_partnershipName" 
+                id="editMemo_partnerName" 
                 name="name"
                 placeholder="Enter the partnership name here"
               />
@@ -49,31 +49,31 @@
           <%# Partner Address %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMemo_partnerAddress">
+              <label for="editMemo_partnerAddress">
                 <span>Partner Address</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMemo_partnerAddress" 
+                id="editMemo_partnerAddress" 
                 name="address"
                 placeholder="Enter the partner address here"
               />
             </div>
           </div>
   
-          <%# Partnership Representative Name %>
+          <%# Partner Representative Name %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMemo_partnershipRepresentative">
+              <label for="editMemo_partnerRepresentative">
                 <span>Name of Representative</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMemo_partnershipRepresentative" 
+                id="editMemo_partnerRepresentative" 
                 name="representative"
                 placeholder="Enter the partnership representative name here"
               />
@@ -83,14 +83,14 @@
           <%# PUP REPD Representative %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMemo_pupREPD">
+              <label for="editMemo_pupREPD">
                 <span>Name of PUP REPD Representative</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addMemo_pupREPD" 
+                id="editMemo_pupREPD" 
                 name="pup_REPD"
                 placeholder="Enter the PUP REPD representative here"
               />
@@ -99,8 +99,8 @@
   
           <%# Branch/Campus / Organization %>
           <div class="col-12">
-            <div class="form-group" id="addMemo_organization_grp">
-              <label for="addMemo_organization">
+            <div class="form-group" id="editMemo_organization_grp">
+              <label for="editMemo_organization">
                 <span>Branch/Campus</span>
                 <span class="text-danger">*</span>
               </label>
@@ -110,7 +110,7 @@
                   <div class="flex-grow-1 mr-1">
                     <select 
                       name="organization" 
-                      id="addMemo_organization_select" 
+                      id="editMemo_organization" 
                       class="form-control select2"
                       style="width: 100%;"
                     >
@@ -135,7 +135,7 @@
           <%# Notary Signed Date %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addMemo_notarySignedDate">
+              <label for="editMemo_notarySignedDate">
                 <span>Notary Signed Date</span>
                 <span class="text-danger">*</span>
               </label>
@@ -143,7 +143,7 @@
                 <input 
                   type="text" 
                   class="form-control" 
-                  id="addMemo_notarySignedDate" 
+                  id="editMemo_notarySignedDate" 
                   name="notary_date"
                   placeholder="Please select notary signed date" 
                   data-inputmask-alias="datetime"
@@ -154,7 +154,7 @@
                   <button 
                     type="button" 
                     class="btn btn-primary" 
-                    id="addMemo_notarySignedDate_pickerBtn"
+                    id="editMemo_notarySignedDate_pickerBtn"
                     data-toggle="tooltip" 
                     title="Select notary signed date"
                   >
@@ -179,7 +179,7 @@
           <%# Effective on/Validity Date %>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="addMemo_validityDate">
+              <label for="editMemo_validityDate">
                 <span>Effective on</span>
                 <span class="text-danger">*</span>
               </label>
@@ -187,7 +187,7 @@
                 <input 
                   type="text" 
                   class="form-control" 
-                  id="addMemo_validityDate" 
+                  id="editMemo_validityDate" 
                   name="validity_date"
                   placeholder="Please select effectivity date" 
                   data-inputmask-alias="datetime"
@@ -198,7 +198,7 @@
                   <button 
                     type="button" 
                     class="btn btn-primary" 
-                    id="addMemo_validityDate_pickerBtn"
+                    id="editMemo_validityDate_pickerBtn"
                     data-toggle="tooltip" 
                     title="Select effectivity date"
                   >
@@ -212,7 +212,7 @@
           <%# Duration %>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="addMemo_duration">
+              <label for="editMemo_duration">
                 <span>Duration</span>
                 <span class="small">(in years)</span>
                 <span class="text-danger">*</span>
@@ -220,7 +220,7 @@
               <input 
                 type="number" 
                 class="form-control" 
-                id="addMemo_duration" 
+                id="editMemo_duration" 
                 name="duration"
                 placeholder="Enter the duration here"
               />
@@ -231,7 +231,7 @@
           <div class="col-12">
             <div class="form-group">
               <span class="font-weight-bold">Valid until: </span>
-              <span id="addMemo_validUntil">
+              <span id="editMemo_validUntil">
                 <span class="font-italic text-muted">Please select an effectivity date and duration.</span>
               </span>
             </div>

@@ -1,18 +1,19 @@
 /**
  * ==============================================
- * * ADD MEMO
+ * * EDIT MEMO
  * ==============================================
  */
 
-(() => {
+const EditMemo = (() => {
 
   // * Local Variables
 
   let initialized = false;
   const user_roles = JSON.parse(getCookie('roles'));
-  const modal = $('#addMemo_modal')
-  const formSelector = '#addMemo_form';
+  const modal = $('#editMemo_modal')
+  const formSelector = '#editMemo_form';
   const form = $(formSelector)[0];
+  let memo;
   let W_form; // Witnesses form
   let processing = false;
 
@@ -23,19 +24,19 @@
     // *** For Date Inputs *** //
 
     // Initialize Notary Signed Date
-    $app('#addMemo_notarySignedDate').initDateInput({
-      button: '#addMemo_notarySignedDate_pickerBtn'
+    $app('#editMemo_notarySignedDate').initDateInput({
+      button: '#editMemo_notarySignedDate_pickerBtn'
     });
 
     // Initialize Validity Date
-    $app('#addMemo_validityDate').initDateInput({
-      button: '#addMemo_validityDate_pickerBtn'
+    $app('#editMemo_validityDate').initDateInput({
+      button: '#editMemo_validityDate_pickerBtn'
     });
 
     // *** For Add Memo Modal *** //
     
-    modal.on('show.bs.modal', () => {
-      $.ajax({
+    modal.on('show.bs.modal', async () => {
+      await $.ajax({
         url: `${ BASE_URL_API }/organizations`,
         type: 'GET',
         success: result => {
@@ -43,7 +44,7 @@
             ajaxErrorHandler(result.message)
           } else {
             const { data } = result;
-            const select = $('#addMemo_organization_select');
+            const select = $('#editMemo_organization');
 
             select.empty();
 
@@ -54,8 +55,8 @@
                   <option value="${ d.id }">${ d.name } | ${ d.type }</option>
                 `);
 
-                $('#addMemo_formGroups_loader').hide();
-                $('#addMemo_formGroups').show();
+                $('#editMemo_formGroups_loader').hide();
+                $('#editMemo_formGroups').show();
               });
             } else {
               select.append('<option disabled>No organizations yet.</option>');
@@ -70,11 +71,12 @@
           })
         }
       });
+      await setInputValues();
     });
 
     modal.on('hidden.bs.modal', () => {
-      $('#addMemo_formGroups_loader').show();
-      $('#addMemo_formGroups').hide();
+      $('#editMemo_formGroups_loader').show();
+      $('#editMemo_formGroups').hide();
       form.reset();
       W_form.resetForm();
     });
@@ -85,9 +87,9 @@
 
     // *** To get valid until *** //
 
-    $('#addMemo_validityDate, #addMemo_duration').on('keyup change', () => {
-      const effectivity_date = $('#addMemo_validityDate').val();
-      const duration = parseInt($('#addMemo_duration').val());
+    $('#editMemo_validityDate, #editMemo_duration').on('keyup change', () => {
+      const effectivity_date = $('#editMemo_validityDate').val();
+      const duration = parseInt($('#editMemo_duration').val());
 
       if (
         effectivity_date 
@@ -96,13 +98,32 @@
         && duration > 0
       ) {
         const valid_until = moment(effectivity_date).add(duration, 'year');
-        setHTMLContent('#addMemo_validUntil', formatDateTime(valid_until, 'Date'));
+        setHTMLContent('#editMemo_validUntil', formatDateTime(valid_until, 'Date'));
       } else {
-        setHTMLContent('#addMemo_validUntil', `
+        setHTMLContent('#editMemo_validUntil', `
           <span class="font-italic text-muted">Please select an effectivity date and duration.</span>
         `);
       }
     });
+  }
+
+  const setInputValues = async () => {
+    const { partner } = memo;
+
+    setInputValue({
+      '#editMemo_partnerName': partner.name,
+      '#editMemo_partnerAddress': partner.address,
+      '#editMemo_partnerRepresentative': memo.representative_partner,
+      '#editMemo_pupREPD': memo.representative_pup,
+      '#editMemo_organization': memo.organization_id,
+      '#editMemo_notarySignedDate': memo.notarized_date,
+      '#editMemo_validityDate': memo.validity_date,
+      '#editMemo_duration': memo.duration,
+    });
+
+    $('#editMemo_organization, #editMemo_validityDate, #editMemo_duration').trigger('change');
+
+    W_form.setWitnesses(memo.witnesses);
   }
 
   const handleForm = () => {
@@ -148,7 +169,7 @@
           required: "Please select the notary signed date.",
           notEmpty: "This field cannot be empty.",
           sameOrBeforeDateTimeSelector: {
-            rule: '#addMemo_validityDate',
+            rule: '#editMemo_validityDate',
             message: 'The notary date must be ealier than the effectivity date.' 
           }
         },
@@ -156,7 +177,7 @@
           required: "Please select the validity date.",
           notEmpty: "This field cannot be empty.",
           sameOrAfterDateTimeSelector: {
-            rule: '#addMemo_notarySignedDate',
+            rule: '#editMemo_notarySignedDate',
             message: 'The validity date must be same or later than the notary date.' 
           }
         },
@@ -208,19 +229,20 @@
     }
 
     await $.ajax({
-      url: `${ BASE_URL_API }/partners/create`,
-      type: 'POST',
+      url: `${ BASE_URL_API }/memos/${ memo.id }`,
+      type: 'PUT',
       data: data,
-      success: async result => {
+      success: async res => {
         processing = false;
-        if (result.error) {
-          ajaxErrorHandler(result.message);
+        if (res.error) {
+          ajaxErrorHandler(res.message);
           enableElements();
         } else {
-          await Memos.reloadDataTable();
+          memo = {...memo, ...data}
+          await MemoDetails.loadDetails(memo);
           enableElements();
-          $('#addMemo_modal').modal('hide');
-          toastr.success('A new MOA/MOU has been successfully added.');
+          $('#editMemo_modal').modal('hide');
+          toastr.success('The details of the MOA/MOU has been successfully updated.');
         }
       },
       error: () => {
@@ -231,15 +253,21 @@
     });
   }
 
+  // * Init
+
+  const init = (memoData) => {
+    if (user_roles.includes('Extensionist') && !initialized) {
+      initialized = true;
+      memo = memoData;
+      console.log(memo);
+      initializations();
+      handleForm();
+    }
+  }
+
   // * Return Public Functions
 
   return {
-    init: () => {
-      if (user_roles.includes('Extensionist') && !initialized) {
-        initialized = true;
-        initializations();
-        handleForm();
-      }
-    }
+    init
   }
-})().init();
+})();

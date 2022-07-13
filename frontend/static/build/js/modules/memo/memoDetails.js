@@ -4,17 +4,12 @@
  * ==============================================
  */
 
-
 'use strict';
-
 
 const MemoDetails = (() => {
 
   // * Local Variables
 
-  const formSelector = '#editMOA_form';
-
-  let dt;
   let memo;
   let initialized = false;
 
@@ -71,10 +66,11 @@ const MemoDetails = (() => {
       representative_partner,
       representative_pup,
       notarized_date,
+      witnesses,
       validity_date,
       end_date,
       partner: p, 
-      organization: o 
+      organization: o,
     } = memo;
 
     setHTMLContent({
@@ -92,6 +88,15 @@ const MemoDetails = (() => {
           <div>${ moment(notarized_date).format('MMMM DD, YYYY (dddd)') }</div>
           <div class="small text-muted">${ fromNow(notarized_date) }</div>
         `
+      },
+      '#memoDetails_body_witnesses': () => {
+        if (witnesses.length) {
+          let list = '<ul class="mb-0">';
+          witnesses.forEach(w => list += `<li>${w.name}${ w.role ? ` - ${ w.role }` : '' }</li>`);
+          list += '</ul>';
+          return list;
+        }
+        return noContentTemplate('No witnesses has been added.');
       },
       '#memoDetails_body_validity': () => {
         if (validity_date && end_date) {
@@ -156,70 +161,10 @@ const MemoDetails = (() => {
     });
   }
 
-  const loadDetails = () => {
+  const loadDetails = async (memoData) => {
+    if (memoData) memo = memoData;
     loadHeaderDetails();
     loadBodyDetails();
-  }
-
-  const initializations = () => {
-    // Notary Signed Date
-    $app('#editMOA_notarySignedDate').initDateInput({
-      button: '#editMOA_notarySignedDate_pickerBtn'
-    });
-
-    // Validity Date
-    $app('#editMOA_validityDate').initDateInput({
-      button: '#editMOA_validityDate_pickerBtn'
-    });
-  }
-
-  const handleForm = () => {
-    $app(formSelector).handleForm({
-      validators: {
-        name: {
-          required: "The partner name is required.",
-          notEmpty: "This field cannot be empty",
-        },
-        address: {
-          required: "The partner address is required.",
-          notEmpty: "This field cannot be empty",
-        },
-        representative: {
-          required: "The name of representative is required.",
-          notEmpty: "This field cannot be empty",
-        },
-        organization:  {
-          required: "The organization is required.",
-          notEmpty: "This field cannot be empty",
-        },
-        pup_REPD: {
-          required: "The name of PUP REPD Representative is required.",
-          notEmpty: "This field cannot be empty",
-        },
-        notary_date: {
-          required: "Please select the notary signed date.",
-          notEmpty: "This field cannot be empty",
-          afterDateTime: {
-						rule: moment().subtract(1, 'days'),
-						message: 'Notary Signed date must be current or onwards.'
-					}
-        },
-        validity_date: {
-          required: "Please select the validity date.",
-          notEmpty: "This field cannot be empty",
-          afterDateTime: {
-						rule: moment().subtract(1, 'days'),
-						message: 'Validity date must be current or onwards.'
-					}
-        },
-        uploadDocument: {
-          required: "MOA/MOU attachment is required.",
-        }
-      },
-      onSubmit: () => {
-        toastr.success("MOA/MOU has been updated successfully!");
-      }
-    });
   }
 
   const removeLoaders = () => {
@@ -246,9 +191,6 @@ const MemoDetails = (() => {
       initialized = true;
       memo = memoData;
       loadDocumentTitle();
-      initializations();
-      // initDataTable();
-      handleForm();
       loadDetails();
       removeLoaders();
     }
@@ -257,7 +199,8 @@ const MemoDetails = (() => {
   // * Return Public Methods
 
   return {
-    init
+    init,
+    loadDetails
   }
 
 })();
@@ -686,6 +629,7 @@ const MemoDocuments = (() => {
         
         MemoDetails.init(data);
         MemoDocuments.init(data);
+        EditMemo.init(data);
       }
     },
     error: (xhr, status, error) => {

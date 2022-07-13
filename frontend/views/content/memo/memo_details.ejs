@@ -102,12 +102,12 @@
                 <span id="memoDetails_header_representative"></span>
               </div>
 
-              <%# Organization %>
+              <%# Branch/Campus / Organization %>
               <div class="d-flex align-items-baseline">
                 <i 
                   class="fas fa-sitemap fa-fw mr-2 text-dark" 
                   data-toggle="tooltip" 
-                  title="Organization"
+                  title="Branch/Campus"
                 ></i>
                 <span id="memoDetails_header_organization"></span>
               </div>
@@ -117,7 +117,7 @@
                 <i 
                   class="fas fa-certificate fa-fw mr-2 text-dark" 
                   data-toggle="tooltip" 
-                  title="Validity"
+                  title="Validity Time Frame"
                 ></i>
                 <span id="memoDetails_header_validity"></span>
               </div>
@@ -249,9 +249,9 @@
                     <hr class="my-2">
                   </div>
 
-                  <%# Organization %>
+                  <%# Branch/Campus / Organization %>
                   <dt class="col-md-3">
-                    <div class="mx-2">Organization</div>
+                    <div class="mx-2">Branch/Campus</div>
                   </dt>
                   <dd class="col-md-9">
                     <div class="mx-2" id="memoDetails_body_organization"></div>
@@ -267,6 +267,18 @@
                   </dt>
                   <dd class="col-md-9">
                     <div class="mx-2" id="memoDetails_body_notarySignedDate"></div>
+                  </dd>
+
+                  <div class="col-12">
+                    <hr class="my-2">
+                  </div>
+
+                  <%# Witnesses %>
+                  <dt class="col-md-3">
+                    <div class="mx-2">Witnesses</div>
+                  </dt>
+                  <dd class="col-md-9">
+                    <div class="mx-2" id="memoDetails_body_witnesses"></div>
                   </dd>
 
                   <div class="col-12">
@@ -327,15 +339,18 @@
     
               <div class="card-body">
                 
-                <div class="form-group text-right">
-                  <button 
-                    class="btn btn-info" 
-                    data-toggle="modal" 
-                    data-target="#uploadMemoDocuments_modal"
-                  >
-                    <i class="fas fa-upload mr-1"></i>
-                    <span>Upload Document</span>
-                  </button>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h4>Upload your documents</h4>
+                  <div class="text-right">
+                    <button 
+                      class="btn btn-info" 
+                      data-toggle="modal" 
+                      data-target="#uploadMemoDocuments_modal"
+                    >
+                      <i class="fas fa-upload mr-1"></i>
+                      <span>Upload</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div class="table-responsive">
@@ -386,22 +401,15 @@
             
             <div class="card-body p-2">
               <div class="dropdown-header">MOA/MOU details</div>
-              <a class="btn btn-negative btn-block text-left" href=""	data-toggle="modal"
-              data-target="#editMOA_modal">
-                <i class="fas fa-edit text-info fa-fw mr-1"></i>
-                <span>Edit details</span>
-              </a>
-              <hr class="my-2">
-              <div class="dropdown-header">Renewal</div>
-              <button 
-                type="button"
+              <div
+                type="button" 
                 class="btn btn-negative btn-block text-left" 
                 data-toggle="modal"
-                data-target="#uploadDocumentRenewal_modal"
+                data-target="#editMemo_modal"
               >
-                <i class="fas fa-file-upload text-primary fa-fw mr-1"></i>
-                <span>Upload Document</span>
-              </button>
+                <i class="fas fa-edit text-info fa-fw mr-1"></i>
+                <span>Edit details</span>
+              </div>
             </div>
             
           </div>
@@ -415,9 +423,10 @@
 
 
 <%# === Modals === %>
-<%- include('../../partials/memo/modals/edit_memo_details') %>
-<%- include('../../partials/memo/modals/upload_documents') %>
-
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+  <%- include('../../partials/memo/modals/edit_memo') %>
+  <%- include('../../partials/memo/modals/upload_documents') %>
+<% } %> 
 
 
 <%# ***** Scripts ***** %>
@@ -452,3 +461,6 @@
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/modules/memo/memoDetails.js"></script>
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+  <script src="<%=BASE_URL%>/js/modules/memo/editMemo.js"></script>
+<% } %>

@@ -3330,3 +3330,325 @@ class ActivityEvaluationForm {
     return evaluation;
   }
 }
+
+
+class WitnessesForm {
+  constructor(form = $(`[data-form="witnesses"]`)) {
+    this.form = form;
+
+    this.witnesses = [];
+
+    // Object 
+    // {
+    //   witness_id: '',
+    //   name: '',
+    //   role: ''
+    // }
+
+    const dataPrefix = 'data-witnesses-';
+
+    this.data = {
+      witness_id: `${ dataPrefix }witness-id`,
+
+      container: `${ dataPrefix }container`,
+      input: `${ dataPrefix }input`,
+      btn: `${ dataPrefix }btn`,
+      modal: `${ dataPrefix }modal`,
+    }
+
+    this.#initializations();
+  }
+
+  // * Template Literals
+
+  #buttonsContainer = () => `
+    <div class="text-right text-md-left" ${ this.data.container }="buttons">
+      <button 
+        type="button" 
+        class="btn btn-sm btn-success" 
+        ${ this.data.btn }="addWitness"
+      >
+        <i class="fas fa-plus mr-1"></i>
+        <span>Add witness</span>
+      </button>
+    </div>
+  `
+
+  #addWitnessRow = (witness_id) => `
+    <div 
+      class="d-flex align-items-baseline mb-1"
+      ${ this.data.witness_id }="${ witness_id }"
+    >
+      <div class="px-2">●</div>
+
+      <div class="form-row flex-grow-1 mx-2">
+        <div class="col-md-8 pl-0 pr-0 pr-md-1">
+          <div class="form-group mb-1">
+            <input 
+              type="text" 
+              class="form-control"
+              name="name-${ witness_id }"
+              ${ this.data.input }="name"
+              placeholder="Enter the witness' name"
+            />
+          </div>
+        </div>
+        <div class="col-md-4 pr-0 pl-0 pl-md-1">
+          <div class="form-group mb-1">
+            <input 
+              type="text" 
+              class="form-control"
+              name="role-${ witness_id }"
+              ${ this.data.input }="role"
+              placeholder="Enter the witness' role"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button 
+          type="button"
+          class="btn btn-negative btn-sm"
+          ${ this.data.btn }="removeWitness"
+          data-toggle="tooltip"
+          title="Remove witness field"
+        >
+          <i class="fas fa-times text-danger"></i>
+        </button>
+      </div>
+    </div>
+  `
+
+  #removeWitnessModal = () => `
+    <div 
+      class="modal" 
+      ${ this.data.modal }="removeWitness"
+      ${ this.data.witness_id }=""
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex">
+              <h1 class="mr-3 display-4">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+              </h1>
+              <div>
+                <div class="font-weight-bold mb-2">Remove witness field</div>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this witness field?<br>Your inputs will not be saved.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+            <button 
+              type="button" 
+              class="btn btn-danger" 
+              ${ this.data.btn }="confirmRemove"
+            >Yes, I'm sure.</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+
+  // * Private Methods
+
+  #initializations = () => {
+
+    // Append the buttons container in the DOM
+    this.form.append(this.#buttonsContainer());
+
+    // Initialize the add button
+    const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
+    const addWitness_btn = btns_container.find(`[${ this.data.btn }="addWitness"]`);
+    addWitness_btn.on('click', () => this.addWitness());
+    addWitness_btn.attr('disabled', true);
+
+    if (!$(`[${ this.data.modal }="removeWitness"]`).length) {
+      
+      // Append the modal in the body
+      $('body').append(this.#removeWitnessModal());
+
+      const removeWitness_modal = $('body').find(`[${ this.data.modal }="removeWitness"]`);
+
+      // Handle modal events
+
+      removeWitness_modal.on('show.bs.modal', (e) => {
+        if (!removeWitness_modal.attr(this.data.witness_id)) e.preventDefault();
+      });
+
+      removeWitness_modal.on('hide.bs.modal', () => {
+        removeWitness_modal.attr(this.data.witness_id, '');
+      });
+
+      // Initialize the remove button
+      const confirmRemove_btn = removeWitness_modal.find(`[${ this.data.btn }="confirmRemove"]`);
+
+      confirmRemove_btn.on('click', () => {
+        
+        // Get the witness_id on the modal
+        const witness_id = removeWitness_modal.attr(this.data.witness_id);
+
+        // Call the remove member method
+        this.removeWitness(witness_id);
+
+        // Hide the modal after remove
+        removeWitness_modal.modal('hide');
+      });
+    }
+
+    // By default, add a member
+    this.addWitness();
+  }
+
+  #hasInvalidInput = () => {
+    return this.witnesses.some(({ witness_id }) => {
+      const witness_row = this.form.find(`[${ this.data.witness_id }="${ witness_id }"]`);
+      const name = witness_row.find(`[${ this.data.input }="name"]`).val().trim();
+      const role = witness_row.find(`[${ this.data.input }="role"]`).val().trim();
+
+      if(name.replace(/\s+/g, '') === '') return true;
+      if(name.length < 5) return true;
+
+      if(role.length !== 0 && role.length < 5) return true;
+
+      return false;
+    });
+  }
+
+  #toggleAddWitnessBtn = () => {
+    const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
+    const addWitness_btn = btns_container.find(`[${ this.data.btn }="addWitness"]`);
+    addWitness_btn.attr('disabled', this.#hasInvalidInput());
+  }
+
+  // * Public Methods
+
+  addWitness = (data) => {
+    const witness_id = uuid();
+
+    // Create object
+    this.witnesses.push({
+      witness_id: witness_id,
+      name: '',
+      role: ''
+    });
+
+    // Add member row in DOM
+    const btns_container = this.form.find(`[${ this.data.container }="buttons"]`);
+    btns_container.before(this.#addWitnessRow(witness_id));
+
+    this.#toggleAddWitnessBtn();
+
+    // Initiate the inputs
+
+    const witness_row = this.form.find(`[${ this.data.witness_id }="${ witness_id }"]`);
+    const name_input = witness_row.find(`[${ this.data.input }="name"]`);
+    const role_input = witness_row.find(`[${ this.data.input }="role"]`);
+
+    name_input.rules('add', {
+      required: true,
+      notEmpty: true,
+      minlength: 5,
+      messages: {
+        required: `The witness' name is required.`,
+        notEmpty: `This field cannot be blank.`,
+        minlength: `Make sure you type the full name of the witness.`,
+      }
+    });
+
+    role_input.rules('add', {
+      notEmpty: true,
+      minlength: 5,
+      messages: {
+        notEmpty: `This field cannot be blank.`,
+        minlength: `Make sure you type the full title on the role.`,
+      }
+    });
+
+    name_input.on('keyup change', () => {
+      this.witnesses = this.witnesses.map(m => m.witness_id === witness_id
+        ? { ...m, name: name_input.val().replace(/\s+/g, ' ').trim() } : m
+      );
+      this.#toggleAddWitnessBtn();
+    });
+
+    role_input.on('keyup change', () => {
+      this.witnesses = this.witnesses.map(m => m.witness_id === witness_id
+        ? { ...m, role: role_input.val().replace(/\s+/g, ' ').trim() } : m
+      );
+      this.#toggleAddWitnessBtn();
+    });
+
+    initInputs();
+
+    // Initiate the buttons
+
+    const hasInputs = () => name_input.val().trim() !== '' || role_input.val().trim() !== '';
+
+    const removeWitness_btn = witness_row.find(`[${ this.data.btn }="removeWitness"]`);
+    removeWitness_btn.on('click', () => {
+      if (hasInputs()) {
+        const removeWitness_modal = $('body').find(`[${ this.data.modal }="removeWitness"]`);
+        removeWitness_modal.attr(this.data.witness_id, witness_id);
+        removeWitness_modal.modal('show');
+      } else if (this.witnesses.length === 1) {
+        toastr.warning('You must include at least one witness');
+      } else {
+        removeWitness_btn.tooltip('hide');
+        this.removeWitness(witness_id);
+      }
+    });
+
+    if (data) {
+      name_input.val(data.name).trigger('change');
+      role_input.val(data.role).trigger('change');
+    }
+  }
+
+  removeWitness = (witness_id) => {
+    if (!witness_id) {
+      console.error(`'witness_id' param is missing for removeWitness()`);
+      return;
+    }
+
+    this.witnesses = this.witnesses.filter(t => t.witness_id != witness_id);
+    this.form.find(`[${ this.data.witness_id }="${ witness_id }"]`).remove();
+
+    this.#toggleAddWitnessBtn();
+
+    if (this.witnesses.length === 0) this.addWitness();
+  }
+
+  getWitnesses = () => {
+    let witnesses = [...this.witnesses];
+    witnesses.forEach(t => delete t.witness_id);
+    return witnesses;
+  } 
+
+  setWitnesses = (data) => {
+    if (!data) {
+      console.error(`Data is required for setWitnesses()`);
+      return;
+    }
+
+    this.witnesses = [];
+    this.form.find(`[${ this.data.witness_id }]`).remove();
+
+    data.forEach(d => this.addWitness(d));
+  }
+
+  resetForm = () => {
+    this.witnesses = [];
+    this.form.find(`[${ this.data.witness_id }]`).remove();
+
+    this.addWitness();
+  }
+}
