@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const bcrypt = require('bcrypt')
 const { sendMail } = require('../../utils/sendMail.js')
 const { Users } = require('../sequelize/models')
-const { datatable } = require('../../utils/datatableResponse')
+const datatable = require('../../utils/datatableResponse')
 
 exports.datatableUsers = async (req, res) => {
   try {

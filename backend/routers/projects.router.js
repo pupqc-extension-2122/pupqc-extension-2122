@@ -19,7 +19,8 @@ const {
   deleteComment,
   evaluateProposal,
   evaluateActivity,
-  reschedulePresentation
+  reschedulePresentation,
+  updateMonitoring
 } = require('../controllers/projects.controller')
 const jwtMiddleWare = require('../../utils/jwtMiddleware')
 const { uploadProjectDocument } = require('../../utils/multerHelper')
@@ -31,7 +32,8 @@ router.get('/approved/datatables', datatableApprovedProposal)
 router.get('/datatables', datatableProposal)
 router.get('/:id', viewProposal)
 router.post('/create', uploadProjectDocument, createProject)
-router.put('/:project_id/reschedule', reschedulePresentation)
+router.put('/:id/change_monitoring', updateMonitoring)
+router.put('/:id/reschedule', reschedulePresentation)
 router.put('/:id', updateProject)
 
 // * Activities

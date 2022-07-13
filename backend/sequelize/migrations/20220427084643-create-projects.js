@@ -7,6 +7,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
+      created_by: {
+        type: Sequelize.UUID,
+        references: {
+          model: {
+            tableName: 'Users'
+          },
+          key: 'id'
+        }
+      },
       SO_number: {
         type: Sequelize.STRING,
       },
@@ -56,15 +65,6 @@ module.exports = {
       },
       presentation_date: {
         type: Sequelize.DATEONLY
-      },
-      created_by: {
-        type: Sequelize.UUID,
-        references: {
-          model: {
-            tableName: 'Users'
-          },
-          key: 'id'
-        }
       },
       created_at: {
         allowNull: false,
