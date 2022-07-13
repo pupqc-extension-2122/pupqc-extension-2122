@@ -23,6 +23,7 @@ module.exports = {
         representative_pup: 'ANNA RUBY P. GAPASIN',
         representative_partner: 'ROBERTO O. ASUNCION',
         notarized_date: new Date('2022-03-22'),
+        witnesses: '[{"name":"James Jimenez","role":"Leader"}]',
         created_at: new Date(),
         updated_at: new Date()
       }

@@ -51,6 +51,10 @@ module.exports = {
       notarized_date: {
         type: Sequelize.DATEONLY
       },
+      witnesses: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE
