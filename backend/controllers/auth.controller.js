@@ -166,9 +166,16 @@ exports.authMagic = async (req, res) => {
 
   let info = JSON.parse(decrypted)
 
-  if (new Date(info.expires).toLocaleTimeString() < new Date(Date.now()).toLocaleTimeString())
-    return res.status(410).send({ error: true, message: 'Link is expired' })
-
+  if (new Date(info.expires).toLocaleTimeString() < new Date(Date.now()).toLocaleTimeString()){
+    return res.status(410).send(`
+      <html>
+        <body>
+          <div>This link is expired. Redirecting you to login page.</div>
+          <script>setTimeout(()=>location.assign('/'),1000)</script>
+        </body>
+      </html>
+    `)
+}
   let user = await Users.findOne({
     where: { email: info.email },
     attributes: [
@@ -182,6 +189,7 @@ exports.authMagic = async (req, res) => {
     ],
     include: {
       model: Roles,
+      as: 'roles',
       attributes: ['name'],
       through: {
         attributes: []
@@ -194,7 +202,7 @@ exports.authMagic = async (req, res) => {
 
 
   let { id, email, first_name, middle_name, last_name, suffix_name } = user
-  let roles = user.Roles.map(el => el.name)
+  let roles = user.roles.map(el => el.name)
   let data = { id, email, first_name, middle_name, last_name, suffix_name, roles }
 
   let expiresIn = '7h'
@@ -205,11 +213,19 @@ exports.authMagic = async (req, res) => {
   res.cookie('user', data.id, { expires })
   res.cookie('roles', JSON.stringify(roles), { expires })
 
-  res.send({
-    error: false,
-    message: 'Login Success!',
-    data: { id, email, first_name, middle_name, last_name, suffix_name }
-  })
+  let to_store = { id, email, first_name, middle_name, last_name, suffix_name }
+
+  res.send(`
+  <html>
+    <body>
+    <p>Redirecting you to the site...</p>
+    <script>
+      localStorage.setItem('user_data', ${JSON.stringify(JSON.stringify(to_store))});
+      setTimeout( () =>  location.assign('/p'), 1000)
+    </script>
+    </body>
+  </html>
+  `)
 
 }
 
