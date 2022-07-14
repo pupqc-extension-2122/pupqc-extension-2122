@@ -46,6 +46,13 @@ module.exports = {
         role_id: '07e382e1-bb61-492f-acb1-8063a579dc09',
         created_at: new Date(),
         updated_at: new Date()
+      },
+      {
+        id: '0c06a7b5-9fe3-4398-ab26-f0a9616f34df',
+        user_id: '5ee732ca-a57e-48a0-a0ec-1d6d09b2823f',
+        role_id: 'f026e1a8-5fe3-479f-bf40-4775c81828c0',
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ])
   },

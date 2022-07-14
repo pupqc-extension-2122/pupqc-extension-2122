@@ -29,6 +29,11 @@ module.exports = {
         name: 'Admin',
         created_at: new Date(),
         updated_at: new Date()
+      },{
+        id: 'f026e1a8-5fe3-479f-bf40-4775c81828c0',
+        name: 'Director',
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ])
   },
