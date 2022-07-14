@@ -485,7 +485,7 @@ const ProjectOptions = (() => {
     Object.entries(obj).forEach(([key, value]) => {
       if (project.hasOwnProperty(key)) {
         project[key] = value;
-        updated = true;
+        if (!updated) updated = true;
       }
     });
 
@@ -1237,7 +1237,7 @@ const ProjectOptions = (() => {
           },
           callback: {
             rule: () => checkInputForTimeFrame(),
-            message: 'Start and end date are still same with the project timeline.'
+            message: 'The start and end dates are still the same within the project time frame.'
           } 
         },
         end_date: {
@@ -1249,7 +1249,7 @@ const ProjectOptions = (() => {
           },
           callback: {
             rule: () => checkInputForTimeFrame(),
-            message: 'Start and end date are still same with the project timeline.'
+            message: 'The start and end dates are still the same within the project time frame.'
           } 
         },
         remarks: {
@@ -2120,9 +2120,7 @@ const ProjectComments = (() => {
 
 const ProjectActivities = (() => {
 
-  /**
-	 * * Local Variables
-	 */
+  // * Local Variables
 
   const dtElem = $('#activities_dt');
   const viewModal = $('#projectActivityDetails_modal');
@@ -2142,9 +2140,7 @@ const ProjectActivities = (() => {
   let project;
   let mode;
 
-  /**
-	 * * Private Methods
-	 */
+  // * Private Methods
 
   const initializations = () => {
 
@@ -2155,6 +2151,9 @@ const ProjectActivities = (() => {
       // Show the loaders
       $('#projectActivityDetails_loader').show();
       $('#projectActivityDetails').hide();
+
+      // Set the default tab
+      if (mode === 'Activity Evaluation') $('#projectActivityDetails_details_tab').tab('show');
     });
 
     // *** For Edit *** //
@@ -2677,7 +2676,7 @@ const ProjectActivities = (() => {
             searchable: false,
             sortable: false,
             render: (data, type, row) => {
-              let status = 'Not yet graded';
+              const status = data.evaluation ? 'Evaluated' : 'Not yet graded';
               const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
               return `
                 <div class="text-center">
@@ -2694,18 +2693,27 @@ const ProjectActivities = (() => {
             render: data => {
   
               const submitEvaluationGrade = () => {
-                const status = 'Not yet graded';
-                return user_roles.includes('Extensionist') && status == 'Not yet graded'
+                const status = data.evaluation ? 'Evaluated' : 'Not yet graded';
+                return user_roles.includes('Extensionist') && status === 'Not yet graded'
                   ? `
-                    <button
-                      type="button"
+                    <div
+                      role="button"
                       class="dropdown-item"
                       onclick="ProjectActivities.submitPostEvaluation('${ data.id }')"
                     >
                       <span>Submit post evaluation</span>
-                    </button>
+                    </div>
                   `
                   : ''
+                  // `
+                  //   <div
+                  //     role="button"
+                  //     class="dropdown-item"
+                  //     onclick="ProjectActivities.editPostEvaluation('${ data.id }')"
+                  //   >
+                  //     <span>Edit post evaluation</span>
+                  //   </div>
+                  // `
               }
   
               return `
@@ -2862,23 +2870,51 @@ const ProjectActivities = (() => {
       validators: {},
       onSubmit: async () => {
 
+        processing = true;
+
         // Get data
         const data = { 
           evaluation: AE_form.getEvaluation()
         }
 
+        const confirmBtn = $('#activityEvaluation_submitBtn');
+
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+        
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Submit');
+        }
+
         const fd = new FormData($('#activityEvaluation_form')[0]);
 
         await $.ajax({
-          url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ fd.get('activity_id') }`,
-          type: 'PUT',
+          url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ fd.get('activity_id') }/evaluate`,
+          type: 'POST',
           data: data,
           success: (res) => {
+            processing = false;
             if (res.error) {
               ajaxErrorHandler(res.message);
             } else {
+              enableElements();
+              submitActivityEvaluation_modal.modal('hide');
               toastr.success('An activity has been successfully evaluated');
             }
+          },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectMain.js',
+              fn: 'ProjectActivities.initActivityEvaluation()',
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
           }
         });
       }
@@ -2886,19 +2922,16 @@ const ProjectActivities = (() => {
 
     AE_form = new ActivityEvaluationForm($('#activityEvaluation_form'));
 
-    // submitActivityEvaluation_modal.on('hide.bs.modal', (e) => {
-    //   e.preventDefault();
-    //   $('#cancelSubmitEvaluationActivity_modal').modal('show');
-    // });
+    submitActivityEvaluation_modal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
 
     submitActivityEvaluation_modal.on('hidden.bs.modal', () => {
       AE_form.resetForm();
     });
   }
 
-  /**
-	 * * Public Methods
-	 */
+  // * Public Methods
 
   const reloadDataTable = async () => {
     await dt.ajax.reload();
@@ -2918,12 +2951,14 @@ const ProjectActivities = (() => {
           ajaxErrorHandler(result.message)
         } else {
           const { 
+            id,
             activity_name, 
             topics, 
             outcomes,
             start_date,
             end_date,
-            details 
+            details,
+            evaluation
           } = result.data;
 
           // Set Content
@@ -3053,10 +3088,69 @@ const ProjectActivities = (() => {
             },
             '#projectActivityDetails_details': details
           });
-  
+          
           // Hide the loaders
           $('#projectActivityDetails_loader').hide();
           $('#projectActivityDetails').show();
+          
+          if (mode === "Activity Evaluation") {
+            setHTMLContent('#projectActivityDetails_postEvaluation_pane', () => {
+              if (evaluation) {
+                let rows = '';
+                console.log(evaluation);
+                evaluation.forEach(eval_group => {
+                  rows += `
+                    <tr>
+                      <td 
+                        colspan="2" 
+                        class="font-weight-bold" 
+                        style="background: #f6f6f6"
+                      >${ eval_group.category }</td>
+                    </tr>
+                  `;
+
+                  eval_group.criteria.forEach(criterion_group => {
+                    rows += `
+                      <tr>
+                        <td>${ criterion_group.criterion }</td>
+                        <td class="text-right">${ parseFloat(criterion_group.rate).toFixed(2) }</td>
+                      </tr>
+                    `
+                  });
+                })
+                return `
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <th width="90%" class="align-middle">Criteria</th>
+                        <th width="10%" class="align-middle text-right">Rate</th>
+                      </thead>
+                      <tbody>
+                        ${ rows }
+                      </tbody>
+                    </table>
+                  </div>
+                `
+              } else {
+                return `
+                  <div class="p-5 text-center">
+                    <div class="display-3 mb-2">
+                      <i class="fas fa-circle-question text-secondary"></i>
+                    </div>
+                    <h3>No post evaluation yet.</h3>
+                    <p>This project activity is not yet graded. You can submit by clicking the button below.</p>
+                    <button 
+                      class="btn btn-success" 
+                      onclick="ProjectActivities.submitPostEvaluation('${ id }')"
+                    >
+                      <i class="fas fa-file-import mr-1"></i>
+                      <span>Submit Post Evaluation</span>
+                    </button>
+                  </div>
+                `
+              }
+            });
+          }
         }
       },
       error: (xhr, status, error) => {
@@ -3135,14 +3229,17 @@ const ProjectActivities = (() => {
   const submitPostEvaluation = async (activity_id) => {
     if (mode !== 'Activity Evaluation') return;
 
+    // Set the activity id
     $('#activityEvaluation_activityId').val(activity_id);
+    
+    // Hide the view modal if shown
+    viewModal.modal('hide');
 
+    // Show the activity evaluation modal
     submitActivityEvaluation_modal.modal('show');
   }
 
-  /**
-	 * * Init
-	 */
+  // * Init
 
   const init = (data) => {
     if (!initialized) {
@@ -3155,9 +3252,7 @@ const ProjectActivities = (() => {
     };
   }
 
-  /**
-	 * * Return Public Functions
-	 */
+  // * Return Public Functions
 
   return {
     init,

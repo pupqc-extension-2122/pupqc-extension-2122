@@ -8,16 +8,13 @@
 
 const ActivityEvaluation = (() => {
 
-  /**
- * * Local Variables
- */
+  // * Local Variables
+
   let dt;
   const dtElem = $('#activityEvaluation_dt');
   let initialized = 0;
 
-  /**
- * * Private Methods
- */
+  // * Private Methods
 
   const initDataTable = async () => {
     dt = await dtElem.DataTable({
@@ -147,15 +144,11 @@ const ActivityEvaluation = (() => {
     });
   }
 
-  /**
- * * Public Methods
- */
-
+  // * Public Methods
+  
   const reloadDataTable = async () => await dt.ajax.reload();
 
-  /**
- * * Init
- */
+  // * Init
 
   const init = () => {
     if (!initialized) {
@@ -164,10 +157,8 @@ const ActivityEvaluation = (() => {
     }
   }
 
-  /**
- * * Return public methods
- */
-
+  // * Return Public Methods
+  
   return {
     init,
     reloadDataTable

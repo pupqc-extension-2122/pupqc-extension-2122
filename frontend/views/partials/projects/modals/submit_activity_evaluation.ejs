@@ -1,4 +1,4 @@
-<%# Submit Activity  Modal %>
+<%# Submit Activity Evaluation Modal %>
 <div class="modal fade" data-backdrop="static" id="submitActivityEvaluation_modal">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <form class="modal-content" id="activityEvaluation_form">
@@ -13,13 +13,13 @@
       </div>
       <div class="modal-body">
 
-        <input type="text" name="activity_id" id="activityEvaluation_activityId">
+        <input type="hidden" name="activity_id" id="activityEvaluation_activityId">
         
         <div class="table-responsive">
           <table class="table table-bordered" id="activityEvaluation_form">
             <thead>
-              <th class="align-middle" style="width: 83%">Criteria</th>
-              <th class="align-middle" style="width: 12%">Ave. Rate</th>
+              <th class="align-middle" style="width: 80%">Criteria</th>
+              <th class="align-middle" style="width: 15%">Ave. Rate</th>
               <th style="width: 5%"></th>
             </thead>
             <tbody></tbody>
@@ -29,36 +29,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" id="activityEvaluation_submitBtn">Submit</button>
       </div>
     </form>
-  </div>
-</div>
-
-<%# Confirm Approve the Project Modal %>
-<div class="modal" id="cancelSubmitEvaluationActivity_modal">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Confirmation</h4>
-        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="d-flex">
-          <h1 class="mr-3 display-4">
-            <i class="fas fa-exclamation-circle text-info"></i>
-          </h1>
-          <div>
-            <div>Are you sure you want to cancel? Your inputs cannot be save.</div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="cancelSubmitEvaluationActivity_confirmBtn">Yes, please!</button>
-      </div>
-    </div>
   </div>
 </div>

@@ -22,7 +22,7 @@
           <div class="p-3 my-5"></div>
         </div>
 
-        <%# Activity Details %>
+        <%# Project Activity Details %>
         <div id="projectActivityDetails" style="display: none;">
           <h4 id="projectActivityDetails_title"></h4>
           
@@ -31,7 +31,7 @@
             <li class="nav-item" role="presentation">
               <a 
                 class="nav-link active" 
-                id="projecr" 
+                id="projectActivityDetails_details_tab" 
                 data-toggle="tab" 
                 href="#projectActivityDetails_details_pane" 
                 role="tab" 
@@ -60,7 +60,7 @@
             
             <%# Details %>
             <div 
-              class="tab-pane active" 
+              class="tab-pane fade show active" 
               id="projectActivityDetails_details_pane" 
               role="tabpanel" 
               aria-labelledby="projecr"
@@ -123,30 +123,11 @@
 
             <%# Activity Evaluation Grade %>
             <div 
-              class="tab-pane" 
+              class="tab-pane fade" 
               id="projectActivityDetails_postEvaluation_pane" 
               role="tabpanel" 
               aria-labelledby="projectActivityDetails_postEvaluation_tab"
             >
-              <div class="table-responsive">
-                <table class="table table-bordered">
-                  <thead>
-                    <th width="90%" class="align-middle">Criteria</th>
-                    <th width="10%" class="align-middle text-right">Rate</th>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td colspan="2" class="font-weight-bold" style="background: #f6f6f6">Speaker</td>
-                    </tr>
-                    <% for( let index = 0; index < 5; index++ ) { %>
-                      <tr>
-                        <td>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Debitis quasi eligendi ad quos quisquam quia eaque placeat, voluptas corporis accusamus! Aliquid doloribus maiores ea neque?</td>
-                        <td class="text-right">2.5</td>
-                      </tr>
-                    <% } %>
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
         </div>
