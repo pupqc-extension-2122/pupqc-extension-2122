@@ -817,6 +817,7 @@ exports.updateProjectActivities = async (req, res) => {
       include: [
         {
           model: Projects,
+          as: 'project',
           where: {
             status: {
               [Op.in]: allowed_status
