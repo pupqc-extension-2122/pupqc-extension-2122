@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Budget_Item_Categories extends Model {
+  class Budget_Categories extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,18 +14,24 @@ module.exports = (sequelize, DataTypes) => {
       // this.hasMany(models.Financial_Requirements, { foreignKey: 'category_id', as: 'financial_requirements' })
     }
   }
-  Budget_Item_Categories.init({
+  Budget_Categories.init({
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true
     },
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      unique: {args: true, msg: 'This category already exists'}
+    }
   }, {
     sequelize,
-    modelName: 'Budget_Item_Categories',
+    modelName: 'Budget_Categories',
+    tableName: 'Budget_Categories',
     createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
+    paranoid: true
   });
-  return Budget_Item_Categories;
+  return Budget_Categories;
 };

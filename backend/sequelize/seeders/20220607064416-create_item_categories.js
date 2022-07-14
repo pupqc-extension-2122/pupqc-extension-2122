@@ -12,7 +12,7 @@ module.exports = {
      * }], {});
     */
 
-    await queryInterface.bulkInsert('Budget_Item_Categories', [
+    await queryInterface.bulkInsert('Budget_Categories', [
       {
         id: '54f6e8d0-1c8f-45f3-a314-872edcbeccc7',
         name: 'Operating Cost',
@@ -65,6 +65,6 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
 
-    await queryInterface.bulkDelete('Budget_Item_Categories', null, {})
+    await queryInterface.bulkDelete('Budget_Categories', null, {})
   }
 };
