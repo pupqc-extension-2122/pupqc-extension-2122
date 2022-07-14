@@ -1,0 +1,112 @@
+<%# Change Time Frame Modal %>
+<div class="modal fade" id="changeTimeFrame_modal" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <form class="modal-content" id="changeTimeFrame_form">
+      <div class="modal-header">
+        <h4 class="modal-title">Change Project Time Frame</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="text-center">
+          <h1 class="mr-3 display-3">
+            <i class="fas fa-exclamation-triangle text-warning"></i>
+          </h1>
+          <p class="px-3 px-md-5">You are about to change the time frame of the project. To do so, please provide the new dates and the details of why you took this action.</p>
+        </div>
+
+        <%# Start Date %>
+        <div class="form-group">
+          <label for="changeTimeFrame_startDate">
+            <span>Start Date</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group date">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="changeTimeFrame_startDate" 
+              name="start_date"
+              placeholder="Please select a new start date" 
+              data-inputmask-alias="datetime"
+              data-inputmask-inputformat="yyyy-mm-dd" 
+              data-mask 
+            />
+            <div class="input-group-append">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                id="changeTimeFrame_startDate_pickerBtn"
+                data-toggle="tooltip" 
+                title="Select a start date"
+              >
+                <i class="fa fa-calendar-day fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <%# End Date %>
+        <div class="form-group">
+          <label for="changeTimeFrame_endDate">
+            <span>End Date</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group date">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="changeTimeFrame_endDate" 
+              name="end_date"
+              placeholder="Please select a new end date" 
+              data-inputmask-alias="datetime"
+              data-inputmask-inputformat="yyyy-mm-dd" 
+              data-mask 
+            />
+            <div class="input-group-append">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                id="changeTimeFrame_endDate_pickerBtn"
+                data-toggle="tooltip" 
+                title="Select an end date"
+              >
+                <i class="fa fa-calendar-day fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <%# Status %>
+        <div class="form-group">
+          <span class="font-weight-bold mr-1">Status:</span>
+          <span id="changeTimeFrame_status">
+            <span class="text-muted font-italic">Please select a valid start and end date</span>
+          </span>
+        </div>
+
+        <%# Remarks %>
+        <div class="form-group">
+          <label for="changeTimeFrame_remarks">
+            <span>Remarks</span>
+            <span class="text-danger">*</span>
+          </label>
+          <textarea 
+            name="remarks" 
+            id="changeTimeFrame_remarks" 
+            rows="5" 
+            class="form-control"
+            placeholder="Please provide the details for your action"
+          ></textarea>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="changeTimeFrame_btn">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

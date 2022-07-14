@@ -1,7 +1,7 @@
 <%# Confirm Approve the Project Modal %>
-<div class="modal" id="confirmApproveTheProject_modal">
+<div class="modal fade" id="confirmApproveTheProject_modal">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
+    <form class="modal-content" id="approveProject_form">
       <div class="modal-header">
         <h4 class="modal-title">Confirmation</h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
@@ -9,19 +9,41 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="d-flex">
-          <h1 class="mr-3 display-4">
+
+        <div class="text-center">
+          <h1 class="mr-3 display-3">
             <i class="fas fa-exclamation-circle text-info"></i>
           </h1>
-          <div>
-            <div>Are you sure you want to approve this project?</div>
-          </div>
+          <p class="px-3 px-md-5">You are about to approve the project. To do so, please provide the SO number.</p>
         </div>
+        
+        <div class="form-group">
+          <label for="cancelProposal_remarks">
+            <span>SO number</span>
+            <span class="text-danger">*</span>
+          </label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="approveProject_soNumber"
+            name="SO_number"
+            placeholder="Enter the SO number"
+          />
+        </div>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="confirmApproveTheProject_btn">Yes, please!</button>
+        <button 
+          type="button" 
+          class="btn btn-negative" 
+          data-dismiss="modal"
+        >Cancel</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          id="confirmApproveTheProject_btn"
+        >Submit and approve</button>
       </div>
-    </div>
+    </form>
   </div>
 </div>

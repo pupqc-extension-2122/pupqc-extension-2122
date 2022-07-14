@@ -145,6 +145,24 @@
                   </div>
                 </div>
 
+                <%# Extension Project Type %>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="addProject_projectTitle">
+                      <span>Extension Project Type</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <select 
+                      name="extension_type" 
+                      id="addProject_extensionType_select" 
+                      class="form-control select2"
+                      style="width: 100%;"
+                    >
+                      <option disabled>Select an extension project type.</option>
+                    </select>
+                  </div>
+                </div>
+
                 <%# Implementer %>
                 <div class="col-12">
                   <div class="form-group">
@@ -415,6 +433,16 @@
                 </dt>
                 <dd class="col-md-9">
                   <div class="mx-2" id="projectDetailsConfirm_title"></div>
+                </dd>
+
+                <div class="col-12"><hr class="my-2"></div>
+
+                <%# Extension Project Type %>
+                <dt class="col-md-3">
+                  <div class="mx-2">Extension Project Type</div>
+                </dt>
+                <dd class="col-md-9">
+                  <div class="mx-2" id="projectDetailsConfirm_extensionType"></div>
                 </dd>
 
                 <div class="col-12"><hr class="my-2"></div>

@@ -327,6 +327,12 @@ const CUSTOM_VALIDATIONS = [
 				: !moment(value).isSame(moment(params));
 		},
 		defaultMessage: 'It must not be equal to a value'
+	}, {
+		ruleName: "callback",
+		handler: (value, element, params) => {
+      return params;
+		},
+		defaultMessage: 'It must not be equal to a value'
 	}
 ]
 

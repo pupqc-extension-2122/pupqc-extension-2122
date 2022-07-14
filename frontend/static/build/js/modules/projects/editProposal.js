@@ -28,6 +28,26 @@
 
 	const initializations = () => {
 
+    // Extension Project Type
+    const extensionType_select = $('#addProject_extensionType_select');
+    const extension_types = [
+      {
+        id: 'Livelihood Literacy',
+        name: 'Livelihood Literacy',
+      }, {
+        id: 'Knowledge Transfer',
+        name: 'Knowledge Transfer',
+      }
+    ]
+
+    extensionType_select.empty();
+    extensionType_select.append(`<option></option>`);
+    extension_types.forEach(t => {
+      extensionType_select.append(`
+        <option value="${ t.id }">${ t.name }</option>
+      `);
+    });
+
 		// Initialize Start Date
 		$app('#editProject_startDate').initDateInput({
 			button: '#editProject_startDate_pickerBtn'
@@ -215,6 +235,9 @@
             message: 'Make sure you  enter the full title of the project.'
           }
 				},
+        extension_type: {
+          required: "Please select an extension project type.",
+        },
 				implementer: {
 					required: "The implementer is required.",
           notEmpty: "This field cannot be empty.",
@@ -317,6 +340,7 @@
 		const fd = new FormData($(formSelector)[0]);
 		return {
 			title: fd.get('title'),
+      extension_type: fd.get('extension_type'),
 			implementer: fd.get('implementer'),
 			team_members: PT_form.getTeamMembers(),
 			target_groups: TG_form.getTargetGroups(),
@@ -333,6 +357,7 @@
 	const loadProjectDetails = () => {
 		const {
 			title,
+      extension_type,
 			implementer,
 			team_members: pt,
 			target_groups: tg,
@@ -349,6 +374,7 @@
 
 		setHTMLContent({
 			'#projectDetailsConfirm_title': title || noContentTemplate('No title has been set up'),
+      '#projectDetailsConfirm_extensionType': extension_type || noContentTemplate('No project extension type has been set up.</div>'),
 			'#projectDetailsConfirm_implementer': implementer || noContentTemplate('No implementer has been set up.'),
 			'#projectDetailsConfirm_projectTeam': () => {
 				if (pt.length) {

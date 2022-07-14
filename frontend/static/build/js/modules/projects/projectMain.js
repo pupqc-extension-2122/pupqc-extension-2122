@@ -10,9 +10,7 @@
 
 const ProjectDetails = (() => {
 
-  /**
-   * * Local Variables`
-   */
+  // * Local Variables
 
   const header = $('#projectDetails_header');
   const body = $('#projectDetails_body');
@@ -22,9 +20,7 @@ const ProjectDetails = (() => {
   let project;
   let mode;
 
-  /**
-   * * Private Functions
-   */
+  // * Private Methods
 
   const noContentTemplate = (message) => `<div class="text-muted font-italic">${message}</div>`;
 
@@ -171,6 +167,7 @@ const ProjectDetails = (() => {
         end_date,
         impact_statement,
         summary,
+        SO_number,
         financial_requirements: fr,
         evaluation_plans: ep
       } = project;
@@ -247,6 +244,7 @@ const ProjectDetails = (() => {
         },
         '#projectDetails_body_impactStatement': impact_statement || noContentTemplate('No impact statement has been set up.'),
         '#projectDetails_body_summary': summary || noContentTemplate('No summary has been set up.</div>'),
+        '#projectDetails_body_SONumber': SO_number || noContentTemplate('No SO number has been set up.</div>'),
         '#projectDetails_body_evaluationPlans': () => {
           if (ep.length) {
             let evaluationPlanRows = '';
@@ -400,6 +398,7 @@ const ProjectDetails = (() => {
           }
         });
 
+        $('#projectDetails_evaluationSummary_tabSpacer').show();
         $('#projectDetails_evaluationSummary_tab').show();
       } else {
         $('#projectDetails_evaluationSummary_tab').hide();
@@ -421,9 +420,7 @@ const ProjectDetails = (() => {
     $('#projectDetails_body').show();
   }
 
-  /**
-   * * Public Functions
-   */
+  // * Public Methods
 
   const loadDetails = (projectData) => {
     if (projectData) project = projectData;
@@ -432,9 +429,7 @@ const ProjectDetails = (() => {
     loadBodyDetails();
   }
 
-  /**
-   * * Init
-   */
+  // * Init
 
   const init = (data) => {
     if (!initialized) {
@@ -446,9 +441,7 @@ const ProjectDetails = (() => {
     }
   }
 
-  /**
-   * * Return Public Functions
-   */
+  // * Return Public Functions
 
   return {
     init,
@@ -472,7 +465,7 @@ const ProjectOptions = (() => {
   let project;
   let mode;
 
-  // Submission Modals
+  // Proposal Option Modals
   const forApproval_modal = $('#confirmSubmitForApproval_modal');
   const forRevision_modal = $('#confirmRequestForRevision_modal');
   const setPresentationSchedule_modal = $('#setPresentationSchedule_modal');
@@ -480,6 +473,9 @@ const ProjectOptions = (() => {
   const setProjectEvaluation_modal = $('#setProjectEvaluation_modal');
   const approveProject_modal = $('#confirmApproveTheProject_modal');
   const cancelProposal_modal = $('#confirmCancelTheProposal_modal');
+
+  // Monitoring Option Modals
+  const changeTimeFrame_modal = $('#changeTimeFrame_modal');
   
   // * * * PRIVATE METHODS * * * //
 
@@ -501,7 +497,7 @@ const ProjectOptions = (() => {
         AddProjectActivity.init(project);
         ProjectActivities.init(project);
       }
-  }
+    }
   }
 
   // *** FOR SUBMISSIONS *** //
@@ -971,53 +967,69 @@ const ProjectOptions = (() => {
 
   const initApproveProject = () => {
     const isBadAction = () => project.status !== 'Pending';
+    const formSelector = '#approveProject_form';
+    const form = $(formSelector)[0];
     const confirmBtn = $('#confirmApproveTheProject_btn');
 
-    confirmBtn.on('click', async () => {
-      if (isBadAction()) return;
-      
-      processing = true;
-      
-      // Disable elements
-      confirmBtn.attr('disabled', true);
-      confirmBtn.html(`
-        <span class="px-3">
-          <i class="fas fa-spinner fa-spin-pulse"></i>
-        </span>
-      `);
-    
-      // Enable elements function
-      const enableElements = () => {
-        confirmBtn.attr('disabled', false);
-        confirmBtn.html('Yes, please!');
-      }
-      
-      await $.ajax({
-        url: `${ BASE_URL_API }/projects/approve/${ project.id }`,
-        type: 'PUT',
-        success: async res => {
-          processing = false;
-
-          if (res.error) {
-            ajaxErrorHandler(res.message);
-            enableElements();
-          } else {
-            approveProject_modal.modal('hide');
-            enableElements();
-            updateProjectDetails({ status: 'Approved' });
-            ProjectHistory.addToTimeline(res.data);
-            toastr.success('The proposal has been approved.');
-          }
-        },
-        error: (xhr, status, error) => {
-          ajaxErrorHandler({
-            file: 'projects/projectProposalDetails.js',
-            fn: `ProjectOptions.initApproveProject(): confirmBtn.on('click', ...)`,
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-          });
-          enableElements();
+    $app(formSelector).handleForm({
+      validators: {
+        SO_number: {
+          required: 'The SO number is required.'
         }
-      });
+      },
+      onSubmit: async () => {
+        if (isBadAction()) return;
+        
+        processing = true;
+        
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+      
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Yes, please!');
+        }
+
+        const fd = new FormData(form);
+
+        const data = {
+          SO_number: fd.get('SO_number'),
+        }
+        
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/approve/${ project.id }`,
+          type: 'PUT',
+          data: data,
+          success: async res => {
+            processing = false;
+  
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+              enableElements();
+            } else {
+              approveProject_modal.modal('hide');
+              enableElements();
+              updateProjectDetails({ status: 'Approved' });
+              ProjectHistory.addToTimeline(res.data);
+              toastr.success('The proposal has been approved.');
+            }
+          },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: `ProjectOptions.initApproveProject(): confirmBtn.on('click', ...)`,
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+            enableElements();
+          }
+        });
+      }
     });
 
     approveProject_modal.on('show.bs.modal', (e) => {
@@ -1112,9 +1124,9 @@ const ProjectOptions = (() => {
     });
   }
 
-  // *** INITIALIZE SUBMISSIONS *** //
+  // *** INITIALIZE PROPOSAL OPTIONS *** //
 
-  const initSubmissions = () => {
+  const initProposalOptions = () => {
     if (mode !== 'Proposal') return;
 
     // * ======== FOR EXTENSIONIST ======== * //
@@ -1133,6 +1145,182 @@ const ProjectOptions = (() => {
       initProjectEvaluation();
       initApproveProject();
     }
+  }
+
+  // *** INITIALIZE MONITORING OPTIONS *** //
+
+  const initChangeTimeFrame = () => {
+
+    const startDate_selector = '#changeTimeFrame_startDate';
+    const endDate_selector = '#changeTimeFrame_endDate';
+
+    const startDate_input = $(startDate_selector);
+    const endDate_input = $(endDate_selector);
+
+    const formSelector = '#changeTimeFrame_form';
+    const form = $(formSelector)[0];
+    
+    let validator;
+
+    changeTimeFrame_modal.on('show.bs.modal', () => {
+      startDate_input.val(project.start_date).trigger('change');
+      endDate_input.val(project.end_date).trigger('change');
+    });
+
+    changeTimeFrame_modal.on('hidden.bs.modal', () => {
+      form.reset();
+    });
+    
+    // Initialize Start Date Input
+    $app(startDate_selector).initDateInput({
+      button: '#changeTimeFrame_startDate_pickerBtn'
+    });
+    
+    // Initialize End Date Input
+    $app(endDate_selector).initDateInput({
+      button: '#changeTimeFrame_endDate_pickerBtn'
+    });
+
+    $(`${ startDate_selector }, ${ endDate_selector }`).on('change', () => {
+      $('#changeTimeFrame_status').html(() => {
+        const start_date = startDate_input.val();
+        const end_date = endDate_input.val();
+
+        if (moment(start_date).isSameOrBefore(moment(end_date))) {
+          const today = moment();
+            let status;
+            if (today.isBefore(start_date) && today.isBefore(end_date)) {
+              status = 'Upcoming';
+            } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
+              status = 'Concluded';
+            } else if (today.isBetween(start_date, end_date)) {
+              status = 'On going';
+            } else {
+              status = 'No data';
+            }
+            const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
+            return `
+              <span class="badge badge-subtle-${ theme } px-2 py-1">
+                <i class="${ icon } fa-fw mr-1"></i>
+                <span>${ status }</span>
+              </span>
+            `;
+        } else {
+          return `
+            <span class="text-muted font-italic">Please select a valid start and end date</span>
+          `
+        }
+      })
+      startDate_input.valid();
+      endDate_input.valid();
+    });
+
+    const checkInputForTimeFrame = () => {
+      const selectedStartDate = startDate_input.val();
+      const selectedEndDate = endDate_input.val();
+
+      return !(
+        moment(selectedStartDate).isSame(moment(project.start_date)) 
+        && moment(selectedEndDate).isSame(moment(project.end_date))
+      );
+    }
+
+    // Handle form
+    validator = $app(formSelector).handleForm({
+      validators: {
+        start_date: {
+          required: 'Please select a start date.',
+          dateISO: 'Your input is not a valid date.',
+          beforeDateTimeSelector: {
+            rule: '#changeTimeFrame_endDate',
+            message: 'The start date must be earlier than end date.'
+          },
+          callback: {
+            rule: () => checkInputForTimeFrame(),
+            message: 'Start and end date are still same with the project timeline.'
+          } 
+        },
+        end_date: {
+          required: 'Please select a start date.',
+          dateISO: 'Your input is not a valid date.',
+          afterDateTimeSelector: {
+            rule: '#changeTimeFrame_startDate',
+            message: 'The end date must be later than start date.'
+          },
+          callback: {
+            rule: () => checkInputForTimeFrame(),
+            message: 'Start and end date are still same with the project timeline.'
+          } 
+        },
+        remarks: {
+          required: 'Please type your remarks.',
+          notEmpty: 'This field cannot be blank.',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full details of your remarks'
+          }
+        }
+      },
+      onSubmit: () => {
+        processing = true;
+
+        const submit_btn = $('#changeTimeFrame_btn');
+
+        // Disable elements
+        submit_btn.attr('disabled', true);
+        submit_btn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+        
+        // Enable elements function
+        const enableElements = () => {
+          submit_btn.attr('disabled', false);
+          submit_btn.html('Save');
+        }
+
+        const fd = new FormData(form);
+
+        const data = {
+          start_date: fd.get('start_date'),
+          end_date: fd.get('end_date'),
+          remarks: fd.get('remarks'),
+        }
+
+        $.ajax({
+          url: `${ BASE_URL_API }/projects/${ project.id }/change_monitoring`,
+          type: 'PUT',
+          data: data,
+          success: res => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              enableElements();
+              updateProjectDetails({ 
+                start_date: data.start_date,
+                end_date: data.end_date
+              });
+              changeTimeFrame_modal.modal('hide');
+              toastr.success('The project time frame has been successfully updated.');
+            }
+          },
+          error: (xhr, status, error) => {
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: `ProjectOptions.initChangeTimeFrame(): confirmBtn.on('click', ...)`,
+              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            });
+            enableElements();
+          }
+        });
+      }
+    });
+    
+  }
+
+  const initMonitoringOptions = () => {
+    initChangeTimeFrame();
   }
 
   // * * * PUBLIC METHODS * * * //
@@ -1421,6 +1609,19 @@ const ProjectOptions = (() => {
               <span>View project details</span>
             </div>
           `
+        }, {
+          id: 'Change Time Frame',
+          category: 'Edit Details',
+          template: `
+            <div
+              role="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('changeTimeFrame')"
+            >
+              <i class="fas fa-calendar-week text-warning fa-fw mr-1"></i>
+              <span>Change time frame</span>
+            </div>
+          `
         },
       ];
 
@@ -1428,6 +1629,10 @@ const ProjectOptions = (() => {
         optionList.push('View activities');
       } else if (activitiesDT.length) {
         optionList.push('View project details');
+      }
+
+      if (user_roles.includes('Extensionist')) {
+        optionList.push('Change Time Frame');
       }
     }
 
@@ -1482,6 +1687,7 @@ const ProjectOptions = (() => {
     if (user_roles.includes('Extensionist')) {
       optionFunc.submitForApproval = () => forApproval_modal.modal('show');
       optionFunc.cancelTheProposal = () => cancelProposal_modal.modal('show');
+      optionFunc.changeTimeFrame = () => changeTimeFrame_modal.modal('show');
     }
 
     if (user_roles.includes('Chief')) {
@@ -1502,7 +1708,8 @@ const ProjectOptions = (() => {
       initialized = 1;
       mode = data.mode;
       setOptions(data.project);
-      initSubmissions();
+      if (mode === 'Proposal') initProposalOptions();
+      if (mode === 'Monitoring') initMonitoringOptions();
     }
   }
 

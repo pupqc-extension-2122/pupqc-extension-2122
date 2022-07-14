@@ -129,6 +129,11 @@
 
 <%- include('../../partials/projects/modals/project_activity_details') %>
 
+<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+  <%- include('../../partials/projects/modals/change_time_frame') %>
+<% } %>
+
+
 
 
 <%# ***** Scripts ***** %>
