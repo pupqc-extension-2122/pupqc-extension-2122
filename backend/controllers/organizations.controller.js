@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken')
 const { Organizations } = require('../sequelize/models')
 
 exports.listOrganizations = async (req, res) => {
