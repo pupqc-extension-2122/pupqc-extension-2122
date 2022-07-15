@@ -25,6 +25,25 @@ exports.listOrganizations = async (req, res) => {
   }
 }
 
+exports.createOrganizations = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Admin'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const body = req.body
+
+    let data = await Organizations.create(...body)
+
+    if(data)
+      res.send({error: false, message: `${data.type} created successfully`})
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.updateOrganizations = async (req, res) => {
   try {
 
