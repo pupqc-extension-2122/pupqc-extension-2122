@@ -33,10 +33,15 @@ exports.createOrganizations = async (req, res) => {
 
     const body = req.body
 
-    let data = await Organizations.create(...body)
+    let [data, created] = await Organizations.findOrCreate({
+      where: { name: body.name, paranoid: false },
+      default: { type: body.type }
+    })
 
-    if(data)
-      res.send({error: false, message: `${data.type} created successfully`})
+    if (created)
+      res.send({ error: false, message: `${data.type} created successfully` })
+    else
+      res.send({ error: true, message: `Duplicate ${body.type}` })
 
   } catch (error) {
     console.log(error)
