@@ -92,7 +92,7 @@ exports.datatableProposal = async (req, res) => {
     else if (req.auth.roles.includes('Extensionist'))
       options = { where: { created_by: req.auth.id } };
 
-    else if (req.auth.roles.includes('Chief'))
+    else
       options = { where: { status: { [Op.not]: 'Created' } } }
 
     options.include = ['memos', 'partners'];
