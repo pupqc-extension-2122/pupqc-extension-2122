@@ -23,7 +23,7 @@
     $app('#addBudgetItemCategory_form').handleForm({
       validators: {
         category_name: {
-          required: "Budget item category  Name is required.",
+          required: "The budget item category name is required.",
           notEmpty: "This field cannot be blank.",
         }
       },

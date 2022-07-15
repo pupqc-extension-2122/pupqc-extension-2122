@@ -13,7 +13,7 @@
     const data = await User.getData();
 
     // For User Profile Card
-    setHTMLContent({
+    await setHTMLContent({
       '#userProfile_name': formatName('F M. L, S', {
         firstName: data.first_name,
         middleName: data.middle_name,
@@ -33,7 +33,7 @@
     });
 
     // For Edit form
-    setInputValue({
+    await setInputValue({
       '#editUserInfo_firstName': data.first_name,
       '#editUserInfo_middleName': data.middle_name,
       '#editUserInfo_lastName': data.last_name,
@@ -63,10 +63,19 @@
     });
   }
 
+  const removeLoaders = () => {
+    $('#userInfo_body_loader').remove();
+    $('#userInfo_body').show();
+
+    $('#profileCard_loader').remove();
+    $('#profileCard').show();
+  }
+
   return {
-    init: () => {
-      loadUserData();
+    init: async () => {
+      await loadUserData();
       handleForm();
+      removeLoaders();
     }
   }
 })().init();
