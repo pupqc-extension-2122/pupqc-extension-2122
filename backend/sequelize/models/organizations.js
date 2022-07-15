@@ -23,19 +23,21 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {notEmpty: true},
+      validate: { notEmpty: true },
     },
     type: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {notEmpty: true},
+      validate: { notEmpty: true },
     }
   }, {
     sequelize,
     modelName: 'Organizations',
     tableName: 'Organizations',
     createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
+    paranoid: true
   });
   return Organizations;
 };

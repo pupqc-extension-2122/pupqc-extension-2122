@@ -10,7 +10,7 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      type:{
+      type: {
         type: Sequelize.STRING
       },
       created_at: {
@@ -19,6 +19,9 @@ module.exports = {
       },
       updated_at: {
         allowNull: false,
+        type: Sequelize.DATE
+      },
+      deleted_at: {
         type: Sequelize.DATE
       }
     });
