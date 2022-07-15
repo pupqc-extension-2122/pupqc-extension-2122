@@ -25,3 +25,28 @@ exports.listOrganizations = async (req, res) => {
   }
 }
 
+exports.updateOrganizations = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Admin'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const id = req.params.id
+    const body = req.body
+
+    const data = await Organizations.findByPk(id)
+
+    if (!data)
+      return res.statu(404).send({ error: true, message: 'Branch/Campus/College not found' })
+
+    data.name = body.name
+    data.type = body.type
+    await data.save()
+
+    res.send({ error: false, message: `${data.type} updated successfully` })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
