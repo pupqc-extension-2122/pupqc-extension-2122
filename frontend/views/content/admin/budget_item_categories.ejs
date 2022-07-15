@@ -138,16 +138,17 @@
         <div class="table-responsive">
           <table class="table w-100" id="budget_item_categories_dt">
             <thead>
+              <th class="sr-only">Date Created</th>
               <th class="align-middle">Budget Item Category Name</th>
               <th class="align-middle">Date Added</th>
               <th class="align-middle text-sm-center">Status</th>
               <th class="align-middle">
-                <span class="d-inline-block d-sm-none">Actions</span>
+                <span class="sr-only">Actions</span>
               </th>
             </thead>
             <tbody>
               <tr>
-                <td colspan="4" class="text-center">
+                <td colspan="5" class="text-center">
                   <%- include('../../partials/loaders/dt_body') %>
                 </td>
               </tr>
@@ -185,3 +186,7 @@
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/modules/admin/budgetItemCategories.js"></script>
+
+<% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
+  <script src="<%=BASE_URL%>/js/modules/admin/addBudgetItemCategory.js"></script>
+<% } %>

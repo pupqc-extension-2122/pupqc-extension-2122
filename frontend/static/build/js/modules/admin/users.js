@@ -130,7 +130,7 @@ const Users = (() => {
                 <div class="dropdown-menu dropdown-menu-right">
                   <div class="dropdown-header">Options</div>
                   <a href="${ BASE_URL_WEB }/a/user/${ data.id }" class="dropdown-item">
-                      <span>View details</span>
+                      <span>Edit details</span>
                   </a>
                 </div>
               </div>

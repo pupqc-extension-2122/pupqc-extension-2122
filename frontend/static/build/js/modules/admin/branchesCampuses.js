@@ -10,14 +10,108 @@
   /**
     * * Local Variables
     */
-  let initialized = 0;
 
-  // ! Simulation
-  let data;
+  let dt;
+  const dtElem = $('#branches_campuses_dt');
+  let initialized = false;
 
   /**
    * * Private Methods
    */
+
+  const initDataTable = async () => {
+    dt = await dtElem.DataTable({
+			...DT_CONFIG_DEFAULTS,
+      ajax: {
+        url: `${ BASE_URL_API }/organizations/`,
+        success: result => {
+          console.log(result);
+        },
+        error: (xhr, status, error) => {
+          ajaxErrorHandler({
+            file: 'admin/branchesCampuses.js',
+            fn: 'BranchesCampuses.initDataTable()',
+            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          }, 1);
+        },
+        data: {
+          types: {
+            created_at: 'date',
+            name: 'string',
+          }
+        },
+        beforeSend: () => {
+          dtElem.find('tbody').html(`
+            <tr>
+              <td colspan="5">${ DT_LANGUAGE.loadingRecords }</td>
+            </tr>
+          `);
+        },
+      },
+      columns: [
+        { 
+          data: 'created_at',
+          visible: false,
+        }, {
+          data: 'name',
+          width: '55%',
+        }, {
+          data: 'created_at',
+          width: '25%',
+          render: data => {
+            const created_at = data.created_at
+            return `
+              <div>${ formatDateTime(created_at, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(created_at) }</div>
+            `
+          }
+        }, {
+          data: null,
+          sortable: false,
+          width: '15%',
+          render: (data) => {
+            return data.active 
+              ? `
+                <div class="text-sm-center">
+                  <div class="badge badge-subtle-success px-2 py-1">
+                    <i class="fas fa-check fa-fw mr-1"></i>
+                    <span>Active</span>
+                  </div>
+                </div>
+              `
+              : `
+                <div class="text-center">
+                  <div class="badge badge-subtle-danger px-2 py-1">
+                    <i class="fas fa-ban fa-fw mr-1"></i>
+                    <span>Inactive</span>
+                  </div>
+                </div>
+              ` 
+          }
+        }, {
+          data: null,
+          width: '5%',
+          render: data => {
+            return `
+              <div class="dropdown text-center">
+                
+                <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                  <i class="fas fa-ellipsis-h"></i>
+                </div>
+              
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-header">Options</div>
+                  <a href="${ BASE_URL_WEB }/a/budget-item-categories/${ data.id }" class="dropdown-item">
+                      <span>Edit details</span>
+                  </a>
+                </div>
+              </div>
+            `
+          }
+        }
+      ]
+    });
+  }
 
   const handleForm = () => {
     $app('#addBranchCampus_form').handleForm({
@@ -37,97 +131,12 @@
     });
   }
 
-  const initDataTable = async () => {
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-
-        // Sample Data
-        data = [
-          {
-            branchCampus_name: 'Polytechnic University of the Philippines Quezon City',
-            type:'Branch',
-            date_added: '07/05/2022',
-            status: 'Active'
-          }, {
-            branchCampus_name: 'Polytechnic University of the Philippines Pulilan, Bulacan',
-            type:'Campus',
-            date_added: '07/05/2022',
-            status: 'Active'
-          },
-        ];
-        resolve();
-      }, 2500);
-    });
-
-    // Data Table
-    $('#branches_campuses_dt').DataTable({
-      data: data,
-      responsive: true,
-      language: DT_LANGUAGE,
-      columns: [
-        { 
-          data: 'branchCampus_name' 
-        },
-        { 
-          data: 'type' 
-        },
-        {
-          data: null,
-          render: ({ date_added }) => {
-            return `
-              <div>${ formatDateTime(date_added, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(date_added) }</div>
-            `
-          }
-        },
-        {
-          data: null, 
-          render: ({ status }) => {
-            const { theme, icon } = PARTNER_STATUS_STYLES[status];
-            return `
-              <div class="text-center">
-                <div class="badge badge-subtle-${ theme } px-2 py-1">
-                  <i class="${ icon } fa-fw mr-1"></i>
-                  <span>${ status }</span>
-                </div>
-            `;
-          }
-        },
-        {
-          data: null,
-          render: data => {
-            return `
-              <div class="dropdown text-center">
-                <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
-                  <i class="fas fa-ellipsis-h"></i>
-                </div>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <div class="dropdown-header">Options</div>
-                  <a 
-                    class="dropdown-item"
-                    href="${ BASE_URL_WEB }/a/branches-campuses/${ data.id }" 
-                  >
-                    <span>View details</span>
-                  </a>
-                  <a 
-                    class="dropdown-item"
-                    href="${ BASE_URL_WEB }/a/edit-branches-campuses/${ data.id }" 
-                  >
-                    <span>Edit details</span>
-                  </a>
-                </div>
-              </div>
-            `;
-          }
-        }
-      ]
-    });
-  }
 
   /**
    * * Public Methods
    */
 
+  const reloadDataTable = async () =>  await dt.ajax.reload();
 
   /**
    * * Init
@@ -141,7 +150,8 @@
   }
 
   return {
-    init
+    init,
+    reloadDataTable
   }
 
 })();
