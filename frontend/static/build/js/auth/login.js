@@ -83,9 +83,11 @@
           const user_roles = JSON.parse(getCookie('roles'));
 
           if (user_roles.includes('Admin')) {
-            setTimeout(() => location.assign('/a'), 250);
+            setTimeout(() => location.assign('/a'), 100);
+          } else if (user_roles.length === 1 && user_roles.includes('Chief')) {
+            setTimeout(() => location.assign('/p/proposals'), 100);
           } else {
-            setTimeout(() => location.assign('/p'), 250);
+            setTimeout(() => location.assign('/p'), 100);
           }
         }
       },

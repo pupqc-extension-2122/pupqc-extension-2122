@@ -995,7 +995,7 @@ const ProjectOptions = (() => {
         // Enable elements function
         const enableElements = () => {
           confirmBtn.attr('disabled', false);
-          confirmBtn.html('Yes, please!');
+          confirmBtn.html('Submit and approve');
         }
 
         const fd = new FormData(form);
@@ -1781,7 +1781,7 @@ const ProjectComments = (() => {
       id: '',
       body: data.body,
       created_at: moment().toISOString(),
-      user: User.getData()
+      user: User.getData(),
     });
 
     resetForm();

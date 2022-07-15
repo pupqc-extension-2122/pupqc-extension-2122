@@ -28,7 +28,7 @@ const User = (() => {
 
   // * Public Methods
 
-  const getData = async (key = null) => {
+  const getData = (key = null) => {
     if (key) {
       if (user.hasOwnProperty(key)) return user[key]
       else DEV_MODE && console.error('Invalid user data key')

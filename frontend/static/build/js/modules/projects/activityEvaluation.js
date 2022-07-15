@@ -60,7 +60,7 @@ const ActivityEvaluation = (() => {
             const displayTitle = data.length > 100
               ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
               : data
-            return `<a href="${ BASE_URL_WEB }/p/evaluation/${ row.id }">${ displayTitle }</a>`
+            return `<a href="${ BASE_URL_WEB }/p/evaluation/${ row.id }/activities">${ displayTitle }</a>`
           }
 				}, {
           data: null,
@@ -83,19 +83,17 @@ const ActivityEvaluation = (() => {
         }, {
           data: 'start_date',
           render: data => {
-            const start_date = data.start_date
             return `
-              <div>${ formatDateTime(start_date, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(start_date) }</div>
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, {
           data: 'end_date',
           render: data => {
-            const end_date = data.end_date
             return `
-              <div>${ formatDateTime(end_date, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(end_date) }</div>
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, {
@@ -111,9 +109,14 @@ const ActivityEvaluation = (() => {
               return total + (activity.evaluation ? 1 : 0);
             }, 0);
 
-            console.log(evaluated_activities);
-
             const percent = parseFloat(((evaluated_activities / total_project_activities) * 100).toFixed(4))
+
+            const theme = (() => {
+              if (percent >= 0 && percent <= 33) return 'bg-danger';
+              else if(percent > 33 && percent <= 66) return 'bg-warning';
+              else if(percent > 66 && percent < 100) return 'bg-info';
+              else if(percent === 100) return 'bg-success';
+            })()
 
             if (percent === 100) {
               return `
@@ -128,7 +131,7 @@ const ActivityEvaluation = (() => {
               return `
                 <div class="progress">
                   <div 
-                    class="progress-bar bg-success" 
+                    class="progress-bar ${ theme }" 
                     role="progressbar" 
                     aria-valuenow="${ percent }" 
                     aria-valuemin="0" 

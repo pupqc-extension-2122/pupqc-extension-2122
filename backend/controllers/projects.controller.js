@@ -261,7 +261,7 @@ exports.updateProject = async (req, res) => {
     if (new Date(req.body.start_date) > new Date(req.body.end_date))
       return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
 
-    let partners = body.partner_id
+    let partners = body.partner_id || []; 
 
     let current_project = await Projects.findByPk(id, {
       where: {
@@ -483,10 +483,13 @@ exports.submitForReviewProposal = async (req, res) => {
     const id = req.params.id
     const body = req.body
 
-    let project = await Projects.findByPk(id, { include: ['activities'] })
+    let project = await Projects.findByPk(id, { include: ['activities', 'project_partners'] })
 
     if (!project)
       return res.status(404).send({ error: true, message: 'Bad Request' })
+
+    if (!project.project_partners.length)
+      return res.send({ warning: true, message: 'Please include at least one cooperating agency' })
 
     if (!project.activities.length)
       return res.send({ warning: true, message: 'Please include at least one project activity' })

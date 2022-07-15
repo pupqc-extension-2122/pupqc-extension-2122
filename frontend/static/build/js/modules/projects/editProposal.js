@@ -33,7 +33,7 @@
 	const initializations = () => {
 
     // Extension Project Type
-    const extensionType_select = $('#addProject_extensionType_select');
+    const extensionType_select = $('#editProject_extensionType');
     const extension_types = [
       {
         id: 'Livelihood',
@@ -203,35 +203,7 @@
 		CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
 	}
 
-	const initFinancialRequirementsForm = () => {
-
-		// Get the line item budget
-		const lineItemBudget = [
-			{
-				id: 1,
-				name: 'Operating Cost',
-			}, {
-				id: 2,
-				name: 'Supplies',
-			}, {
-				id: 3,
-				name: 'Communication',
-			}, {
-				id: 4,
-				name: 'Documentation',
-			}, {
-				id: 5,
-				name: 'Travel Cost'
-			}, {
-				id: 6,
-				name: 'Food Expenses'
-			}, {
-				id: 7,
-				name: 'Others'
-			},
-		];
-
-		lineItemBudget_list = [...lineItemBudget];
+	const initFinancialRequirementsForm = async () => {
 
 		// Create an instance of financial requirements form
 		FR_form = new FinancialRequirementsForm(
@@ -244,7 +216,24 @@
 			}
 		);
 
-		FR_form.setLineItemBudgetList(lineItemBudget_list);
+    await $.ajax({
+      url: `${ BASE_URL_API }/budget_categories`,
+      type: 'GET',
+      success: res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          FR_form.setLineItemBudgetList(res.data);
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/editProposal.js',
+          fn: 'onDOMLoad.handleForm()',
+          xhr: xhr
+        });
+      }
+    });
 	}
 
 	const initEvaluationPlanForm = () => {
@@ -339,6 +328,8 @@
         data.partner_id = data.cooperating_agencies.map(p => p.id);
         delete data.cooperating_agencies;
 
+        if (data.partner_id.length === 0) data.partner_id = [].toString();
+
         await $.ajax({
           url: `${ BASE_URL_API }/projects/${ project_id }`,
           type: 'PUT',
@@ -352,17 +343,17 @@
               // Set session alert
               setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ project_id }`, {
                 theme: 'success',
-                message: 'A new proposal has been successfully updated.'
+                message: `The project proposal has been successfully updated.`
               });
             }
           },
           error: (xhr, status, error) => {
+            enableElements();
             ajaxErrorHandler({
               file: 'projects/editProposal.js',
               fn: 'onDOMLoad.handleForm()',
               xhr: xhr
             });
-            enableElements();
           }
         });
       }
@@ -558,6 +549,7 @@
 
           setInputValue({
             '#editProject_projectTitle': data.title,
+            '#editProject_extensionType': data.project_type,
             '#editProject_implementer': data.implementer,
             '#editProject_startDate': new Date(data.start_date),
             '#editProject_endDate': new Date(data.end_date),
@@ -565,6 +557,8 @@
             '#editProject_summary': data.summary,
           });
 
+          $('#editProject_extensionType').trigger('change');
+          
           ['#editProject_startDate', '#editProject_endDate'].forEach(s => $(s).trigger('change'));
 
           PT_form.setTeamMembers(data.team_members);
@@ -604,7 +598,7 @@
 				initProjectTeamForm();
 				initTargetGroupForm();
 				await initCooperatingAgenciesGroupForm();
-				initFinancialRequirementsForm();
+				await initFinancialRequirementsForm();
 				initEvaluationPlanForm();
         await setInputValues();
         removeLoaders();

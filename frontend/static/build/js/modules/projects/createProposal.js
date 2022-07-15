@@ -232,35 +232,7 @@
     );
   }
 
-  const initFinancialRequirementsForm = () => {
-
-    // Get the line item budget
-    const lineItemBudget = [
-      {
-        id: 1,
-        name: 'Operating Cost',
-      }, {
-        id: 2,
-        name: 'Supplies',
-      }, {
-        id: 3,
-        name: 'Communication',
-      }, {
-        id: 4,
-        name: 'Documentation',
-      }, {
-        id: 5,
-        name: 'Travel Cost'
-      }, {
-        id: 6,
-        name: 'Food Expenses'
-      }, {
-        id: 7,
-        name: 'Others'
-      },
-    ];
-
-    lineItemBudget_list = [...lineItemBudget];
+  const initFinancialRequirementsForm = async () => {
 
     // Create an instance of financial requirements form
     FR_form = new FinancialRequirementsForm(
@@ -273,8 +245,25 @@
       }
     );
 
-    // Set Line Item Budget List
-    FR_form.setLineItemBudgetList(lineItemBudget_list);
+    await $.ajax({
+      url: `${ BASE_URL_API }/budget_categories`,
+      type: 'GET',
+      success: res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          FR_form.setLineItemBudgetList(res.data);
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/editProposal.js',
+          fn: 'onDOMLoad.handleForm()',
+          xhr: xhr
+        });
+      }
+    });
+
   }
 
   const initEvaluationPlanForm = () => {
@@ -370,35 +359,35 @@
         data.partner_id = data.cooperating_agencies.map(p => p.id);
         delete data.cooperating_agencies;
 
-        console.log(data);
-
-        // await $.ajax({
-        //   url: `${ BASE_URL_API }/projects/create`,
-        //   type: 'POST',
-        //   data: data,
-        //   success: res => {
-        //     if (res.error) {
-        //       ajaxErrorHandler(res.message);
-        //       enableElements();
-        //     } else {
+        if (data.partner_id.length === 0) data.partner_id = [].toString();
+        
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/create`,
+          type: 'POST',
+          data: data,
+          success: res => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+              enableElements();
+            } else {
               
-        //       // Set session alert
-        //       setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ res.data.id }`, {
-        //         theme: 'success',
-        //         message: 'A new proposal has been successfully created.'
-        //       });
-        //     }
-        //   },
-        //   error: (xhr, status, error) => {
-        //     enableElements();
-        //     ajaxErrorHandler({
-        //       file: 'projects/projectProposalDetails.js',
-        //       fn: 'onDOMLoad.$.ajax',
-        //       data: data,
-        //       details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-        //     });
-        //   }
-        // });
+              // Set session alert
+              setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ res.data.id }`, {
+                theme: 'success',
+                message: 'A new proposal has been successfully created.'
+              });
+            }
+          },
+          error: (xhr, status, error) => {
+            enableElements();
+            ajaxErrorHandler({
+              file: 'projects/projectProposalDetails.js',
+              fn: 'onDOMLoad.$.ajax',
+              data: data,
+              xhr: xhr,
+            });
+          }
+        });
       }
     });
   }
@@ -600,7 +589,7 @@
         initTargetGroupForm();
         initCooperatingAgenciesGroupForm();
         await getPartners();
-        initFinancialRequirementsForm();
+        await initFinancialRequirementsForm();
         initEvaluationPlanForm();
         removeLoaders();
       }

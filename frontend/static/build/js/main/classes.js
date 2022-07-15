@@ -823,11 +823,8 @@ class FinancialRequirementsForm {
 		this.#initializations();
 	}
 
-	/**
-	 * * Template Literals
-	 * o--/[=================>
-	 */
-
+  // * Template Literals
+  
 	#lineItemBudgetRow = (lineItemBudget) => `
     <tr 
       ${this.data.lineItemBudgetId}="${lineItemBudget.id}"
@@ -997,10 +994,7 @@ class FinancialRequirementsForm {
     </div>
   `
 
-	/**
-	 * * Private Methods
-	 * o--/[=================>
-	 */
+  // * Private Methods
 
 	#dataElement = (dataAttr, value) => {
 
@@ -1152,10 +1146,7 @@ class FinancialRequirementsForm {
     )
   }
 
-	/**
-	 * * Public Methods
-	 * o--/[=================>
-	 */
+  // * Public Methods
 
 	setLineItemBudgetList = (data = []) => {
 
@@ -1165,8 +1156,12 @@ class FinancialRequirementsForm {
 		// Set the line item budget options
 		this.#resetSelect();
 		if (this.lineItemBudgetList.length)
-			this.lineItemBudgetList.forEach(({ id, name, selected }) =>
-				this.select.append(`<option value="${id}"${selected ? ' disabled' : ''}>${name}</option>`)
+			this.lineItemBudgetList.forEach(({ id, name, selected, excluded }) =>
+				this.select.append(`
+          <option 
+            value="${id}"${selected ? ' disabled' : ''}
+          >${name}${ excluded ? ' (Removed)' : '' }</option>
+        `)
 			);
 		else this.select.append(`<option disabled>No list of line item budget yet.</option>`)
 	}
@@ -1468,8 +1463,15 @@ class FinancialRequirementsForm {
 
 	setFinancialRequirements(data) {
 		data.forEach(d => {
-      
       let BI_category = this.lineItemBudgetList.find(x => x.name == d.category);
+      if (!BI_category) {
+        BI_category = {
+          id: uuid(),
+          name: d.category,
+          excluded: true,
+        }
+        this.lineItemBudgetList.push(BI_category);
+      }
       this.addLineItemBudgetRows(BI_category, false);
 
       d.items.forEach(i => this.addBudgetItemRow(BI_category.id, i));
