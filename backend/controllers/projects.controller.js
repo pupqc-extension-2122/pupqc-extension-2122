@@ -190,6 +190,7 @@ exports.createProject = async (req, res) => {
 
     let data = await Projects.create({
       title: body.title,
+      project_type: body.project_type,
       implementer: body.implementer,
       target_groups: body.target_groups,
       team_members: body.team_members,
@@ -327,6 +328,7 @@ exports.updateProject = async (req, res) => {
 
     let updated_project = current_project
     updated_project.title = body.title
+    updated_project.project_type = body.project_type
     updated_project.implementer = body.implementer
     updated_project.target_groups = body.target_groups
     updated_project.team_members = body.team_members
