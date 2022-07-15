@@ -69,7 +69,7 @@ const PartnerDetails = (() => {
           ajaxErrorHandler({
             file: 'memo/partnerDetails.js',
             fn: 'PartnerDetails.initDataTable()',
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           }, true);
         },
         data: {
@@ -262,7 +262,7 @@ const PartnerDetails = (() => {
       ajaxErrorHandler({
         file: 'memo/partnerDetails.js',
         fn: 'onDOMLoad.$.ajax',
-        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        xhr: xhr
       }, true);
     }
   });

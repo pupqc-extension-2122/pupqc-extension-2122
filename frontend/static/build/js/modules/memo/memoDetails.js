@@ -455,7 +455,7 @@ const MemoDocuments = (() => {
         ajaxErrorHandler({
           file: 'memos/memoDetail.js',
           fn: 'MemoDocuments.deleteFile()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });
@@ -488,7 +488,7 @@ const MemoDocuments = (() => {
           ajaxErrorHandler({
             file: 'memos/memoDetail.js',
             fn: 'MemoDocuments.initDataTable',
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           }, 1);
         },
         data: {
@@ -642,7 +642,7 @@ const MemoDocuments = (() => {
       ajaxErrorHandler({
         file: 'memo/memoDetails.js',
         fn: 'onDOMLoad.$.ajax',
-        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        xhr: xhr
       }, true);
     } 
   });

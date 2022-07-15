@@ -245,9 +245,13 @@
           toastr.success('A new MOA/MOU has been successfully added.');
         }
       },
-      error: () => {
+      error: (xhr, status, error) => {
         processing = false;
-        ajaxErrorHandler();
+        ajaxErrorHandler({
+          file: 'memo/addMemo.js',
+          fn: 'onFormSubmit().$.ajax',
+          xhr: xhr
+        }, 1);
         enableElements();
       }
     });

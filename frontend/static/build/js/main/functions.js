@@ -105,10 +105,29 @@ const getCookie = (cname) => {
  */
 const ajaxErrorHandler = (errMsg = '', onDOMLoad = 0) => {
   if (!onDOMLoad) {
-    toastr.error('Something went wrong. Please reload the page.', null, {
-      timeOut: 0,
-      extendedTimeOut: 0,
-    });
+    if (typeof errMsg === 'object') {
+      if (errMsg.hasOwnProperty('xhr')) {
+        const { xhr } = errMsg;
+        const { responseJSON } = xhr;
+        toastr.error(`
+          <div class="mb-1">Oops! Something went wrong.</div>
+          <div class="small">Status: ${ xhr.status } - ${ xhr.statusText }</div>
+          <div class="small">Message: ${ responseJSON.message }</div>
+        `, null, {
+          timeOut: 0,
+          extendedTimeOut: 0,
+        });
+      }
+      if (DEV_MODE) console.error({
+        ...errMsg,
+        xhr: {
+          status: errMsg.xhr.status,
+          message: errMsg.xhr.responseJSON.message
+        }
+      });
+    } else {
+      console.error(`[ERR]: ${ errMsg || 'Failed to call ajax.' }`);
+    }
   } else {
     const body = $('body');
     $('.wrapper').remove();
@@ -118,7 +137,12 @@ const ajaxErrorHandler = (errMsg = '', onDOMLoad = 0) => {
         <div>
           <div class="row align-items-center justify-content-center">
             <div class="col-md-6 d-flex justify-content-center">
-              <img class="w-75" src="${ BASE_URL_WEB }/img/app/load_error.svg" alt="Maintenance" draggable="false">
+              <img 
+                class="w-75" 
+                src="${ BASE_URL_WEB }/img/app/load_error.svg" 
+                alt="System Error" 
+                draggable="false"
+              />
             </div>
           </div>
         </div>
@@ -148,13 +172,6 @@ const ajaxErrorHandler = (errMsg = '', onDOMLoad = 0) => {
         state = 0;
       }
     }, 2000);
-  }
-  if (DEV_MODE) {
-    if (typeof errMsg === 'object') {
-      console.error(errMsg);
-    } else {
-      console.error(`[ERR]: ${ errMsg || 'Failed to call ajax.' }`);
-    }
   }
 }
 

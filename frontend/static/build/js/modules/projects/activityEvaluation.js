@@ -28,7 +28,7 @@ const ActivityEvaluation = (() => {
           ajaxErrorHandler({
             file: 'projects/projectMonitoring.js',
             fn: 'ProjectMonitoring.initDataTable()',
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           }, 1);
         },
         data: {
@@ -100,17 +100,47 @@ const ActivityEvaluation = (() => {
           }
         }, {
           data: null,
+          width: '15%',
+          searchable: false,
+          sortable: false,
           render: data => {
-            let status = 'Not yet graded';
-            const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
-            return `
-              <div class="text-sm-center">
-                <div class="badge badge-subtle-${ theme } px-2 py-1">
-                  <i class="${ icon } fa-fw mr-1"></i>
-                  <span>${ status }</span>
+            const project_activities = data.activities;
+            const total_project_activities = project_activities.length;
+            
+            const evaluated_activities = project_activities.reduce((total, activity) => {
+              return total + (activity.evaluation ? 1 : 0);
+            }, 0);
+
+            console.log(evaluated_activities);
+
+            const percent = parseFloat(((evaluated_activities / total_project_activities) * 100).toFixed(4))
+
+            if (percent === 100) {
+              return `
+                <div>
+                  <i class="fas fa-check-circle text-success fa-fw mr-1"></i>
+                  <span>Completed</span>
                 </div>
-              </div>
-            `;
+              `
+            } else if (percent === 0) {
+              return `<div class="text-muted font-italic">No activity has been evaluated yet.</div>`
+            } else {
+              return `
+                <div class="progress">
+                  <div 
+                    class="progress-bar bg-success" 
+                    role="progressbar" 
+                    aria-valuenow="${ percent }" 
+                    aria-valuemin="0" 
+                    aria-valuemax="100" 
+                    style="width: ${ percent }%"
+                  ></div>
+                </div>
+                <div class="small">
+                  <span>Evaluated: ${ evaluated_activities }/${ total_project_activities }</span>
+                </div>
+              `;
+            }
           }
         }, {
           data: null,

@@ -36,7 +36,7 @@
       ajaxErrorHandler({
         file: 'projects/projectMonitoringDetails.js',
         fn: 'onDOMLoad.$.ajax',
-        details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        xhr: xhr
       }, 1);
     }
   });

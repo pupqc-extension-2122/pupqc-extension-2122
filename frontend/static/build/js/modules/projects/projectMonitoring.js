@@ -31,7 +31,7 @@ const ProjectMonitoring = (() => {
           ajaxErrorHandler({
             file: 'projects/projectMonitoring.js',
             fn: 'ProjectMonitoring.initDataTable()',
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           }, 1);
         },
         data: {

@@ -159,6 +159,7 @@ const ProjectDetails = (() => {
     if (body.length) {
       const {
         title,
+        project_type,
         implementer,
         team_members: pt,
         target_groups: tg,
@@ -175,6 +176,7 @@ const ProjectDetails = (() => {
       // Set the overall details of the project
       setHTMLContent({
         '#projectDetails_body_title': title || noContentTemplate('No title has been set up'),
+        '#projectDetails_body_extensionType': project_type || noContentTemplate('No extension project type has been set up.'),
         '#projectDetails_body_implementer': implementer || noContentTemplate('No implementer has been set up.'),
         '#projectDetails_body_projectTeam': () => {
           if (pt.length) {
@@ -550,7 +552,7 @@ const ProjectOptions = (() => {
           ajaxErrorHandler({
             file: 'projects/projectProposalDetails.js',
             fn: `ProjectOptions.initForApproval(): confirmBtn.on('click', ...)`,
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           });
           enableElements();
         }
@@ -631,7 +633,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: `ProjectOptions.initForRevision(): confirmBtn.on('click', ...)`,
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -741,7 +743,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: `ProjectOptions.initForEvaluation(): confirmBtn.on('click', ...)`,
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -839,7 +841,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: `ProjectOptions.initForEvaluation(): confirmBtn.on('click', ...)`,
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -953,7 +955,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: `ProjectOptions.initProjectEvaluation(): confirmBtn.on('click', ...)`,
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -1024,7 +1026,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: `ProjectOptions.initApproveProject(): confirmBtn.on('click', ...)`,
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -1107,7 +1109,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: `ProjectOptions.initCancelProposal(): confirmBtn.on('click', ...)`,
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -1309,7 +1311,7 @@ const ProjectOptions = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: `ProjectOptions.initChangeTimeFrame(): confirmBtn.on('click', ...)`,
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -1805,7 +1807,7 @@ const ProjectComments = (() => {
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectComments.handleForm().$.ajax',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
         removeComment(blockId, commentBlock);
       }
@@ -1854,7 +1856,7 @@ const ProjectComments = (() => {
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectComments.removeComment().$.ajax',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
         commentBlock.show();
         processing = false;
@@ -1977,7 +1979,7 @@ const ProjectComments = (() => {
             ajaxErrorHandler({
               file: 'projects/projectProposalDetails.js',
               fn: 'ProjectComments.handleForm().$.ajax',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             displayBodySection.find(`[data-comment-part="body"]`).html(oldBody);
           }
@@ -2240,7 +2242,7 @@ const ProjectActivities = (() => {
             ajaxErrorHandler({
               file: 'projects/PropojectProposalDetails.js',
               fn: 'ProjectActivities.initDataTable',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             }, 1);
           },
           data: {
@@ -2393,7 +2395,7 @@ const ProjectActivities = (() => {
             ajaxErrorHandler({
               file: 'projects/PropojectMonitoringDetails.js',
               fn: 'ProjectActivities.initDataTable',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             }, 1);
           },
           data: {
@@ -2572,7 +2574,7 @@ const ProjectActivities = (() => {
             ajaxErrorHandler({
               file: 'projects/PropojectMonitoringDetails.js',
               fn: 'ProjectActivities.initDataTable',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             }, 1);
           },
           data: {
@@ -2857,7 +2859,7 @@ const ProjectActivities = (() => {
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectActivities.onEditFormSubmit()',
           data: data,
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
         enableElements();
       }
@@ -2899,21 +2901,24 @@ const ProjectActivities = (() => {
           url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ fd.get('activity_id') }/evaluate`,
           type: 'POST',
           data: data,
-          success: (res) => {
+          success: async (res) => {
             processing = false;
             if (res.error) {
               ajaxErrorHandler(res.message);
             } else {
               enableElements();
+              await ProjectActivities.reloadDataTable();
               submitActivityEvaluation_modal.modal('hide');
               toastr.success('An activity has been successfully evaluated');
             }
           },
           error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
             ajaxErrorHandler({
               file: 'projects/projectMain.js',
               fn: 'ProjectActivities.initActivityEvaluation()',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
           }
         });
@@ -3168,7 +3173,7 @@ const ProjectActivities = (() => {
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectActivities.initViewMode()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });
@@ -3231,7 +3236,7 @@ const ProjectActivities = (() => {
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectActivities.initEditMode()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });
@@ -3474,7 +3479,7 @@ const AddProjectActivity = (() => {
           file: 'projects/projectProposalDetails.js',
           fn: 'AddProjectActivity.onFormSubmit()',
           data: data,
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });
@@ -3846,7 +3851,7 @@ const ProjectDocuments = (() => {
         ajaxErrorHandler({
           file: 'projects/projectMain.js',
           fn: 'ProjectDocuments.deleteFile()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });
@@ -3879,7 +3884,7 @@ const ProjectDocuments = (() => {
           ajaxErrorHandler({
             file: 'projects/projectMain.js',
             fn: 'ProjectDocuments.initDataTable',
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           }, 1);
         },
         data: {

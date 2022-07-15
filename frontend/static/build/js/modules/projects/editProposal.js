@@ -190,7 +190,7 @@
         ajaxErrorHandler({
           file: 'projects/createPropsal.js',
           fn: 'onDOMLoad.getPartners()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });
@@ -360,7 +360,7 @@
             ajaxErrorHandler({
               file: 'projects/editProposal.js',
               fn: 'onDOMLoad.handleForm()',
-              details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+              xhr: xhr
             });
             enableElements();
           }
@@ -373,7 +373,7 @@
 		const fd = new FormData($(formSelector)[0]);
 		return {
 			title: fd.get('title'),
-      extension_type: fd.get('extension_type'),
+      project_type: fd.get('extension_type'),
 			implementer: fd.get('implementer'),
 			team_members: PT_form.getTeamMembers(),
 			target_groups: TG_form.getTargetGroups(),
@@ -390,7 +390,7 @@
 	const loadProjectDetails = () => {
 		const {
 			title,
-      extension_type,
+      project_type,
 			implementer,
 			team_members: pt,
 			target_groups: tg,
@@ -407,7 +407,7 @@
 
 		setHTMLContent({
 			'#projectDetailsConfirm_title': title || noContentTemplate('No title has been set up'),
-      '#projectDetailsConfirm_extensionType': extension_type || noContentTemplate('No project extension type has been set up.</div>'),
+      '#projectDetailsConfirm_extensionType': project_type || noContentTemplate('No project extension type has been set up.</div>'),
 			'#projectDetailsConfirm_implementer': implementer || noContentTemplate('No implementer has been set up.'),
 			'#projectDetailsConfirm_projectTeam': () => {
 				if (pt.length) {
@@ -578,7 +578,7 @@
         ajaxErrorHandler({
           file: 'projects/editProposal.js',
           fn: 'onDOMLoad.setInputValues()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         }, 1);
       }
     });

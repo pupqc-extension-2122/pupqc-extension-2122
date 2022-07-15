@@ -110,7 +110,7 @@
         ajaxErrorHandler({
           file: 'admin/addUser.js',
           fn: 'onDOMLoad.getRoles()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });
@@ -151,7 +151,7 @@
         ajaxErrorHandler({
           file: 'admin/addUser.js',
           fn: 'onDOMLoad.getRoles()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr
         });
       }
     });

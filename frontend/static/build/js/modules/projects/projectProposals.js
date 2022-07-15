@@ -33,7 +33,7 @@ const ProjectProposals = (() => {
           ajaxErrorHandler({
             file: 'projects/projectProposals.js',
             fn: 'ProjectProposals.initDataTable()',
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           }, 1);
         },
         data: {

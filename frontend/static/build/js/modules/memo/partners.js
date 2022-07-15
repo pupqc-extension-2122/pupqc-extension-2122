@@ -31,7 +31,7 @@ const Partners = (() => {
           ajaxErrorHandler({
             file: 'memo/partners.js',
             fn: 'Partnerships.initDataTable()',
-            details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+            xhr: xhr
           }, 1);
         },
         data: {
