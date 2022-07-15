@@ -1,4 +1,14 @@
 const { Budget_Categories } = require('../sequelize/models')
+const datatable = require('../../utils/datatableResponse')
+
+exports.datatableCategories = async (req, res) => {
+  if (!req.auth.roles.includes('Admin'))
+    return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+  let data = await datatable(Budget_Categories, req.query, { paranoid: false })
+
+  res.send(data)
+}
 
 exports.listCategories = async (req, res) => {
 
