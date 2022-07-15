@@ -37,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false, validate: { notEmpty: true }
     },
+    project_type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true }
+    },
     implementer: {
       type: DataTypes.STRING,
       allowNull: false, validate: { notEmpty: true }

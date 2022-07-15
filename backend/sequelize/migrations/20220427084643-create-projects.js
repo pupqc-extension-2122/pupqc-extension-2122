@@ -23,7 +23,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      implementer:{
+      project_type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      implementer: {
         type: Sequelize.STRING,
         allowNull: false
       },

@@ -15,6 +15,7 @@ module.exports = {
       {
         id: '05b02fae-98bc-445b-895f-2164bc9a20ec',
         title: 'New Project',
+        project_type: 'Knowledge Transfer',
         implementer: 'Grace Lopez',
         target_groups: ['Project 1', 'Group 2'].join(';'),
         team_members: JSON.stringify([
