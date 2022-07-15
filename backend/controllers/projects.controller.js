@@ -679,7 +679,7 @@ exports.reschedulePresentation = async (req, res) => {
 exports.evaluateActivity = async (req, res) => {
   try {
 
-    if (!req.auth.roles.includes('Chief'))
+    if (!req.auth.roles.includes('Extensionist'))
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const project_id = req.params.project_id
