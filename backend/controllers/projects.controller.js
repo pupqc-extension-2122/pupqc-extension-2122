@@ -144,30 +144,33 @@ exports.createProject = async (req, res) => {
     if (new Date(req.body.start_date) > new Date(req.body.end_date))
       return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
 
-    let partners = await Partners.findAll({
-      where: {
-        id: [...body.partner_id]
-      },
-      include: [
-        {
-          model: Memos,
-          as: 'memos',
-          where: {
-            [Op.and]: {
-              end_date: {
-                [Op.gt]: new Date(body.start_date)
-              },
-              validity_date: {
-                [Op.lte]: new Date(body.start_date)
+
+
+    let project_partners = []
+    if (body.partner_id) {
+
+      let partners = await Partners.findAll({
+        where: {
+          id: [...body.partner_id]
+        },
+        include: [
+          {
+            model: Memos,
+            as: 'memos',
+            where: {
+              [Op.and]: {
+                end_date: {
+                  [Op.gt]: new Date(body.start_date)
+                },
+                validity_date: {
+                  [Op.lte]: new Date(body.start_date)
+                }
               }
             }
           }
-        }
-      ]
-    })
+        ]
+      })
 
-    let project_partners = []
-    if (partners.length) {
       project_partners = partners.map(el => (
         {
           partner_id: el.id,
