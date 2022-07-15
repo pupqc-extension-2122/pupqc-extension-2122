@@ -248,7 +248,6 @@
                   <div class="form-group" id="addProject_cooperatingAgencies_grp">
                     <label for="addProject_cooperatingAgencies">
                       <span>Cooperating Agencies</span>
-                      <span class="text-danger">*</span>
                     </label>
 
                     <div class="form-group">
@@ -260,7 +259,7 @@
                             class="form-control select2"
                             style="width: 100%;"
                           >
-                            <option disabled>No cooperating agencies yet.</option>
+                            <option disabled>Select one or more cooperating agency.</option>
                           </select>
                         </div>
                       </div>
@@ -557,6 +556,12 @@
 
   </div>
 </section>
+
+
+
+<%# === Modals === %>
+
+<%- include('../../partials/projects/modals/no_cooperating_agency') %>
 
 
 

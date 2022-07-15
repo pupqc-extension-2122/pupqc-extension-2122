@@ -1210,7 +1210,7 @@ const ProjectOptions = (() => {
             <span class="text-muted font-italic">Please select a valid start and end date</span>
           `
         }
-      })
+      });
       startDate_input.valid();
       endDate_input.valid();
     });

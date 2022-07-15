@@ -11,6 +11,9 @@
   // * Local Variables
 
   const formSelector = '#addProject_form';
+  
+  const noCoopAgency_modal = $('#noCooperatingAgency_modal');
+  
   let stepper;
   let PT_form; // Project Team Form
   let TG_form; // Target Group Form
@@ -19,6 +22,7 @@
   let EP_form; // Evaluation Plan form
   let lineItemBudget_list;
   let cooperatingAgencies_list;
+  let noCoopAgency_mode = false;
 
   // * Private Methods
 
@@ -56,21 +60,44 @@
 
     // Handle Date inputs on change
     $('#addProject_startDate, #addProject_endDate').on('change', () => {
-      const startDateElem = $('#addProject_startDate');
-      const endDateElem = $('#addProject_endDate');
+      const start_date_elem = $('#addProject_startDate');
+      const end_date_elem = $('#addProject_endDate');
 
-      startDateElem.valid();
-      endDateElem.valid();
+      const start_date = $(start_date_elem).val();
+      const end_date = $(end_date_elem).val();
 
-      const start_date = startDateElem.val();
-      const end_date = endDateElem.val();
-      
-      if (start_date && end_date) {
-        getPartners({
-          start_date: start_date,
-          end_date: end_date
-        });
+      const start_date_moment = moment(start_date);
+      const end_date_moment = moment(end_date);
+
+      if (!start_date) end_date_elem.valid();
+      if (!end_date) start_date_elem.valid();
+
+      if (start_date_moment.isValid() && end_date_moment.isValid()) {
+        start_date_elem.valid();
+        end_date_elem.valid();
       }
+
+      // const start_date = startDateElem.val();
+      // const end_date = endDateElem.val();
+      
+      // if (start_date && end_date) {
+      //   getPartners({
+      //     start_date: start_date,
+      //     end_date: end_date
+      //   });
+      // }
+    });
+
+    const noCoopAgency_btn = noCoopAgency_modal.find(`[data-cooperating-agency-btn="addLater"]`);
+
+    noCoopAgency_modal.on('show.bs.modal', (e) => {
+      if (noCoopAgency_mode) e.preventDefault();
+    });
+    
+    noCoopAgency_btn.on('click', () => {
+      noCoopAgency_mode = true;
+      noCoopAgency_modal.modal('hide');
+      stepper.next();
     });
   }
 
@@ -96,7 +123,7 @@
       // stepper.next();
       if ($(formSelector).valid()) {
         if (currentStep == 0 && CA_form.getSelectedCooperatingAgencies().length == 0) {
-          toastr.warning('Please add at least one cooperating agency');
+          !noCoopAgency_mode ? noCoopAgency_modal.modal('show') : stepper.next();
         } else if (currentStep == 1) {
           if (FR_form.requirements.length == 0)
             toastr.warning('Please add at least one line item budget');
@@ -139,9 +166,9 @@
   }
 
   const getPartners = async (params) => {
-    // console.log(params);
     await $.ajax({
-      url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
+      // url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
+      url: `${ BASE_URL_API }/partners`,
       type: 'GET',
       success: result => {
         if (result.error) {
@@ -567,6 +594,7 @@
         initProjectTeamForm();
         initTargetGroupForm();
         initCooperatingAgenciesGroupForm();
+        await getPartners();
         initFinancialRequirementsForm();
         initEvaluationPlanForm();
         removeLoaders();

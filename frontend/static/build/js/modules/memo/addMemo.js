@@ -13,6 +13,7 @@
   const modal = $('#addMemo_modal')
   const formSelector = '#addMemo_form';
   const form = $(formSelector)[0];
+  let validator;
   let W_form; // Witnesses form
   let processing = false;
 
@@ -83,6 +84,27 @@
       if (processing) e.preventDefault();
     });
 
+    // *** Validate Notarized Date & Validity Date *** //
+    
+    $('#addMemo_notarySignedDate, #addMemo_validityDate').on('change', () => {
+      const notary_date_input = $('#addMemo_notarySignedDate');
+      const validity_date_input = $('#addMemo_validityDate');
+
+      const notary_date = notary_date_input.val();
+      const validity_date = validity_date_input.val();
+
+      const notarized_date_moment = moment(notary_date);
+      const validity_date_moment = moment(validity_date);
+
+      if (!notary_date) validity_date_input.valid();
+      if (!validity_date) notary_date_input.valid();
+
+      if (notarized_date_moment.isValid() && validity_date_moment.isValid()) {
+        notary_date_input.valid();
+        validity_date_input.valid();
+      }
+    });
+
     // *** To get valid until *** //
 
     $('#addMemo_validityDate, #addMemo_duration').on('keyup change', () => {
@@ -106,7 +128,7 @@
   }
 
   const handleForm = () => {
-    $app(formSelector).handleForm({
+    validator = $app(formSelector).handleForm({
       validators: {
         name: {
           required: "The partner name is required.",
