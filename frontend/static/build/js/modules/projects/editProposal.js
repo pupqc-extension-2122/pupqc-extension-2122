@@ -36,8 +36,11 @@
     const extensionType_select = $('#addProject_extensionType_select');
     const extension_types = [
       {
-        id: 'Livelihood Literacy',
-        name: 'Livelihood Literacy',
+        id: 'Livelihood',
+        name: 'Livelihood',
+      },{
+        id: 'Literacy',
+        name: 'Literacy',
       }, {
         id: 'Knowledge Transfer',
         name: 'Knowledge Transfer',
