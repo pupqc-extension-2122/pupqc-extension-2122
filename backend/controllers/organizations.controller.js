@@ -75,6 +75,29 @@ exports.updateOrganizations = async (req, res) => {
   }
 }
 
+exports.restoreOrganizations = async (req, res) => {
+  try {
+
+    if (!req.auth.roles.includes('Admin'))
+      return res.status(403).send({ error: true, message: 'Forbidden Action' })
+
+    const id = req.params.id
+
+    let data = await Organizations.findByPk(id, { paranoid: false })
+
+    if (!data)
+      return res.status(404).send({ error: true, message: 'Record not found' })
+
+    await data.restore()
+
+    res.send({ error: false, message: 'Record restored successfully' })
+
+  } catch (error) {
+    console.log(error)
+    res.send(error)
+  }
+}
+
 exports.deleteOrganizations = async (req, res) => {
   try {
 
