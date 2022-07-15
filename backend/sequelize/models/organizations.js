@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: { notEmpty: true },
+      unique: {args: true, msg: 'The Name you entered already exists'}
     },
     type: {
       type: DataTypes.STRING,
