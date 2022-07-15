@@ -40,7 +40,7 @@ router.get('/', jwtMiddleware, (req, res) => res.redirect(`/p/dashboard`));
 router.get('/dashboard', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'dashboard', {
       document_title: 'Dashboard',
       active_sidebar_tab: 'Dashboard',
@@ -57,7 +57,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
 router.get('/proposals', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'project_proposals', {
       document_title: 'Project Proposals',
       active_sidebar_tab: 'Project Proposals',
@@ -102,7 +102,7 @@ router.get('/proposals/:project_id', jwtMiddleware, async (req, res) => {
   // if(project.status === 'Created' && roles.length === 1 && roles.includes('Chief'))
   //   return res.status(404).send({ error: true, message: 'Page Not Found' });
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'project_proposal_details', {
       document_title: 'Project Details',
       active_sidebar_tab: 'Project Proposals',
@@ -130,7 +130,7 @@ router.get('/proposals/:project_id/activities', jwtMiddleware, async (req, res) 
   if(project.status === 'Created' && roles.length === 1 && roles.includes('Chief'))
     return render404(res);
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'project_proposal_activities', {
       document_title: 'Project Activities',
       active_sidebar_tab: 'Project Proposals',
@@ -172,7 +172,7 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, async (req, res) => {
 router.get('/monitoring/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'project_monitoring', {
       document_title: 'Project Monitoring',
       active_sidebar_tab: 'Project Monitoring',
@@ -197,7 +197,7 @@ router.get('/monitoring/:project_id', jwtMiddleware, async (req, res) => {
   if(!project || project.status !== 'Approved')
     return render404(res);
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'project_monitoring_details', {
       document_title: 'Project Monitoring Details',
       active_sidebar_tab: 'Project Monitoring',
@@ -222,7 +222,7 @@ router.get('/monitoring/:project_id/activities', jwtMiddleware, async (req, res)
   if(!project || project.status !== 'Approved')
     return render404(res);
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'project_monitoring_activities', {
       document_title: 'Project Activities',
       active_sidebar_tab: 'Project Monitoring',
@@ -241,7 +241,7 @@ router.get('/monitoring/:project_id/activities', jwtMiddleware, async (req, res)
 router.get('/evaluation/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'activity_evaluation', {
       document_title: 'Project Evaluation',
       active_sidebar_tab: 'Project Evaluation',
@@ -266,7 +266,7 @@ router.get('/evaluation/:project_id', jwtMiddleware, async (req, res) => {
   if(!project || project.status !== 'Approved')
     return render404(res);
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'activity_evaluation_details', {
       document_title: 'Project Details',
       active_sidebar_tab: 'Project Evaluation',
@@ -283,7 +283,7 @@ router.get('/evaluation/:project_id', jwtMiddleware, async (req, res) => {
 router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'activity_evaluation_activities', {
       document_title: 'Project Activities',
       active_sidebar_tab: 'Project Evaluation',

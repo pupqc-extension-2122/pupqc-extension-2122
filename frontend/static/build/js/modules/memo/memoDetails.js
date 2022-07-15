@@ -209,6 +209,8 @@ const MemoDetails = (() => {
 const MemoDocuments = (() => {
   
   // * Local Variables
+
+  const user_roles = JSON.parse(getCookie('roles'));
   
   const dtElem = $('#uploadedDocuments_dt');
   const uploadDocuments_modal = $('#uploadMemoDocuments_modal');
@@ -228,11 +230,13 @@ const MemoDocuments = (() => {
   // * Private Methods
 
   const initializations = async () => {
-    await initializeDropzone();
-    handleSubmitDocumentForm();
-    handleUploadDocumentsModal();
-    handleRenameFileModal();
-    handleDeletDocumentModal();
+    if (user_roles.includes('Extensionist')) {
+      await initializeDropzone();
+      handleSubmitDocumentForm();
+      handleUploadDocumentsModal();
+      handleRenameFileModal();
+      handleDeleteDocumentModal();
+    }
   }
 
   const initializeDropzone = async () => {
@@ -457,7 +461,7 @@ const MemoDocuments = (() => {
     });
   }
 
-  const handleDeletDocumentModal = () => {
+  const handleDeleteDocumentModal = () => {
     const confirmBtn = deleteDocument_modal
       .find(`[data-delete-document-confirm-btn]`)
 
@@ -617,6 +621,7 @@ const MemoDocuments = (() => {
 
 (() => {
   const memo_id = location.pathname.split('/')[3];
+  const user_roles = JSON.parse(getCookie('roles'));
 
   $.ajax({
     url: `${ BASE_URL_API }/memos/${ memo_id }`,
@@ -629,7 +634,8 @@ const MemoDocuments = (() => {
         
         MemoDetails.init(data);
         MemoDocuments.init(data);
-        EditMemo.init(data);
+
+        if (user_roles.includes('Extensionist')) EditMemo.init(data);
       }
     },
     error: (xhr, status, error) => {

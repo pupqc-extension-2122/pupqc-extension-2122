@@ -3097,7 +3097,6 @@ const ProjectActivities = (() => {
             setHTMLContent('#projectActivityDetails_postEvaluation_pane', () => {
               if (evaluation) {
                 let rows = '';
-                console.log(evaluation);
                 evaluation.forEach(eval_group => {
                   rows += `
                     <tr>
@@ -3132,22 +3131,34 @@ const ProjectActivities = (() => {
                   </div>
                 `
               } else {
-                return `
-                  <div class="p-5 text-center">
-                    <div class="display-3 mb-2">
-                      <i class="fas fa-circle-question text-secondary"></i>
+                if (user_roles.includes('Extensionist')) {
+                  return `
+                    <div class="p-5 text-center">
+                      <div class="display-3 mb-2">
+                        <i class="fas fa-circle-question text-secondary"></i>
+                      </div>
+                      <h3>No post evaluation yet.</h3>
+                      <p>This project activity is not yet graded. You can submit by clicking the button below.</p>
+                      <button 
+                        class="btn btn-success" 
+                        onclick="ProjectActivities.submitPostEvaluation('${ id }')"
+                      >
+                        <i class="fas fa-file-import mr-1"></i>
+                        <span>Submit Post Evaluation</span>
+                      </button>
                     </div>
-                    <h3>No post evaluation yet.</h3>
-                    <p>This project activity is not yet graded. You can submit by clicking the button below.</p>
-                    <button 
-                      class="btn btn-success" 
-                      onclick="ProjectActivities.submitPostEvaluation('${ id }')"
-                    >
-                      <i class="fas fa-file-import mr-1"></i>
-                      <span>Submit Post Evaluation</span>
-                    </button>
-                  </div>
-                `
+                  `
+                } else {
+                  return `
+                    <div class="p-5 text-center">
+                      <div class="display-3 mb-2">
+                        <i class="fas fa-circle-question text-secondary"></i>
+                      </div>
+                      <h3>No post evaluation yet.</h3>
+                      <p>This project activity is not yet graded but expected to have soon.</p>
+                    </div>
+                  `
+                }
               }
             });
           }

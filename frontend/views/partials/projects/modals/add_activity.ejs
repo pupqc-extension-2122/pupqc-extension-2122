@@ -1,0 +1,160 @@
+<%# Add Project Activity Modal %>
+<div class="modal fade" data-backdrop="static" id="addProjectActivity_modal">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content" id="addProjectActivity_form">
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <i class="fas fa-list fa-fw mr-1"></i>
+          <span>Add Project Activity</span>
+        </h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <%# Activity Title %>
+        <div class="form-group">
+          <label for="addProjectActivity_title">
+            <span>Activity Title / Name</span>
+            <span class="text-danger">*</span>
+          </label>
+          <input type="text" class="form-control" id="addProjectActivity_title" name="title"
+            placeholder="Type the title of activity here" />
+        </div>
+
+        <%# Topics %>
+        <div class="form-group" id="addProjectActivity_topics_grp">
+          <label for="addProjectActivity_title">
+            <span>Topics</span>
+            <span class="text-danger">*</span>
+          </label>
+
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-sm btn-success" id="addTopic_btn">
+              <i class="fas fa-plus mr-1"></i>
+              <span>Add topic</span>
+            </button>
+          </div>
+        </div>
+
+        <%# Outcomes %>
+        <div class="form-group" id="addProjectActivity_outcomes_grp">
+          <label for="addProjectActivity_title">
+            <span>Outcomes</span>
+            <span class="text-danger">*</span>
+          </label>
+
+          <div class="d-flex justify-content-between">
+            <button type="button" class="btn btn-sm btn-success" id="addOutcome_btn">
+              <i class="fas fa-plus mr-1"></i>
+              <span>Add outcome statement</span>
+            </button>
+          </div>
+        </div>
+
+        <%# Start/End Date %>
+        <div class="form-row">
+
+          <%# Start Date %>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="addProjectActivity_startDate">
+                <span>Start Date</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="input-group date">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="addProjectActivity_startDate" 
+                  name="start_date"
+                  placeholder="Please select a start date" 
+                  data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="yyyy-mm-dd" 
+                  data-mask 
+                />
+                <div class="input-group-append">
+                  <button 
+                    type="button" 
+                    class="btn btn-primary" 
+                    id="addProjectActivity_startDate_pickerBtn"
+                    data-toggle="tooltip" 
+                    title="Select a start date"
+                  >
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# End Date %>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="addProjectActivity_endDate">
+                <span>End Date</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="input-group date">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="addProjectActivity_endDate" 
+                  name="end_date"
+                  placeholder="Please select an end date" 
+                  data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="yyyy-mm-dd" 
+                  data-mask 
+                />
+                <div class="input-group-append">
+                  <button 
+                    type="button" 
+                    class="btn btn-primary" 
+                    id="addProjectActivity_endDate_pickerBtn"
+                    data-toggle="tooltip" 
+                    title="Select a start date"
+                  >
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%# Summary/Details %>
+        <div class="form-group">
+          <label for="addProjectActivity_details">
+            <span>Summary/Details</span>
+            <span class="text-danger">*</span>
+          </label>
+          <textarea 
+            class="form-control"
+            name="details" 
+            id="addProjectActivity_details" 
+            rows="5"
+            placeholder="Please type the summary/details of the activity here"
+          ></textarea>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-negative"
+          id="addProjectActivity_cancelBtn"
+          data-dismiss="modal"
+        >Cancel</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          id="addProjectActivity_saveBtn"
+        >
+          <i class="fas fa-check mr-1"></i>
+          <span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

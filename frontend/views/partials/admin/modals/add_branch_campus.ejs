@@ -1,70 +1,68 @@
-<% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
-  <%# Add Branch/Campus Modal %>
-  <div class="modal fade" id="addBranchCampus_modal" data-backdrop="static">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <form class="modal-content" id="addBranchCampus_form">
-        <div class="modal-header">
-          <h4 class="modal-title">Add a Branch/Campus</h4>
-          <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        
-        <div class="modal-body">
+<%# Add Branch/Campus Modal %>
+<div class="modal fade" id="addBranchCampus_modal" data-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content" id="addBranchCampus_form">
+      <div class="modal-header">
+        <h4 class="modal-title">Add a Branch/Campus</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
 
-          <%# Form Groups %>
-          <div class="row" id="addBranchCampus_formGroups">
+        <%# Form Groups %>
+        <div class="row" id="addBranchCampus_formGroups">
 
-            <%# Branch/Campus Name %>
-            <div class="col-12">
-              <div class="form-group">
-                <label for="addBranchCampus_branchCampusName">
-                  <span>Branch/Campus Name</span>
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="addBranchCampus_branchCampusName" 
-                  name="branchCampus_name"
-                  placeholder="Enter the branch/campus name here"
-                />
-              </div>
+          <%# Branch/Campus Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="addBranchCampus_branchCampusName">
+                <span>Branch/Campus Name</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="addBranchCampus_branchCampusName" 
+                name="branchCampus_name"
+                placeholder="Enter the branch/campus name here"
+              />
             </div>
+          </div>
 
-            <%# Type %>
-            <div class="col-12">
-              <div class="form-group" id="addBranchCampus_type_grp">
-                <label for="addBranchCampus_type">
-                  <span>Type</span>
-                  <span class="text-danger">*</span>
-                </label>
-    
-                <div class="form-group">
-                  <div class="form-row">
-                    <div class="col-12">
-                      <select 
-                        name="type" 
-                        id="addBranchCampus_type_select" 
-                        class="form-control select2"
-                        style="width: 100%;"
-                      > 
-                        <option>Branch</option>
-                        <option>Campus</option>
-                      </select>
-                    </div>
+          <%# Type %>
+          <div class="col-12">
+            <div class="form-group" id="addBranchCampus_type_grp">
+              <label for="addBranchCampus_type">
+                <span>Type</span>
+                <span class="text-danger">*</span>
+              </label>
+  
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="col-12">
+                    <select 
+                      name="type" 
+                      id="addBranchCampus_type_select" 
+                      class="form-control select2"
+                      style="width: 100%;"
+                    > 
+                      <option>Branch</option>
+                      <option>Campus</option>
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
+
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="submitBranchCampus_btn">Submit</button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submitBranchCampus_btn">Submit</button>
+      </div>
+    </form>
   </div>
-<% } %>
+</div>

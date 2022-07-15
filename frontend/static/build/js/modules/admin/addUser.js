@@ -1,6 +1,6 @@
 /**
  * ==============================================
- * * ADD User
+ * * REGISTER USER
  * ==============================================
  */
 
@@ -10,9 +10,10 @@
 
   let initialized = false;
   const user_roles = JSON.parse(getCookie('roles'));
-  const modal = $('#addUser_modal')
-  const formSelector = '#addUser_form';
+  const modal = $('#registerUser_modal')
+  const formSelector = '#registerUser_form';
   const form = $(formSelector)[0];
+  let loaded = false;
   let processing = false;
 
   // * Private Methods
@@ -21,35 +22,11 @@
 
     // *** For Add User Modal *** //
 
-    // User Role
-    const userRole_select = $('#addUser_role_select');
-    const user_roles = [
-      {
-        id: 'Director',
-        name: 'Director',
-      }, {
-        id: 'Chief',
-        name: 'Chief',
-      }, {
-        id: 'Extensionist',
-        name: 'Extensionist',
-      }, {
-        id: 'Admin',
-        name: 'Admin',
-      }
-    ]
-
-    userRole_select.empty();
-    userRole_select.append(`<option></option>`);
-    user_roles.forEach(t => {
-      userRole_select.append(`
-        <option value="${ t.id }">${ t.name }</option>
-      `);
+    modal.on('show.bs.modal', async () => {
+      await getRoles();
     });
 
     modal.on('hidden.bs.modal', () => {
-      $('#addUser_formGroups_loader').show();
-      $('#addUser_formGroups').hide();
       form.reset();
     });
 
@@ -59,7 +36,7 @@
   }
 
   const handleForm = () => {
-    $app('#addUser_form').handleForm({
+    $app(formSelector).handleForm({
       validators: {
         first_name: {
           required: "First  name is required.",
@@ -74,8 +51,8 @@
           email: 'The input is not a valid email address.',
           notEmpty: "This field cannot be blank.",
         },
-        role:  {
-          required: "Role is required.",
+        roles:  {
+          required: "Please select at least one role.",
           notEmpty: "This field cannot be blank.",
         }
       },
@@ -108,7 +85,7 @@
       middle_name: fd.get('middle_name'),
       suffix_name: fd.get('suffix_name'),
       email: fd.get('email'),
-      roles: fd.get('roles'),
+      user_roles: fd.getAll('roles').map(r => r = { role_id: r }),
     }
 
     await $.ajax({
@@ -123,16 +100,67 @@
         } else {
           await Users.reloadDataTable();
           enableElements();
-          $('#addUser_modal').modal('hide');
+          modal.modal('hide');
           toastr.success('A new user has been successfully added.');
         }
       },
-      error: () => {
+      error: (xhr, status, error) => {
         processing = false;
-        ajaxErrorHandler();
         enableElements();
+        ajaxErrorHandler({
+          file: 'admin/addUser.js',
+          fn: 'onDOMLoad.getRoles()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
       }
     });
+  }
+
+  const getRoles = async () => {
+    if (loaded) return;
+    processing = true;
+    await $.ajax({
+      url: `${ BASE_URL_API }/roles`,
+      type: 'GET',
+      success: res => {
+        processing = false;
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          const { data } = res;
+          const rolesList = $('#addUser_rolesList');
+
+          rolesList.empty();
+
+          data.forEach(role => {
+            rolesList.append(`
+              <div class="icheck-primary">
+                <input type="checkbox" name="roles" value="${ role.id }" id="role-${ role.id }">
+                <label for="role-${ role.id }">${ role.name }</label>
+              </div>
+            `);
+          });
+          
+          removeLoaders();
+
+          if (!loaded) loaded = true;
+        }
+      },
+      error: (xhr, status, error) => {
+        processing = false;
+        ajaxErrorHandler({
+          file: 'admin/addUser.js',
+          fn: 'onDOMLoad.getRoles()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
+      }
+    });
+  }
+
+  const removeLoaders = () => {
+    if (loaded) return;
+    $('#addUser_formGroups_loader').remove();
+    $('#addUser_formGroups').show();
   }
 
   // * Return Public Functions

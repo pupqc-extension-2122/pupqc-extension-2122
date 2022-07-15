@@ -139,7 +139,10 @@
 <%# === Modals === %>
 
 <%- include('../../partials/projects/modals/project_activity_details') %>
-<%- include('../../partials/projects/modals/submit_activity_evaluation') %>
+
+<% if (roles.includes('Extensionist')) { %>
+  <%- include('../../partials/projects/modals/submit_activity_evaluation') %>
+<% } %>
 
 
 

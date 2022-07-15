@@ -175,7 +175,7 @@
 
 <%# Modals %>
 
-<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+<% if (roles.includes('Extensionist')) { %>
   <%- include('../../partials/memo/modals/add_memo') %>
 <% } %>
 

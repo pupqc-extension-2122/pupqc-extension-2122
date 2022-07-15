@@ -1,44 +1,42 @@
-<% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
-  <%# Add Budget Item Category Modal %>
-  <div class="modal fade" id="addBudgetItemCategory_modal" data-backdrop="static">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <form class="modal-content" id="addBudgetItemCategory_form">
-        <div class="modal-header">
-          <h4 class="modal-title">Add a Budget Item Category</h4>
-          <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        
-        <div class="modal-body">
+<%# Add Budget Item Category Modal %>
+<div class="modal fade" id="addBudgetItemCategory_modal" data-backdrop="static">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <form class="modal-content" id="addBudgetItemCategory_form">
+      <div class="modal-header">
+        <h4 class="modal-title">Add a Budget Item Category</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
 
-          <%# Form Groups %>
-          <div class="row" id="addBudgetItemCategory_formGroups">
+        <%# Form Groups %>
+        <div class="row" id="addBudgetItemCategory_formGroups">
 
-            <%# Budget Item Category Name %>
-            <div class="col-12">
-              <div class="form-group">
-                <label for="addBudgetItemCategory_categoryName">
-                  <span>Budget Item Category Name</span>
-                  <span class="text-danger">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="addBudgetItemCategory_categoryName" 
-                  name="category_name"
-                  placeholder="Enter the budget item category name here"
-                />
-              </div>
+          <%# Budget Item Category Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="addBudgetItemCategory_categoryName">
+                <span>Budget Item Category Name</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="addBudgetItemCategory_categoryName" 
+                name="category_name"
+                placeholder="Enter the budget item category name here"
+              />
             </div>
-
           </div>
+
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="submitBudgetItemCategory_btn">Submit</button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submitBudgetItemCategory_btn">Submit</button>
+      </div>
+    </form>
   </div>
-<% } %>
+</div>

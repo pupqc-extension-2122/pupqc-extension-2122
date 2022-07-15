@@ -64,7 +64,7 @@
 
 <%# === Modals === %> 
 
-<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+<% if (roles.includes('Extensionist')) { %>
   <%- include('../../partials/projects/modals/upload_documents') %>
   <%- include('../../partials/projects/modals/change_time_frame') %>
 <% } %>

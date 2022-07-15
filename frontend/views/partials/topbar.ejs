@@ -23,19 +23,28 @@
   <%# Left navbar links %>
   <div class="collapse navbar-collapse order-3" id="navbarCollapse">
     <ul class="navbar-nav mt-1 mt-sm-0">
-      <li class="nav-item d-sm-inline-block">
-        <a 
-          href="<%=BASE_URL%>/p" 
-          class="nav-link px-2 px-3<% if (active_topbar_tab == "Projects") { %> active<% } %>"
-        >Projects</a>
-      </li>
-      <li class="nav-item d-sm-inline-block">
-        <a 
-          href="<%=BASE_URL%>/m" 
-          class="nav-link px-2 px-3<% if (active_topbar_tab == "MOA/MOU") { %> active<% } %>"
-        >MOA/MOU</a>
-      </li>
-      <% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
+      <% 
+        if (
+          roles.includes('Extensionist') 
+          || roles.includes('Chief') 
+          || roles.includes('Director')
+        ) { 
+      %>
+        <li class="nav-item d-sm-inline-block">
+          <a 
+            href="<%=BASE_URL%>/p" 
+            class="nav-link px-2 px-3<% if (active_topbar_tab == "Projects") { %> active<% } %>"
+          >Projects</a>
+        </li>
+        <li class="nav-item d-sm-inline-block">
+          <a 
+            href="<%=BASE_URL%>/m" 
+            class="nav-link px-2 px-3<% if (active_topbar_tab == "MOA/MOU") { %> active<% } %>"
+          >MOA/MOU</a>
+        </li>
+      <% } %>
+
+      <% if (roles.includes('Admin')) { %>
         <li class="nav-item d-sm-inline-block">
           <a 
             href="<%=BASE_URL%>/a" 
@@ -43,6 +52,7 @@
           >SysAdmin</a>
         </li>
       <% } %>
+
     </ul>
   </div>  
 

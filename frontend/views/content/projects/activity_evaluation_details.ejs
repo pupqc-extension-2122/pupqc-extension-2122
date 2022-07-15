@@ -62,7 +62,10 @@
 
 
 <%# === Modals === %> 
-<%- include('../../partials/projects/modals/upload_documents') %>
+
+<% if (roles.includes('Extensionist')) { %>
+  <%- include('../../partials/projects/modals/upload_documents') %>
+<% } %>
 
 
 <%# ***** Scripts ***** %>

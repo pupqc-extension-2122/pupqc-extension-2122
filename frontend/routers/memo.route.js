@@ -37,7 +37,7 @@ router.get('/', jwtMiddleware, (req, res) => res.redirect(`/m/dashboard`));
 router.get('/dashboard', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'dashboard', {
       document_title: 'Dashboard',
       active_sidebar_tab: 'Dashboard',
@@ -54,7 +54,7 @@ router.get('/dashboard', jwtMiddleware, (req, res) => {
 router.get('/partners', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'partners', {
       document_title: 'Partnerships',
       active_sidebar_tab: 'Partners',
@@ -79,7 +79,7 @@ router.get('/partners/:partner_id', jwtMiddleware, async (req, res) => {
   if(!partner)
     return render404(res);
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'partner_details', {
       document_title: 'Partner Details',
       active_sidebar_tab: 'Partners',
@@ -96,7 +96,7 @@ router.get('/partners/:partner_id', jwtMiddleware, async (req, res) => {
 router.get('/memo/', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'memos', {
       document_title: 'MOA/MOU',
       active_sidebar_tab: 'MOA/MOU',
@@ -121,7 +121,7 @@ router.get('/memo/:memo_id', jwtMiddleware, async (req, res) => {
   if(!memo)
     return render404(res);
 
-  roles.includes('Extensionist') || roles.includes('Chief')
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'memo_details', {
       document_title: 'MOA/MOU Details',
       active_sidebar_tab: 'MOA/MOU',

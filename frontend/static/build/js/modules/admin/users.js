@@ -51,6 +51,8 @@ const Users = (() => {
           visible: false,
         }, {
 					data: null,
+          searchable: false,
+          sortable: false,
           width: '25%',
           render: (data, type, row) => {
             const userName = (format = 'F M. L, S') => {
@@ -83,6 +85,7 @@ const Users = (() => {
           }
         }, {
           data: 'created_at',
+          width: '15%',
           render: data => {
             const created_at = data.created_at
             return `
@@ -92,12 +95,12 @@ const Users = (() => {
           }
         }, {
           data: null,
-          class: 'text-center', 
+          width: '15%',
           sortable: false,
           render: (data) => {
             return data.verified 
               ? `
-                <div class="text-center">
+                <div class="text-sm-center">
                   <div class="badge badge-subtle-success px-2 py-1">
                     <i class="fas fa-check fa-fw mr-1"></i>
                     <span>Verified</span>

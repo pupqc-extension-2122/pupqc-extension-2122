@@ -8,7 +8,6 @@ const RENDER_OPTION_DEFAULTS = {
   sidebar: 'sidebars/admin_sidebar',
 }
 
-
 const renderRoles = (roles) => {
   let roleTemplate = '';
   roles.forEach((role, index) => {
@@ -17,7 +16,6 @@ const renderRoles = (roles) => {
   });
   return roleTemplate;
 }
-
 
 const render404 = (res) => {
   return res.status(404).render('content/errors/404', {

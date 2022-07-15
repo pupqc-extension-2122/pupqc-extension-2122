@@ -265,19 +265,19 @@
       </div>
 
       <div class="card-body">
-        <div class="d-flex mb-3">
-          <h4 class="mb-3 flex-grow-1">Upload your documents</h4>
-          
-          <% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+        
+        <% if (roles.includes('Extensionist')) { %>
+          <div class="d-flex mb-3">
+            <h4 class="mb-3 flex-grow-1">Upload your documents</h4>
+            
             <div class="text-right">
               <button class="btn btn-info" data-toggle="modal" data-target="#uploadDocuments_modal">
                 <i class="fas fa-upload mr-1"></i>
                 <span>Upload</span>
               </button>
             </div>
-          <% } %>  
-        
-        </div>
+          </div>
+        <% } %>  
 
         <div class="table-responsive">
           <table class="table w-100" id="uploadedDocuments_dt">

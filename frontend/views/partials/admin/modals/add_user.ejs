@@ -1,7 +1,7 @@
 <%# Add User Modal %>
-<div class="modal fade" id="addUser_modal" data-backdrop="static">
+<div class="modal fade" id="registerUser_modal" data-backdrop="static">
   <div class="modal-dialog modal-dialog-scrollable">
-    <form class="modal-content" id="addUser_form">
+    <form class="modal-content" id="registerUser_form">
       <div class="modal-header">
         <h4 class="modal-title">Register a User</h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
@@ -11,24 +11,24 @@
       
       <div class="modal-body">
 
-        <%# Form Groups %>
-        <div class="row" id="addUser_formGroups">
-
-          <%# Form Group Loader %>
-          <div id="addUser_formGroups_loader">
-            <div class="form-group">
-              <div class="skeleton text" style="width: 8rem"></div>
-              <div class="skeleton input"></div>
-            </div>
-            <div class="form-group">
-              <div class="skeleton text" style="width: 8rem"></div>
-              <div class="skeleton input"></div>
-              <div class="skeleton input"></div>
-            </div>
-            <div class="form-group">
-              <div class="p-3 my-5"></div>
-            </div>
+        <%# Form Group Loader %>
+        <div id="addUser_formGroups_loader">
+          <div class="form-group">
+            <div class="skeleton text" style="width: 8rem"></div>
+            <div class="skeleton input"></div>
           </div>
+          <div class="form-group">
+            <div class="skeleton text" style="width: 8rem"></div>
+            <div class="skeleton input"></div>
+            <div class="skeleton input"></div>
+          </div>
+          <div class="form-group">
+            <div class="p-3 my-5"></div>
+          </div>
+        </div>
+
+        <%# Form Groups %>
+        <div class="row" id="addUser_formGroups" style="display: none">
 
           <%# First Name %>
           <div class="col-12">
@@ -117,27 +117,12 @@
           <div class="col-12">
             <div class="form-group" id="addUser_role_grp">
               <label for="addUser_role">
-                <span>Role</span>
+                <span>Select one or more roles</span>
                 <span class="text-danger">*</span>
               </label>
-  
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-12">
-                    <select 
-                      name="role" 
-                      id="addUser_role_select" 
-                      class="form-control select2"
-                      style="width: 100%;"
-                    > 
-                      <option>Director</option>
-                      <option>Chief</option>
-                      <option>Extensionist</option>
-                      <option>Admin</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+
+              <div id="addUser_rolesList"></div>
+
             </div>
           </div>
 

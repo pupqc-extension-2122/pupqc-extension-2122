@@ -339,19 +339,21 @@
     
               <div class="card-body">
                 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h4>Upload your documents</h4>
-                  <div class="text-right">
-                    <button 
-                      class="btn btn-info" 
-                      data-toggle="modal" 
-                      data-target="#uploadMemoDocuments_modal"
-                    >
-                      <i class="fas fa-upload mr-1"></i>
-                      <span>Upload</span>
-                    </button>
+                <% if (roles.includes('Extensionist')) { %>
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>Upload your documents</h4>
+                    <div class="text-right">
+                      <button 
+                        class="btn btn-info" 
+                        data-toggle="modal" 
+                        data-target="#uploadMemoDocuments_modal"
+                      >
+                        <i class="fas fa-upload mr-1"></i>
+                        <span>Upload</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
+                <% } %>
 
                 <div class="table-responsive">
                   <table class="table w-100" id="uploadedDocuments_dt">
@@ -423,7 +425,7 @@
 
 
 <%# === Modals === %>
-<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+<% if (roles.includes('Extensionist')) { %>
   <%- include('../../partials/memo/modals/edit_memo') %>
   <%- include('../../partials/memo/modals/upload_documents') %>
 <% } %> 
@@ -461,6 +463,7 @@
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/modules/memo/memoDetails.js"></script>
-<% if (JSON.parse(JSON.stringify(roles)).includes('Extensionist')) { %>
+
+<% if (roles.includes('Extensionist')) { %>
   <script src="<%=BASE_URL%>/js/modules/memo/editMemo.js"></script>
 <% } %>
