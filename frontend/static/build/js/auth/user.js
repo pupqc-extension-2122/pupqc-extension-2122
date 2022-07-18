@@ -70,15 +70,13 @@ const User = (() => {
         } else {
           toastr.info('Logging out.');
           localStorage.clear();
-          setTimeout(() => location.replace(`${ BASE_URL_WEB }/login`), 750);
+          setTimeout(() => location.replace(`${ BASE_URL_WEB }/login`), 250);
         }
       },
-      error: () => {
-        toastr.error('Something went wrong. Please reload the page.', {
-          "timeOut": "0",
-          "extendedTimeOut": "0",
+      error: (xhr) => {
+        ajaxErrorHandler({
+          xhr: xhr
         });
-        console.error(`[ERR]: Failed to call ajax.`);
       }
     });
   }

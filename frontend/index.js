@@ -23,6 +23,13 @@ app.use((req, res, next) => {
 // Web Routes
 app.use(`/`, require('./routers/auth.route'));
 
+// Redirect if not logged in 
+app.use((req, res, next) => {
+  if (!(req.cookies.user && req.cookies.roles)) res.redirect('/login');
+  if (req.cookies.first_time == 'true') res.redirect('/change-password');
+  next();
+});
+
 app.use(`/p/`, require('./routers/projects.route'));
 app.use(`/m/`, require('./routers/memo.route'));
 app.use(`/a/`, require('./routers/admin.route'));
@@ -35,6 +42,6 @@ app.use((req, res, next) => {
     layout: './layouts/error',
     document_title: '404 - Page not found',
   });
-})
+});
 
 module.exports = app
