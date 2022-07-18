@@ -109,3 +109,16 @@
   initInputs();
 
 })();
+
+(function( $, undefined ) {
+
+	// $.extend( $.ui.menu.prototype.options.classes, {
+	// 	"ui-menu": "dropdown-menu",
+  //   "ui-menu-item": "dropdown-item"
+	// });
+
+	$.extend( $.ui.autocomplete.prototype.options.classes, {
+		"ui-autocomplete": "dropdown-menu",
+	});
+
+})(jQuery);

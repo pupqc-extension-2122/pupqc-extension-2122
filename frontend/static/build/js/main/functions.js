@@ -12,7 +12,7 @@
  */
 
 /**
- * Generate and returns a short universal unique id 
+ * Generate and returns a 14-character universal unique id 
  * @returns {string} Returns a uuid
  */
 const uuid = () => {
@@ -197,12 +197,8 @@ const setDocumentTitle = (message, withTail = 1) => {
  * Remove whitespaces on inputs
  */
 const initInputs = () => {
-  $('input[type="text"], input[type="email"], textarea').on('keyup', function() {
-    $(this).val($(this).val().replace(/\s+/g, ' '));
-  });
-  
   $('input[type="text"], input[type="email"], textarea').on('change', function() {
-    $(this).val($(this).val().trim());
+    $(this).val($(this).val().trim().replace(/\s+/g, ' '))
   });
 }
 

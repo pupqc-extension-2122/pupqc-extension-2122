@@ -29,26 +29,25 @@
   const initializations = async () => {
 
     // Extension Project Type
-    const extensionType_select = $('#addProject_extensionType_select');
+    const extensionType = $('#addProject_extensionType');
     const extension_types = [
       {
         id: 'Livelihood',
         name: 'Livelihood',
-      },{
-        id: 'Literacy',
-        name: 'Literacy',
       }, {
-        id: 'Knowledge Transfer',
-        name: 'Knowledge Transfer',
+        id: 'Literacy/Knowledge Transfer',
+        name: 'Literacy/Knowledge Transfer',
       }
     ]
 
-    extensionType_select.empty();
-    extensionType_select.append(`<option></option>`);
-    extension_types.forEach(t => {
-      extensionType_select.append(`
-        <option value="${ t.id }">${ t.name }</option>
-      `);
+    extensionType.autocomplete({
+      source: extension_types.map(x => x.name),
+    });
+
+    // Implementer
+    const implementer = $('#addProject_implementer');
+    implementer.autocomplete({
+      source: ['Polytechnic University of the Philippines, Quezon City Branch'],
     });
 
     // Initialize Start Date
@@ -205,27 +204,6 @@
   }
 
   const initCooperatingAgenciesGroupForm = () => {
-    // await $.ajax({
-    //   url: `${ BASE_URL_API }/partners`,
-    //   type: 'GET',
-    //   success: result => {
-    //     if (result.error) {
-    //       ajaxErrorHandler(result.message);
-    //     } else {
-    //       cooperatingAgencies_list = result.data;
-    //     }
-    //   },
-    //   error: () => {
-    //     ajaxErrorHandler(
-    //       {
-    //         file: 'projects/createProposal.js',
-    //         fn: 'onDOMLoad.initCooperatingAgenciesGroupForm()',
-    //       }
-    //       , 1
-    //     );
-    //   }
-    // });
-
     CA_form = new CooperatingAgenciesForm(
       '#addProject_cooperatingAgencies_grp',
       '#addProject_cooperatingAgencies_select'

@@ -636,10 +636,7 @@ class CooperatingAgenciesForm {
 		this.#initializations();
 	}
 
-	/**
-	 * * Template Literals
-	 * o--/[=================>
-	 */
+	// * Template Literals
 
 	#empty = () => `
 		<div class="py-5 text-muted text-center" ${ this.data.formElem }="emptyTemplate">
@@ -668,10 +665,7 @@ class CooperatingAgenciesForm {
 		</div>
 	`
 
-	/**
-	 * * Private Methods
-	 * o--/[=================>
-	 */
+	 // * Private Methods
 
 	#dataElement = (dataAttr, value) => this.formGroup.find(`[${this.data[dataAttr]}="${value}"]`);
 
@@ -698,10 +692,7 @@ class CooperatingAgenciesForm {
 			:	this.#dataElement('formElem', 'emptyTemplate').remove()
 	}
 
-	/**
-	 * * Public Methods
-	 * o--/[=================>
-	 */
+	// * Public Methods
 
 	selectCooperatingAgency = (id) => {
 		const selected = id || this.selectElem.val();
@@ -1561,10 +1552,7 @@ class EvaluationPlanForm {
 		this.#initializations();
 	}
 
-	/**
-	 * * Template Literals
-	 * o--/[=================>
-	 */
+	// * Template Literals
 
 	#planRow = planId => {
 		const { planRowId, outcomeInput, indicatorInput, collectionMethodInput, frequencyInput, removePlanBtn } = this.data;
@@ -1660,10 +1648,7 @@ class EvaluationPlanForm {
 		</div>
 	`;
 
-	/**
-	 * * Private Methods
-	 * o--/[=================>
-	 */
+	// * Private Methods
 
 	#dataElement = (dataAttr, value) => {
 
@@ -1728,10 +1713,7 @@ class EvaluationPlanForm {
     )
   }
 
-	/**
-	 * * Public Methods
-	 * o--/[=================>
-	 */
+	// * Public Methods
 
 	addPlanRow = (data = {}) => {
 
@@ -1807,6 +1789,10 @@ class EvaluationPlanForm {
 			)
       this.#setAddBtnState();
     });
+
+    frequencyInput.autocomplete({
+      source: ['Once', 'Twice', 'Thrice'],
+    })
 
     initInputs();
 

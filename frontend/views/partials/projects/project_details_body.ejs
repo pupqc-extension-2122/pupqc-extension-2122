@@ -315,46 +315,103 @@
       <div class="card-body">
         <h4 class="mb-3">Summary of Project Evaluation</h4>
 
-        <%# Date of Presentation %>
-        <div class="row mb-3">
-          <div class="col-3">
-            <div class="font-weight-bold">Date of Presentation</div>
-          </div>
-          <div class="col-9" id="projectDetails_body_presentationDate"></div>
-        </div>
+        <dl class="row">
 
-        <%# Date of Evaluation %>
-        <div class="row mb-3">
-          <div class="col-3">
-            <div class="font-weight-bold">Date of Evaluation</div>
-          </div>
-          <div class="col-9" id="projectDetails_body_evaluationDate"></div>
-        </div>
+          <div class="col-12"><hr class="mt-0 mb-2"></div>
 
-        <%# Evaluation Summary %>
-        <div class="table-responsive">
-          <table 
-            id="evaluationSummaryDT" 
-            class="table table-bordered w-100" 
-            width="100"
-            cellspacing="0"
-          >
-            <thead>
-              <tr>
-                <th class="align-middle" style="width: 70%">Evaluator</th>
-                <th class="align-middle text-right" style="width: 15%">Total Points</th>
-                <th class="align-middle text-center" style="width: 15%">Remarks</th>
-              </tr>
-            </thead>
-            <tbody id="projectDetails_body_evaluationSummary">
-              <tr>
-                <td colspan="3">
-                  <%- include('../loaders/dt_body') %>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <%# Date of Presentation %>
+          <dt class="col-md-4">
+            <div class="mx-2">Date of Presentation</div>
+          </dt>
+          <dd class="col-md-8">
+            <div class="mx-2" id="projectDetails_body_presentationDate"></div>
+          </dd>
+          
+          <div class="col-12"><hr class="mt-0 mb-2"></div>
+
+          <%# Date of Conducted Technical Evaluation %>
+          <dt class="col-md-4">
+            <div class="mx-2">Date of Conducted Technical Evaluation</div>
+          </dt>
+          <dd class="col-md-8">
+            <div class="mx-2" id="projectDetails_body_technicalEvaluationDate">
+              <div>July 28, 2022 (Thursday)</div>
+              <div class="small text-muted">in 9 days</div>
+            </div>
+          </dd>
+
+          <div class="col-12"><hr class="mt-0 mb-2"></div>
+
+          <%# Date of EPPEC Evaluation %>
+          <dt class="col-md-4">
+            <div class="mx-2">Date of EPPEC Evaluation</div>
+          </dt>
+          <dd class="col-md-8">
+            <div class="mx-2" id="projectDetails_body_evaluationDate"></div>
+          </dd>
+
+          <div class="col-12"><hr class="mt-0 mb-2"></div>
+
+          <%# Release date of Results %>
+          <dt class="col-md-4">
+            <div class="mx-2">Release date of Results</div>
+          </dt>
+          <dd class="col-md-8">
+            <div class="mx-2" id="projectDetails_body_releaseDate">
+              <div>July 28, 2022 (Thursday)</div>
+              <div class="small text-muted">in 9 days</div>
+            </div>
+          </dd>
+
+          <div class="col-12"><hr class="mt-0 mb-2"></div>
+
+          <%# EPPEC Rating %>
+          <dt class="col-12">
+            <div class="mx-2">EPPEC Rating</div>
+          </dt>
+          <dd class="col-12">
+            <div class="mx-2">
+              <p>Note: To be able to pass the evaluation, the project proposal should get <b>at least 70%</b> average points</p>
+              
+              <div class="table-responsive">
+                <table 
+                  id="evaluationSummaryDT" 
+                  class="table table-bordered w-100" 
+                  width="100"
+                  cellspacing="0"
+                >
+                  <thead>
+                    <tr>
+                      <th class="align-middle" style="width: 70%">Evaluator</th>
+                      <th class="align-middle text-right" style="width: 15%">Total Points</th>
+                      <th class="align-middle text-center" style="width: 15%">Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody id="projectDetails_body_evaluationSummary">
+                    <tr>
+                      <td colspan="3">
+                        <%- include('../loaders/dt_body') %>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </dd>
+
+          <div class="col-12"><hr class="mt-0 mb-2"></div>
+
+          <%# EPPEC Recommendations %>
+          <dt class="col-md-3">
+            <div class="mx-2">EPPEC Recommendations</div>
+          </dt>
+          <dd class="col-md-9">
+            <div class="mx-2" id="projectDetails_body_recommendations">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ex fugiat error assumenda reiciendis, nostrum aperiam minima tempora? Sit natus sequi placeat consequatur eos numquam? Ipsa!</div>
+          </dd>
+
+          <div class="col-12"><hr class="mt-0 mb-2"></div>
+          
+        </dl>
       </div>
     </div>
   </div>

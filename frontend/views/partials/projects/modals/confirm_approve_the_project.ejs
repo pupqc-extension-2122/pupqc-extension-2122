@@ -3,7 +3,7 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <form class="modal-content" id="approveProject_form">
       <div class="modal-header">
-        <h4 class="modal-title">Confirmation</h4>
+        <h4 class="modal-title">Approve the project</h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
@@ -11,15 +11,47 @@
       <div class="modal-body">
 
         <div class="text-center">
-          <h1 class="mr-3 display-3">
+          <h1 class="mr-3 display-4">
             <i class="fas fa-exclamation-circle text-info"></i>
           </h1>
-          <p class="px-3 px-md-5">You are about to approve the project. To do so, please provide the SO number.</p>
+          <p class="px-3 px-md-5">You are about to approve the project. To do so, please provide the following information.</p>
         </div>
         
+        <%# Date of Endorsement for Funding %>
         <div class="form-group">
-          <label for="cancelProposal_remarks">
-            <span>SO number</span>
+          <label for="approveProject_endorsementDate">
+            <span>Date of Endorsement for Funding</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group date">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="approveProject_endorsementDate" 
+              name="evaluation_date"
+              placeholder="Please select the date of endorsement for funding" 
+              data-inputmask-alias="datetime"
+              data-inputmask-inputformat="yyyy-mm-dd" 
+              data-mask 
+            />
+            <div class="input-group-append">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                id="approveProject_endorsementDate_pickerBtn"
+                data-toggle="tooltip" 
+                title="Select the date of endorsement"
+              >
+                <i class="fa fa-calendar-day fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <%# SO number %>
+        <div class="form-group">
+          <label for="approveProject_soNumber">
+            <span>Special Order (SO) Number</span>
             <span class="text-danger">*</span>
           </label>
           <input 
@@ -30,6 +62,100 @@
             placeholder="Enter the SO number"
           />
         </div>
+
+        <%# Date of Endorsement for Funding %>
+        <div class="form-group">
+          <label for="approveProject_releaseDateSONumber">
+            <span>Release Date of Special Order</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group date">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="approveProject_releaseDateSONumber" 
+              name="evaluation_date"
+              placeholder="Please select the release date of special order" 
+              data-inputmask-alias="datetime"
+              data-inputmask-inputformat="yyyy-mm-dd" 
+              data-mask 
+            />
+            <div class="input-group-append">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                id="approveProject_releaseDateSONumber_pickerBtn"
+                data-toggle="tooltip" 
+                title="Select the release date of special order"
+              >
+                <i class="fa fa-calendar-day fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <%# Release Date of Cash Advance %>
+        <div class="form-group">
+          <label for="approveProject_releaseDateCashAdvance">
+            <span>Release Date of Cash Advance</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group date">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="approveProject_releaseDateCashAdvance" 
+              name="evaluation_date"
+              placeholder="Please select the release date of special order" 
+              data-inputmask-alias="datetime"
+              data-inputmask-inputformat="yyyy-mm-dd" 
+              data-mask 
+            />
+            <div class="input-group-append">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                id="approveProject_releaseDateCashAdvance_pickerBtn"
+                data-toggle="tooltip" 
+                title="Select the release date of special order"
+              >
+                <i class="fa fa-calendar-day fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <%# Release Date of Notice to Proceed %>
+        <div class="form-group">
+          <label for="approveProject_releaseDateNoticeToProceed">
+            <span>Release Date of Notice to Proceed</span>
+            <span class="text-danger">*</span>
+          </label>
+          <div class="input-group date">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="approveProject_releaseDateNoticeToProceed" 
+              name="evaluation_date"
+              placeholder="Please select the release date of special order" 
+              data-inputmask-alias="datetime"
+              data-inputmask-inputformat="yyyy-mm-dd" 
+              data-mask 
+            />
+            <div class="input-group-append">
+              <button 
+                type="button" 
+                class="btn btn-primary" 
+                id="approveProject_releaseDateNoticeToProceed_pickerBtn"
+                data-toggle="tooltip" 
+                title="Select the release date of special order"
+              >
+                <i class="fa fa-calendar-day fa-fw"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
 
       </div>
       <div class="modal-footer">

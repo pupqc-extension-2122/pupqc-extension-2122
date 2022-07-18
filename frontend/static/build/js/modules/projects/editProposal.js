@@ -33,26 +33,25 @@
 	const initializations = () => {
 
     // Extension Project Type
-    const extensionType_select = $('#editProject_extensionType');
+    const extensionType = $('#editProject_extensionType');
     const extension_types = [
       {
         id: 'Livelihood',
         name: 'Livelihood',
-      },{
-        id: 'Literacy',
-        name: 'Literacy',
       }, {
-        id: 'Knowledge Transfer',
-        name: 'Knowledge Transfer',
+        id: 'Literacy/Knowledge Transfer',
+        name: 'Literacy/Knowledge Transfer',
       }
     ]
 
-    extensionType_select.empty();
-    extensionType_select.append(`<option></option>`);
-    extension_types.forEach(t => {
-      extensionType_select.append(`
-        <option value="${ t.id }">${ t.name }</option>
-      `);
+    extensionType.autocomplete({
+      source: extension_types.map(x => x.name),
+    });
+
+    // Implementer
+    const implementer = $('#editProject_implementer');
+    implementer.autocomplete({
+      source: ['Polytechnic University of the Philippines, Quezon City Branch'],
     });
 
 		// Initialize Start Date

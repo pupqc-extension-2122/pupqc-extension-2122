@@ -872,9 +872,14 @@ const ProjectOptions = (() => {
     const isBadAction = () => project.status !== 'For Evaluation';
     let PE_form;
     
-    // Initialize Presentation Date
+    // Initialize Evaluation Date
     $app('#setProjectEvaluation_evaluationDate').initDateInput({
       button: '#setProjectEvaluation_evaluationDate_pickerBtn'
+    });
+
+    // Initialize Release Date
+    $app('#setProjectEvaluation_releaseDate').initDateInput({
+      button: '#setProjectEvaluation_releaseDate_pickerBtn'
     });
 
     setProjectEvaluation_modal.on('show.bs.modal', (e) => {
@@ -900,6 +905,30 @@ const ProjectOptions = (() => {
             message: 'The evaluation date must be same or later than the presentation date.'
           }
         },
+        release_date: {
+          required: 'Please select when the results has been released.',
+          dateISO: 'Your input is not a valid date.',
+          sameOrBeforeDateTime: {
+            rule: () => project.end_date,
+            message: 'The evaluation date must be same or earlier than the end of the project timeline.'
+          },
+          sameOrAfterDateTime: {
+            rule: () => project.presentation_date,
+            message: 'The evaluation date must be same or later than the presentation date.'
+          },
+          sameOrAfterDateTimeSelector: {
+            rule: '#setProjectEvaluation_evaluationDate',
+            message: 'The release date must be same or later than the evaluation date.'
+          }
+        },
+        recommendations: {
+          required: 'The recommendations of the EPPEC is required.',
+          notEmpty: 'This field cannot be blank',
+          minlength: {
+            rule: 5,
+            message: 'Make sure you type the full details of the recommendation.'
+          }
+        }
       },
       onSubmit: async () => {
         if (isBadAction()) return;
@@ -2124,7 +2153,8 @@ const ProjectActivities = (() => {
 
   // * Local Variables
 
-  const dtElem = $('#activities_dt');
+  const dtElem_selector = '#activities_dt';
+  const dtElem = $(dtElem_selector);
   const viewModal = $('#projectActivityDetails_modal');
   const editModal = $('#editProjectActivity_modal');
   const submitActivityEvaluation_modal = $('#submitActivityEvaluation_modal');
@@ -2269,7 +2299,13 @@ const ProjectActivities = (() => {
             data: 'activity_name',
             width: '25%',
             render: (data, type, row) => {
-              return `<span role="button" class="text-primary" onclick="ProjectActivities.initViewMode('${ row.id }')">${ data }</span>`
+              return `
+                <span 
+                  role="button" 
+                  class="text-primary" 
+                  data-dt-btn="initViewMode"
+                >${ data }</span>
+              `
             }
           }, {
             data: null,
@@ -2353,7 +2389,7 @@ const ProjectActivities = (() => {
                     <button
                       type="button"
                       class="dropdown-item"
-                      onclick="ProjectActivities.initEditMode('${ data.id }')"
+                      data-dt-btn="initEditMode"
                     >
                       <span>Edit details</span>
                     </button>
@@ -2371,7 +2407,7 @@ const ProjectActivities = (() => {
                     <button
                       type="button"
                       class="dropdown-item"
-                      onclick="ProjectActivities.initViewMode('${ data.id }')"
+                      data-dt-btn="initViewMode"
                     >
                       <span>View details</span>
                     </button>
@@ -2422,7 +2458,13 @@ const ProjectActivities = (() => {
             data: 'activity_name',
             width: '25%',
             render: (data, type, row) => {
-              return `<span role="button" class="text-primary" onclick="ProjectActivities.initViewMode('${ row.id }')">${ data }</span>`
+              return `
+                <span 
+                  role="button" 
+                  class="text-primary" 
+                  data-dt-btn="initViewMode"
+                >${ data }</span>
+              `
             }
           }, {
             data: null,
@@ -2524,22 +2566,7 @@ const ProjectActivities = (() => {
           }, {
             data: null,
             width: '5%',
-            render: data => {
-  
-              const editOption = () => {
-                return user_roles.includes('Extensionist') && project.status == 'Created'
-                  ? `
-                    <button
-                      type="button"
-                      class="dropdown-item"
-                      onclick="ProjectActivities.initEditMode('${ data.id }')"
-                    >
-                      <span>Edit details</span>
-                    </button>
-                  `
-                  : ''
-              }
-  
+            render: () => {
               return `
                 <div class="dropdown text-center">
                   <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
@@ -2550,11 +2577,10 @@ const ProjectActivities = (() => {
                     <button
                       type="button"
                       class="dropdown-item"
-                      onclick="ProjectActivities.initViewMode('${ data.id }')"
+                      data-dt-btn="initViewMode"
                     >
                       <span>View details</span>
                     </button>
-                    ${ editOption() }
                   </div>
                 </div>
               `;
@@ -2601,7 +2627,13 @@ const ProjectActivities = (() => {
             data: 'activity_name',
             width: '25%',
             render: (data, type, row) => {
-              return `<span role="button" class="text-primary" onclick="ProjectActivities.initViewMode('${ row.id }')">${ data }</span>`
+              return `
+              <span 
+                role="button" 
+                class="text-primary" 
+                data-dt-btn="initViewMode"
+              >${ data }</span>
+            `
             }
           }, {
             data: null,
@@ -2728,7 +2760,7 @@ const ProjectActivities = (() => {
                     <button
                       type="button"
                       class="dropdown-item"
-                      onclick="ProjectActivities.initViewMode('${ data.id }')"
+                      data-dt-btn="initViewMode"
                     >
                       <span>View details</span>
                     </button>
@@ -2743,6 +2775,18 @@ const ProjectActivities = (() => {
     }
 
     if (dtOptions) dt = await dtElem.DataTable(dtOptions);
+
+    $(dtElem_selector).on('click', `[data-dt-btn="initViewMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initViewMode(data);
+    });
+
+    $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initEditMode(data);
+    });
   }
 
   const handleEditForm = () => {
@@ -2838,7 +2882,7 @@ const ProjectActivities = (() => {
       end_date: fd.get('end_date'),
       details: fd.get('details')
     }
-    
+
     await $.ajax({
       url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ fd.get('activity_id') }`,
       type: 'PUT',
@@ -2855,13 +2899,13 @@ const ProjectActivities = (() => {
         }
       }, 
       error: (xhr, status, error) => {
+        enableElements();
         ajaxErrorHandler({
           file: 'projects/projectProposalDetails.js',
           fn: 'ProjectActivities.onEditFormSubmit()',
           data: data,
           xhr: xhr
         });
-        enableElements();
       }
     });
 
@@ -2942,246 +2986,228 @@ const ProjectActivities = (() => {
     await dt.ajax.reload();
   }
 
-  const initViewMode = async (activity_id) => {
+  const initViewMode = async (data) => {
 
     // Show the modal
     viewModal.modal('show');
     
-    // Get the project activity details
-    await $.ajax({
-      url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ activity_id }`,
-      type: 'GET',
-      success: result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message)
-        } else {
-          const { 
-            id,
-            activity_name, 
-            topics, 
-            outcomes,
-            start_date,
-            end_date,
-            details,
-            evaluation
-          } = result.data;
+    const { 
+      id,
+      activity_name, 
+      topics, 
+      outcomes,
+      start_date,
+      end_date,
+      details,
+      evaluation
+    } = data;
 
-          // Set Content
-          setHTMLContent({
-            '#projectActivityDetails_title': activity_name,
-            '#projectActivityDetails_topics': () => {
-              if(topics.length) {
-                let list = `<ul class="mb-0">`;
-                topics.forEach(t => list += `<li>${ t }</li>`);
-                list += `</ul>`;
-                return list;
-              }
-            },
-            '#projectActivityDetails_outcomes': () => {
-              if(outcomes.length) {
-                let list = `<ul class="mb-0">`;
-                outcomes.forEach(o => list += `<li>${ o }</li>`);
-                list += `</ul>`;
-                return list;
-              }
-            },
-            '#projectActivityDetails_timeframe': () => {
-              if (start_date && end_date) {
-                const needStartDateEdit = () => {
-                  return !moment(start_date).isBetween(
-                    moment(project.start_date), 
-                    moment(project.end_date),
-                    undefined,
-                    '[]'
-                  )
-                    ? `
-                      <i 
-                        class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
-                        style="--fa-animation-duration: 1s;"
-                        data-toggle="tooltip" 
-                        title="The start date should be within the project timeline"
-                      ></i>
-                    ` : ''
-                }
-                const needEndDateEdit = () => {
-                  return !moment(end_date).isBetween(
-                    moment(project.start_date), 
-                    moment(project.end_date),
-                    undefined,
-                    '[]'
-                  )
-                    ? `
-                      <i 
-                        class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
-                        style="--fa-animation-duration: 1s;"
-                        data-toggle="tooltip" 
-                        title="The end date should be within the project timeline"
-                      ></i>
-                    ` : ''
-                }
-                const getDuration = () => {
-                  return moment(start_date).isSame(moment(end_date))
-                    ? 'in the whole day'
-                    : moment(start_date).to(moment(end_date), true)
-                }
-                const forMonitoring = () => {
-                  if(mode === 'Monitoring') {
-                    const today = moment();
-                    let status;
-                    if (today.isBefore(start_date) && today.isBefore(end_date)) {
-                      status = 'Upcoming';
-                    } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
-                      status = 'Concluded';
-                    } else if (today.isBetween(start_date, end_date)) {
-                      status = 'On going';
-                    } else {
-                      status = 'No data';
-                    }
-                    const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
-                    const statusTemplate = `
-                      <div class="badge badge-subtle-${ theme } px-2 py-1">
-                        <i class="${ icon } fa-fw mr-1"></i>
-                        <span>${ status }</span>
-                      </div>
-                    `;
-                    return `
-                      <div class="col-12"><div class="mt-2"></div></div>
-
-                      <div class="pl-0 col-4 col-lg-2">
-                        <div class="font-weight-bold">Status:</div>
-                      </div>
-                      <div class="col-8 col-lg-10">
-                        ${ statusTemplate }
-                      </div>
-                    `
-                  }
-                  return '';
-                }
-                return `
-                  <div class="ml-4 ml-lg-0 row">
-                    <div class="pl-0 col-4 col-lg-2">
-                      <div class="font-weight-bold">Start Date:</div>
-                    </div>
-                    <div class="col-8 col-lg-10">
-                      <div>${ needStartDateEdit() }${ moment(start_date).format('MMMM D, YYYY (dddd)') }</div>
-                      <div class="small text-muted">${ fromNow(start_date) }</div>
-                    </div>
-
-                    <div class="col-12"><div class="mt-2"></div></div>
-
-                    <div class="pl-0 col-4 col-lg-2">
-                      <div class="font-weight-bold">End Date:</div>
-                    </div>
-                    <div class="col-8 col-lg-10">
-                      <div>${ needEndDateEdit() }${ moment(end_date).format('MMMM D, YYYY (dddd)') }</div>
-                      <div class="small text-muted">${ fromNow(end_date) }</div>
-                    </div>
-
-                    <div class="col-12"><div class="mt-2"></div></div>
-
-                    <div class="pl-0 col-4 col-lg-2">
-                      <div class="font-weight-bold">Duration:</div>
-                    </div>
-                    <div class="col-8 col-lg-10">
-                      <div>Approximately ${ getDuration() }</div>
-                    </div>
-
-                    ${ forMonitoring() }
-                  </div>
-                `
-              } else return noContentTemplate('No dates have been set up.');
-            },
-            '#projectActivityDetails_details': details
-          });
-          
-          // Hide the loaders
-          $('#projectActivityDetails_loader').hide();
-          $('#projectActivityDetails').show();
-          
-          if (mode === "Activity Evaluation") {
-            setHTMLContent('#projectActivityDetails_postEvaluation_pane', () => {
-              if (evaluation) {
-                let rows = '';
-                evaluation.forEach(eval_group => {
-                  rows += `
-                    <tr>
-                      <td 
-                        colspan="2" 
-                        class="font-weight-bold" 
-                        style="background: #f6f6f6"
-                      >${ eval_group.category }</td>
-                    </tr>
-                  `;
-
-                  eval_group.criteria.forEach(criterion_group => {
-                    rows += `
-                      <tr>
-                        <td>${ criterion_group.criterion }</td>
-                        <td class="text-right">${ parseFloat(criterion_group.rate).toFixed(2) }</td>
-                      </tr>
-                    `
-                  });
-                })
-                return `
-                  <div class="table-responsive">
-                    <table class="table table-bordered">
-                      <thead>
-                        <th width="90%" class="align-middle">Criteria</th>
-                        <th width="10%" class="align-middle text-right">Rate</th>
-                      </thead>
-                      <tbody>
-                        ${ rows }
-                      </tbody>
-                    </table>
-                  </div>
-                `
-              } else {
-                if (user_roles.includes('Extensionist')) {
-                  return `
-                    <div class="p-5 text-center">
-                      <div class="display-3 mb-2">
-                        <i class="fas fa-circle-question text-secondary"></i>
-                      </div>
-                      <h3>No post evaluation yet.</h3>
-                      <p>This project activity is not yet graded. You can submit by clicking the button below.</p>
-                      <button 
-                        class="btn btn-success" 
-                        onclick="ProjectActivities.submitPostEvaluation('${ id }')"
-                      >
-                        <i class="fas fa-file-import mr-1"></i>
-                        <span>Submit Post Evaluation</span>
-                      </button>
-                    </div>
-                  `
-                } else {
-                  return `
-                    <div class="p-5 text-center">
-                      <div class="display-3 mb-2">
-                        <i class="fas fa-circle-question text-secondary"></i>
-                      </div>
-                      <h3>No post evaluation yet.</h3>
-                      <p>This project activity is not yet graded but expected to have soon.</p>
-                    </div>
-                  `
-                }
-              }
-            });
-          }
+    // Set Content
+    setHTMLContent({
+      '#projectActivityDetails_title': activity_name,
+      '#projectActivityDetails_topics': () => {
+        if(topics.length) {
+          let list = `<ul class="mb-0">`;
+          topics.forEach(t => list += `<li>${ t }</li>`);
+          list += `</ul>`;
+          return list;
         }
       },
-      error: (xhr, status, error) => {
-        ajaxErrorHandler({
-          file: 'projects/projectProposalDetails.js',
-          fn: 'ProjectActivities.initViewMode()',
-          xhr: xhr
-        });
-      }
+      '#projectActivityDetails_outcomes': () => {
+        if(outcomes.length) {
+          let list = `<ul class="mb-0">`;
+          outcomes.forEach(o => list += `<li>${ o }</li>`);
+          list += `</ul>`;
+          return list;
+        }
+      },
+      '#projectActivityDetails_timeframe': () => {
+        if (start_date && end_date) {
+          const needStartDateEdit = () => {
+            return !moment(start_date).isBetween(
+              moment(project.start_date), 
+              moment(project.end_date),
+              undefined,
+              '[]'
+            )
+              ? `
+                <i 
+                  class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                  style="--fa-animation-duration: 1s;"
+                  data-toggle="tooltip" 
+                  title="The start date should be within the project timeline"
+                ></i>
+              ` : ''
+          }
+          const needEndDateEdit = () => {
+            return !moment(end_date).isBetween(
+              moment(project.start_date), 
+              moment(project.end_date),
+              undefined,
+              '[]'
+            )
+              ? `
+                <i 
+                  class="fas fa-exclamation-triangle fa-beat-fade text-warning mr-1" 
+                  style="--fa-animation-duration: 1s;"
+                  data-toggle="tooltip" 
+                  title="The end date should be within the project timeline"
+                ></i>
+              ` : ''
+          }
+          const getDuration = () => {
+            return moment(start_date).isSame(moment(end_date))
+              ? 'in the whole day'
+              : moment(start_date).to(moment(end_date), true)
+          }
+          const forMonitoring = () => {
+            if(mode === 'Monitoring') {
+              const today = moment();
+              let status;
+              if (today.isBefore(start_date) && today.isBefore(end_date)) {
+                status = 'Upcoming';
+              } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
+                status = 'Concluded';
+              } else if (today.isBetween(start_date, end_date)) {
+                status = 'On going';
+              } else {
+                status = 'No data';
+              }
+              const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
+              const statusTemplate = `
+                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                  <i class="${ icon } fa-fw mr-1"></i>
+                  <span>${ status }</span>
+                </div>
+              `;
+              return `
+                <div class="col-12"><div class="mt-2"></div></div>
+
+                <div class="pl-0 col-4 col-lg-2">
+                  <div class="font-weight-bold">Status:</div>
+                </div>
+                <div class="col-8 col-lg-10">
+                  ${ statusTemplate }
+                </div>
+              `
+            }
+            return '';
+          }
+          return `
+            <div class="ml-4 ml-lg-0 row">
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Start Date:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>${ needStartDateEdit() }${ moment(start_date).format('MMMM D, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(start_date) }</div>
+              </div>
+
+              <div class="col-12"><div class="mt-2"></div></div>
+
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">End Date:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>${ needEndDateEdit() }${ moment(end_date).format('MMMM D, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(end_date) }</div>
+              </div>
+
+              <div class="col-12"><div class="mt-2"></div></div>
+
+              <div class="pl-0 col-4 col-lg-2">
+                <div class="font-weight-bold">Duration:</div>
+              </div>
+              <div class="col-8 col-lg-10">
+                <div>Approximately ${ getDuration() }</div>
+              </div>
+
+              ${ forMonitoring() }
+            </div>
+          `
+        } else return noContentTemplate('No dates have been set up.');
+      },
+      '#projectActivityDetails_details': details
     });
+    
+    // Hide the loaders
+    $('#projectActivityDetails_loader').hide();
+    $('#projectActivityDetails').show();
+    
+    if (mode === "Activity Evaluation") {
+      setHTMLContent('#projectActivityDetails_postEvaluation_pane', () => {
+        if (evaluation) {
+          let rows = '';
+          evaluation.forEach(eval_group => {
+            rows += `
+              <tr>
+                <td 
+                  colspan="2" 
+                  class="font-weight-bold" 
+                  style="background: #f6f6f6"
+                >${ eval_group.category }</td>
+              </tr>
+            `;
+
+            eval_group.criteria.forEach(criterion_group => {
+              rows += `
+                <tr>
+                  <td>${ criterion_group.criterion }</td>
+                  <td class="text-right">${ parseFloat(criterion_group.rate).toFixed(2) }</td>
+                </tr>
+              `
+            });
+          })
+          return `
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <th width="90%" class="align-middle">Criteria</th>
+                  <th width="10%" class="align-middle text-right">Rate</th>
+                </thead>
+                <tbody>
+                  ${ rows }
+                </tbody>
+              </table>
+            </div>
+          `
+        } else {
+          if (user_roles.includes('Extensionist')) {
+            return `
+              <div class="p-5 text-center">
+                <div class="display-3 mb-2">
+                  <i class="fas fa-circle-question text-secondary"></i>
+                </div>
+                <h3>No post evaluation yet.</h3>
+                <p>This project activity is not yet graded. You can submit by clicking the button below.</p>
+                <button 
+                  class="btn btn-success" 
+                  onclick="ProjectActivities.submitPostEvaluation('${ id }')"
+                >
+                  <i class="fas fa-file-import mr-1"></i>
+                  <span>Submit Post Evaluation</span>
+                </button>
+              </div>
+            `
+          } else {
+            return `
+              <div class="p-5 text-center">
+                <div class="display-3 mb-2">
+                  <i class="fas fa-circle-question text-secondary"></i>
+                </div>
+                <h3>No post evaluation yet.</h3>
+                <p>This project activity is not yet graded but expected to have soon.</p>
+              </div>
+            `
+          }
+        }
+      });
+    }
 
     if (mode === 'Activity Evaluation') $('#projectActivityDetails_tabs').show();
   }
 
-  const initEditMode = async (activity_id) => {
+  const initEditMode = async (data) => {
     if (
       mode !== 'Proposal'
       || !(project.status === 'Created' || project.status === 'For Revision')
@@ -3190,56 +3216,39 @@ const ProjectActivities = (() => {
     // Show the modal
     editModal.modal('show');
 
-    // Get the details of the project activity
-    await $.ajax({
-      url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ activity_id }`,
-      type: 'GET',
-      success: result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message)
-        } else {
-          const { 
-            activity_name, 
-            topics, 
-            outcomes,
-            start_date,
-            end_date,
-            details
-          } = result.data;
-        
-          // Set the input values
-          setInputValue({
-            '#editProjectActivity_activityId': activity_id,
-            '#editProjectActivity_title': activity_name,
-            '#editProjectActivity_startDate': formatDateTime(start_date, 'YYYY-MM-DD'),
-            '#editProjectActivity_endDate': formatDateTime(end_date, 'YYYY-MM-DD'),
-            '#editProjectActivity_details': details,
-          });
-
-          // To make sure that input dates are updated
-          $('#editProjectActivity_startDate').trigger('change');
-          $('#editProjectActivity_endDate').trigger('change');
-
-          // Set the topics and outcomes
-          PA_form.setTopics(topics);
-          PA_form.setOutcomes(outcomes);
-
-          // Hide the loaders
-          $('#editProjectActivity_formGroups_loader').hide();
-          $('#editProjectActivity_formGroups').show();
-          
-          // Enable buttons
-          $('#editProjectActivity_form_saveBtn').attr('disabled', false);
-        }
-      },
-      error: (xhr, status, error) => {
-        ajaxErrorHandler({
-          file: 'projects/projectProposalDetails.js',
-          fn: 'ProjectActivities.initEditMode()',
-          xhr: xhr
-        });
-      }
+    const { 
+      id,
+      activity_name, 
+      topics, 
+      outcomes,
+      start_date,
+      end_date,
+      details
+    } = data;
+  
+    // Set the input values
+    setInputValue({
+      '#editProjectActivity_activityId': id,
+      '#editProjectActivity_title': activity_name,
+      '#editProjectActivity_startDate': formatDateTime(start_date, 'YYYY-MM-DD'),
+      '#editProjectActivity_endDate': formatDateTime(end_date, 'YYYY-MM-DD'),
+      '#editProjectActivity_details': details,
     });
+
+    // To make sure that input dates are updated
+    $('#editProjectActivity_startDate').trigger('change');
+    $('#editProjectActivity_endDate').trigger('change');
+
+    // Set the topics and outcomes
+    PA_form.setTopics(topics);
+    PA_form.setOutcomes(outcomes);
+
+    // Hide the loaders
+    $('#editProjectActivity_formGroups_loader').hide();
+    $('#editProjectActivity_formGroups').show();
+    
+    // Enable buttons
+    $('#editProjectActivity_form_saveBtn').attr('disabled', false);
   }
   
   const submitPostEvaluation = async (activity_id) => {
@@ -3273,8 +3282,6 @@ const ProjectActivities = (() => {
   return {
     init,
     reloadDataTable,
-    initViewMode,
-    initEditMode,
     submitPostEvaluation
   }
 })();

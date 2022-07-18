@@ -145,21 +145,20 @@
                   </div>
                 </div>
 
-                <%# Extension Project Type %>
+                <%# Extension Project Type/Category %>
                 <div class="col-12">
                   <div class="form-group">
-                    <label for="addProject_projectTitle">
-                      <span>Extension Project Type</span>
+                    <label for="addProject_extensionType">
+                      <span>Extension Project Type/Category</span>
                       <span class="text-danger">*</span>
                     </label>
-                    <select 
-                      name="extension_type" 
-                      id="addProject_extensionType_select" 
-                      class="form-control select2"
-                      style="width: 100%;"
-                    >
-                      <option disabled>Select an extension project type.</option>
-                    </select>
+                    <input 
+                      type="text"
+                      class="form-control"
+                      id="addProject_extensionType"
+                      name="extension_type"
+                      placeholder="Enter the type/category of the extension project"
+                    />
                   </div>
                 </div>
 
@@ -315,6 +314,28 @@
                     </label>
                     <textarea id="addProject_summary" name="summary" class="form-control" cols="30" rows="5"
                       placeholder="Compose the summary of the proposed project here"></textarea>
+                  </div>
+                </div>
+                
+                <%# Frequency of Project Monitoring %>
+                <div class="col-12">
+                  <div class="form-group">
+                    <label for="addProject_monitoringFrequency">
+                      <span>Frequency of Project Monitoring</span>
+                      <span class="text-danger">*</span>
+                    </label>
+                    <select 
+                      name="monitoring_frequency" 
+                      id="addProject_monitoringFrequency" 
+                      class="form-control select2"
+                      style="width: 100%;"
+                    >
+                      <option></option>
+                      <option value="Monthly">Monthly</option>
+                      <option value="Quarterly">Quarterly</option>
+                      <option value="Semi-Annually">Semi-Annually</option>
+                      <option value="Annually">Annually</option>
+                    </select>
                   </div>
                 </div>
 

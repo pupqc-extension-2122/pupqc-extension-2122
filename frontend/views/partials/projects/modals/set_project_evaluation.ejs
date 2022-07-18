@@ -3,17 +3,16 @@
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <form class="modal-content" id="setProjectEvaluation_form">
       <div class="modal-header">
-        <h4 class="modal-title">Set Project Evaluation</h4>
+        <h4 class="modal-title">Set EPPEC Evaluation</h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
       </div>
       <div class="modal-body">
-      
-        <%# Date of Evaluation %>
+
         <div class="form-group">
-          <label for="setProjectEvaluation_evaluationDate">
-            <span>Date of Evaluation</span>
+          <label for="setProjectEvaluation_technicalEvaluationDate">
+            <span>Date of Conducted Technical Evaluation</span>
             <span class="text-danger">*</span>
           </label>
           <div class="input-group date">
@@ -40,46 +39,139 @@
             </div>
           </div>
         </div>
-
-        <%# Evaluators %>
-        <div class="table-responsive">
-          <table class="table table-bordered" id="setProjectEvaluation_evaluatorsForm">
-            <thead>
-              <th class="align-middle" width="75%">Evaluator</th>
-              <th class="align-middle" width="12%">Total Points<br>(in %)</th>
-              <th class="align-middle" width="8%" class="text-center">Remarks</th>
-              <th class="align-middle" width="5%"></th>
-            </thead>
-            <tbody>
-              <tr data-project-evaluators-form-row="add">
-                <td colspan="4" class="text-center">
+      
+        <div class="form-row">
+          
+          <%# Date of Evaluation %>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="setProjectEvaluation_evaluationDate">
+                <span>Date of EPPEC Evaluation</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="input-group date">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="setProjectEvaluation_evaluationDate" 
+                  name="evaluation_date"
+                  placeholder="Please select date of presentation" 
+                  data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="yyyy-mm-dd" 
+                  data-mask 
+                />
+                <div class="input-group-append">
                   <button 
                     type="button" 
-                    class="btn btn-sm btn-success" 
-                    data-project-evaluators-form-btn="add"
+                    class="btn btn-primary" 
+                    id="setProjectEvaluation_evaluationDate_pickerBtn"
+                    data-toggle="tooltip" 
+                    title="Select date of presentation"
                   >
-                    <i class="fas fa-plus mr-1"></i>
-                    <span>Add row</span>
-                  </>
-                </td>
-              </tr>
-              <tr style="background-color: #f6f6f6">
-                <td class="text-right font-weight-bold">Average Score</td>
-                <td 
-                  class="text-right font-weight-bold" 
-                  data-project-evaluators-form-display="averagePoints"
-                >--</td>
-                <td 
-                  class="text-center font-weight-bold text-success"
-                  data-project-evaluators-form-display="averageRemarks"
-                >--</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <%# Release Date of Results %>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="setProjectEvaluation_releaseDate">
+                <span>Release date of results</span>
+                <span class="text-danger">*</span>
+              </label>
+              <div class="input-group date">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="setProjectEvaluation_releaseDate" 
+                  name="release_date"
+                  placeholder="Please select date a release date of results" 
+                  data-inputmask-alias="datetime"
+                  data-inputmask-inputformat="yyyy-mm-dd" 
+                  data-mask 
+                />
+                <div class="input-group-append">
+                  <button 
+                    type="button" 
+                    class="btn btn-primary" 
+                    id="setProjectEvaluation_releaseDate_pickerBtn"
+                    data-toggle="tooltip" 
+                    title="Select date of presentation"
+                  >
+                    <i class="fa fa-calendar-day fa-fw"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <p>Note: To be able to pass the evaluation, the project proposal should get at least 70% average points</p>
+        <%# Evaluators %>
+        <div>
+          <label>
+            <span>EPPEC Rating</span>
+            <span class="text-danger">*</span>
+          </label>
+  
+          <p>Note: To be able to pass the evaluation, the project proposal should get <b>at least 70%</b> average points</p>
+          
+          <div class="table-responsive">
+            <table class="table table-bordered" id="setProjectEvaluation_evaluatorsForm">
+              <thead>
+                <th class="align-middle" width="75%">Evaluator</th>
+                <th class="align-middle" width="12%">Total Points<br>(in %)</th>
+                <th class="align-middle" width="8%" class="text-center">Remarks</th>
+                <th class="align-middle" width="5%"></th>
+              </thead>
+              <tbody>
+                <tr data-project-evaluators-form-row="add">
+                  <td colspan="4" class="text-center">
+                    <button 
+                      type="button" 
+                      class="btn btn-sm btn-success" 
+                      data-project-evaluators-form-btn="add"
+                    >
+                      <i class="fas fa-plus mr-1"></i>
+                      <span>Add row</span>
+                    </>
+                  </td>
+                </tr>
+                <tr style="background-color: #f6f6f6">
+                  <td class="text-right font-weight-bold">Average Score</td>
+                  <td 
+                    class="text-right font-weight-bold" 
+                    data-project-evaluators-form-display="averagePoints"
+                  >--</td>
+                  <td 
+                    class="text-center font-weight-bold text-success"
+                    data-project-evaluators-form-display="averageRemarks"
+                  >--</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <%# Recommendations %>
+        <div class="form-group">
+          <label for="setProjectEvaluation_recommendations">
+            <span>EPPEC Recommendations</span>
+            <span class="text-danger">*</span>
+          </label>
+          <textarea 
+            class="form-control"
+            name="recommendations" 
+            id="setProjectEvaluation_recommendations" 
+            rows="5"
+            placeholder="Please enter the recommendations of the EPPEC for the extension project"
+          ></textarea>
+        </div>
+
 
       </div>
       <div class="modal-footer">
