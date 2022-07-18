@@ -94,7 +94,7 @@ exports.login = async (req, res) => {
     res.cookie('token', token, { httpOnly: true, signed: true, expires })
     res.cookie('user', data.id, { expires })
     res.cookie('roles', JSON.stringify(roles), { expires })
-    res.cookie('verified', !verified)
+    res.cookie('verified', Number(!verified))
 
     return res.send({
       error: false,
