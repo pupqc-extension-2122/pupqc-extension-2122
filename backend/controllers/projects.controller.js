@@ -261,7 +261,7 @@ exports.updateProject = async (req, res) => {
     if (new Date(req.body.start_date) > new Date(req.body.end_date))
       return res.status(400).send({ error: true, message: 'Start Date cannot be later than End Date' })
 
-    let partners = body.partner_id || []; 
+    let partners = body.partner_id || [];
 
     let current_project = await Projects.findByPk(id, {
       where: {
@@ -614,9 +614,12 @@ exports.evaluateProposal = async (req, res) => {
     let project_evaluation = await Project_Evaluations.create({
       project_id: project.id,
       project_title: project.title,
-      evaluation_date: body.evaluation_date,
+      technical_evaluation_date: body.technical_evaluation_date,
+      eppec_evaluation_date: body.eppec_evaluation_date,
+      release_date: body.release_date,
       evaluators: body.evaluators,
-      average_points: body.average_points
+      average_points: body.average_points,
+      recommendations: body.recommendations || null
     })
 
     if (project_evaluation) {
