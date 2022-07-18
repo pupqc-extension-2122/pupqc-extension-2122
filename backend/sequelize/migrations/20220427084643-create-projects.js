@@ -16,9 +16,6 @@ module.exports = {
           key: 'id'
         }
       },
-      SO_number: {
-        type: Sequelize.STRING,
-      },
       title: {
         type: Sequelize.STRING,
         allowNull: false
@@ -66,6 +63,17 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      monitoring_frequency: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      monitoring_method: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      SO_number: {
+        type: Sequelize.STRING,
       },
       presentation_date: {
         type: Sequelize.DATEONLY
