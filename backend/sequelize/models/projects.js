@@ -132,12 +132,61 @@ module.exports = (sequelize, DataTypes) => {
     monitoring_frequency: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: { notEmpty: true },
+      validate: {
+        notEmpty: true,
+        isIn: {
+          args: [[
+            'Monthly',
+            'Quarterly',
+            'Semi-Annually',
+            'Annually'
+          ]]
+        }
+      },
     },
     monitoring_method: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: { notEmpty: true },
+      validate: {
+        notEmpty: true,
+        isIn: {
+          args: [[
+            'Site Visit',
+            'Telephone Logs',
+            'Interview',
+            'Observation',
+            'Survey'
+          ]]
+        }
+      },
+    },
+    funding_type: {
+      type: DataTypes.STRING,
+      defaultValue: 'Internal',
+      validate: {
+        isIn: {
+          args: [[
+            'Internal',
+            'External'
+          ]]
+        }
+      }
+    },
+    funding_approval_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
+    },
+    SO_release_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
+    },
+    cash_release_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
+    },
+    notice_release_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
     },
     presentation_date: DataTypes.DATEONLY,
     created_by: {

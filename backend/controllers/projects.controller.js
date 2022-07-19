@@ -204,6 +204,7 @@ exports.createProject = async (req, res) => {
       summary: body.summary,
       financial_requirements: body.financial_requirements,
       evaluation_plans: body.evaluation_plans,
+      funding_type: body.funding_type,
       project_partners: project_partners,
       monitoring_frequency: body.monitoring_frequency,
       monitoring_method: body.monitoring_method,
@@ -342,9 +343,12 @@ exports.updateProject = async (req, res) => {
     updated_project.impact_statement = body.impact_statement
     updated_project.summary = body.summary
     updated_project.financial_requirements = body.financial_requirements
+    updated_project.funding_type = body.funding_type
     updated_project.evaluation_plans = body.evaluation_plans
     updated_project.monitoring_frequency = body.monitoring_frequency
     updated_project.monitoring_method = body.monitoring_method
+    updated_project.cash_release_date = body.cash_release_date || null
+    updated_project.notice_release_date = body.notice_release_date || null
 
     await updated_project.save()
 
@@ -583,6 +587,7 @@ exports.approveProposal = async (req, res) => {
 
   project.status = 'Approved'
   project.SO_number = body.SO_number
+  project.SO_release_date = new Date(Date.now())
 
   await project.save()
 

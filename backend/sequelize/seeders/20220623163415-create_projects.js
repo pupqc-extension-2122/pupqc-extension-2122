@@ -56,6 +56,7 @@ module.exports = {
             frequency: '3 days'
           }
         ]),
+        funding_type: 'Internal',
         monitoring_frequency: 'Annually',
         monitoring_method: 'Survey',
         created_by: 'ea019730-7967-4297-a356-532a581e7c69',
