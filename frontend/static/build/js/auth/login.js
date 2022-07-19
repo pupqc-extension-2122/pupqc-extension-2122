@@ -80,15 +80,23 @@
           submitBtn.html(`<i class="fas fa-check"></i>`);
           submitBtn.removeClass('btn-primary').addClass('btn-success');
 
-          const user_roles = JSON.parse(getCookie('roles'));
+          let redirect_path;
 
-          if (user_roles.includes('Admin')) {
-            setTimeout(() => location.assign('/a'), 100);
-          } else if (user_roles.length === 1 && user_roles.includes('Chief')) {
-            setTimeout(() => location.assign('/p/proposals'), 100);
+          if (getCookie('verified') == '0') {
+            redirect_path = '/change-password';
           } else {
-            setTimeout(() => location.assign('/p'), 100);
+            const user_roles = JSON.parse(getCookie('roles'));
+
+            if (user_roles.includes('Admin')) {
+              redirect_path = '/a';
+            } else if (user_roles.length === 1 && user_roles.includes('Chief')) {
+              redirect_path = '/p/proposals';
+            } else {
+              redirect_path = '/p';
+            }
           }
+          
+          setTimeout(() => location.assign(redirect_path), 250);
         }
       },
       error: (xhr, status, error) => {

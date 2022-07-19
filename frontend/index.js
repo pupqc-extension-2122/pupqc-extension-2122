@@ -25,8 +25,22 @@ app.use(`/`, require('./routers/auth.route'));
 
 // Redirect if not logged in 
 app.use((req, res, next) => {
-  if (!(req.cookies.user && req.cookies.roles)) res.redirect('/login');
-  if (req.cookies.first_time == 'true') res.redirect('/change-password');
+
+  const user_cookies = ['verified','user','roles'];
+
+  // If user does not have enough privilege
+  if (!(user_cookies.every(k => req.cookies[k] !== undefined))) {
+
+    // Make sure all cookies are clear
+    [...user_cookies,'token'].forEach(k => res.clearCookie(k));
+
+    // Redirect to login
+    res.redirect('/login');
+  }
+
+  // If not verified, always redirect to change password
+  if (req.cookies.verified == '0') res.redirect('/change-password');
+
   next();
 });
 

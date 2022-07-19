@@ -1,10 +1,14 @@
 const router = require('express').Router();
 const PATH = 'auth/';
+const user_cookies = ['verified','user','roles'];
+
+const hasPrivilege = (req) => user_cookies.every(k => req.cookies[k] !== undefined);
 
 
 // Redirect to login
 router.get('/', (req, res) => {
-  if (req.cookies.roles) {
+  console.log("TEST");
+  if (hasPrivilege(req)) {
     const roles = JSON.parse(req.cookies.roles);
     if (roles.includes('Admin'))
       res.redirect('/a');
@@ -17,15 +21,15 @@ router.get('/', (req, res) => {
 
 // Login
 router.get('/login', (req, res) => {
-  if (req.cookies.roles) {
-    const roles = JSON.parse(req.cookies.roles);
+  const cookies = req.cookies;
+  if (hasPrivilege(req)) {
+    const roles = JSON.parse(cookies.roles);
     if (roles.includes('Admin'))
       res.redirect('/a');
     else {
       res.redirect('/p');
     }
   } else {
-    res.clearCookie('first_time');
     res.render(PATH + 'login', {
       layout: './layouts/auth',
       document_title: 'Login',
@@ -45,13 +49,14 @@ router.get('/forgot-password', (req, res) => {
 
 // Change Password (For first timers)
 router.get('/change-password', (req, res) => {
-  if (req.cookies.user && req.cookies.roles && req.cookies.first_time) {
+
+  if (hasPrivilege(req) && req.cookies.verified == '0') {
     res.render(PATH + 'change_password', {
       layout: './layouts/auth',
       document_title: 'Forgot Password',
     });
   } else {
-    ['first_time','user','roles','token'].forEach(k => res.clearCookie(k));
+    [...user_cookies,'token'].forEach(k => res.clearCookie(k));
     res.redirect('/login');
   }
 });
