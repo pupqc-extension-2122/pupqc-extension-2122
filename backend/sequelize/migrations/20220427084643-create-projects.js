@@ -76,8 +76,20 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      funding_approval_date: {
+        type: Sequelize.DATEONLY
+      },
       SO_number: {
         type: Sequelize.STRING,
+      },
+      SO_release_date: {
+        type: Sequelize.DATEONLY
+      },
+      cash_release_date: {
+        type: Sequelize.DATEONLY
+      },
+      notice_release_date: {
+        type: Sequelize.DATEONLY
       },
       presentation_date: {
         type: Sequelize.DATEONLY

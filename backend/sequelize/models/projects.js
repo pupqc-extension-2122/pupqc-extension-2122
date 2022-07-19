@@ -173,6 +173,22 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    funding_approval_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
+    },
+    SO_release_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
+    },
+    cash_release_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
+    },
+    notice_release_date: {
+      type: DataTypes.DATEONLY,
+      validate: { notEmpty: true }
+    },
     presentation_date: DataTypes.DATEONLY,
     created_by: {
       type: DataTypes.UUID,
