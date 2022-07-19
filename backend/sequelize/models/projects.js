@@ -160,6 +160,19 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     },
+    funding_type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'Internal',
+      validate: {
+        isIn: {
+          args: [[
+            'Internal',
+            'External'
+          ]]
+        }
+      }
+    },
     presentation_date: DataTypes.DATEONLY,
     created_by: {
       type: DataTypes.UUID,

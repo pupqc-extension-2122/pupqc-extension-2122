@@ -72,6 +72,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      funding_type: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       SO_number: {
         type: Sequelize.STRING,
       },
