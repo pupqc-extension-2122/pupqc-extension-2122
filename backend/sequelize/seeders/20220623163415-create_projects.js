@@ -56,6 +56,8 @@ module.exports = {
             frequency: '3 days'
           }
         ]),
+        monitoring_frequency: 'Annually',
+        monitoring_method: 'Survey',
         created_by: 'ea019730-7967-4297-a356-532a581e7c69',
         created_at: new Date('2022-05-01'),
         updated_at: new Date('2022-05-30')
