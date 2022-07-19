@@ -94,7 +94,8 @@ exports.login = async (req, res) => {
     res.cookie('token', token, { httpOnly: true, signed: true, expires })
     res.cookie('user', data.id, { expires })
     res.cookie('roles', JSON.stringify(roles), { expires })
-    res.cookie('verified', Number(!verified))
+    res.cookie('verified', Number(!verified), { expires })
+    res.cookie('from_magic', 0, { expires })
 
     return res.send({
       error: false,
@@ -113,6 +114,7 @@ exports.logout = (req, res) => {
   res.clearCookie('user')
   res.clearCookie('roles')
   res.clearCookie('verified')
+  res.clearCookie('from_magic')
   res.send({
     error: false,
     message: 'You are now logged out.'
@@ -124,7 +126,7 @@ exports.sendMagic = async (req, res) => {
 
   let user = await Users.findOne({ where: { email: body.email } })
 
-  if (!user)
+  if (!user || !user.verified)
     res.status(404).send({ error: true, message: 'User not found' })
 
   let data = JSON.stringify({
@@ -212,6 +214,8 @@ exports.authMagic = async (req, res) => {
   res.cookie('token', token, { httpOnly: true, signed: true, expires })
   res.cookie('user', data.id, { expires })
   res.cookie('roles', JSON.stringify(roles), { expires })
+  res.cookie('verified', 1, { expires })
+  res.cookie('from_magic', 1, { expires })
 
   let to_store = { id, email, first_name, middle_name, last_name, suffix_name }
 
