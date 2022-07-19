@@ -22,7 +22,7 @@
     dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
       ajax: {
-        url: `${ BASE_URL_API }/budget_categories/datatables`,
+        url: `${ BASE_URL_API }/budget_categories/`,
         // success: result => {
         //   console.log(result);
         // },
@@ -36,7 +36,7 @@
         data: {
           types: {
             created_at: 'date',
-            name: 'string'
+            name: 'string',
           }
         },
         beforeSend: () => {

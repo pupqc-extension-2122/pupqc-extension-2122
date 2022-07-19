@@ -23,10 +23,10 @@
     dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
       ajax: {
-        url: `${ BASE_URL_API }/organizations/datatables`,
-        // success: result => {
-        //   console.log(result);
-        // },
+        url: `${ BASE_URL_API }/organizations/`,
+        success: result => {
+          console.log(result);
+        },
         error: (xhr, status, error) => {
           ajaxErrorHandler({
             file: 'admin/branchesCampuses.js',
@@ -38,13 +38,12 @@
           types: {
             created_at: 'date',
             name: 'string',
-            type: 'string'
           }
         },
         beforeSend: () => {
           dtElem.find('tbody').html(`
             <tr>
-              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+              <td colspan="5">${ DT_LANGUAGE.loadingRecords }</td>
             </tr>
           `);
         },
@@ -55,10 +54,7 @@
           visible: false,
         }, {
           data: 'name',
-          width: '30%',
-        },  {
-          data: 'type',
-          width: '25%',
+          width: '55%',
         }, {
           data: 'created_at',
           width: '25%',
@@ -117,6 +113,25 @@
     });
   }
 
+  const handleForm = () => {
+    $app('#addBranchCampus_form').handleForm({
+      validators: {
+        branchCampus_name: {
+          required: "Branch/Campus name is required.",
+          notEmpty: "This field cannot be blank.",
+        },
+        type: {
+          required: "Type is required.",
+          notEmpty: "This field cannot be blank.",
+        }
+      },
+      onSubmit: () => {
+        toastr.success("Branch/Campus has been added successfully!");
+      }
+    });
+  }
+
+
   /**
    * * Public Methods
    */
@@ -130,6 +145,7 @@
     if (!initialized) {
       initialized = 1;
       initDataTable();
+      handleForm();
     }
   }
 

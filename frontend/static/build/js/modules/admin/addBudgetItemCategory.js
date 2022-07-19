@@ -22,12 +22,9 @@
 
     // *** For Add Budget Item Category Modal *** //
 
-    modal.on('show.bs.modal', () => {
+    modal.on('hidden.bs.modal', () => {
       $('#addBudgetItemCategory_formGroups_loader').remove();
       $('#addBudgetItemCategory_formGroups').show();
-    });
-
-    modal.on('hidden.bs.modal', () => {
       form.reset();
     });
 
@@ -68,7 +65,7 @@
     }
     
     const data = {
-      name: fd.get('category_name'),
+      name: fd.get('name'),
     }
 
     await $.ajax({
