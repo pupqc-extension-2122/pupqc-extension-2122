@@ -132,12 +132,33 @@ module.exports = (sequelize, DataTypes) => {
     monitoring_frequency: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: { notEmpty: true },
+      validate: {
+        notEmpty: true,
+        isIn: {
+          args: [[
+            'Monthly',
+            'Quarterly',
+            'Semi-Anually',
+            'Anually'
+          ]]
+        }
+      },
     },
     monitoring_method: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: { notEmpty: true },
+      validate: {
+        notEmpty: true,
+        isIn: {
+          args: [[
+            'Site Visit',
+            'Telephone Logs',
+            'Interview',
+            'Observation',
+            'Survey'
+          ]]
+        }
+      },
     },
     presentation_date: DataTypes.DATEONLY,
     created_by: {
