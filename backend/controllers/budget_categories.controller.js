@@ -60,6 +60,7 @@ exports.updateCategories = async (req, res) => {
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     const id = req.params.id
+    const body = req.body
 
     const data = await Budget_Categories.findByPk(id)
 
