@@ -127,7 +127,7 @@ exports.sendMagic = async (req, res) => {
   let user = await Users.findOne({ where: { email: body.email } })
 
   if (!user || !user.verified)
-    res.status(404).send({ error: true, message: 'User not found' })
+    return res.status(404).send({ error: true, message: 'User not found' })
 
   let data = JSON.stringify({
     email: body.email,
