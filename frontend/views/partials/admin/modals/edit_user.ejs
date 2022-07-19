@@ -1,0 +1,152 @@
+<%# Edit User Modal %>
+<div class="modal fade" id="editUser_modal" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <form class="modal-content" id="editUser_form">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit User Details</h4>
+        <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+
+        <%# Form Group Loader %>
+        <div id="editUser_formGroups_loader">
+          <div class="form-group">
+            <div class="skeleton text" style="width: 8rem"></div>
+            <div class="skeleton input"></div>
+          </div>
+          <div class="form-group">
+            <div class="skeleton text" style="width: 8rem"></div>
+            <div class="skeleton input"></div>
+            <div class="skeleton input"></div>
+          </div>
+          <div class="form-group">
+            <div class="p-3 my-5"></div>
+          </div>
+        </div>
+
+        <%# Form Groups %>
+        <div class="row" id="editUser_formGroups" style="display: none">
+
+          <%# User ID %>
+          <input type="hidden" id="editUser_userId" name="user_id">
+
+          <%# First Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editUser_firstName">
+                <span>First Name</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="editUser_firstName" 
+                name="first_name"
+                placeholder="Enter the first name here"
+              />
+            </div>
+          </div>
+
+          <%# Middle Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editUser_middleName">
+                <span>Middle Name</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="editUser_middleName" 
+                name="middle_name"
+                placeholder="Enter the middle name here"
+              />
+            </div>
+          </div>
+
+          <%# Last Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editUser_lastName">
+                <span>Last Name</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="editUser_lastName" 
+                name="last_name"
+                placeholder="Enter the last name here"
+              />
+            </div>
+          </div>
+
+          <%# Suffix Name %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editUser_suffixName">
+                <span>Suffix Name</span>
+              </label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="editUser_suffixName" 
+                name="suffix_name"
+                placeholder="Enter the suffix name here"
+              />
+            </div>
+          </div>
+          
+          <%# Email %>
+          <div class="col-12">
+            <div class="form-group">
+              <label for="editUser_email">
+                <span>Email</span>
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="editUser_email" 
+                name="email"
+                placeholder="Enter the email address here"
+              />
+            </div>
+          </div>
+
+          <%# Role %>
+          <div class="col-12">
+            <div class="form-group" id="editUser_role_grp">
+              <label for="editUser_role">
+                <span>Select one or more roles</span>
+                <span class="text-danger">*</span>
+              </label>
+
+              <div id="editUser_rolesList"></div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-negative" 
+          id="editUser_cancelBtn"
+          data-dismiss="modal"
+        >Cancel</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          id="editUser_saveBtn"
+        >
+          <i class="fas fa-check mr-1"></i>
+          <span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -9,12 +9,35 @@
 const Users = (() => {
   
   // * Local Variables
-
+  const dtElem_selector = '#users_dt';
+  const dtElem = $(dtElem_selector);
+  const editModal = $('#editUser_modal');
+  const editFormSelector = '#editUser_form';
+  const editForm = $(editFormSelector)[0];
   let dt;
-  const dtElem = $('#users_dt');
+  let editValidator;
   let initialized = false;
+  let loaded = false;
+  let processing = false;
 
   // * Private Methods 
+
+  const initializations = () => {
+
+    // *** For Edit User Modal *** //
+
+    editModal.on('show.bs.modal', async () => {
+      await getRoles();
+    });
+
+    editModal.on('hidden.bs.modal', () => {
+      editForm.reset();
+    });
+
+    editModal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
+  }
 
   const initDataTable = async () => {
     dt = await dtElem.DataTable({
@@ -129,9 +152,13 @@ const Users = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right">
                   <div class="dropdown-header">Options</div>
-                  <a href="${ BASE_URL_WEB }/a/user/${ data.id }" class="dropdown-item">
-                      <span>Edit details</span>
-                  </a>
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    data-dt-btn="initEditMode"
+                  >
+                    <span>Edit details</span>
+                  </button>
                 </div>
               </div>
             `
@@ -139,17 +166,195 @@ const Users = (() => {
         }
       ]
     });
+
+    $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initEditMode(data);
+    });
+  }
+
+  const handleEditForm = () => {
+    editValidator = $app(editFormSelector).handleForm({
+      validators: {
+        first_name: {
+          required: "First  name is required.",
+          notEmpty: "This field cannot be blank.",
+        },
+        last_name: {
+          required: "Last name is required.",
+          notEmpty: "This field cannot be blank.",
+        },
+        email:  {
+          required: "Email is required.",
+          email: 'The input is not a valid email address.',
+          notEmpty: "This field cannot be blank.",
+        },
+        roles:  {
+          required: "Please select at least one role.",
+          notEmpty: "This field cannot be blank.",
+        }
+      },
+      onSubmit: () => onEditFormSubmit()
+    });
+  }
+
+  const onEditFormSubmit = async () => {
+
+    processing = true;
+
+    // Disable the elements
+    const saveBtn = $('#editUser_saveBtn');
+    const cancelBtn = $('#editUser_cancelBtn');
+    
+    cancelBtn.attr('disabled', true);
+    saveBtn.attr('disabled', true);
+    saveBtn.html(`
+      <span class="px-3">
+        <i class="fas fa-spinner fa-spin-pulse"></i>
+      </span>
+    `);
+
+    // For enabling elements
+    const enableElements = () => {
+
+      // Enable buttons
+      cancelBtn.attr('disabled', false);
+      saveBtn.attr('disabled', false);
+      saveBtn.html(`Submit`);
+
+      processing = false;
+    }
+
+    // Get the data
+    const fd = new FormData(editForm);
+    const data = {
+      first_name: fd.get('first_name'),
+      last_name: fd.get('last_name'),
+      middle_name: fd.get('middle_name'),
+      suffix_name: fd.get('suffix_name'),
+      email: fd.get('email'),
+      user_roles: fd.getAll('roles').map(r => r = { role_id: r }),
+    }
+
+    await $.ajax({
+      url: `${ BASE_URL_API }/users/${ fd.get('user_id') }`,
+      type: 'PUT',
+      data: data,
+      success: async res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+          enableElements();
+        } else {
+          await reloadDataTable();
+          enableElements();
+          editModal.modal('hide');
+          toastr.success('A user has been successfully updated');
+        }
+      }, 
+      error: (xhr, status, error) => {
+        enableElements();
+        ajaxErrorHandler({
+          file: 'admin/users.js',
+          fn: 'Users.onEditFormSubmit()',
+          data: data,
+          xhr: xhr
+        });
+      }
+    });
+
+  }
+
+  const getRoles = async () => {
+    if (loaded) return;
+    processing = true;
+    await $.ajax({
+      url: `${ BASE_URL_API }/roles`,
+      type: 'GET',
+      success: res => {
+        processing = false;
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          const { data } = res;
+          const rolesList = $('#editUser_rolesList');
+
+          rolesList.empty();
+
+          data.forEach(role => {
+            rolesList.append(`
+              <div class="icheck-primary">
+                <input type="checkbox" name="roles" value="${ role.id }" id="role-${ role.id }">
+                <label for="role-${ role.id }">${ role.name }</label>
+              </div>
+            `);
+          });
+          
+          removeLoaders();
+
+          if (!loaded) loaded = true;
+        }
+      },
+      error: (xhr, status, error) => {
+        processing = false;
+        ajaxErrorHandler({
+          file: 'admin/user.js',
+          fn: 'onDOMLoad.getRoles()',
+          xhr: xhr
+        });
+      }
+    });
+  }
+
+  const removeLoaders = () => {
+    if (loaded) return;
+    $('#editUser_formGroups_loader').remove();
+    $('#editUser_formGroups').show();
   }
 
   // * Public Methods
 
   const reloadDataTable = async () =>  await dt.ajax.reload();
 
+  const initEditMode = async (data) => {
+
+    // Show the modal
+    editModal.modal('show');
+
+    const { 
+      id,
+      first_name, 
+      last_name, 
+      middle_name,
+      suffix_name,
+      email,
+      roles
+    } = data;
+  
+    // Set the input values
+    setInputValue({
+      '#editUser_userId': id,
+      '#editUser_firstName': first_name,
+      '#editUser_middleName': middle_name,
+      '#editUser_lastName': last_name,
+      '#editUser_suffixName': suffix_name,
+      '#editUser_email': email,
+      '#editUser_rolesList': roles
+    });
+    
+    // Enable buttons
+    $('#editUser_saveBtn').attr('disabled', false);
+  }
+
+  
+
   // * Init
 
   const init = () => {
     if (!initialized) {
-      initialized = 1;
+      initialized = true;
+      initializations();
+      handleEditForm();
       initDataTable();
     }
   }
