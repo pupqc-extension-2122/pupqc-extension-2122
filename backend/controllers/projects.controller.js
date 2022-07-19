@@ -204,7 +204,7 @@ exports.createProject = async (req, res) => {
       summary: body.summary,
       financial_requirements: body.financial_requirements,
       evaluation_plans: body.evaluation_plans,
-      funding_type: body.funding_type || null,
+      funding_type: body.funding_type,
       project_partners: project_partners,
       monitoring_frequency: body.monitoring_frequency,
       monitoring_method: body.monitoring_method,

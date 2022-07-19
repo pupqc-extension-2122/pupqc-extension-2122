@@ -138,8 +138,8 @@ module.exports = (sequelize, DataTypes) => {
           args: [[
             'Monthly',
             'Quarterly',
-            'Semi-Anually',
-            'Anually'
+            'Semi-Annually',
+            'Annually'
           ]]
         }
       },
@@ -162,7 +162,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     funding_type: {
       type: DataTypes.STRING,
-      allowNull: false,
       defaultValue: 'Internal',
       validate: {
         isIn: {
