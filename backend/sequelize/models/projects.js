@@ -129,6 +129,16 @@ module.exports = (sequelize, DataTypes) => {
         return JSON.parse(this.getDataValue('evaluation_plans'))
       }
     },
+    monitoring_frequency: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true },
+    },
+    monitoring_method: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: { notEmpty: true },
+    },
     presentation_date: DataTypes.DATEONLY,
     created_by: {
       type: DataTypes.UUID,

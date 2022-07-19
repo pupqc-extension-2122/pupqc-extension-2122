@@ -74,8 +74,6 @@ exports.login = async (req, res) => {
     let expiresIn
     let expires
 
-    data.first_time = verified
-
     if (verified) {
       user.verified = true
       await user.save()
@@ -96,6 +94,7 @@ exports.login = async (req, res) => {
     res.cookie('token', token, { httpOnly: true, signed: true, expires })
     res.cookie('user', data.id, { expires })
     res.cookie('roles', JSON.stringify(roles), { expires })
+    res.cookie('verified', Number(!verified))
 
     return res.send({
       error: false,
@@ -113,6 +112,7 @@ exports.logout = (req, res) => {
   res.clearCookie('token')
   res.clearCookie('user')
   res.clearCookie('roles')
+  res.clearCookie('verified')
   res.send({
     error: false,
     message: 'You are now logged out.'

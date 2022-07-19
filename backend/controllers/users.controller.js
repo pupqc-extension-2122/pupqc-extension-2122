@@ -139,19 +139,27 @@ exports.changePassword = async (req, res) => {
   try {
 
     const body = req.body
+    const cookies = req.cookies
 
     const user = await Users.findByPk(req.auth.id)
 
     if (!user)
       return res.status(404).send({ error: true, message: 'User not found' })
 
-    let verify = await user.verify(body.old_password)
+    if (cookies.verified == true) {
+      let verify = await user.verify(body.old_password)
 
-    if (!verify)
-      return res.status(401).send({ error: true, message: 'Unauthorized' })
+      if (!verify)
+        return res.status(401).send({ error: true, message: 'Unauthorized' })
+    }
 
     user.password = await bcrypt.hash(body.new_password, 12)
     await user.save()
+
+
+    if (cookies.verified == false) {
+      res.cookie('verified', 1)
+    }
 
     res.send({ error: false, message: 'Password has been changed successfully' })
 

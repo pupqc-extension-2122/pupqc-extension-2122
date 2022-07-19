@@ -21,7 +21,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      evaluation_date: {
+      techinical_evaluation_date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false
+      },
+      eppec_evaluation_date: {
+        type: Sequelize.DATEONLY,
+        allowNull: false
+      },
+      release_date: {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
@@ -32,6 +40,9 @@ module.exports = {
       average_points: {
         type: Sequelize.NUMERIC,
         allowNull: false
+      },
+      recommendations: {
+        type: Sequelize.TEXT
       },
       created_at: {
         allowNull: false,

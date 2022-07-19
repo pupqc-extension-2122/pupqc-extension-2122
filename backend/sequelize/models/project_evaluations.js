@@ -30,7 +30,17 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: { notEmpty: true }
     },
-    evaluation_date: {
+    technical_evaluation_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: { notEmpty: true }
+    },
+    release_date: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+      validate: { notEmpty: true }
+    },
+    eppec_evaluation_date: {
       type: DataTypes.DATEONLY,
       allowNull: false,
       validate: { notEmpty: true }
@@ -50,6 +60,10 @@ module.exports = (sequelize, DataTypes) => {
     average_points: {
       type: DataTypes.NUMERIC,
       allowNull: false,
+      validate: { notEmpty: true }
+    },
+    recommendations: {
+      type: DataTypes.TEXT,
       validate: { notEmpty: true }
     }
   }, {
