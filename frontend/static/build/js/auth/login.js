@@ -110,7 +110,7 @@
           file: 'auth/login.js',
           fn: 'onDOMLoad.$.ajax',
           data: data,
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+          xhr: xhr,
         });
       }
     });

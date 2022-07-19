@@ -31,6 +31,16 @@
     }
   ]
 
+  const password_input = $('#updatePassword_password');
+  const confirmPassword_input = $('#confirmPassword_password');
+
+  const save_btn = $('#updatePassword_saveBtn');
+  const logout_btn = $('#updatePassword_logoutBtn');
+
+  let processing = false;
+
+  // * Private Variables
+
   const checkPasswordStrength = (password) => {
     let strength = 0;
     let interpretation = 'undefined';
@@ -56,7 +66,9 @@
   }
 
   const initializations = () => {
-    $('#updatePassword_password').on('keyup', (e) => {
+
+    // For Password Input
+    password_input.on('keyup', (e) => {
       const password = $(e.currentTarget).val();
       const password_strength = checkPasswordStrength(password);
       const percent = password_strength.strength >= 8 ? 100 : ( password_strength.strength / 8 ) * 100;
@@ -77,6 +89,11 @@
           : `<div class="font-weight-bold">${ password_strength.interpretation }</div>`;
       });
     });
+
+    // For logout button
+    logout_btn.on('click', (e) => {
+      if (processing) e.preventDefault();
+    });
   }
 
   const handleForm = () => {
@@ -86,13 +103,13 @@
           required: 'Please type your password.',
           callback: {
             rule: () => {
-              const password = $('#updatePassword_password').val();
+              const password = password_input.val();
               return password_patterns
                 .map(o => { if (o.id !== 'spaces') return o.pattern })
                 .every(p => password.match(p) ? true : false )
             },
             message: () => {
-              const password = $('#updatePassword_password').val();
+              const password = password_input.val();
 
               const forLowerCases = () => {
                 const pattern = password_patterns.find(o => o.id === 'lowercases').pattern;
@@ -164,16 +181,74 @@
     });
   }
 
+  const setElementsToLoadingState = () => {
+    save_btn.attr('disabled', true);
+    save_btn.html(`<i class="fas fa-spinner fa-spin-pulse"></i>`);
+
+    password_input.attr('disabled', true);
+    confirmPassword_input.attr('disabled', true);
+  }
+
+  const setElementsToUnloadState = () => {
+    save_btn.attr('disabled', false);
+    save_btn.html(`<span>Save my password</span>`);
+
+    password_input.attr('disabled', false);
+    confirmPassword_input.attr('disabled', false);
+  }
+
+
   const onFormSubmit = () => {
+    processing = true;
+    setElementsToLoadingState();
+
     const fd = new FormData(form);
 
     const data = {
-      password: fd.get('password')
+      old_password: fd.get('password'),
+      new_password: fd.get('password'),
     }
 
     $.ajax({
-      url: `${ BASE_URL_API }/`
-    })
+      url: `${ BASE_URL_API }/users/change_password`,
+      type: 'PUT',
+      data: data,
+      success: res => {
+        if (res.error) {
+          setElementsToUnloadState();
+          ajaxErrorHandler(res.message);
+        } else {
+          setElementsToUnloadState();
+          toastr.success('Success! You are now redirecting to your site...', null, {"positionClass": "toast-top-center mt-3"});
+
+          let redirect_path;
+
+          if (getCookie('verified') == '0') {
+            redirect_path = '/change-password';
+          } else {
+            const user_roles = JSON.parse(getCookie('roles'));
+
+            if (user_roles.includes('Admin')) {
+              redirect_path = '/a';
+            } else if (user_roles.length === 1 && user_roles.includes('Chief')) {
+              redirect_path = '/p/proposals';
+            } else {
+              redirect_path = '/p';
+            }
+          }
+          
+          setTimeout(() => location.assign(redirect_path), 250);
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'auth/login.js',
+          fn: 'onDOMLoad.$.ajax',
+          data: data,
+          xhr: xhr,
+        });
+      }
+    });
   }
 
   return {

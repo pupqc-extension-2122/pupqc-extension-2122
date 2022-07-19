@@ -3214,7 +3214,7 @@ const ProjectActivities = (() => {
     ) return;
 
     // Show the modal
-    editModal.modal('show');
+    $('#alkdjdlsafkj').modal('show');
 
     const { 
       id,
