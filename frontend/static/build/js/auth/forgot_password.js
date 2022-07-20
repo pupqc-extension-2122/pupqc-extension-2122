@@ -54,7 +54,10 @@
 
   const setElementsToUnloadState = () => {
     submit_btn.attr('disabled', false);
-    submit_btn.html(`<span>Save my password</span>`);
+    submit_btn.html(`
+      <span>Send</span>
+      <i class="fas fa-sign-in-alt ml-1"></i>
+    `);
 
     email_input.attr('disabled', false);
   }
