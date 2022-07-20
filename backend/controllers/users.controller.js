@@ -149,7 +149,7 @@ exports.changePassword = async (req, res) => {
     if (cookies.verified == true) {
       let verify = await user.verify(body.old_password)
 
-      if (!verify)
+      if (!verify && cookies.from_magic == false)
         return res.status(401).send({ error: true, message: 'Unauthorized' })
     }
 
@@ -158,10 +158,10 @@ exports.changePassword = async (req, res) => {
 
 
     if (cookies.verified == false)
-      res.cookie('verified', 1)
+      res.cookie('verified', 1, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
 
     if (cookies.from_magic == true)
-      res.clearCookie('from_magic')
+      res.cookie('from_magic', 0, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
 
     res.send({ error: false, message: 'Password has been changed successfully' })
 
