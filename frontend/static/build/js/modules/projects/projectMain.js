@@ -35,7 +35,7 @@ const ProjectDetails = (() => {
       ? projectTitle.substring(0, 75) + ' ...' 
       : projectTitle;
 
-      setDocumentTitle(`${ documentTitle } - ${ $('#activities_dt').length ? 'Project Activities' : 'Project Details' }`);
+    setDocumentTitle(`${ documentTitle } - ${ $('#activities_dt').length ? 'Project Activities' : 'Project Details' }`);
   }
 
   const loadHeaderDetails = () => {

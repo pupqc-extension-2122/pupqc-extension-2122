@@ -126,10 +126,6 @@
               </ul>
   
               <div class="card-tools">
-                <!-- <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse"
-                  title="Collapse card">
-                  <i class="fas fa-minus"></i>
-                </button> -->
                 <button 
                   type="button" 
                   class="btn btn-sm btn-negative" 
@@ -231,11 +227,11 @@
               <div class="tab-pane fade" id="settings">
                 <h3 class="mb-3">Update your password</h3>
 
-                <form class="form-horizontal" id="settings_form">
+                <form class="form-horizontal" id="accountSettings_form">
 
                   <%# Old Password %>
                   <div class="form-group">
-                    <label for="account_oldPassword">
+                    <label for="accountSetting_oldPassword">
                       <span>Old Password</span>
                       <span class="text-danger">*</span>
                     </label>
@@ -243,7 +239,7 @@
                       <input 
                         type="password" 
                         class="form-control" 
-                        id="account_oldPassword" 
+                        id="accountSetting_oldPassword" 
                         name="old_password"
                         placeholder="Enter your password here" 
                         autocomplete="false"
@@ -256,8 +252,8 @@
                   </div>
 
                   <%# New Password %>
-                  <div class="form-group">
-                    <label for="account_newPassword">
+                  <div class="form-group mb-2">
+                    <label for="accountSetting_newPassword">
                       <span>New Password</span>
                       <span class="text-danger">*</span>
                     </label>
@@ -265,17 +261,36 @@
                       <input 
                         type="password" 
                         class="form-control" 
-                        id="account_newPassword" 
+                        id="accountSetting_newPassword" 
                         name="new_password"
                         placeholder="Enter your password here" 
                         autocomplete="false"
+                      />
+                    </div>
+                  </div>
+
+                  <%# Password Strength %>
+                  <div class="form-group">
+                    <div class="progress progress-sm">
+                      <div 
+                        class="progress-bar bg-success" 
+                        id="passwordStrength_progressBar"
+                        role="progressbar" 
+                        aria-valuenow="0" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100" 
+                        style="width: 0%"
                       >
+                      </div>
+                    </div>
+                    <div class="small" id="passwordStrength_label">
+                      <div class="text-muted font-italic">We will check how strong your password is</div>
                     </div>
                   </div>
 
                   <%# Confirm New Password %>
                   <div class="form-group">
-                    <label for="account_confirmNewPassword">
+                    <label for="accountSetting_confirmNewPassword">
                       <span>Confirm New Password</span>
                       <span class="text-danger">*</span>
                     </label>
@@ -283,18 +298,22 @@
                       <input 
                         type="password" 
                         class="form-control" 
-                        id="account_confirmNewPassword" 
-                        name="confirm_newPassword"
+                        id="accountSetting_confirmNewPassword" 
+                        name="confirm_password"
                         placeholder="Re-enter your password here" 
                         autocomplete="false"
-                      >
+                      />
                     </div>
                   </div>
                   
+                  <%# Buttons %>
                   <div class="form-group">
                     <div class="float-right">
-                      <button type="submit" class="btn btn-primary" id="submitBtn" data-toggle="modal" 
-                      data-target="#confirmChangePasswordModal">
+                      <button 
+                        type="submit" 
+                        class="btn btn-primary" 
+                        id="accountSettings_saveBtn" 
+                      >
                         <span>Save</span>
                         <i class="fas fa-check ml-1"></i>
                       </button>

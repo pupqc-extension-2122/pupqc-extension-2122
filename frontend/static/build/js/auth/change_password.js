@@ -29,10 +29,10 @@
       id: 'spaces',
       pattern: /\s/g,
     }
-  ]
+  ];
 
   const password_input = $('#updatePassword_password');
-  const confirmPassword_input = $('#confirmPassword_password');
+  const confirmPassword_input = $('#updatePassword_confirmPassword');
 
   const save_btn = $('#updatePassword_saveBtn');
   const logout_btn = $('#updatePassword_logoutBtn');
@@ -47,7 +47,6 @@
 
   const checkPasswordStrength = (password) => {
     let strength = 0;
-    let interpretation = 'undefined';
 
     const incrementStrength = (pattern_instance) => strength += pattern_instance > 2 ? 2 : pattern_instance;
 
@@ -56,15 +55,19 @@
       if (matches) incrementStrength(matches.length);
     });
 
-    if (strength == 0) interpretation = 'Undefined';
-    if (strength > 0) interpretation = 'Very weak';
-    if (strength >= 2) interpretation = 'Weak';
-    if (strength >= 4) interpretation = 'Good';
-    if (strength >= 6) interpretation = 'Strong';
-    if (strength >= 8) interpretation = 'Unpredictable';
+    const percent = strength >= 9 ? 100 : ( strength / 9 ) * 100;
+    const interpretation = (() => {
+      if (percent == 0) return 'Undefined';
+      if (percent < 25) return 'Very weak';
+      if (percent < 50) return 'Poor';
+      if (percent < 75) return 'Good';
+      if (percent < 100) return 'Strong';
+      if (percent == 100) return 'Unpredictable';
+    })();
 
     return {
       strength,
+      percent,
       interpretation
     }
   }
@@ -75,23 +78,29 @@
     password_input.on('keyup', (e) => {
       const password = $(e.currentTarget).val();
       const password_strength = checkPasswordStrength(password);
-      const percent = password_strength.strength >= 8 ? 100 : ( password_strength.strength / 8 ) * 100;
+      const percent = password_strength.percent;
+
+      const theme = (() => {
+        if (percent < 25) return 'danger';
+        if (percent < 50) return 'warning';
+        if (percent < 75) return 'info';
+        if (percent < 100) return 'success';
+        if (percent == 100) return 'primary';
+      })();
       
       $('#passwordStrength_progressBar')
         .css({ width: `${ percent }%` })
         .removeClass('bg-danger bg-warning bg-info bg-success')
-        .addClass(() => {
-          if (percent <= 25) return 'bg-danger';
-          if (percent <= 50) return 'bg-warning';
-          if (percent <= 75) return 'bg-info';
-          if (percent <= 100) return 'bg-success';
-        });
+        .addClass(`bg-${ theme }`);
       
       $('#passwordStrength_label').html(() => {
         return percent == 0
           ? `<div class="text-muted font-italic">We will check how strong your password is</div>`
-          : `<div class="font-weight-bold">${ password_strength.interpretation }</div>`;
+          : `<div class="text-${ theme }">${ password_strength.interpretation }</div>`;
       });
+
+      if (password) password_input.valid();
+      if (password === confirmPassword_input.val()) confirmPassword_input.valid();
     });
 
     // For logout button
@@ -196,7 +205,7 @@
         confirm_password: {
           required: 'This field is required.',
           callback: {
-            rule: () => $('#updatePassword_confirmPassword').val() === $('#updatePassword_password').val(),
+            rule: () => confirmPassword_input.val() === password_input.val(),
             message: 'This is not matched with your password.'
           }
         }
@@ -243,8 +252,12 @@
           setElementsToUnloadState();
           ajaxErrorHandler(res.message);
         } else {
-          setElementsToUnloadState();
           toastr.success('Success! You are now redirecting to your site...', null, {"positionClass": "toast-top-center mt-3"});
+
+          save_btn
+            .html(`<i class="fas fa-check mx-3"></i>`)
+            .removeClass('btn-primary')
+            .addClass('btn-success');
 
           let redirect_path;
 

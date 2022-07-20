@@ -45,13 +45,23 @@ router.get('/forgot-password', (req, res) => {
 
 
 // Change Password (For first timers)
-router.get('/change-password', (req, res) => {
-  return hasPrivilege(req) && req.cookies.verified == '0'
-    ? res.render(PATH + 'change_password', {
-        layout: './layouts/auth',
-        document_title: 'Forgot Password',
-      })
-    : render404(res);
+router.get('/update-password', (req, res) => {
+  if (hasPrivilege(req) && (req.cookies.verified == '0' || req.cookies.from_magic == '1')) {
+    return res.render(PATH + 'change_password', {
+      layout: './layouts/auth',
+      document_title: 'Update your password',
+    });
+  } else {
+
+    // Make sure all cookies are clear (incase unwanted user manipulate cookies in front)
+    user_cookies.forEach(k => req.cookies[k] && res.clearCookie(k));
+
+    // Token also
+    res.clearCookie('token');
+    
+    // Return 404 page
+    return render404(res);
+  }
 });
 
 
