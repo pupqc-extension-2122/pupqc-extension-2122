@@ -26,20 +26,23 @@ app.use(`/`, require('./routers/auth.route'));
 // Redirect if not logged in 
 app.use((req, res, next) => {
 
-  const user_cookies = ['verified','user','roles'];
+  const user_cookies = ['from_magic','verified','user','roles'];
 
   // If user does not have enough privilege
-  if (!(user_cookies.every(k => req.cookies[k] !== undefined))) {
+  if (user_cookies.some(k => req.cookies[k] === undefined)) {
 
     // Make sure all cookies are clear
-    [...user_cookies,'token'].forEach(k => res.clearCookie(k));
+    user_cookies.forEach(k => req.cookies[k] && res.clearCookie(k));
+
+    // Token also
+    res.clearCookie('token');
 
     // Redirect to login
-    res.redirect('/login');
+    return res.redirect('/login');
   }
 
   // If not verified, always redirect to change password
-  if (req.cookies.verified == '0') res.redirect('/change-password');
+  if (req.cookies.verified == '0') return res.redirect('/change-password');
 
   next();
 });
@@ -48,11 +51,11 @@ app.use(`/p/`, require('./routers/projects.route'));
 app.use(`/m/`, require('./routers/memo.route'));
 app.use(`/a/`, require('./routers/admin.route'));
 app.use(`/me/`, require('./routers/user_info.route'));
-app.use(`/t/`, require('./routers/test.route'));
+// app.use(`/t/`, require('./routers/test.route'));
 
 // For 404
 app.use((req, res, next) => {
-  res.status(404).render('content/errors/404', {
+  return res.status(404).render('content/errors/404', {
     layout: './layouts/error',
     document_title: '404 - Page not found',
   });

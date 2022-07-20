@@ -37,7 +37,11 @@
   const save_btn = $('#updatePassword_saveBtn');
   const logout_btn = $('#updatePassword_logoutBtn');
 
+  const confirmLogout_modal = $('#confirmLogout_modal');
+
   let processing = false;
+  let request_for_logout = false;
+  let logging_out = false;
 
   // * Private Variables
 
@@ -93,7 +97,27 @@
     // For logout button
     logout_btn.on('click', (e) => {
       if (processing) e.preventDefault();
+      request_for_logout = true;
+      confirmLogout_modal.modal('show');
     });
+
+    // For confirm logout modal
+    confirmLogout_modal.on('show.bs.modal', (e) => {
+      if (!request_for_logout) e.preventDefault();
+    });
+
+    confirmLogout_modal.on('hide.bs.modal', (e) => {
+      if (logging_out) e.preventDefault();
+      request_for_logout = false;
+    });
+
+    $('#confirmLogout_btn').on('click', (e) => {
+      logging_out = true;
+      $(e.currentTarget).html(`<i class="fas fa-spinner fa-spin-pulse mx-3"></i>`);
+      User.logout();
+    });
+
+    $('#cancelLogout_btn').on('click', () => confirmLogout_modal.modal('hide'));
   }
 
   const handleForm = () => {
@@ -200,7 +224,6 @@
 
   const onFormSubmit = () => {
     processing = true;
-    setElementsToLoadingState();
 
     const fd = new FormData(form);
 
@@ -208,6 +231,8 @@
       old_password: fd.get('password'),
       new_password: fd.get('password'),
     }
+
+    setElementsToLoadingState();
 
     $.ajax({
       url: `${ BASE_URL_API }/users/change_password`,
