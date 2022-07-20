@@ -225,7 +225,7 @@ exports.authMagic = async (req, res) => {
     <p>Redirecting you to the site...</p>
     <script>
       localStorage.setItem('user_data', ${JSON.stringify(JSON.stringify(to_store))});
-      setTimeout( () =>  location.assign('/p'), 1000)
+      setTimeout( () =>  location.assign('/update-password'), 1000)
     </script>
     </body>
   </html>

@@ -157,9 +157,11 @@ exports.changePassword = async (req, res) => {
     await user.save()
 
 
-    if (cookies.verified == false) {
+    if (cookies.verified == false)
       res.cookie('verified', 1)
-    }
+
+    if (cookies.from_magic == true)
+      res.clearCookie('from_magic')
 
     res.send({ error: false, message: 'Password has been changed successfully' })
 
