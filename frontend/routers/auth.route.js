@@ -2,7 +2,7 @@ const router = require('express').Router();
 const PATH = 'auth/';
 const user_cookies = ['from_magic','verified','user','roles'];
 
-const hasPrivilege = (req) => user_cookies.every(k => req.cookies[k] !== undefined);
+const hasPrivilege = (req) => user_cookies.every(k => req.cookies[k] !== undefined) && req.signedCookies.token;
 
 const render404 = (res) => {
   return res.status(404).render('content/errors/404', {
@@ -57,7 +57,7 @@ router.get('/update-password', (req, res) => {
     user_cookies.forEach(k => req.cookies[k] && res.clearCookie(k));
 
     // Token also
-    res.clearCookie('token');
+    if (req.signedCookies.token) res.clearCookie('token');
     
     // Return 404 page
     return render404(res);

@@ -29,13 +29,13 @@ app.use((req, res, next) => {
   const user_cookies = ['from_magic','verified','user','roles'];
 
   // If user does not have enough privilege
-  if (user_cookies.some(k => req.cookies[k] === undefined)) {
+  if (user_cookies.some(k => req.cookies[k] === undefined) || !req.signedCookies.token) {
 
     // Make sure all cookies are clear (incase unwanted user manipulate cookies in front)
     user_cookies.forEach(k => req.cookies[k] && res.clearCookie(k));
 
     // Token also
-    res.clearCookie('token');
+    if (req.signedCookies.token) res.clearCookie('token');
 
     // Redirect to login
     return res.redirect('/login');
