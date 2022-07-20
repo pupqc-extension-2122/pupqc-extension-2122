@@ -100,21 +100,21 @@
       url: `${ BASE_URL_API }/organizations/create`,
       type: 'POST',
       data: data,
-      success: result => {
-          console.log(data);
-      },
-      // success: async result => {
-      //   processing = false;
-      //   if (result.error) {
-      //     ajaxErrorHandler(result.message);
-      //     enableElements();
-      //   } else {
-      //     await BranchesCampuses.reloadDataTable();
-      //     enableElements();
-      //     modal.modal('hide');
-      //     toastr.success('A new branch/campus has been successfully added.');
-      //   }
+      // success: result => {
+      //     console.log(result);
       // },
+      success: async result => {
+        processing = false;
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+          enableElements();
+        } else {
+          await BranchesCampuses.reloadDataTable();
+          enableElements();
+          modal.modal('hide');
+          toastr.success('A new branch/campus has been successfully added.');
+        }
+      },
       error: (xhr, status, error) => {
         processing = false;
         enableElements();
