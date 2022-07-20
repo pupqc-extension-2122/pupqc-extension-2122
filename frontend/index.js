@@ -31,7 +31,7 @@ app.use((req, res, next) => {
   // If user does not have enough privilege
   if (user_cookies.some(k => req.cookies[k] === undefined)) {
 
-    // Make sure all cookies are clear
+    // Make sure all cookies are clear (incase unwanted user manipulate cookies in front)
     user_cookies.forEach(k => req.cookies[k] && res.clearCookie(k));
 
     // Token also
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
   }
 
   // If not verified, always redirect to change password
-  if (req.cookies.verified == '0') return res.redirect('/change-password');
+  if (req.cookies.verified == '0' || req.cookies.from_magic == '1') return res.redirect('/update-password');
 
   next();
 });

@@ -328,6 +328,12 @@ const CUSTOM_VALIDATIONS = [
 		},
 		defaultMessage: 'It must not be equal to a value'
 	}, {
+		ruleName: "notEqualTo",
+		handler: (value, element, params) => {
+      return value != params;
+		},
+		defaultMessage: 'It must not be equal to a value'
+	}, {
 		ruleName: "callback",
 		handler: (value, element, params) => {
       return params;

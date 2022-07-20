@@ -77,8 +77,10 @@
         } else {
           localStorage.setItem(USER_DATA_KEY, JSON.stringify(res.data));
           toastr.success('Success!', null, {"positionClass": "toast-top-center mt-3"});
-          submitBtn.html(`<i class="fas fa-check"></i>`);
-          submitBtn.removeClass('btn-primary').addClass('btn-success');
+          submitBtn
+            .html(`<i class="fas fa-check"></i>`)
+            .removeClass('btn-primary')
+            .addClass('btn-success');
 
           let redirect_path;
 
