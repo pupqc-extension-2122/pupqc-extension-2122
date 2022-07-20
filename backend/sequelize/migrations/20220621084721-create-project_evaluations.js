@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      techinical_evaluation_date: {
+      technical_evaluation_date: {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
