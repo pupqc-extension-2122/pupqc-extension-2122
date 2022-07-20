@@ -36,7 +36,7 @@ exports.createOrganizations = async (req, res) => {
     let [data, created] = await Organizations.findOrCreate({
       where: { name: body.name },
       paranoid: false,
-      default: { type: body.type }
+      defaults: { type: body.type }
     })
 
     if (created)
