@@ -10,13 +10,37 @@
   /**
     * * Local Variables
     */
+  const dtElem_selector = '#budget_item_categories_dt';
+  const dtElem = $(dtElem_selector);
+  const editModal = $('#editBudgetItemCategory_modal');
+  const editFormSelector = '#editBudgetItemCategory_form';
+  const editForm = $(editFormSelector)[0];
   let dt;
-  const dtElem = $('#budget_item_categories_dt');
+  let editValidator;
   let initialized = false;
+  let processing = false;
 
   /**
    * * Private Methods
    */
+    
+  const initializations = () => {
+
+    // *** For Add Budget Item Category Modal *** //
+
+    editModal.on('show.bs.modal', () => {
+      $('#editBudgetItemCategory_formGroups_loader').remove();
+      $('#editBudgetItemCategory_formGroups').show();
+    });
+
+    editModal.on('hidden.bs.modal', () => {
+      editForm.reset();
+    });
+
+    editModal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
+  }
 
   const initDataTable = async () => {
     dt = await dtElem.DataTable({
@@ -100,9 +124,13 @@
               
                 <div class="dropdown-menu dropdown-menu-right">
                   <div class="dropdown-header">Options</div>
-                  <a href="${ BASE_URL_WEB }/a/budget-item-categories/${ data.id }" class="dropdown-item">
-                      <span>Edit details</span>
-                  </a>
+                  <button
+                    type="button"
+                    class="dropdown-item"
+                    data-dt-btn="initEditMode"
+                  >
+                    <span>Edit details</span>
+                  </button>
                 </div>
               </div>
             `
@@ -110,20 +138,119 @@
         }
       ]
     });
+
+    $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initEditMode(data);
+    });
   }
 
-  /**
-   * * Public Methods
-   */
-  const reloadDataTable = async () =>  await dt.ajax.reload();
+  const handleEditForm = () => {
+    editValidator = $app(editFormSelector).handleForm({
+      validators: {
+        category_name: {
+          required: "The budget item category name is required.",
+          notEmpty: "This field cannot be blank.",
+        }
+      },
+      onSubmit: () => onEditFormSubmit()
+    });
+  }
 
+  const onEditFormSubmit = async () => {
+
+    processing = true;
+
+    // Disable the elements
+    const saveBtn = $('#editBudgetItemCategory_saveBtn');
+    const cancelBtn = $('#editBudgetItemCategory_cancelBtn');
+    
+    cancelBtn.attr('disabled', true);
+    saveBtn.attr('disabled', true);
+    saveBtn.html(`
+      <span class="px-3">
+        <i class="fas fa-spinner fa-spin-pulse"></i>
+      </span>
+    `);
+
+    // For enabling elements
+    const enableElements = () => {
+
+      // Enable buttons
+      cancelBtn.attr('disabled', false);
+      saveBtn.attr('disabled', false);
+      saveBtn.html(`Submit`);
+
+      processing = false;
+    }
+
+    // Get the data
+    const fd = new FormData(editForm);
+    const data = {
+      name: fd.get('category_name'),
+    }
+
+    await $.ajax({
+      url: `${ BASE_URL_API }/budget_categories/${ fd.get('category_id') }`,
+      type: 'PUT',
+      data: data,
+      success: async res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+          enableElements();
+        } else {
+          await reloadDataTable();
+          enableElements();
+          editModal.modal('hide');
+          toastr.success('A budget item category has been successfully updated');
+        }
+      }, 
+      error: (xhr, status, error) => {
+        enableElements();
+        ajaxErrorHandler({
+          file: 'admin/budgetItemCategories.js',
+          fn: 'BudgetItemCategories.onEditFormSubmit()',
+          data: data,
+          xhr: xhr
+        });
+      }
+    });
+
+  }
+
+  // * Public Methods
+  
+  const reloadDataTable = async () =>  await dt.ajax.reload();
+  const initEditMode = async (data) => {
+
+    // Show the modal
+    editModal.modal('show');
+
+    const { 
+      id,
+      name
+    } = data;
+  
+    // Set the input values
+    setInputValue({
+      '#editBudgetItemCategory_categoryId': id,
+      '#editBudgetItemCategory_categoryName': name,
+    });
+    
+    // Enable buttons
+    $('#editBudgetItemCategory_saveBtn').attr('disabled', false);
+  }
+  
   /**
    * * Init
    */
   const init = () => {
     if (!initialized) {
-      initialized = 1;
+      initialized = true;
+      initializations();
       initDataTable();
+      handleEditForm();
     }
   }
 
