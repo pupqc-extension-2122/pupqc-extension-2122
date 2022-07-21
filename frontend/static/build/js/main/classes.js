@@ -235,10 +235,15 @@ class ProjectTeamForm {
       required: true,
       notEmpty: true,
       minlength: 5,
+      callback: (i) => !this.team_members.some(e => 
+        e.member_id !== member_id 
+        && e.name.toUpperCase() === $(i).val().toUpperCase()
+      ),
       messages: {
         required: `The team member's name is required.`,
         notEmpty: `This field cannot be blank.`,
         minlength: `Make sure you type the full name of the team member.`,
+        callback: `The name of this team member is already existed.`,
       }
     });
 
@@ -365,10 +370,7 @@ class TargetGroupsForm {
 		this.#initializations();
 	}
 
-	/**
-	 * * Template Literals
-	 * o--/[=================>
-	 */
+	// * Template Literals
 
   #removeTargetGroupFieldModal = `
     <div class="modal" id="removeTargetGroupField_modal">
@@ -406,10 +408,7 @@ class TargetGroupsForm {
     </div>
   `
 
-	/**
-	 * * Private Methods
-	 * o--/[=================>
-	 */
+	// * Private Methods
 
 	#initializations = () => {
 
@@ -492,10 +491,7 @@ class TargetGroupsForm {
     );
   }
 
-	/**
-	 * * Public Methods
-	 * o--/[=================>
-	 */
+	// * Public Methods
 
 	addTargetGroup = (data = '') => {
 
@@ -523,11 +519,16 @@ class TargetGroupsForm {
 			required: true,
       notEmpty: true,
       minlength: 5,
+      callback: (i) => !this.targetGroups.some(e => 
+        e.id !== formGroupId 
+        && e.target_group.toUpperCase() === $(i).val().toUpperCase() 
+      ),
 			messages: { 
         required: 'The name of the target group is required.',
         notEmpty: 'This field cannot be blank.',
         minlength: 'Make sure you enter the full name of the target group.',
-      }
+        callback: 'This target group is already existed.',
+      },
 		});
 
 		// *** Initiate the inputs *** //
@@ -1938,10 +1939,7 @@ class ProjectActivityForm {
 		this.#initializations();
 	}
 
-	/**
-	 * * Template Literals
-	 * o--/[=================>
-	 */
+	// * Template Literals
 
 	#topicFormGroup = formGroupId => {
 		const { formGroupId: fg, input, removeBtn } = this.data.topics;
@@ -2075,10 +2073,7 @@ class ProjectActivityForm {
   </div>
 `
 	
-	/**
-	 * * Private Methods
-	 * o--/[=================>
-	 */
+	// * Private Methods
 
 	#dataElement = (obj, dataElem, value) => $(`[${ this.data[obj][dataElem] }="${ value }"]`);
 
@@ -2172,10 +2167,7 @@ class ProjectActivityForm {
     )
   }
 
-	/**
-	 * * Public Methods
-	 * o--/[=================>
-	 */
+	// * Public Methods
 
 	// *** ACTIVITY TOPICS *** //
 
@@ -2456,9 +2448,7 @@ class ProjectEvaluationForm {
     this.#initializations();
   }
   
-	/**
-	 * * Template Literals
-	 */
+	// * Template Literals
 
   #evaluatorRow = rowId => `
     <tr ${ this.data.rowId }="${ rowId }">
@@ -2540,9 +2530,7 @@ class ProjectEvaluationForm {
     </div>
   `
 
-	/**
-	 * * Private Methods
-	 */
+  // * Private Methods
 
   #initializations = () => {
 
@@ -2615,9 +2603,7 @@ class ProjectEvaluationForm {
     )
   }
 
-  /**
-	 * * Public Methods
-	 */
+  // * Public Methods
 
   addEvaluatorRow = () => {
 
@@ -2646,10 +2632,15 @@ class ProjectEvaluationForm {
       required: true,
       notEmpty: true,
       minlength: 3,
+      callback: (i) => !this.evaluators.some(e => 
+        e.row_id !== rowId 
+        && e.name.toUpperCase() === $(i).val().toUpperCase()
+      ),
       messages: {
         required: 'The name of the evaluator is required.',
         notEmpty: 'This field cannot be blank.',
         minlength: 'Make sure you enter the full name of the evaluator.',
+        callback: 'The name of the evaluator is already existed.'
       }
     });
 
@@ -3542,10 +3533,15 @@ class WitnessesForm {
       required: true,
       notEmpty: true,
       minlength: 5,
+      callback: (i) => !this.witnesses.some(e => 
+        e.witness_id !== witness_id 
+        && e.name.toUpperCase() === $(i).val().toUpperCase()
+      ),
       messages: {
         required: `The witness' name is required.`,
         notEmpty: `This field cannot be blank.`,
         minlength: `Make sure you type the full name of the witness.`,
+        callback: `This witness is already existed.`
       }
     });
 

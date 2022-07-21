@@ -150,8 +150,12 @@ const ProjectDetails = (() => {
       });
     }
 
-    if (project.evaluation) {
+    if (project.status != 'For Evaluation' && project.evaluation) {
       if ($('#presentationDate_notif').length) $('#presentationDate_notif').remove();
+    }
+
+    if (project.SO_number) {
+      $('#projectDetails_header_SONumber').show().html(`Special Order #: <span class="font-weight-bold">${ project.SO_number }</span>`)
     }
   }
 
@@ -1053,11 +1057,51 @@ const ProjectOptions = (() => {
     const form = $(formSelector)[0];
     const confirmBtn = $('#confirmApproveTheProject_btn');
 
+    // Initialize Date Inputs
+    [
+      '#approveProject_fundingApprovalDate',
+      '#approveProject_SOReleaseDate',
+      '#approveProject_cashReleaseDate',
+      '#approveProject_noticeReleaseDate',
+    ].forEach(s => $app(s).initDateInput({ button: `${s}_pickerBtn` }));
+
     $app(formSelector).handleForm({
       validators: {
         SO_number: {
           required: 'The SO number is required.'
-        }
+        },
+        funding_approval_date: {
+          required: 'The date of endorsement for funding is required.',
+          dateISO: 'Your input is not a valid date.',
+          beforeDateTime: {
+            rule: () => project.end_date,
+            message: 'This date must within the project timeline.'
+          }
+        },
+        SO_release_date: {
+          required: 'The release date of SO is required.',
+          dateISO: 'Your input is not a valid date.',
+          beforeDateTime: {
+            rule: () => project.end_date,
+            message: 'This date must within the project timeline.'
+          }
+        },
+        cash_release_date: {
+          required: 'The release date of cash advance is required.',
+          dateISO: 'Your input is not a valid date.',
+          beforeDateTime: {
+            rule: () => project.end_date,
+            message: 'This date must within the project timeline.'
+          }
+        },
+        notice_release_date: {
+          required: 'The release date of notice to proceed is required.',
+          dateISO: 'Your input is not a valid date.',
+          beforeDateTime: {
+            rule: () => project.end_date,
+            message: 'This date must within the project timeline.'
+          }
+        },
       },
       onSubmit: async () => {
         if (isBadAction()) return;
@@ -1082,6 +1126,10 @@ const ProjectOptions = (() => {
 
         const data = {
           SO_number: fd.get('SO_number'),
+          funding_approval_date: fd.get('funding_approval_date'),
+          SO_release_date: fd.get('SO_release_date'),
+          cash_release_date: fd.get('cash_release_date'),
+          notice_release_date: fd.get('notice_release_date'),
         }
         
         await $.ajax({
@@ -1097,7 +1145,7 @@ const ProjectOptions = (() => {
             } else {
               approveProject_modal.modal('hide');
               enableElements();
-              updateProjectDetails({ status: 'Approved' });
+              updateProjectDetails(data);
               ProjectHistory.addToTimeline(res.data);
               toastr.success('The proposal has been approved.');
             }
@@ -1120,7 +1168,7 @@ const ProjectOptions = (() => {
 
     approveProject_modal.on('hide.bs.modal', (e) => {
       if (processing) e.preventDefault();
-    })
+    });
   }
 
   const initCancelProposal = () => {
@@ -1643,7 +1691,7 @@ const ProjectOptions = (() => {
           'Created': () => revisingOptions(),
           'For Revision': () => revisingOptions(),
           'For Review': () => {
-            addOption('Undo submission');
+            // addOption('Undo submission');
             addOption('Cancel the proposal');
           },
           'For Evaluation': () => {
