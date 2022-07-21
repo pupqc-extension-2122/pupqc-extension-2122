@@ -169,6 +169,8 @@ const ProjectDetails = (() => {
         impact_statement,
         summary,
         SO_number,
+        monitoring_frequency,
+        monitoring_method,
         financial_requirements: fr,
         evaluation_plans: ep
       } = project;
@@ -247,6 +249,8 @@ const ProjectDetails = (() => {
         '#projectDetails_body_impactStatement': impact_statement || noContentTemplate('No impact statement has been set up.'),
         '#projectDetails_body_summary': summary || noContentTemplate('No summary has been set up.</div>'),
         '#projectDetails_body_SONumber': SO_number || noContentTemplate('No SO number has been set up.</div>'),
+        '#projectDetails_body_monitoringFrequency': monitoring_frequency || noContentTemplate('No frequency of project monitoring has been set up.</div>'),
+        '#projectDetails_body_monitoringMethod': monitoring_method || noContentTemplate('No method of project monitoring has been set up.</div>'),
         '#projectDetails_body_evaluationPlans': () => {
           if (ep.length) {
             let evaluationPlanRows = '';
@@ -321,7 +325,13 @@ const ProjectDetails = (() => {
 
       // If Project Evaluation has been graded
       if (project.evaluation) {
-        const { evaluation_date, evaluators } = project.evaluation;
+        const { 
+          technical_evaluation_date, 
+          eppec_evaluation_date, 
+          release_date, 
+          evaluators,
+          recommendations,
+        } = project.evaluation;
         const presentation_date = project.presentation_date;
 
         setHTMLContent({
@@ -335,11 +345,31 @@ const ProjectDetails = (() => {
               return `<div class="font-italic text-muted">No date has been set.</div>`
             }
           },
-          '#projectDetails_body_evaluationDate': () => {
-            if (evaluation_date) {
+          '#projectDetails_body_technicalEvaluationDate': () => {
+            if (technical_evaluation_date) {
               return `
-                <div>${ moment(evaluation_date).format('MMMM DD, YYYY (dddd)') }</div>
-                <div class="small text-muted">${ fromNow(evaluation_date) }</div>
+                <div>${ moment(technical_evaluation_date).format('MMMM DD, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(technical_evaluation_date) }</div>
+              `
+            } else {
+              return `<div class="font-italic text-muted">No date has been set.</div>`
+            }
+          },
+          '#projectDetails_body_EPPECEvaluationDate': () => {
+            if (eppec_evaluation_date) {
+              return `
+                <div>${ moment(eppec_evaluation_date).format('MMMM DD, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(eppec_evaluation_date) }</div>
+              `
+            } else {
+              return `<div class="font-italic text-muted">No date has been set.</div>`
+            }
+          },
+          '#projectDetails_body_releaseDate': () => {
+            if (release_date) {
+              return `
+                <div>${ moment(release_date).format('MMMM DD, YYYY (dddd)') }</div>
+                <div class="small text-muted">${ fromNow(release_date) }</div>
               `
             } else {
               return `<div class="font-italic text-muted">No date has been set.</div>`
@@ -397,7 +427,8 @@ const ProjectDetails = (() => {
             `
 
             return rows;
-          }
+          },
+          '#projectDetails_body_recommendations': recommendations
         });
 
         $('#projectDetails_evaluationSummary_tabSpacer').show();
@@ -872,6 +903,11 @@ const ProjectOptions = (() => {
     const isBadAction = () => project.status !== 'For Evaluation';
     let PE_form;
     
+    // Initialize Technical Evaluation Date
+    $app('#setProjectEvaluation_technicalEvaluationDate').initDateInput({
+      button: '#setProjectEvaluation_technicalEvaluationDate_pickerBtn'
+    });
+
     // Initialize Evaluation Date
     $app('#setProjectEvaluation_evaluationDate').initDateInput({
       button: '#setProjectEvaluation_evaluationDate_pickerBtn'
@@ -893,8 +929,20 @@ const ProjectOptions = (() => {
     // Handle Form
     $app('#setProjectEvaluation_form').handleForm({
       validators: {
-        evaluation_date: {
-          required: 'Please select when the evaluation occured.',
+        technical_evaluation_date: {
+          required: 'Please select when the conducted technical evaluation occured.',
+          dateISO: 'Your input is not a valid date.',
+          sameOrBeforeDateTime: {
+            rule: () => project.end_date,
+            message: 'The evaluation date must be same or earlier than the end of the project timeline.'
+          },
+          sameOrAfterDateTime: {
+            rule: () => project.presentation_date,
+            message: 'The evaluation date must be same or later than the presentation date.'
+          }
+        },
+        eppec_evaluation_date: {
+          required: 'Please select when the EPPEC evaluation occured.',
           dateISO: 'Your input is not a valid date.',
           sameOrBeforeDateTime: {
             rule: () => project.end_date,
@@ -955,9 +1003,12 @@ const ProjectOptions = (() => {
         const fd = new FormData($('#setProjectEvaluation_form')[0]);
         const evaluationData = PE_form.getEvaluationData();
         const data = {
-          evaluation_date: fd.get('evaluation_date'),
+          eppec_evaluation_date: fd.get('eppec_evaluation_date'),
+          technical_evaluation_date: fd.get('technical_evaluation_date'),
+          release_date: fd.get('eppec_evaluation_date'),
           evaluators: evaluationData.evaluation,
           average_points: evaluationData.average.points,
+          recommendations: fd.get('recommendations'),
         }
 
         await $.ajax({
@@ -1365,10 +1416,10 @@ const ProjectOptions = (() => {
 
     // Get Option List function
     const getOptionList = (optionArr = []) => {
-      if(optionArr.length) {
+      if(Array.isArray(optionArr) && optionArr.length) {
         let optionList = '';
         let selectedOptions = {};
-        optionArr.forEach(o => {
+        optionArr.filter(o => o).forEach(o => {
           const { id, category } = optionsDict.find(od => od.id == o);
           if (!selectedOptions.hasOwnProperty(category)) selectedOptions[category] = [];
           selectedOptions[category].push(id);
@@ -1384,14 +1435,23 @@ const ProjectOptions = (() => {
       }
     }
 
+    // Container for dictionary of options
+    // Index are equivalent to the level of priority/arrangement
     let optionsDict;
+
+    // Raw list of options
     let optionList = [];
 
+    // Get the added option and set to the index of itself in the dictionary for 
+    // level of priority/arragement
+    const addOption = (optionId) => optionList[optionsDict.findIndex(o => o.id === optionId)] = optionId;
+    
     // * For Proposal Mode
     if (mode === 'Proposal') {
 
-      // Dictionary of options
       optionsDict = [
+
+        // ---> CATEGORY: PROJECT ACTIVITIES <--- //
         {
           id: 'Add project activity',
           category: 'Project Activities',
@@ -1419,7 +1479,10 @@ const ProjectOptions = (() => {
               <span>View activities</span>
             </div>
           `
-        }, {
+        }, 
+        
+        // ---> CATEGORY: PROJECT DETAILS <--- //
+        {
           id: 'View project details',
           category: 'Project Details',
           template: `
@@ -1445,7 +1508,10 @@ const ProjectOptions = (() => {
               <span>Edit details</span>
             </div>
           `
-        }, {
+        }, 
+        
+        // ---> CATEGORY: FOR SUBMISSION <--- //
+        {
           id: 'Submit for approval',
           category: 'For Submission',
           template: `
@@ -1456,58 +1522,6 @@ const ProjectOptions = (() => {
             >
               <i class="fas fa-hand-pointer fa-fw mr-1"></i>
               <span>Submit for approval</span>
-            </button>
-          `
-        }, {
-          id: 'Undo submission',
-          category: 'For Submission',
-          template: `
-            <button 
-              type="button"
-              class="btn btn-negative btn-block text-left" 
-              onclick="ProjectOptions.triggerOption('undoSubmission')"
-            >
-              <i class="fas fa-undo fa-fw text-warning mr-1"></i>
-              <span>Undo submission</span>
-            </button>
-          `
-        }, {
-          id: 'Submit evaluation grade',
-          category: 'For Submission',
-          template: `
-            <button 
-              type="button"
-              class="btn btn-outline-info btn-block text-left" 
-              onclick="ProjectOptions.triggerOption('submitEvaluationGrade')"
-            >
-              <i class="fas fa-list-alt fa-fw mr-1"></i>
-              <span>Submit evaluation grade</span>
-            </button>
-          `
-        }, {
-          id: 'Re-sched presentation',
-          category: 'For Submission',
-          template: `
-            <button 
-              type="button"
-              class="btn btn-negative btn-block text-left" 
-              onclick="ProjectOptions.triggerOption('reschedulePresentation')"
-            >
-              <i class="fas fa-calendar-alt fa-fw mr-1 text-warning"></i>
-              <span>Re-sched presentation</span>
-            </button>
-          `
-        }, {
-          id: 'Cancel the proposal',
-          category: 'For Submission',
-          template: `
-            <button 
-              type="button"
-              class="btn btn-negative btn-block text-left" 
-              onclick="ProjectOptions.triggerOption('cancelTheProposal')"
-            >
-              <i class="fas fa-times-circle fa-fw mr-1 text-warning"></i>
-              <span>Cancel the proposal</span>
             </button>
           `
         }, {
@@ -1524,16 +1538,16 @@ const ProjectOptions = (() => {
             </button>
           `
         }, {
-          id: 'Request for revision',
+          id: 'Submit evaluation grade',
           category: 'For Submission',
           template: `
             <button 
               type="button"
-              class="btn btn-negative btn-block text-left" 
-              onclick="ProjectOptions.triggerOption('requestForRevision')"
+              class="btn btn-outline-info btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('submitEvaluationGrade')"
             >
-              <i class="fas fa-file-pen fa-fw mr-1 text-warning"></i>
-              <span>Request for revision</span>
+              <i class="fas fa-list-alt fa-fw mr-1"></i>
+              <span>Submit evaluation grade</span>
             </button>
           `
         }, {
@@ -1549,22 +1563,74 @@ const ProjectOptions = (() => {
               <span>Approve the project</span>
             </button>
           `
-        }
+        }, {
+          id: 'Undo submission',
+          category: 'For Submission',
+          template: `
+            <button 
+              type="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('undoSubmission')"
+            >
+              <i class="fas fa-undo fa-fw text-warning mr-1"></i>
+              <span>Undo submission</span>
+            </button>
+          `
+        }, {
+          id: 'Re-sched presentation',
+          category: 'For Submission',
+          template: `
+            <button 
+              type="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('reschedulePresentation')"
+            >
+              <i class="fas fa-calendar-alt fa-fw mr-1 text-warning"></i>
+              <span>Re-sched presentation</span>
+            </button>
+          `
+        }, {
+          id: 'Request for revision',
+          category: 'For Submission',
+          template: `
+            <button 
+              type="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('requestForRevision')"
+            >
+              <i class="fas fa-file-pen fa-fw mr-1 text-warning"></i>
+              <span>Request for revision</span>
+            </button>
+          `
+        }, {
+          id: 'Cancel the proposal',
+          category: 'For Submission',
+          template: `
+            <button 
+              type="button"
+              class="btn btn-negative btn-block text-left" 
+              onclick="ProjectOptions.triggerOption('cancelTheProposal')"
+            >
+              <i class="fas fa-times-circle fa-fw mr-1 text-warning"></i>
+              <span>Cancel the proposal</span>
+            </button>
+          `
+        },
       ];
 
       let optionsTemplate;
   
       if (body.length) {
-        optionList.push('View activities');
+        addOption('View activities');
       } else if (activitiesDT.length) {
-        optionList.push('View project details');
+        addOption('View project details');
       }
-  
+
       if (user_roles.includes('Extensionist')) {
         const revisingOptions = () => {
           if (body.length) {
-            optionList.push('Edit project details');
-            optionList.push('Submit for approval');
+            addOption('Edit project details');
+            addOption('Submit for approval');
           }
           if (activitiesDT.length) {
             optionList.unshift('Add project activity');
@@ -1577,14 +1643,14 @@ const ProjectOptions = (() => {
           'Created': () => revisingOptions(),
           'For Revision': () => revisingOptions(),
           'For Review': () => {
-            optionList.push('Undo submission');
-            optionList.push('Cancel the proposal');
+            addOption('Undo submission');
+            addOption('Cancel the proposal');
           },
           'For Evaluation': () => {
-            optionList.push('Cancel the proposal');
+            addOption('Cancel the proposal');
           },
           'Pending': () => {
-            optionList.push('Cancel the proposal');
+            addOption('Cancel the proposal');
           },
         }
         if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
@@ -1593,27 +1659,29 @@ const ProjectOptions = (() => {
       if (user_roles.includes('Chief')) {
         optionsTemplate = {
           'For Review': () => {
-            optionList.push('Set presentation schedule');
-            optionList.push('Request for revision');
+            addOption('Set presentation schedule');
+            addOption('Request for revision');
           },
           'For Evaluation': () => {
-            optionList.push('Submit evaluation grade');
-            optionList.push('Re-sched presentation');
+            addOption('Submit evaluation grade');
+            addOption('Re-sched presentation');
           },
           'Pending': () => {
-            optionList.push('Approve the project');
-            optionList.push('Request for revision');
+            addOption('Approve the project');
+            addOption('Request for revision');
           }
         }
         if (typeof optionsTemplate[status] !== "undefined") optionsTemplate[status]();
       }
+
     } 
     
     // * For Monitoring Mode
     else if (mode === 'Monitoring') {
 
-      // Dictionary of options
       optionsDict = [
+
+        // ---> CATEGORY: PROJECT ACTIVITIES <--- //
         {
           id: 'View activities',
           category: 'Project Activities',
@@ -1627,7 +1695,10 @@ const ProjectOptions = (() => {
               <span>View activities</span>
             </div>
           `
-        }, {
+        }, 
+        
+        // ---> CATEGORY: PROJECT DETAILS <--- //
+        {
           id: 'View project details',
           category: 'Project Details',
           template: `
@@ -1640,7 +1711,10 @@ const ProjectOptions = (() => {
               <span>View project details</span>
             </div>
           `
-        }, {
+        }, 
+        
+        // ---> CATEGORY: EDIT DETAILS <--- //
+        {
           id: 'Change Time Frame',
           category: 'Edit Details',
           template: `
@@ -1657,21 +1731,22 @@ const ProjectOptions = (() => {
       ];
 
       if (body.length) {
-        optionList.push('View activities');
+        addOption('View activities');
       } else if (activitiesDT.length) {
-        optionList.push('View project details');
+        addOption('View project details');
       }
 
       if (user_roles.includes('Extensionist')) {
-        optionList.push('Change Time Frame');
+        addOption('Change Time Frame');
       }
     }
 
     // * For Activity Evaluation
     else if (mode === 'Activity Evaluation') {
 
-      // Dictionary of options
       optionsDict = [
+
+        // ---> CATEGORY: PROJECT ACTIVITIES <--- //
         {
           id: 'View activities',
           category: 'Project Activities',
@@ -1685,7 +1760,10 @@ const ProjectOptions = (() => {
               <span>View activities</span>
             </div>
           `
-        }, {
+        }, 
+
+        // ---> CATEGORY: PROJECT DETAILS <--- //
+        {
           id: 'View project details',
           category: 'Project Details',
           template: `
@@ -1702,9 +1780,9 @@ const ProjectOptions = (() => {
       ];
 
       if (body.length) {
-        optionList.push('View activities');
+        addOption('View activities');
       } else if (activitiesDT.length) {
-        optionList.push('View project details');
+        addOption('View project details');
       }
     }
 

@@ -75,8 +75,8 @@ router.get('/create-proposal', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') 
-    ? res.render(PATH + 'create_proposal', {
-      document_title: 'Create Project Proposal',
+    ? res.render(PATH + 'project_proposal_form', {
+      document_title: 'Create a proposal',
       active_sidebar_tab: 'Project Proposals',
       name: `${ first_name } ${ last_name }`,
       role: renderRoles(roles),
@@ -156,8 +156,8 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, async (req, res) => {
     return render404(res);
 
   roles.includes('Extensionist')
-    ? res.render(PATH + 'edit_proposal', {
-      document_title: 'Edit Project Proposal',
+    ? res.render(PATH + 'project_proposal_form', {
+      document_title: 'Edit a proposal',
       active_sidebar_tab: 'Project Proposals',
       name: `${ first_name } ${ last_name }`,
       role: renderRoles(roles),

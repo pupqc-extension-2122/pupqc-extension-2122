@@ -10,6 +10,7 @@
       </div>
       <div class="modal-body">
 
+          <%# Date of Conducted Technical Evaluation %>
         <div class="form-group">
           <label for="setProjectEvaluation_technicalEvaluationDate">
             <span>Date of Conducted Technical Evaluation</span>
@@ -19,9 +20,9 @@
             <input 
               type="text" 
               class="form-control" 
-              id="setProjectEvaluation_evaluationDate" 
-              name="evaluation_date"
-              placeholder="Please select date of presentation" 
+              id="setProjectEvaluation_technicalEvaluationDate" 
+              name="technical_evaluation_date"
+              placeholder="Please select a date" 
               data-inputmask-alias="datetime"
               data-inputmask-inputformat="yyyy-mm-dd" 
               data-mask 
@@ -30,7 +31,7 @@
               <button 
                 type="button" 
                 class="btn btn-primary" 
-                id="setProjectEvaluation_evaluationDate_pickerBtn"
+                id="setProjectEvaluation_technicalEvaluationDate_pickerBtn"
                 data-toggle="tooltip" 
                 title="Select date of presentation"
               >
@@ -42,7 +43,7 @@
       
         <div class="form-row">
           
-          <%# Date of Evaluation %>
+          <%# Date of EPPEC Evaluation %>
           <div class="col-md-6">
             <div class="form-group">
               <label for="setProjectEvaluation_evaluationDate">
@@ -54,8 +55,8 @@
                   type="text" 
                   class="form-control" 
                   id="setProjectEvaluation_evaluationDate" 
-                  name="evaluation_date"
-                  placeholder="Please select date of presentation" 
+                  name="eppec_evaluation_date"
+                  placeholder="Please select a date" 
                   data-inputmask-alias="datetime"
                   data-inputmask-inputformat="yyyy-mm-dd" 
                   data-mask 
@@ -88,7 +89,7 @@
                   class="form-control" 
                   id="setProjectEvaluation_releaseDate" 
                   name="release_date"
-                  placeholder="Please select date a release date of results" 
+                  placeholder="Please select a date" 
                   data-inputmask-alias="datetime"
                   data-inputmask-inputformat="yyyy-mm-dd" 
                   data-mask 

@@ -1,6 +1,6 @@
 /**
  * ==============================================
- * * CREATE PROJECT PROPOSAL
+ * * PROJECT PROPOSAL FORM
  * ==============================================
  */
 
@@ -10,9 +10,19 @@
 
   // * Local Variables
 
-  const formSelector = '#addProject_form';
+  const formSelector = '#projectProposal_form';
   
   const noCoopAgency_modal = $('#noCooperatingAgency_modal');
+  
+  const form_type = (() => {
+    const path = location.pathname.split('/')[2];
+    if (path === 'create-proposal') return 'create';
+    if (path === 'edit-proposal') return 'edit';
+  })();
+
+  const project_id = (() => {
+    if (form_type === 'edit') return location.pathname.split('/')[3];
+  })();
   
   let stepper;
   let PT_form; // Project Team Form
@@ -20,16 +30,15 @@
   let CA_form; // Cooperating Agencies form
   let FR_form; // Financial Requirements form
   let EP_form; // Evaluation Plan form
-  let lineItemBudget_list;
   let cooperatingAgencies_list;
   let noCoopAgency_mode = false;
 
   // * Private Methods
 
-  const initializations = async () => {
+  const initializations = () => {
 
     // Extension Project Type
-    const extensionType = $('#addProject_extensionType');
+    const extensionType = $('#projectProposal_extensionType');
     const extension_types = [
       {
         id: 'Livelihood',
@@ -45,25 +54,24 @@
     });
 
     // Implementer
-    const implementer = $('#addProject_implementer');
-    implementer.autocomplete({
+    $('#projectProposal_implementer').autocomplete({
       source: ['Polytechnic University of the Philippines, Quezon City Branch'],
     });
 
     // Initialize Start Date
-    $app('#addProject_startDate').initDateInput({
-      button: '#addProject_startDate_pickerBtn'
+    $app('#projectProposal_startDate').initDateInput({
+      button: '#projectProposal_startDate_pickerBtn'
     });
 
     // Initialize End Date
-    $app('#addProject_endDate').initDateInput({
-      button: '#addProject_endDate_pickerBtn'
+    $app('#projectProposal_endDate').initDateInput({
+      button: '#projectProposal_endDate_pickerBtn'
     });
 
     // Handle Date inputs on change
-    $('#addProject_startDate, #addProject_endDate').on('change', () => {
-      const start_date_elem = $('#addProject_startDate');
-      const end_date_elem = $('#addProject_endDate');
+    $('#projectProposal_startDate, #projectProposal_endDate').on('change', () => {
+      const start_date_elem = $('#projectProposal_startDate');
+      const end_date_elem = $('#projectProposal_endDate');
 
       const start_date = $(start_date_elem).val();
       const end_date = $(end_date_elem).val();
@@ -78,24 +86,52 @@
         start_date_elem.valid();
         end_date_elem.valid();
       }
-
-      // const start_date = startDateElem.val();
-      // const end_date = endDateElem.val();
-      
-      // if (start_date && end_date) {
-      //   getPartners({
-      //     start_date: start_date,
-      //     end_date: end_date
-      //   });
-      // }
     });
 
-    const noCoopAgency_btn = noCoopAgency_modal.find(`[data-cooperating-agency-btn="addLater"]`);
+    // Monitoring Frequency
+    const monitoring_frequencies = [
+      {
+        id: 'Weekly',
+        name: 'Weekly',
+      }, {
+        id: 'Quarterly',
+        name: 'Quarterly',
+      }, {
+        id: 'Monthly',
+        name: 'Monthly',
+      }, {
+        id: 'Semi-annually',
+        name: 'Semi-annually',
+      }, {
+        id: 'Annually',
+        name: 'Annually',
+      }, 
+    ];
+    
+    // Monitoring Method
+    $('#projectProposal_monitoringMethod').autocomplete({
+      source: [
+        'Site Visit',
+        'Telephone Logs',
+        'Interview',
+        'Observation',
+        'Survey'
+      ],
+    });
 
+    const monitoringFrequency_input = $('#projectProposal_monitoringFrequency');
+    monitoringFrequency_input.empty();
+    monitoringFrequency_input.append(`<option></option>`);
+    monitoring_frequencies.forEach(f => monitoringFrequency_input.append(`<option value="${ f.id }">${ f.name }</option>`));
+
+    // If user not select coop agency
+
+    const noCoopAgency_btn = noCoopAgency_modal.find(`[data-cooperating-agency-btn="addLater"]`);
+    
     noCoopAgency_modal.on('show.bs.modal', (e) => {
       if (noCoopAgency_mode) e.preventDefault();
     });
-    
+
     noCoopAgency_btn.on('click', () => {
       noCoopAgency_mode = true;
       noCoopAgency_modal.modal('hide');
@@ -122,7 +158,6 @@
 
     // When next button has been clicked
     nextBtn.on('click', () => {
-      // stepper.next();
       if ($(formSelector).valid()) {
         if (currentStep == 0 && CA_form.getSelectedCooperatingAgencies().length == 0) {
           !noCoopAgency_mode ? noCoopAgency_modal.modal('show') : stepper.next();
@@ -143,7 +178,7 @@
     prevBtn.on('click', () => stepper.previous());
 
     // Handle steps
-    document.getElementById('addProject_stepper').addEventListener('shown.bs-stepper', (event) => {
+    document.getElementById('projectProposal_stepper').addEventListener('shown.bs-stepper', (event) => {
 
       // Update the current step
       currentStep = event.detail.to;
@@ -163,31 +198,8 @@
         nextBtn.hide();
       }
 
-      if (currentStep == 3) loadProjectDetails();
+      if (currentStep == 3) loadProjectDetailsToConfirm();
     });
-  }
-
-  const getPartners = async (params) => {
-    await $.ajax({
-      // url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
-      url: `${ BASE_URL_API }/partners`,
-      type: 'GET',
-      success: result => {
-        if (result.error) {
-          ajaxErrorHandler(result.message);
-        } else {
-          cooperatingAgencies_list = result.data;
-          CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
-        }
-      },
-      error: (xhr, status, error) => {
-        ajaxErrorHandler({
-          file: 'projects/createPropsal.js',
-          fn: 'onDOMLoad.getPartners()',
-          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
-        });
-      }
-    })
   }
 
   const initProjectTeamForm = () => {
@@ -195,26 +207,46 @@
   }
 
   const initTargetGroupForm = () => {
-    TG_form = new TargetGroupsForm('#addProject_targetGroups_grp', {
+    TG_form = new TargetGroupsForm('#projectProposal_targetGroups_grp', {
       buttons: {
         add: '#addTargetGroup_btn',
-        // clear: '#clearTargetGroupEmptyFields_btn'
       }
     });
   }
 
-  const initCooperatingAgenciesGroupForm = () => {
+  const initCooperatingAgenciesGroupForm = async () => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/partners`,
+      type: 'GET',
+      success: res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          cooperatingAgencies_list = res.data;
+        }
+      },
+      error: () => {
+        ajaxErrorHandler({
+          file: 'projects/createPropsal.js',
+          fn: 'onDOMLoad.getPartners()',
+          xhr: xhr
+        });
+      }
+    });
+
     CA_form = new CooperatingAgenciesForm(
-      '#addProject_cooperatingAgencies_grp',
-      '#addProject_cooperatingAgencies_select'
+      '#projectProposal_cooperatingAgencies_grp',
+      '#projectProposal_cooperatingAgencies_select'
     );
+
+    CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
   }
 
   const initFinancialRequirementsForm = async () => {
 
     // Create an instance of financial requirements form
     FR_form = new FinancialRequirementsForm(
-      '#financialRequirements_form',
+      '#financialRequirements_form', 
       '#financialRequirement_addLineItemBudget_select',
       {
         buttons: {
@@ -241,7 +273,6 @@
         });
       }
     });
-
   }
 
   const initEvaluationPlanForm = () => {
@@ -250,7 +281,6 @@
     EP_form = new EvaluationPlanForm('#evaluationPlan_form', {
       buttons: {
         add: '#evaluationPlan_addPlan_btn',
-        clear: '#evaluationPlan_clearEmptyFields_btn'
       }
     });
   }
@@ -260,7 +290,7 @@
       validators: {
         title: {
           required: "The title of the project is required.",
-          notEmpty: "This field cannot be blank.",
+          notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
             message: 'Make sure you  enter the full title of the project.'
@@ -271,7 +301,7 @@
         },
         implementer: {
           required: "The implementer is required.",
-          notEmpty: "This field cannot be blank.",
+          notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
             message: 'Make sure you enter the full name of the implementer.'
@@ -279,36 +309,42 @@
         },
         start_date: {
           required: "Please select a date when the project will start.",
-          dateISO: "Your input is an invalid date.",
+          dateISO: 'Your input is not a valid date.',
           beforeDateTimeSelector: {
-            rule: '#addProject_endDate',
-            message: 'The start date must be earlier than end date.'
+            rule: '#projectProposal_endDate',
+            message: 'The start date must be earlier that the end date.'
           }
         },
         end_date: {
           required: "Please select a date when the project will end.",
-          dateISO: "Your input is an invalid date.",
+          dateISO: 'Your input is not a valid date.',
           afterDateTimeSelector: {
-            rule: '#addProject_startDate',
+            rule: '#projectProposal_startDate',
             message: 'The end date must be later than the start date.'
           }
         },
         impact_statement: {
           required: "Please compose the impact statement here.",
-          notEmpty: "This field cannot be blank.",
+          notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: 'Make sure you  enter the full details for the impact statement.'
+            message: 'Make sure you enter the full details for the impact statement.'
           }
         },
         summary: {
           required: "Please compose the project summary here.",
-          notEmpty: "This field cannot be blank.",
+          notEmpty: "This field cannot be empty.",
           minlength: {
             rule: 5,
-            message: 'Make sure you enter the full summary of the project.'
+            message: 'Make sure you  enter the full summary of the project'
           }
-        }
+        },
+        monitoring_frequency: {
+          required: 'Please select the frequency of project monitoring.',
+        },
+        monitoring_method: {
+          required: 'The method of project monitoring is required.',
+        },
       },
       onSubmit: async () => {
         const submitBtn = $('#submitBtn');
@@ -338,31 +374,49 @@
         delete data.cooperating_agencies;
 
         if (data.partner_id.length === 0) data.partner_id = [].toString();
-        
+
         await $.ajax({
-          url: `${ BASE_URL_API }/projects/create`,
-          type: 'POST',
+          ...(() => {
+            if (form_type === 'create') return {
+              url: `${ BASE_URL_API }/projects/create`,
+              type: 'POST'
+            }
+
+            if (form_type === 'edit') return {
+              url: `${ BASE_URL_API }/projects/${ project_id }`,
+              type: 'PUT'
+            }
+          })(),
           data: data,
           success: res => {
             if (res.error) {
               ajaxErrorHandler(res.message);
               enableElements();
             } else {
-              
+
               // Set session alert
-              setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ res.data.id }`, {
-                theme: 'success',
-                message: 'A new proposal has been successfully created.'
-              });
+              
+              if (form_type === 'create') {
+                setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ res.data.id }`, {
+                  theme: 'success',
+                  message: 'A new proposal has been successfully created.'
+                });
+              }
+
+              if (form_type === 'edit') {
+                setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ project_id }`, {
+                  theme: 'success',
+                  message: `The project proposal has been successfully updated.`
+                });
+              }
             }
           },
           error: (xhr, status, error) => {
             enableElements();
             ajaxErrorHandler({
-              file: 'projects/projectProposalDetails.js',
-              fn: 'onDOMLoad.$.ajax',
-              data: data,
-              xhr: xhr,
+              file: 'projects/projectProposalForm.js',
+              fn: 'onDOMLoad.handleForm()',
+              xhr: xhr
             });
           }
         });
@@ -383,12 +437,14 @@
       end_date: '' || fd.get('end_date'),
       impact_statement: fd.get('impact_statement'),
       summary: fd.get('summary'),
+      monitoring_frequency: fd.get('monitoring_frequency'),
+      monitoring_method: fd.get('monitoring_method'),
       financial_requirements: FR_form.getFinancialRequirements().requirements,
       evaluation_plans: EP_form.getEvaluationPlans()
     }
   }
 
-  const loadProjectDetails = () => {
+  const loadProjectDetailsToConfirm = () => {
     const {
       title,
       project_type,
@@ -400,11 +456,13 @@
       end_date,
       impact_statement,
       summary,
+      monitoring_frequency,
+      monitoring_method,
       financial_requirements: fr,
       evaluation_plans: ep
     } = getProjectDetailsData();
 
-    const noContentTemplate = (message) => `<div class="text-muted font-italic">${message}</div>`;
+    const noContentTemplate = (message) => `<div class="text-muted font-italic">${ message }</div>`;
 
     setHTMLContent({
       '#projectDetailsConfirm_title': title || noContentTemplate('No title has been set up'),
@@ -478,16 +536,18 @@
       },
       '#projectDetailsConfirm_impactStatement': impact_statement || noContentTemplate('No impact statement has been set up.'),
       '#projectDetailsConfirm_summary': summary || noContentTemplate('No summary has been set up.</div>'),
+      '#projectDetailsConfirm_monitoringFrequency': monitoring_frequency || noContentTemplate('No frequency of project monitoring has been set up.</div>'),
+      '#projectDetailsConfirm_monitoringMethod': monitoring_method || noContentTemplate('No method of project monitoring has been set up.</div>'),
       '#projectDetailsConfirm_evaluationPlans': () => {
-        if (ep.length) {
+        if(ep.length) {
           let evaluationPlanRows = '';
           ep.forEach(p => {
             evaluationPlanRows += `
               <tr>
-                <td>${p.outcome || noContentTemplate('--')}</td>
-                <td>${p.indicator || noContentTemplate('--')}</td>
-                <td>${p.data_collection_method || noContentTemplate('--')}</td>
-                <td>${p.frequency || noContentTemplate('--')}</td>
+                <td>${ p.outcome || noContentTemplate('--') }</td>
+                <td>${ p.indicator || noContentTemplate('--') }</td>
+                <td>${ p.data_collection_method || noContentTemplate('--') }</td>
+                <td>${ p.frequency || noContentTemplate('--') }</td>
               </tr>
             `
           });
@@ -496,53 +556,98 @@
           return `
             <tr>
               <td colspan="4">
-                <div class="p-5 text-center">${noContentTemplate('No evaluation plan has been set up.')}</div>
+                <div class="p-5 text-center">${ noContentTemplate('No evaluation plan has been set up.') }</div>
               </td>
             </tr>
           `
         }
       },
       '#projectDetailsConfirm_financialRequirements': () => {
-				let financialRequirementRows = '';
-				let overallAmount = 0;
+        let financialRequirementRows = '';
+        let overallAmount = 0;
 
-				// Read the object for rendering in the DOM
-				fr.forEach(requirement => {
+        // Read the object for rendering in the DOM
+        fr.forEach(requirement => {
 
-					// Create the line item budget row
-					financialRequirementRows += `
-						<tr style="background-color: #f6f6f6">
-							<td 
-								class="font-weight-bold"
-								colspan="5"
-							>${ requirement.category }</td>
-						</tr>
-					`;
+          // Create the line item budget row
+          financialRequirementRows += `
+            <tr style="background-color: #f6f6f6">
+              <td 
+                class="font-weight-bold"
+                colspan="5"
+              >${ requirement.category }</td>
+            </tr>
+          `;
 
-					// Create the budget item rows
-					requirement.items.forEach(({ budget_item, particulars, quantity, estimated_cost }) => {
-						const totalAmount = quantity * estimated_cost;
-						overallAmount += totalAmount;
-						financialRequirementRows += `
-							<tr>
-								<td>${ budget_item }</td>
-								<td>${ particulars }</td>
-								<td class="text-right">${ quantity }</td>
-								<td class="text-right">${ formatToPeso(estimated_cost) }</td>
-								<td class="text-right">${ formatToPeso(totalAmount) }</td>
-							</tr>
-						`
-					});
-				});
+          // Create the budget item rows
+          requirement.items.forEach(({ budget_item, particulars, quantity, estimated_cost }) => {
+            const totalAmount = quantity * estimated_cost;
+            overallAmount += totalAmount;
+            financialRequirementRows += `
+              <tr>
+                <td>${ budget_item }</td>
+                <td>${ particulars }</td>
+                <td class="text-right">${ quantity }</td>
+                <td class="text-right">${ formatToPeso(estimated_cost) }</td>
+                <td class="text-right">${ formatToPeso(totalAmount) }</td>
+              </tr>
+            `
+          });
+        });
 
-				financialRequirementRows += `
-					<tr class="font-weight-bold" style="background-color: #f6f6f6">
-						<td colspan="4" class="text-right">Overall Amount</td>
-						<td class="text-right">${ formatToPeso(overallAmount) }</td>
-					</tr>
-				`;
+        financialRequirementRows += `
+          <tr class="font-weight-bold" style="background-color: #f6f6f6">
+            <td colspan="4" class="text-right">Overall Amount</td>
+            <td class="text-right">${ formatToPeso(overallAmount) }</td>
+          </tr>
+        `;
 
-				return financialRequirementRows;
+        return financialRequirementRows;
+      }
+    });
+  }
+
+  const setInputValues = async () => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/projects/${ project_id }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          const data = result.data;
+
+          setInputValue({
+            '#projectProposal_projectTitle': data.title,
+            '#projectProposal_extensionType': data.project_type,
+            '#projectProposal_implementer': data.implementer,
+            '#projectProposal_startDate': new Date(data.start_date),
+            '#projectProposal_endDate': new Date(data.end_date),
+            '#projectProposal_impactStatement': data.impact_statement,
+            '#projectProposal_summary': data.summary,
+            '#projectProposal_monitoringFrequency': data.monitoring_frequency,
+            '#projectProposal_monitoringMethod': data.monitoring_method,
+          });
+
+          [
+            '#projectProposal_startDate', 
+            '#projectProposal_endDate',
+            '#projectProposal_monitoringFrequency',
+          ].forEach(s => $(s).trigger('change'));
+
+          PT_form.setTeamMembers(data.team_members);
+          TG_form.setTargetGroups(data.target_groups);
+          CA_form.setSelectedCooperatingAgencies(data.partners);
+          FR_form.setFinancialRequirements(data.financial_requirements);
+          EP_form.setEvaluationPlans(data.evaluation_plans);
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/editProposal.js',
+          fn: 'onDOMLoad.setInputValues()',
+          xhr: xhr
+        }, 1);
       }
     });
   }
@@ -552,23 +657,23 @@
     $('#contentHeader').show();
 
     $('#content_loader').remove();
-    $('#addProject_form').show();
+    $('#projectProposal_form').show();
   }
 
-  // * Initialize
+  // * Return Public Methods
 
   return {
     init: async () => {
       if ($(formSelector).length) {
-        await initializations();
+        initializations();
         handleStepper();
         handleForm();
         initProjectTeamForm();
         initTargetGroupForm();
-        initCooperatingAgenciesGroupForm();
-        await getPartners();
+        await initCooperatingAgenciesGroupForm();
         await initFinancialRequirementsForm();
         initEvaluationPlanForm();
+        if (form_type === 'edit') await setInputValues();
         removeLoaders();
       }
     },

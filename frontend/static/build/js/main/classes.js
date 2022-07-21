@@ -312,10 +312,7 @@ class ProjectTeamForm {
   } 
 
   setTeamMembers = (data) => {
-    if (!data) {
-      console.error(`Data is required for setTeamMembers()`);
-      return;
-    }
+    if (!(data && data.length)) return;
 
     this.team_members = [];
     this.form.find(`[${ this.data.member_id }]`).remove();
@@ -3622,10 +3619,7 @@ class WitnessesForm {
   } 
 
   setWitnesses = (data) => {
-    if (!data) {
-      console.error(`Data is required for setWitnesses()`);
-      return;
-    }
+    if (!(data && data.length)) return;
 
     this.witnesses = [];
     this.form.find(`[${ this.data.witness_id }]`).remove();
