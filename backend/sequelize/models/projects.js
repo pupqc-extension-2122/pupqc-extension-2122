@@ -47,18 +47,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false, validate: { notEmpty: true }
     },
     target_groups: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: { notEmpty: true },
       set(val) {
-        this.setDataValue('target_groups', val.join(';'))
+        this.setDataValue('target_groups', JSON.stringify(val))
       },
       get() {
-        return this.getDataValue('target_groups').split(';')
+        return JSON.parse(this.getDataValue('target_groups'))
       }
     },
     team_members: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       validate: { notEmpty: true },
       set(val) {
