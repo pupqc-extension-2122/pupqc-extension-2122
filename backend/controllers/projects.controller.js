@@ -29,6 +29,13 @@ exports.viewProposal = async (req, res) => {
         }
       },
       {
+        model: Memos,
+        as: 'memos',
+        through: {
+          attributes: []
+        }
+      },
+      {
         model: Project_Evaluations,
         as: 'evaluation'
       },
