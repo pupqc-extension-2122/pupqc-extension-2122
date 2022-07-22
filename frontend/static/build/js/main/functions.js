@@ -269,28 +269,25 @@ const $app = (selector) => {
 	// Handle Form
 	app.handleForm = ({ validators, onSubmit }) => {
 
-		let validationRules = {}, validationMessages = {}
-
-		const ruleObjects = ['rule', 'message']
+		let validationRules = {}, validationMessages = {};
+		const ruleObjects = ['rule', 'message'];
 
 		Object.entries(validators).forEach(([name, objRules]) => {
-			let _rules = {}
-			let _messages = {}
+			let _rules = {}, _messages = {};
 
-			const rules = Object.entries(objRules);
-			rules.forEach(([ruleKey, rule]) => {
+			Object.entries(objRules).forEach(([ruleKey, rule]) => {
 				if (typeof rule === "string") {
 					_rules[ruleKey] = true;
 					_messages[ruleKey] = rule;
 				} else if (typeof rule === "object") {
 					Object.keys(rule).forEach(key => {
 						if (!ruleObjects.includes(key)) {
-							console.error(`"${key}" is an invalid validation parameter`)
+							console.error(`"${key}" is an invalid validation parameter`);
 						} else {
 							_rules[ruleKey] = rule.rule;
-							_messages[ruleKey] = rule.message
+							_messages[ruleKey] = rule.message;
 						}
-					})
+					});
 				}
 			});
 
@@ -306,11 +303,9 @@ const $app = (selector) => {
 			errorClass: 'invalid-feedback',
 			errorPlacement: (error, element) => {
 				if (element.parent('.input-group').length) { // For checkbox/radio
-					error
-						.insertAfter(element.parent());
+					error.insertAfter(element.parent());
 				} else if (element.hasClass('select2')) { // For select2
-					error
-						.insertAfter(element.next('span'));
+					error.insertAfter(element.next('span'));
 				} else { // For Default   
 					element.closest('.form-group').append(error)
 				}
@@ -338,9 +333,13 @@ const $app = (selector) => {
 				}
 			},
       invalidHandler: (form, validator) => validator.focusInvalid(),
-			submitHandler: () => {
-				onSubmit();
-				return false
+			submitHandler: (form) => {
+
+        // Make sure that form is valid before submit
+        if ($(form).valid()) onSubmit();
+				
+        // Make sure that it will not submit by the form's default behavior
+        return false;
 			}
 		});
 	}

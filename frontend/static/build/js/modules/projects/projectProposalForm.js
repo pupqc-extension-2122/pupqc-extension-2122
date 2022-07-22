@@ -86,6 +86,18 @@
         start_date_elem.valid();
         end_date_elem.valid();
       }
+
+      if (start_date && end_date && start_date_moment.isValid() && end_date_moment.isValid()) {
+        getPartners({
+          start_date: start_date,
+          end_date: end_date
+        });
+      } else {
+        const coopAgency_elem = $('#projectProposal_cooperatingAgencies_select');
+        CA_form.setCooperatingAgenciesList([]);
+        coopAgency_elem.empty();
+        coopAgency_elem.append(`<option disabled>Please select a start and end date first.</option>`);
+      }
     });
 
     // Monitoring Frequency
@@ -207,39 +219,57 @@
   }
 
   const initTargetGroupForm = () => {
-    TG_form = new TargetGroupsForm('#projectProposal_targetGroups_grp', {
-      buttons: {
-        add: '#addTargetGroup_btn',
+    TG_form = new TargetGroupsForm();
+  }
+
+  const getPartners = async (params) => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
+      type: 'GET',
+      success: result => {
+        if (result.error) {
+          ajaxErrorHandler(result.message);
+        } else {
+          cooperatingAgencies_list = result.data;
+          CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
+        }
+      },
+      error: (xhr, status, error) => {
+        ajaxErrorHandler({
+          file: 'projects/createPropsal.js',
+          fn: 'onDOMLoad.getPartners()',
+          details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
+        });
       }
     });
   }
 
   const initCooperatingAgenciesGroupForm = async () => {
-    await $.ajax({
-      url: `${ BASE_URL_API }/partners`,
-      type: 'GET',
-      success: res => {
-        if (res.error) {
-          ajaxErrorHandler(res.message);
-        } else {
-          cooperatingAgencies_list = res.data;
-        }
-      },
-      error: () => {
-        ajaxErrorHandler({
-          file: 'projects/createPropsal.js',
-          fn: 'onDOMLoad.getPartners()',
-          xhr: xhr
-        });
-      }
-    });
+    // await $.ajax({
+    //   url: `${ BASE_URL_API }/partners`,
+    //   type: 'GET',
+    //   success: res => {
+    //     if (res.error) {
+    //       ajaxErrorHandler(res.message);
+    //     } else {
+    //       cooperatingAgencies_list = res.data;
+    //     }
+    //   },
+    //   error: () => {
+    //     ajaxErrorHandler({
+    //       file: 'projects/createPropsal.js',
+    //       fn: 'onDOMLoad.getPartners()',
+    //       xhr: xhr
+    //     });
+    //   }
+    // });
 
     CA_form = new CooperatingAgenciesForm(
       '#projectProposal_cooperatingAgencies_grp',
       '#projectProposal_cooperatingAgencies_select'
     );
 
-    CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
+    // CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
   }
 
   const initFinancialRequirementsForm = async () => {

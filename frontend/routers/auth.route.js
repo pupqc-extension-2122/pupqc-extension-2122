@@ -15,11 +15,9 @@ const redirectToInternalPage = (req, res) => res.redirect(JSON.parse(req.cookies
 
 
 // Redirect to login
-router.get('/', (req, res) => {
-  return hasPrivilege(req)
-    ? redirectToInternalPage(req, res)
-    : res.redirect('/login');
-});
+router.get('/', (req, res) => 
+  hasPrivilege(req) ? redirectToInternalPage(req, res) : res.redirect('/login')
+);
 
 
 // Login
@@ -38,9 +36,9 @@ router.get('/forgot-password', (req, res) => {
   return hasPrivilege(req)
     ? redirectToInternalPage(req, res)
     : res.render(PATH + 'forgot_password', {
-      layout: './layouts/auth',
-      document_title: 'Forgot Password',
-    });
+        layout: './layouts/auth',
+        document_title: 'Forgot Password',
+      });
 });
 
 

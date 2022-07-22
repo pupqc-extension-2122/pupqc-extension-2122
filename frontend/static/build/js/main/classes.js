@@ -327,293 +327,329 @@ class ProjectTeamForm {
 }
 
 
+// class TargetGroupsForm {
+// 	constructor(selector, params = {
+// 		buttons: {
+// 			add: '',
+// 		}
+// 	}) {
+
+// 		// *** Defaults *** //
+
+// 		const FORM = `[data-form="targetGroups"]`;
+// 		const BUTTONS = {
+// 			ADD: `[data-target-groups-btn="add"]`,
+// 		}
+
+// 		// *** Setting up properties *** //
+
+// 		this.form = $(selector || FORM);
+// 		this.targetGroups = [];
+
+// 		const { buttons: btn } = params;
+
+// 		this.btn = {
+// 			add: this.form.find(btn.add || BUTTONS.ADD),
+// 		}
+
+// 		this.data = {
+
+// 			// Form group id
+// 			formGroupId: 'data-target-group-form-group-id',
+
+// 			// Input(s)
+// 			targetGroupInput: 'data-target-group-input',
+
+// 			// Remove form group button
+// 			removeFormGroupBtn: 'data-target-group-remove-form-group-btn',
+
+// 			// Modal
+// 			modal: 'data-target-group-modal'
+// 		}
+
+// 		this.#initializations();
+// 	}
+
+// 	// * Template Literals
+
+//   #removeTargetGroupFieldModal = `
+//     <div class="modal" id="removeTargetGroupField_modal">
+//       <div class="modal-dialog modal-dialog-centered">
+//         <div class="modal-content">
+//           <div class="modal-header">
+//             <h4 class="modal-title">Confirmation</h4>
+//             <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+//               <i class="fas fa-times"></i>
+//             </button>
+//           </div>
+//           <div class="modal-body">
+//             <div class="d-flex">
+//               <h1 class="mr-3 display-4">
+//                 <i class="fas fa-exclamation-triangle text-warning"></i>
+//               </h1>
+//               <div>
+//                 <div class="font-weight-bold mb-2">Remove target group field</div>
+//                 <p>You've already entered some data here!<br>Are you sure you want to remove this target group
+//                   field?<br>Your inputs will not be saved.</p>
+//               </div>
+//             </div>
+//           </div>
+//           <div class="modal-footer">
+//             <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+//             <button 
+//               type="button" 
+//               class="btn btn-danger" 
+//               id="confirmRemoveTargetGroupField_btn"
+//               data-remove-target-group-field-id=""
+//             >Yes, I'm sure.</button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   `
+
+// 	// * Private Methods
+
+// 	#initializations = () => {
+
+// 		// *** Initialize the buttons *** //
+
+// 		const { add: addBtn, } = this.btn;
+
+// 		// For add button
+// 		addBtn.on('click', () => this.addTargetGroup());
+
+// 		// *** For Remove Target Group Field Modal *** //
+
+// 		if (!$('#removeTargetGroupField_modal').length) {
+
+// 			// Append the Remove Target Group Field Modal to the DOM
+// 			$('body').append(this.#removeTargetGroupFieldModal);
+
+// 			const confirmRemoveModal = $('#removeTargetGroupField_modal');
+// 			const confirmRemoveBtn = $('#confirmRemoveTargetGroupField_btn');
+
+// 			// When remove target group field modal will hide, reset the button attirbute value
+// 			confirmRemoveModal.on('hide.bs.modal', () => confirmRemoveBtn.attr('data-remove-target-group-field-id', ''));
+
+// 			// When confirming to remove target group field
+// 			confirmRemoveBtn.on('click', () => {
+
+// 				// Get the form group id from the attribute and remove the target group
+// 				this.removeTargetGroup(confirmRemoveBtn.attr('data-remove-target-group-field-id'));
+
+// 				// Hide the modal
+// 				confirmRemoveModal.modal('hide');
+// 			});
+// 		}
+
+// 		// *** Default settings *** //
+
+// 		// Append a blank field
+// 		this.addTargetGroup();
+// 	}
+
+// 	#dataElement = (dataAttr, value) => this.form.find(`[${this.data[dataAttr]}="${value}"]`);
+
+// 	#addTargetGroupFormGroup = formGroupId => `
+//     <div 
+//       class="form-group mb-2"
+//       ${this.data.formGroupId}="${formGroupId}"
+//     >
+//       <div class="d-flex align-items-center">
+//         <div class="px-2 mr-2">●</div>
+//         <div class="w-100 mr-2">
+//           <input 
+//             type="text" 
+//             class="form-control" 
+//             name="target_group-${formGroupId}" 
+//             ${this.data.targetGroupInput}="${formGroupId}"
+//             placeholder="Enter the name of the target group here"
+//           />
+//         </div>
+//         <div>
+//           <button 
+//             type="button" 
+//             class="btn btn-sm btn-negative text-danger"
+//             ${this.data.removeFormGroupBtn}="${formGroupId}"
+// 						data-toggle="tooltip"
+//             title="Remove target group field"
+//           >
+//             <i class="fas fa-times"></i>
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   `
+
+//   #setAddBtnState = () => {
+//     this.btn.add.attr('disabled',
+//       this.targetGroups.some(e => {
+//         const val = this.#dataElement('targetGroupInput', e.id).val().trim();
+//         return !(val && val.length >= 5);  
+//       })
+//     );
+//   }
+
+// 	// * Public Methods
+
+// 	addTargetGroup = (data = '') => {
+
+// 		// *** Create and insert the row into the DOM *** //
+
+// 		// Generate a unique id
+// 		const formGroupId = uuid();
+
+// 		// Push a target group object
+// 		this.targetGroups.push({
+// 			id: formGroupId,
+// 			target_group: data
+// 		});
+
+// 		// Append the form group before the last child (or add button)
+// 		this.form.children().last().before(this.#addTargetGroupFormGroup(formGroupId));
+
+// 		// *** Add the input validators *** //
+
+// 		// Initiate the input
+// 		const input = this.#dataElement('targetGroupInput', formGroupId);
+
+// 		// Add validation to the input
+// 		input.rules('add', {
+// 			required: true,
+//       notEmpty: true,
+//       minlength: 5,
+//       callback: (i) => !this.targetGroups.some(e => 
+//         e.id !== formGroupId 
+//         && e.target_group.toUpperCase() === $(i).val().toUpperCase() 
+//       ),
+// 			messages: { 
+//         required: 'The name of the target group is required.',
+//         notEmpty: 'This field cannot be blank.',
+//         minlength: 'Make sure you enter the full name of the target group.',
+//         callback: 'This target group is already existed.',
+//       },
+// 		});
+
+// 		// *** Initiate the inputs *** //
+
+// 		// Get the target group name if input changes
+// 		input.on('keyup change', () => {
+//       this.#setAddBtnState();
+// 			this.targetGroups = this.targetGroups.map(t =>
+// 				t.id == formGroupId ? { ...t, target_group: input.val() } : t
+// 			);
+//     });
+
+//     initInputs();
+
+// 		// *** Initiate the buttons *** //
+
+//     this.#setAddBtnState();
+
+// 		const removeFormGroupBtn = this.#dataElement('removeFormGroupBtn', formGroupId);
+
+// 		// Initiate the remove form group button
+// 		removeFormGroupBtn.on('click', () => {
+// 			if (this.#dataElement('targetGroupInput', formGroupId).val().trim()) {
+
+// 				// Set the form group id in the data attribute of the modal
+// 				$('#confirmRemoveTargetGroupField_btn').attr('data-remove-target-group-field-id', formGroupId);
+
+// 				// Show the confirmation modal
+// 				$('#removeTargetGroupField_modal').modal('show');
+
+// 			}
+// 			else if (this.targetGroups.length === 1) toastr.warning('You must input at least one target group.');
+// 			else this.removeTargetGroup(formGroupId);
+// 		});
+
+// 		// Set the initial value of the input if it has data
+// 		data && input.val(data).trigger('change');
+
+// 	}
+
+// 	removeTargetGroup = formGroupId => {
+
+// 		// Immediately hide the tooltip from the remove button
+// 		this.#dataElement('removeFormGroupBtn', formGroupId).tooltip('hide');
+
+// 		// Remove the target group object based on id
+// 		this.targetGroups = this.targetGroups.filter(x => x.id != formGroupId);
+
+// 		// Remove the element from the DOM
+// 		this.#dataElement('formGroupId', formGroupId).remove();
+
+// 		// If there are no target group, add new field by default
+// 		this.targetGroups.length === 0 && this.addTargetGroup();
+
+//     this.#setAddBtnState();
+// 	}
+
+// 	setTargetGroups = (data, method = 'reset') => {
+// 		if (data && data.length) {
+// 			const fn = {
+// 				'reset': () => {
+
+// 					// Remove all preset form groups
+// 					this.targetGroups.forEach(({ id }) => {
+
+// 						// Immediately hide the tooltip from the remove button
+// 						this.#dataElement('removeFormGroupBtn', id).tooltip('hide');
+
+// 						// Remove the target group object based on id
+// 						this.targetGroups = this.targetGroups.filter(x => x.id != id);
+
+// 						// Remove the element from the DOM
+// 						this.#dataElement('formGroupId', id).remove();
+// 					});
+
+// 					// Return a new form groups
+// 					data.forEach(d => this.addTargetGroup(d));
+// 				},
+// 				'append': () => data.forEach(d => this.addTargetGroup(d)),
+// 			}
+// 			fn[method]();
+// 		} else console.error('No data has been fetched');
+// 	}
+
+// 	getTargetGroups = () => [...this.targetGroups].map(x => x.target_group);
+// }
+
+
 class TargetGroupsForm {
-	constructor(selector, params = {
-		buttons: {
-			add: '',
-		}
-	}) {
+  constructor(selector = `[data-form="targetGroups"]`) {
+    this.tbl = $(selector);
 
-		// *** Defaults *** //
 
-		const FORM = `[data-form="targetGroups"]`;
-		const BUTTONS = {
-			ADD: `[data-target-groups-btn="add"]`,
-		}
+    const dataPrefix = 'data-target-group-';
 
-		// *** Setting up properties *** //
+    this.data = {
+      input: `${dataPrefix}input`,
+      btn: `${dataPrefix}btn`,
+    }
 
-		this.form = $(selector || FORM);
-		this.targetGroups = [];
-
-		const { buttons: btn } = params;
-
-		this.btn = {
-			add: this.form.find(btn.add || BUTTONS.ADD),
-		}
-
-		this.data = {
-
-			// Form group id
-			formGroupId: 'data-target-group-form-group-id',
-
-			// Input(s)
-			targetGroupInput: 'data-target-group-input',
-
-			// Remove form group button
-			removeFormGroupBtn: 'data-target-group-remove-form-group-btn',
-
-			// Modal
-			modal: 'data-target-group-modal'
-		}
-
-		this.#initializations();
-	}
-
-	// * Template Literals
-
-  #removeTargetGroupFieldModal = `
-    <div class="modal" id="removeTargetGroupField_modal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Confirmation</h4>
-            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="d-flex">
-              <h1 class="mr-3 display-4">
-                <i class="fas fa-exclamation-triangle text-warning"></i>
-              </h1>
-              <div>
-                <div class="font-weight-bold mb-2">Remove target group field</div>
-                <p>You've already entered some data here!<br>Are you sure you want to remove this target group
-                  field?<br>Your inputs will not be saved.</p>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-            <button 
-              type="button" 
-              class="btn btn-danger" 
-              id="confirmRemoveTargetGroupField_btn"
-              data-remove-target-group-field-id=""
-            >Yes, I'm sure.</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
-
-	// * Private Methods
-
-	#initializations = () => {
-
-		// *** Initialize the buttons *** //
-
-		const { add: addBtn, } = this.btn;
-
-		// For add button
-		addBtn.on('click', () => this.addTargetGroup());
-
-		// *** For Remove Target Group Field Modal *** //
-
-		if (!$('#removeTargetGroupField_modal').length) {
-
-			// Append the Remove Target Group Field Modal to the DOM
-			$('body').append(this.#removeTargetGroupFieldModal);
-
-			const confirmRemoveModal = $('#removeTargetGroupField_modal');
-			const confirmRemoveBtn = $('#confirmRemoveTargetGroupField_btn');
-
-			// When remove target group field modal will hide, reset the button attirbute value
-			confirmRemoveModal.on('hide.bs.modal', () => confirmRemoveBtn.attr('data-remove-target-group-field-id', ''));
-
-			// When confirming to remove target group field
-			confirmRemoveBtn.on('click', () => {
-
-				// Get the form group id from the attribute and remove the target group
-				this.removeTargetGroup(confirmRemoveBtn.attr('data-remove-target-group-field-id'));
-
-				// Hide the modal
-				confirmRemoveModal.modal('hide');
-			});
-		}
-
-		// *** Default settings *** //
-
-		// Append a blank field
-		this.addTargetGroup();
-	}
-
-	#dataElement = (dataAttr, value) => this.form.find(`[${this.data[dataAttr]}="${value}"]`);
-
-	#addTargetGroupFormGroup = formGroupId => `
-    <div 
-      class="form-group mb-2"
-      ${this.data.formGroupId}="${formGroupId}"
-    >
-      <div class="d-flex align-items-center">
-        <div class="px-2 mr-2">●</div>
-        <div class="w-100 mr-2">
-          <input 
-            type="text" 
-            class="form-control" 
-            name="target_group-${formGroupId}" 
-            ${this.data.targetGroupInput}="${formGroupId}"
-            placeholder="Enter the name of the target group here"
-          />
-        </div>
-        <div>
-          <button 
-            type="button" 
-            class="btn btn-sm btn-negative text-danger"
-            ${this.data.removeFormGroupBtn}="${formGroupId}"
-						data-toggle="tooltip"
-            title="Remove target group field"
-          >
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  `
-
-  #setAddBtnState = () => {
-    this.btn.add.attr('disabled',
-      this.targetGroups.some(e => {
-        const val = this.#dataElement('targetGroupInput', e.id).val().trim();
-        return !(val && val.length >= 5);  
-      })
-    );
+    this.initializations();
   }
 
-	// * Public Methods
+  // * Template Literals
 
-	addTargetGroup = (data = '') => {
+  // * Private Methods
+  
+  initializations = () => {
+    const tbl_body = this.tbl.find('tbody');
 
-		// *** Create and insert the row into the DOM *** //
-
-		// Generate a unique id
-		const formGroupId = uuid();
-
-		// Push a target group object
-		this.targetGroups.push({
-			id: formGroupId,
-			target_group: data
-		});
-
-		// Append the form group before the last child (or add button)
-		this.form.children().last().before(this.#addTargetGroupFormGroup(formGroupId));
-
-		// *** Add the input validators *** //
-
-		// Initiate the input
-		const input = this.#dataElement('targetGroupInput', formGroupId);
-
-		// Add validation to the input
-		input.rules('add', {
-			required: true,
-      notEmpty: true,
-      minlength: 5,
-      callback: (i) => !this.targetGroups.some(e => 
-        e.id !== formGroupId 
-        && e.target_group.toUpperCase() === $(i).val().toUpperCase() 
-      ),
-			messages: { 
-        required: 'The name of the target group is required.',
-        notEmpty: 'This field cannot be blank.',
-        minlength: 'Make sure you enter the full name of the target group.',
-        callback: 'This target group is already existed.',
-      },
-		});
-
-		// *** Initiate the inputs *** //
-
-		// Get the target group name if input changes
-		input.on('keyup change', () => {
-      this.#setAddBtnState();
-			this.targetGroups = this.targetGroups.map(t =>
-				t.id == formGroupId ? { ...t, target_group: input.val() } : t
-			);
-    });
-
-    initInputs();
-
-		// *** Initiate the buttons *** //
-
-    this.#setAddBtnState();
-
-		const removeFormGroupBtn = this.#dataElement('removeFormGroupBtn', formGroupId);
-
-		// Initiate the remove form group button
-		removeFormGroupBtn.on('click', () => {
-			if (this.#dataElement('targetGroupInput', formGroupId).val().trim()) {
-
-				// Set the form group id in the data attribute of the modal
-				$('#confirmRemoveTargetGroupField_btn').attr('data-remove-target-group-field-id', formGroupId);
-
-				// Show the confirmation modal
-				$('#removeTargetGroupField_modal').modal('show');
-
-			}
-			else if (this.targetGroups.length === 1) toastr.warning('You must input at least one target group.');
-			else this.removeTargetGroup(formGroupId);
-		});
-
-		// Set the initial value of the input if it has data
-		data && input.val(data).trigger('change');
-
-	}
-
-	removeTargetGroup = formGroupId => {
-
-		// Immediately hide the tooltip from the remove button
-		this.#dataElement('removeFormGroupBtn', formGroupId).tooltip('hide');
-
-		// Remove the target group object based on id
-		this.targetGroups = this.targetGroups.filter(x => x.id != formGroupId);
-
-		// Remove the element from the DOM
-		this.#dataElement('formGroupId', formGroupId).remove();
-
-		// If there are no target group, add new field by default
-		this.targetGroups.length === 0 && this.addTargetGroup();
-
-    this.#setAddBtnState();
-	}
-
-	setTargetGroups = (data, method = 'reset') => {
-		if (data && data.length) {
-			const fn = {
-				'reset': () => {
-
-					// Remove all preset form groups
-					this.targetGroups.forEach(({ id }) => {
-
-						// Immediately hide the tooltip from the remove button
-						this.#dataElement('removeFormGroupBtn', id).tooltip('hide');
-
-						// Remove the target group object based on id
-						this.targetGroups = this.targetGroups.filter(x => x.id != id);
-
-						// Remove the element from the DOM
-						this.#dataElement('formGroupId', id).remove();
-					});
-
-					// Return a new form groups
-					data.forEach(d => this.addTargetGroup(d));
-				},
-				'append': () => data.forEach(d => this.addTargetGroup(d)),
-			}
-			fn[method]();
-		} else console.error('No data has been fetched');
-	}
-
-	getTargetGroups = () => [...this.targetGroups].map(x => x.target_group);
+    // Total Target Beneficiaries Row
+    tbl_body.append(`
+      <tr>
+        <td class="text-right" colspan="2">
+          <span class="font-weight-bold">Total target beneficiaries</span>
+        </td>
+        <td>0</td>
+        <td></td>
+      </tr>
+    `);
+  }
 }
 
 
@@ -725,7 +761,9 @@ class CooperatingAgenciesForm {
 				if(data.length) {
 					this.CA_list = data.map(ca => ca = {...ca, selected: false });
 					this.#resetSelect();
-				}
+				} else {
+          this.#resetEmptyTemplate();
+        }
 			}
 		}
 		fn[method]();

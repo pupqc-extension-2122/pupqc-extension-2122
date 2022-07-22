@@ -251,17 +251,72 @@
     
                 <%# Target Groups %>
                 <div class="col-12">
-                  <div class="form-group" id="projectProposal_targetGroups_grp">
+                  <div class="form-group">
                     <label>
                       <span>Target Groups</span>
                       <span class="text-danger">*</span>
                     </label>
-    
-                    <div class="d-flex justify-content-between">
-                      <button type="button" class="btn btn-sm btn-success" id="addTargetGroup_btn">
-                        <i class="fas fa-plus mr-1"></i>
-                        <span>Add target group</span>
-                      </button>
+                    
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <th>Beneficiary Name</th>
+                          <th>Location</th>
+                          <th style="width: 10%">Target Number</th>
+                          <th style="width: 5%"></th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <div class="form-group mb-0">
+                                <input 
+                                  type="text" 
+                                  class="form-control form-control-border"
+                                />
+                              </div>
+                            </td>
+                            <td>
+                              <div class="form-group mb-0">
+                                <input 
+                                  type="text" 
+                                  class="form-control form-control-border"
+                                />
+                              </div>
+                            </td>
+                            <td class="text-right">
+                              <div class="form-group mb-0">
+                                <input 
+                                  type="text" 
+                                  class="form-control form-control-border"
+                                />
+                              </div>
+                            </td>
+                            <td class="text-center">
+                              <button class="btn btn-sm btn-negative">
+                                <i class="fas fa-times text-danger"></i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-center" colspan="4">
+                              <button 
+                                type="button" 
+                                class="btn btn-sm btn-success"
+                              >
+                                <i class="fas fa-plus mr-1"></i>
+                                <span>Add target group</span>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-right" colspan="2">
+                              <span class="font-weight-bold">Total target beneficiaries</span>
+                            </td>
+                            <td>0</td>
+                            <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -282,7 +337,7 @@
                             class="form-control select2"
                             style="width: 100%;"
                           >
-                            <option disabled>Select one or more cooperating agency.</option>
+                            <option disabled>Please select a start and end date first.</option>
                           </select>
                         </div>
                       </div>

@@ -23,7 +23,7 @@ router.get('/', jwtMiddleware, (req, res) => {
     name: `${ first_name } ${ last_name }`,
     role: renderRoles(roles),
     roles: roles,
-  })
+  });
 });
 
 // Export module

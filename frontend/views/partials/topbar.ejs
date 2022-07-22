@@ -23,13 +23,7 @@
   <%# Left navbar links %>
   <div class="collapse navbar-collapse order-3" id="navbarCollapse">
     <ul class="navbar-nav mt-1 mt-sm-0">
-      <% 
-        if (
-          roles.includes('Extensionist') 
-          || roles.includes('Chief') 
-          || roles.includes('Director')
-        ) { 
-      %>
+      <% if (['Extensionist','Chief','Director'].some(r => roles.includes(r))) { %>
         <li class="nav-item d-sm-inline-block">
           <a 
             href="<%=BASE_URL%>/p" 
@@ -41,6 +35,12 @@
             href="<%=BASE_URL%>/m" 
             class="nav-link px-2 px-3<% if (active_topbar_tab == "MOA/MOU") { %> active<% } %>"
           >MOA/MOU</a>
+        </li>
+        <li class="nav-item d-sm-inline-block">
+          <a 
+            href="<%=BASE_URL%>/r" 
+            class="nav-link px-2 px-3<% if (active_topbar_tab == "Reports") { %> active<% } %>"
+          >Reports</a>
         </li>
       <% } %>
 

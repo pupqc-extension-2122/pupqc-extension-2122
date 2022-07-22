@@ -205,7 +205,18 @@ const ProjectDetails = (() => {
         '#projectDetails_body_cooperatingAgencies': () => {
           if (ca.length) {
             let list = '<ul class="mb-0">';
-            ca.forEach(c => list += `<li>${c.name}</li>`);
+            ca.forEach(c => list += `
+              <li>
+                <i 
+                  class="fas fa-check-circle fa-fw mr-1 text-success" 
+                  data-toggle="tooltip" 
+                  title="This partner has currently active MOA/MOU"
+                ></i>
+                <a 
+                  href="${ BASE_URL_WEB }/m/partners/${ c.id }"
+                  target="_blank"
+                >${c.name}</a>
+              </li>`);
             list += '</ul>';
             return list;
           }
@@ -472,6 +483,7 @@ const ProjectDetails = (() => {
     if (!initialized) {
       initialized = true;
       project = data.project;
+      console.log(project);
       mode = data.mode;
       loadDetails();
       removeLoaders();
@@ -3340,7 +3352,7 @@ const ProjectActivities = (() => {
     ) return;
 
     // Show the modal
-    $('#alkdjdlsafkj').modal('show');
+    editModal.modal('show');
 
     const { 
       id,
@@ -3352,7 +3364,7 @@ const ProjectActivities = (() => {
       details
     } = data;
   
-    // Set the input values
+    // Set the input vaDlues
     setInputValue({
       '#editProjectActivity_activityId': id,
       '#editProjectActivity_title': activity_name,
