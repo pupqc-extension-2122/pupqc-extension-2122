@@ -2201,10 +2201,15 @@ class ProjectActivityForm {
 			required: true,
       notEmpty: true,
       minlength: 3,
+      callback: (i) => !this.topics.some(e => 
+        e.id !== formGroupId 
+        && e.topic.toUpperCase() === $(i).val().toUpperCase()
+      ),
 			messages: { 
         required: 'A topic is required.',
         notEmpty: 'This field cannot be blank.',
-        minlength: 'Make sure you enter the full title of a topic.'
+        minlength: 'Make sure you enter the full title of a topic.',
+        callback: 'This topic is already existed.'
       }
 		});
 
@@ -2316,10 +2321,15 @@ class ProjectActivityForm {
 			required: true,
 			notEmpty: true,
       minlength: 5,
+      callback: (i) => !this.outcomes.some(e => 
+        e.id !== formGroupId 
+        && e.outcome.toUpperCase() === $(i).val().toUpperCase()
+      ),
       messages: { 
         required: 'An outcome statement is required.',
         notEmpty: 'This field cannot be blank.',
         minlength: 'Make sure you enter the full details of an outcome.',
+        callback: 'This outcome is already existed.'
       }
 		});
 
@@ -3055,10 +3065,15 @@ class ActivityEvaluationForm {
       required: true,
       notEmpty: true,
       minlength: 3,
+      callback: (i) => !this.evaluation.some(e => 
+        e.category_id !== category_id 
+        && e.category.toUpperCase() === $(i).val().toUpperCase()
+      ),
       messages: {
         required: 'The category is required.',
         notEmpty: 'The category is required.',
-        minlength: 'Make sure you enter the full category title.'
+        minlength: 'Make sure you enter the full category title.',
+        callback: 'This category is already existed.'
       }
     });
 
@@ -3180,10 +3195,15 @@ class ActivityEvaluationForm {
       required: true,
       notEmpty: true,
       minlength: 3,
+      callback: (i) => !this.evaluation.find(x => x.category_id === category_id).criteria.some(e => 
+        e.criterion_id !== criterion_id 
+        && e.criterion.toUpperCase() === $(i).val().toUpperCase()
+      ),
       messages: {
         required: 'The criterion is required.',
         notEmpty: 'This field cannot be blank.',
-        minlength: 'Make sure you enter the full criteria title.'
+        minlength: 'Make sure you enter the full criteria title.',
+        callback: 'This criterion is already existed under this category.'
       }
     });
 

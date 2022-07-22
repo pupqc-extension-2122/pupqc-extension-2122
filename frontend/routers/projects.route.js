@@ -169,7 +169,7 @@ router.get('/edit-proposal/:project_id', jwtMiddleware, async (req, res) => {
 
 
 // Project Monitoring
-router.get('/monitoring/', jwtMiddleware, (req, res) => {
+router.get('/monitoring', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
@@ -235,10 +235,8 @@ router.get('/monitoring/:project_id/activities', jwtMiddleware, async (req, res)
 });
 
 
-
-
 // Project Evaluation
-router.get('/evaluation/', jwtMiddleware, (req, res) => {
+router.get('/evaluation', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;
 
   roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
@@ -285,16 +283,32 @@ router.get('/evaluation/:project_id/activities', jwtMiddleware, (req, res) => {
 
   roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
     ? res.render(PATH + 'activity_evaluation_activities', {
-      document_title: 'Project Activities',
-      active_sidebar_tab: 'Project Evaluation',
-      name: `${ first_name } ${ last_name }`,
-      role: renderRoles(roles),
-      roles: roles,
-      ...RENDER_OPTION_DEFAULTS
-    })
+        document_title: 'Project Activities',
+        active_sidebar_tab: 'Project Evaluation',
+        name: `${ first_name } ${ last_name }`,
+        role: renderRoles(roles),
+        roles: roles,
+        ...RENDER_OPTION_DEFAULTS
+      })
     : render404(res)
 });
 
+
+// Project Reports
+router.get('/reports', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Extensionist') || roles.includes('Chief') || roles.includes('Director')
+    ? res.render(PATH + 'reports', {
+        document_title: 'Project Reports',
+        active_sidebar_tab: 'Project Reports',
+        name: `${ first_name } ${ last_name }`,
+        role: renderRoles(roles),
+        roles: roles,
+        ...RENDER_OPTION_DEFAULTS
+      })
+    : render404(res)
+});
 
 
 module.exports = router;

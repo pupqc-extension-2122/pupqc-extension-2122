@@ -1,5 +1,6 @@
 const express = require('express')
 const expressLayouts = require('express-ejs-layouts');
+const { Users } = require('../backend/sequelize/models');
 
 let app = express()
 
@@ -23,14 +24,13 @@ app.use((req, res, next) => {
 // Web Routes
 app.use(`/`, require('./routers/auth.route'));
 
-// Redirect if not logged in 
-app.use((req, res, next) => {
+// Redirect if no enough privilege 
+app.use(async (req, res, next) => {
 
   const user_cookies = ['from_magic','verified','user','roles'];
 
-  // If user does not have enough privilege
-  if (user_cookies.some(k => req.cookies[k] === undefined) || !req.signedCookies.token) {
-
+  const redirectToLogin = () => {
+    
     // Make sure all cookies are clear (incase unwanted user manipulate cookies in front)
     user_cookies.forEach(k => req.cookies[k] && res.clearCookie(k));
 
@@ -40,6 +40,14 @@ app.use((req, res, next) => {
     // Redirect to login
     return res.redirect('/login');
   }
+
+  // If user does not have enough privilege
+  if (user_cookies.some(k => req.cookies[k] === undefined) || !req.signedCookies.token)
+    return redirectToLogin();
+
+  // else if cookies exist, check if user is existing in database
+  let user = await Users.findByPk(req.cookies.user);
+  if (!user) return redirectToLogin();
 
   // If not verified, always redirect to change password
   if (req.cookies.verified == '0' || req.cookies.from_magic == '1') return res.redirect('/update-password');
