@@ -1,0 +1,50 @@
+<%# Main Sidebar Container %>
+<aside class="main-sidebar main-sidebar-custom sidebar-light-primary">
+
+  <%# Brand Logo %>
+  <%- include('../sidebar_brand_logo') %>
+
+  <%# Sidebar %>
+  <div class="sidebar border-right">
+
+    <%- include('../user_panel') %>
+    <%- include('../sidebar_search') %>
+
+    <%# Sidebar Menu %>
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
+        data-accordion="false">
+
+        <%# Core %>
+        <li class="nav-header">CORE</li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/m/dashboard" 
+            class="nav-link<% if (active_sidebar_tab == "Dashboard") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-chart-pie"></i>
+            <p class="text">Dashboard</p>
+          </a>
+        </li>
+
+        <%# Partnerships %>
+        <li class="nav-header">Report Outputs</li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/m/memo" 
+            class="nav-link<% if (active_sidebar_tab == "Report 1") { %> active<% } %>"
+          >
+            <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+
+  <%# Sidebar Custom/Footer %>
+  <div class="sidebar-custom border-right d-flex align-items-center justify-content-between">
+    <a href="#" class="btn btn-sm btn-negative"><i class="fas fa-cogs"></i></a>
+  </div>
+
+</aside>

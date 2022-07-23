@@ -621,10 +621,21 @@ class TargetGroupsForm {
   constructor(selector = `[data-form="targetGroups"]`) {
     this.tbl = $(selector);
 
+    this.targetGroups = [];
+
+    // {
+    //   target_group_id: uuid(),
+    //   beneficiary_name: '',
+    //   location: '',
+    //   target_number: 0
+    // }
 
     const dataPrefix = 'data-target-group-';
 
     this.data = {
+      target_group_id: `${dataPrefix}target-group-id`,
+      row: `${dataPrefix}row`,
+      cell: `${dataPrefix}cell`,
       input: `${dataPrefix}input`,
       btn: `${dataPrefix}btn`,
     }
@@ -634,22 +645,143 @@ class TargetGroupsForm {
 
   // * Template Literals
 
+  targetGroupRow = (target_group_id) => `
+    <tr ${ this.data.target_group_id }="${ target_group_id }">
+      <td>
+        <div class="form-group mb-0">
+          <input 
+            type="text" 
+            class="form-control form-control-border"
+            name="beneficiary_name-${ target_group_id }"
+            ${ this.data.input }="beneficiaryName"
+            placeholder="Type the name of beneficiary here"
+          />
+        </div>
+      </td>
+      <td>
+        <div class="form-group mb-0">
+          <input 
+            type="text" 
+            class="form-control form-control-border"
+            ${ this.data.input }="location"
+            name="location-${ target_group_id }"
+            placeholder="Type the location of beneficiary here"
+          />
+        </div>
+      </td>
+      <td class="text-right">
+        <div class="form-group mb-0">
+          <input 
+            type="text" 
+            class="form-control form-control-border"
+            ${ this.data.input }="targetNumber"
+            name="target_number-${ target_group_id }"
+          />
+        </div>
+      </td>
+      <td class="text-center">
+        <button class="btn btn-sm btn-negative">
+          <i class="fas fa-times text-danger"></i>
+        </button>
+      </td>
+    </tr>
+  `
+
+  addButtonRow = () => `
+    <tr ${ this.data.row }="addButton">
+      <td class="text-center" colspan="4">
+        <button 
+          type="button" 
+          class="btn btn-sm btn-success"
+          ${ this.data.btn }="addTargetGroup"
+        >
+          <i class="fas fa-plus mr-1"></i>
+          <span>Add target group</span>
+        </button>
+      </td>
+    </tr>
+  `
+
+  totalTargetBeneficiariesRow = () => `
+    <tr ${ this.data.row }="totalTargetBeneficiaries">
+      <td class="text-right" colspan="2">
+        <span class="font-weight-bold">Total target beneficiaries</span>
+      </td>
+      <td ${ this.data.cell }="totalTargetBeneficiaries">0</td>
+      <td></td>
+    </tr>
+  `
+
   // * Private Methods
   
   initializations = () => {
     const tbl_body = this.tbl.find('tbody');
 
-    // Total Target Beneficiaries Row
-    tbl_body.append(`
-      <tr>
-        <td class="text-right" colspan="2">
-          <span class="font-weight-bold">Total target beneficiaries</span>
-        </td>
-        <td>0</td>
-        <td></td>
-      </tr>
-    `);
+    // * Add the rows in the table
+
+    // Add the buttons row
+    tbl_body.append(this.addButtonRow());
+
+    // Add the Total Target Beneficiaries Row
+    tbl_body.append(this.totalTargetBeneficiariesRow());
+
+    // * Initialize the add button
+    
+    const add_btn = tbl_body
+      .find(`[${ this.data.row }="addButton"]`)
+      .find(`[${ this.data.btn }="addTargetGroup"]`)
+
+    add_btn.on('click', () => this.addTargetGroupRow());
+
+    // * By default, add a target group row
+
+    this.addTargetGroupRow();
   }
+
+  // * Public Methods
+
+  addTargetGroupRow = (data) => {
+    const target_group_id = uuid();
+
+    // Append a new object
+    this.targetGroups.push({
+      id: uuid(),
+      beneficiary_name: '',
+      location: '',
+      target_number: 0
+    });
+
+    // *** Add elements in the DOM
+
+    const tbl_body = this.tbl.find('tbody');
+    
+    // Append the row in the dom
+    tbl_body.find(`[${ this.data.row }="addButton"]`).before(this.targetGroupRow(target_group_id));
+    
+    const targetGroup_row = tbl_body.find(`[${ this.data.target_group_id }="${ target_group_id }"]`);
+
+    // *** Initialize inputs
+
+    const beneficiaryName_input = targetGroup_row.find(`[${ this.data.input }="beneficiaryName"]`);
+    const location = targetGroup_row.find(`[${ this.data.input }="location"]`);
+    const targetNumber_input = targetGroup_row.find(`[${ this.data.input }="targetNumber"]`);
+
+
+    beneficiaryName_input.rules('add', {
+      required: true,
+      minlength: 3,
+      callback: (i) => !this.targetGroups.some(o => 
+        o.id !== target_group_id
+        && $(i).val().toUpperCase() === o.beneficiary_name.toUpperCase()
+      ),
+      messages: {
+        required: 'The name of the target beneficiary is required.',
+        minlength: 'Make sure you type the fulll name of the target beneficiary',
+        callback: 'This name is already existed.'
+      }
+    });
+  }
+
 }
 
 
@@ -689,6 +821,7 @@ class CooperatingAgenciesForm {
 					<button 
 						type="button" 
 						class="btn btn-sm btn-negative text-danger" 
+            data-toggle="tooltip"
 						title="Remove cooperating agency"
 						${ this.data.removeBtn }="${ obj.id }"
 					>

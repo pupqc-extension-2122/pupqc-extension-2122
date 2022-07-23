@@ -57,6 +57,7 @@ app.use(async (req, res, next) => {
 
 app.use(`/p/`, require('./routers/projects.route'));
 app.use(`/m/`, require('./routers/memo.route'));
+app.use(`/r/`, require('./routers/reports.route'));
 app.use(`/a/`, require('./routers/admin.route'));
 app.use(`/me/`, require('./routers/user_info.route'));
 // app.use(`/t/`, require('./routers/test.route'));
