@@ -19,7 +19,7 @@
         <li class="nav-header">CORE</li>
         <li class="nav-item">
           <a 
-            href="<%=BASE_URL%>/m/dashboard" 
+            href="<%=BASE_URL%>/r/dashboard" 
             class="nav-link<% if (active_sidebar_tab == "Dashboard") { %> active<% } %>"
           >
             <i class="nav-icon fas fa-chart-pie"></i>
@@ -27,14 +27,46 @@
           </a>
         </li>
 
-        <%# Partnerships %>
+        <%# Reports %>
         <li class="nav-header">Report Outputs</li>
         <li class="nav-item">
           <a 
-            href="<%=BASE_URL%>/m/memo" 
-            class="nav-link<% if (active_sidebar_tab == "Report 1") { %> active<% } %>"
+            href="<%=BASE_URL%>/r/report1" 
+            class="nav-link<% if (active_sidebar_tab == "Status of Submitted Extension Project Proposal for Institutional Funding") { %> active<% } %>"
           >
-            <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit</p>
+            <p class="text">Status of Submitted Extension Project Proposal for Institutional Funding</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/r/report2" 
+            class="nav-link<% if (active_sidebar_tab == "Status of University Extension Projects") { %> active<% } %>"
+          >
+            <p class="text">Status of University Extension Projects</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/r/report3" 
+            class="nav-link<% if (active_sidebar_tab == "University Active Extension Partners and Adopted Communities") { %> active<% } %>"
+          >
+            <p class="text">University Active Extension Partners and Adopted Communities</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/r/report4" 
+            class="nav-link<% if (active_sidebar_tab == "Inventory of University Faculty Experts on Extension Projects") { %> active<% } %>"
+          >
+            <p class="text">Inventory of University Faculty Experts on Extension Projects</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/r/report5" 
+            class="nav-link<% if (active_sidebar_tab == "Project Monitoring") { %> active<% } %>"
+          >
+            <p class="text">Project Monitoring</p>
           </a>
         </li>
       </ul>

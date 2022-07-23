@@ -13,12 +13,12 @@
 <div class="content-header">
   <div class="container-fluid">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/p">Projects</a></li>
-      <li class="breadcrumb-item active">Project Reports</li>
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/r">Report Outputs</a></li>
+      <li class="breadcrumb-item active">University Active Extension Partners and Adopted Communities</li>
     </ol>
     <div class="d-flex align-items-center justify-content-between">
       <div>
-        <h1 class="m-0">Project Reports</h1>
+        <h1 class="m-0">Report on University Active Extension Partners and Adopted Communities</h1>
         <div class="text-secondary">Manage project reports for outputs</div>
       </div>
       <div>
@@ -128,21 +128,23 @@
       </div>
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table w-100" id="activityEvaluation_dt">
+          <table class="table w-100" id="report3_dt">
             <thead>
               <th class="d-none">Date Created</th>
               <th class="align-middle">Project Title</th>
-              <th class="align-middle">Target Group(s)</th>
-              <th class="align-middle">Date Started</th>
-              <th class="align-middle">Date Ended</th>
-              <th class="align-middle text-sm-center">Status</th>
+              <th class="align-middle">Project Proponent</th>
+              <th class="align-middle">Type of Funding</th>
+              <th class="align-middle">Partner Community/Tartget Beneficiaries</th> 
+              <th class="align-middle">Location of Traget Beneficiaries</th> 
+              <th class="align-middle">Date of Effectivity of MOU/MOA</th>
+              <th class="align-middle">Status of Project</th>
               <th class="align-middle">
                 <span class="d-inline-block d-sm-none">Actions</span>
               </th>
             </thead>
             <tbody>
               <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="9" class="text-center">
                   <%- include('../../partials/loaders/dt_body') %>
                 </td>
               </tr>

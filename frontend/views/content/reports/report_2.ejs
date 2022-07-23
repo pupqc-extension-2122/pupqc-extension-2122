@@ -1,0 +1,189 @@
+<%# ***** Styles ****** %>
+
+<%# DataTables %>
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="<%=BASE_URL%>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
+
+<%# ***** Body ****** %>
+
+<%# Content Header (Page header) %>
+<div class="content-header">
+  <div class="container-fluid">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="<%=BASE_URL%>/r">Report Outputs</a></li>
+      <li class="breadcrumb-item active">Status of University Extension Projects</li>
+    </ol>
+    <div class="d-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="m-0">Report on Status of University Extension Projects</h1>
+        <div class="text-secondary">Manage project reports for outputs</div>
+      </div>
+      <div>
+        <!-- <button type="button" class="btn btn-default float-right" id="daterange-btn">
+          <i class="far fa-calendar-alt mr-1"></i>
+          <span>Date Range Picker</span>
+          <i class="fas fa-caret-down ml-1"></i>
+        </button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Main content %>
+<section class="content">
+  <div class="container-fluid">
+
+    <%# Info cards %>
+    <div class="row d-none">
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Messages</span>
+                    <span class="info-box-number">1,410</span>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Bookmarks</span>
+                    <span class="info-box-number">410</span>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Uploads</span>
+                    <span class="info-box-number">13,648</span>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+        <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Likes</span>
+                    <span class="info-box-number">93,139</span>
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <%# DataTable Card %>
+    <div class="card card-outline card-primary">
+      <div class="card-header">
+        <div class="d-flex align-items-center justify-content-between">
+          <h3 class="card-title">List of projects for report outputs</h3>
+          <div class="card-tools">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              data-card-widget="collapse" 
+              title="Collapse card"
+            >
+              <i class="fas fa-minus"></i>
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative" 
+              data-card-widget="maximize" 
+              title="Maximize/minimize card"
+            >
+              <i class="fas fa-expand"></i>
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-negative"
+              data-toggle="tooltip" 
+              title="Reload table"
+              onclick="ActivityEvaluation.reloadDataTable()"
+            >
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table w-100" id="report2_dt">
+            <thead>
+              <th class="d-none">Date Created</th>
+              <th class="align-middle">Project Title</th>
+              <th class="align-middle">Type of Extension Project</th>
+              <th class="align-middle">Objective of the Project</th>
+              <th class="align-middle">Project Proponent</th>
+              <th class="align-middle">Type of Funding</th>
+              <th class="align-middle">Duration of Project</th>
+              <th class="align-middle">Request Amount of Funding</th>
+              <th class="align-middle">Partner Community/Tartget Beneficiaries</th> 
+              <th class="align-middle">Location of Traget Beneficiaries</th> 
+              <th class="align-middle">Target Number of beneficiaries based on Community Needs Assessment</th>
+              <th class="align-middle">Total no. of trainees/beneficiaries participated in the survey on Evaluation of the Training</th>
+              <th class="align-middle">Total no. of trainees/beneficiaries who rated the quality of extension service (Rate 1-5)</th>
+              <th class="align-middle">Total no. of trainees/beneficiaries who rated the timeliness of extension service (Rate 1-5)</th>
+              <th class="align-middle">Number of Technology Transfer of Knowledge training Adopted by the Partner Bneficiaries</th>
+              <th class="align-middle">Status of Project</th>
+              <th class="align-middle">Status of Active Project</th>
+              <th class="align-middle">
+                <span class="d-inline-block d-sm-none">Actions</span>
+              </th>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="18" class="text-center">
+                  <%- include('../../partials/loaders/dt_body') %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<%# ***** Script ****** %>
+
+<%# Datatable %>
+<script src="<%=BASE_URL%>/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/jszip/jszip.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="<%=BASE_URL%>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<%# Main %> 
+<script src="<%=BASE_URL%>/js/main.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/activityEvaluation.js"></script>
