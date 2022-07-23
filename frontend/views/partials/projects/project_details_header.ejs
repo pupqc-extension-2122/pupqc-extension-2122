@@ -33,7 +33,7 @@
 
     <%# Navigation Tabs %>
     <ul 
-      class="nav nav-pills mt-4" 
+      class="nav nav-pills mt-4 user-select-none" 
       role="tablist" 
       id="projectDetails_navTabs"
       style="display: none"
@@ -48,6 +48,7 @@
           href="#projectDetails_summary_pane" 
           role="tab"
           aria-controls="projectDetails_summary_pane"
+          draggable="false"
         >Summary</a>
       </li>
 
@@ -62,6 +63,7 @@
           href="#projectDetails_financial_pane" 
           role="tab"
           aria-controls="projectDetails_financial_pane"
+          draggable="false"
         >Financial Requirements</a>
       </li>
 
@@ -76,6 +78,7 @@
           href="#projectDetails_evaluationPlan_pane" 
           role="tab"
           aria-controls="projectDetails_evaluationPlan_pane"
+          draggable="false"
         >Evaluation Plan</a>
       </li>
       
@@ -94,6 +97,7 @@
           href="#projectDetails_evaluationSummary_pane" 
           role="tab"
           aria-controls="projectDetails_evaluationSummary_pane"
+          draggable="false"
           style="display: none"
         >Evaluation Summary</a>
       </li>

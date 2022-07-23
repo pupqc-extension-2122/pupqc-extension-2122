@@ -41,6 +41,7 @@ const DT_LANGUAGE = {
     next: `<span>Next</span><i class="fas fa-caret-right ml-1"></i>`,
   }
 }
+Object.freeze(DT_LANGUAGE);
 
 const TEMPLATE = {
   LABEL_ICON: (label, icon, iconType="s") => {
@@ -50,6 +51,8 @@ const TEMPLATE = {
     `
   },
 }
+Object.freeze(TEMPLATE);
+
 
 // DataTable Default Configuration
 const DT_CONFIG_DEFAULTS = {
@@ -149,6 +152,8 @@ const DT_CONFIG_DEFAULTS = {
   //   }
   // ],
 }
+Object.freeze(DT_CONFIG_DEFAULTS);
+
 
 // DateTime Formats
 const DATETIME_FORMATS = {
@@ -160,6 +165,8 @@ const DATETIME_FORMATS = {
 	"Short Date": "MMM. D, YYYY",
 	"Time": "hh:mm A"
 }
+Object.freeze(DATETIME_FORMATS);
+
 
 // jQuery Custom Validation
 const CUSTOM_VALIDATIONS = [
@@ -352,6 +359,7 @@ const TOOLTIP_OPTIONS = {
 	trigger: 'hover',
 	selector: '[data-toggle="tooltip"], [data-dt-btn="options"]'
 }
+Object.freeze(TOOLTIP_OPTIONS);
 
 // Maximum empty fields for adding fields
 const MAX_EMPTY_FIELDS = 10;
@@ -360,6 +368,8 @@ const MAX_EMPTY_FIELDS = 10;
 const MONEY_LIMIT = 9999999999;
 
 const MONEY_LIMIT_LARGER = 9999999999999;
+
+const NUM_LOCALE_STRING = 'fil-PH';
 
 // Project Status Styles
 const PROJECT_PROPOSAL_STATUS_STYLES = {
@@ -392,6 +402,7 @@ const PROJECT_PROPOSAL_STATUS_STYLES = {
 		theme: 'danger'
 	},
 }
+Object.freeze(PROJECT_PROPOSAL_STATUS_STYLES);
 
 const PROJECT_HISTORY_STYLES = {
   ...PROJECT_PROPOSAL_STATUS_STYLES,
@@ -400,6 +411,7 @@ const PROJECT_HISTORY_STYLES = {
 		theme: 'warning'
   }
 }
+Object.freeze(PROJECT_HISTORY_STYLES);
 
 // Partner Status Styles
 const PARTNER_STATUS_STYLES = {
@@ -412,6 +424,8 @@ const PARTNER_STATUS_STYLES = {
 		theme: 'danger'
 	},
 }
+Object.freeze(PARTNER_STATUS_STYLES);
+
 
 // Memo Status Styles
 const MEMO_STATUS_STYLES = {
@@ -424,6 +438,7 @@ const MEMO_STATUS_STYLES = {
 		theme: 'danger'
 	},
 }
+Object.freeze(MEMO_STATUS_STYLES);
 
 // Project Evaluation Styles
 const PROJECT_EVALUATION_STATUS_STYLES = {
@@ -440,6 +455,7 @@ const PROJECT_EVALUATION_STATUS_STYLES = {
 		theme: 'info'
 	},
 }
+Object.freeze(PROJECT_EVALUATION_STATUS_STYLES);
 
 // Project Monitoring Styles
 const PROJECT_MONITORING_STATUS_STYLES = {
@@ -460,3 +476,4 @@ const PROJECT_MONITORING_STATUS_STYLES = {
     theme: 'light'
   }
 }
+Object.freeze(PROJECT_MONITORING_STATUS_STYLES);

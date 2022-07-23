@@ -119,7 +119,7 @@ const ProjectMonitoring = (() => {
             const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
             return `
               <div class="text-sm-center">
-                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                <div class="badge badge-subtle-${ theme } user-select-none px-2 py-1">
                   <i class="${ icon } fa-fw mr-1"></i>
                   <span>${ status }</span>
                 </div>

@@ -36,7 +36,7 @@ const setHTMLContent = (param1, param2) => {
  * @returns 
  */
 const formatToPeso = (value) => {
-	const formatter = new Intl.NumberFormat('fil-PH', {
+	const formatter = new Intl.NumberFormat(NUM_LOCALE_STRING, {
 		style: 'currency',
 		currency: 'PHP',
 		minimumFractionDigits: 2,

@@ -62,7 +62,7 @@ const ProjectDetails = (() => {
           const status = project.status;
           const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[status];
           return `
-            <div class="badge badge-subtle-${theme} py-1 px-2">
+            <div class="badge badge-subtle-${theme} user-select-none py-1 px-2">
               <i class="${icon} fa-fw mr-1"></i>
               <span>${status}</span>
             </div>
@@ -86,7 +86,7 @@ const ProjectDetails = (() => {
 
           const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
           return `
-            <div class="badge badge-subtle-${theme} py-1 px-2">
+            <div class="badge badge-subtle-${theme} user-select-none py-1 px-2">
               <i class="${icon} fa-fw mr-1"></i>
               <span>${status}</span>
             </div>
@@ -98,7 +98,7 @@ const ProjectDetails = (() => {
           const status = 'Not yet graded';
           const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
           return `
-            <div class="badge badge-subtle-${theme} py-1 px-2">
+            <div class="badge badge-subtle-${theme} user-select-none py-1 px-2">
               <i class="${icon} fa-fw mr-1"></i>
               <span>${status}</span>
             </div>
@@ -107,7 +107,7 @@ const ProjectDetails = (() => {
 
         else {
           return `
-            <div class="badge badge-subtle-light py-1 px-2">
+            <div class="badge badge-subtle-light user-select-none py-1 px-2">
               <i class="fas fa-question fa-fw mr-1"></i>
               <span>[ERR]: No data</span>
             </div>
@@ -167,7 +167,7 @@ const ProjectDetails = (() => {
         implementer,
         team_members: pt,
         target_groups: tg,
-        partners: ca,
+        memos: ca,
         start_date,
         end_date,
         impact_statement,
@@ -195,12 +195,31 @@ const ProjectDetails = (() => {
         },
         '#projectDetails_body_targetGroups': () => {
           if (tg.length) {
-            let list = '<ul class="mb-0">';
-            tg.forEach(t => list += `<li>${t}</li>`);
-            list += '</ul>';
-            return list;
+            let rows = '', total = 0;
+            tg.forEach(t => {
+              const { beneficiary_name: b, location: l, target_number: n } = t;
+              rows += `
+                <tr>
+                  <td>${ b ? b : noContentTemplate('Missing beneficiary name.') }</td>
+                  <td>${ l ? l : noContentTemplate('The location has not been set up.') }</td>
+                  <td class="text-right">${ n ? parseInt(n).toLocaleString(NUM_LOCALE_STRING) : noContentTemplate('--') }</td>
+                </tr>
+              `;
+              total += parseInt(n);
+            });
+            rows += `
+              <tr class="font-weight-bold text-right" style="background-color: #f6f6f6">
+                <td colspan="2">Total target beneficiaries</td>
+                <td>${ total.toLocaleString(NUM_LOCALE_STRING) }</td>
+              </tr>
+            `
+            return rows;
           }
-          return noContentTemplate('No target groups have been set up.');
+          return `
+            <tr>
+              <td class="text-center py-4" colspan="3">${ noContentTemplate('No target groups have been set up.') }</td>
+            </tr>
+          `;
         },
         '#projectDetails_body_cooperatingAgencies': () => {
           if (ca.length) {
@@ -213,9 +232,9 @@ const ProjectDetails = (() => {
                   title="This partner has currently active MOA/MOU"
                 ></i>
                 <a 
-                  href="${ BASE_URL_WEB }/m/partners/${ c.id }"
+                  href="${ BASE_URL_WEB }/m/memo/${ c.id }"
                   target="_blank"
-                >${c.name}</a>
+                >${c.partner_name}</a>
               </li>`);
             list += '</ul>';
             return list;
@@ -1157,7 +1176,10 @@ const ProjectOptions = (() => {
             } else {
               approveProject_modal.modal('hide');
               enableElements();
-              updateProjectDetails(data);
+              updateProjectDetails({
+                ...data,
+                status: 'Approved'
+              });
               ProjectHistory.addToTimeline(res.data);
               toastr.success('The proposal has been approved.');
             }

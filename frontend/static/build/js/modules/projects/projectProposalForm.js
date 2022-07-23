@@ -30,7 +30,6 @@
   let CA_form; // Cooperating Agencies form
   let FR_form; // Financial Requirements form
   let EP_form; // Evaluation Plan form
-  let cooperatingAgencies_list;
   let noCoopAgency_mode = false;
 
   // * Private Methods
@@ -69,7 +68,7 @@
     });
 
     // Handle Date inputs on change
-    $('#projectProposal_startDate, #projectProposal_endDate').on('change', () => {
+    $('#projectProposal_startDate, #projectProposal_endDate').on('change', async () => {
       const start_date_elem = $('#projectProposal_startDate');
       const end_date_elem = $('#projectProposal_endDate');
 
@@ -88,10 +87,7 @@
       }
 
       if (start_date && end_date && start_date_moment.isValid() && end_date_moment.isValid()) {
-        getPartners({
-          start_date: start_date,
-          end_date: end_date
-        });
+        await getPartners({ start_date, end_date });
       } else {
         const coopAgency_elem = $('#projectProposal_cooperatingAgencies_select');
         CA_form.setCooperatingAgenciesList([]);
@@ -170,6 +166,7 @@
 
     // When next button has been clicked
     nextBtn.on('click', () => {
+      // stepper.next();
       if ($(formSelector).valid()) {
         if (currentStep == 0 && CA_form.getSelectedCooperatingAgencies().length == 0) {
           !noCoopAgency_mode ? noCoopAgency_modal.modal('show') : stepper.next();
@@ -214,24 +211,23 @@
     });
   }
 
-  const initProjectTeamForm = () => {
+  const initProjectTeamForm = async () => {
     PT_form = new ProjectTeamForm();
   }
 
-  const initTargetGroupForm = () => {
+  const initTargetGroupForm = async () => {
     TG_form = new TargetGroupsForm();
   }
 
-  const getPartners = async (params) => {
+  const getPartners = async ({ start_date: s, end_date: e }) => {
     await $.ajax({
-      url: `${ BASE_URL_API }/partners?start_date=${ params.start_date }&end_date=${ params.end_date }`,
+      url: `${ BASE_URL_API }/partners?start_date=${ s }&end_date=${ e }`,
       type: 'GET',
-      success: result => {
+      success: async result => {
         if (result.error) {
           ajaxErrorHandler(result.message);
         } else {
-          cooperatingAgencies_list = result.data;
-          CA_form.setCooperatingAgenciesList(cooperatingAgencies_list);
+          await CA_form.setCooperatingAgenciesList(result.data);
         }
       },
       error: (xhr, status, error) => {
@@ -264,7 +260,7 @@
     //   }
     // });
 
-    CA_form = new CooperatingAgenciesForm(
+    CA_form = await new CooperatingAgenciesForm(
       '#projectProposal_cooperatingAgencies_grp',
       '#projectProposal_cooperatingAgencies_select'
     );
@@ -305,7 +301,7 @@
     });
   }
 
-  const initEvaluationPlanForm = () => {
+  const initEvaluationPlanForm = async () => {
 
     // Create a new instance of evaluation plan form
     EP_form = new EvaluationPlanForm('#evaluationPlan_form', {
@@ -501,7 +497,9 @@
       '#projectDetailsConfirm_projectTeam': () => {
         if (pt.length) {
           let list = '<ul class="mb-0">';
-          pt.forEach(p => list += `<li>${p.name}${ p.role ? ` - ${ p.role }` : '' }</li>`);
+          pt.forEach(({ name, role }) => {
+            list += `<li>${ name ? name : noContentTemplate('Missing team member name.') }${ role ? ` - ${ role }` : '' }</li>`
+          });
           list += '</ul>';
           return list;
         }
@@ -509,10 +507,25 @@
       },
       '#projectDetailsConfirm_targetGroups': () => {
         if (tg.length) {
-          let list = '<ul class="mb-0">';
-          tg.forEach(t => list += `<li>${t}</li>`);
-          list += '</ul>';
-          return list;
+          let rows = '', total = 0;
+          tg.forEach(t => {
+            const { beneficiary_name: b, location: l, target_number: n } = t
+            rows += `
+              <tr>
+                <td>${ b ? b : noContentTemplate('Missing beneficiary name.') }</td>
+                <td>${ l ? l : noContentTemplate('The location has not been set up.') }</td>
+                <td class="text-right">${ n ? n.toLocaleString(NUM_LOCALE_STRING) : noContentTemplate('--') }</td>
+              </tr>
+            `;
+            total += n;
+          });
+          rows += `
+            <tr class="font-weight-bold text-right" style="background-color: #f6f6f6">
+              <td colspan="2">Total target beneficiaries</td>
+              <td>${ total.toLocaleString(NUM_LOCALE_STRING) }</td>
+            </tr>
+          `
+          return rows;
         }
         return noContentTemplate('No target groups have been set up.');
       },
@@ -641,18 +654,18 @@
     await $.ajax({
       url: `${ BASE_URL_API }/projects/${ project_id }`,
       type: 'GET',
-      success: result => {
+      success: async result => {
         if (result.error) {
           ajaxErrorHandler(result.message);
         } else {
-          const data = result.data;
+          const { data } = result;
 
           setInputValue({
             '#projectProposal_projectTitle': data.title,
             '#projectProposal_extensionType': data.project_type,
             '#projectProposal_implementer': data.implementer,
-            '#projectProposal_startDate': new Date(data.start_date),
-            '#projectProposal_endDate': new Date(data.end_date),
+            '#projectProposal_startDate': data.start_date,
+            '#projectProposal_endDate': data.end_date,
             '#projectProposal_impactStatement': data.impact_statement,
             '#projectProposal_summary': data.summary,
             '#projectProposal_monitoringFrequency': data.monitoring_frequency,
@@ -660,10 +673,15 @@
           });
 
           [
-            '#projectProposal_startDate', 
-            '#projectProposal_endDate',
+            // '#projectProposal_startDate', 
+            // '#projectProposal_endDate',
             '#projectProposal_monitoringFrequency',
-          ].forEach(s => $(s).trigger('change'));
+          ].forEach(async s => await $(s).trigger('change'));
+
+          await getPartners({
+            start_date: data.start_date,
+            end_date: data.end_date,
+          });
 
           PT_form.setTeamMembers(data.team_members);
           TG_form.setTargetGroups(data.target_groups);
@@ -698,11 +716,11 @@
         initializations();
         handleStepper();
         handleForm();
-        initProjectTeamForm();
-        initTargetGroupForm();
+        await initProjectTeamForm();
+        await initTargetGroupForm();
         await initCooperatingAgenciesGroupForm();
         await initFinancialRequirementsForm();
-        initEvaluationPlanForm();
+        await initEvaluationPlanForm();
         if (form_type === 'edit') await setInputValues();
         removeLoaders();
       }

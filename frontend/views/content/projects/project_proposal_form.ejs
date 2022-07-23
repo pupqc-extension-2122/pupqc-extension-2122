@@ -254,68 +254,25 @@
                   <div class="form-group">
                     <label>
                       <span>Target Groups</span>
+                      <i class="fas fa-question-circle mx-1 text-secondary" data-toggle="tooltip" title="Based on Community Assessment"></i>
                       <span class="text-danger">*</span>
                     </label>
                     
                     <div class="table-responsive" data-form="targetGroups">
                       <table class="table table-bordered">
                         <thead>
-                          <th>Beneficiary Name</th>
-                          <th>Location</th>
-                          <th style="width: 10%">Target Number</th>
+                          <th class="align-middle text-center" style="min-width: 10rem; width: 20rem;">
+                            <span>Beneficiary Name</span>
+                            <span class="text-danger">*</span>
+                          </th>
+                          <th class="align-middle text-center" style="min-width: 10rem; width: 20rem;">Location</th>
+                          <th class="align-middle text-center" style="width: 6rem; min-width: 6rem; max-width: 6rem;">
+                            <span>Target Number</span>
+                            <span class="text-danger">*</span>
+                          </th>
                           <th style="width: 5%"></th>
                         </thead>
-                        <tbody>
-                          <!-- <tr>
-                            <td>
-                              <div class="form-group mb-0">
-                                <input 
-                                  type="text" 
-                                  class="form-control form-control-border"
-                                />
-                              </div>
-                            </td>
-                            <td>
-                              <div class="form-group mb-0">
-                                <input 
-                                  type="text" 
-                                  class="form-control form-control-border"
-                                />
-                              </div>
-                            </td>
-                            <td class="text-right">
-                              <div class="form-group mb-0">
-                                <input 
-                                  type="text" 
-                                  class="form-control form-control-border"
-                                />
-                              </div>
-                            </td>
-                            <td class="text-center">
-                              <button class="btn btn-sm btn-negative">
-                                <i class="fas fa-times text-danger"></i>
-                              </button>
-                            </td>
-                          </tr> -->
-                          <!-- <tr>
-                            <td class="text-center" colspan="4">
-                              <button 
-                                type="button" 
-                                class="btn btn-sm btn-success"
-                              >
-                                <i class="fas fa-plus mr-1"></i>
-                                <span>Add target group</span>
-                              </button>
-                            </td>
-                          </tr> -->
-                          <!-- <tr>
-                            <td class="text-right" colspan="2">
-                              <span class="font-weight-bold">Total target beneficiaries</span>
-                            </td>
-                            <td>0</td>
-                            <td></td>
-                          </tr> -->
-                        </tbody>
+                        <tbody></tbody>
                       </table>
                     </div>
                   </div>
@@ -451,14 +408,26 @@
               <div class="table-responsive">
                 <table class="table table-bordered" id="financialRequirements_form">
                   <thead class="text-center">
-                    <th class="align-middle" style="width: 25%">Budget Item</th>
-                    <th class="align-middle" style="width: 25%">Particulars</th>
-                    <th class="align-middle" style="width: 15%">Quantity / Pieces</th>
+                    <th class="align-middle" style="width: 25%">
+                      <span>Budget Item</span>
+                      <span class="text-danger">*</span>
+                    </th>
+                    <th class="align-middle" style="width: 25%">
+                      <span>Particulars</span>
+                      <span class="text-danger">*</span>
+                    </th>
                     <th class="align-middle" style="width: 15%">
-                      <div>Estimated Cost</div>
+                      <span>Quantity/Pieces</span>
+                      <span class="text-danger">*</span>
+                    </th>
+                    <th class="align-middle" style="width: 15%">
+                      <div>
+                        <span>Estimated Cost</span>
+                        <span class="text-danger">*</span>
+                      </div>
                       <div class="small">(per qty/pcs)</div>
                     </th>
-                    <th class="align-middle text-right" style="width: 15%">Total Amount</th>
+                    <th class="align-middle text-center" style="width: 15%">Total Amount</th>
                     <th style="width: 5%"></th>
                   </thead>
                   <tbody>
@@ -491,10 +460,22 @@
               <div class="table-responsive">
                 <table class="table table-bordered" id="evaluationPlan_form">
                   <thead class="vertical-align-middle text-center">
-                    <th style="width: 24%">Outcome</th>
-                    <th style="width: 24%">Indicator</th>
-                    <th style="width: 24%">Data Collection Method</th>
-                    <th style="width: 24%">Frequency</th>
+                    <th style="width: 24%">
+                      <span>Outcome</span>
+                      <span class="text-danger">*</span>
+                    </th>
+                    <th style="width: 24%">
+                      <span>Indicator</span>
+                      <span class="text-danger">*</span>
+                    </th>
+                    <th style="width: 24%">
+                      <span>Data Collection Method</span>
+                      <span class="text-danger">*</span>
+                    </th>
+                    <th style="width: 24%">
+                      <span>Frequency</span>
+                      <span class="text-danger">*</span>
+                    </th>
                     <th style="width: 4%"></th>
                   </thead>
                   <tbody>
@@ -567,11 +548,22 @@
                 <div class="col-12"><hr class="my-2"></div>
     
                 <%# Target Groups %>
-                <dt class="col-md-3">
+                <dt class="col-12">
                   <div class="mx-2">Target Group(s)</div>
                 </dt>
-                <dd class="col-md-9">
-                  <div class="mx-2" id="projectDetailsConfirm_targetGroups"></div>
+                <dd class="col-12">
+                  <div class="mx-2 mt-2">
+                    <div class="table-responsive">
+                      <table class="table table-bordered mb-0">
+                        <thead>
+                          <th style="min-width: 10rem;">Beneficiary Name</th>
+                          <th style="min-width: 10rem;">Location</th>
+                          <th class="text-right" style="width: 6rem; min-width: 6rem; max-width: 6rem;">Target Number</th>
+                        </thead>
+                        <tbody id="projectDetailsConfirm_targetGroups"></tbody>
+                      </table>
+                    </div>
+                  </div>
                 </dd>
     
                 <div class="col-12"><hr class="my-2"></div>
@@ -646,7 +638,7 @@
                       <div>Estimated Cost</div>
                       <div class="small">(per qty/pcs)</div>
                     </th>
-                    <th class="vertical-middle" style="width: 10%">Total Amount</th>
+                    <th class="align-middle" style="width: 10%">Total Amount</th>
                   </thead>
                   <tbody id="projectDetailsConfirm_financialRequirements">
                     <tr>

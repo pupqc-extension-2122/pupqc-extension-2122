@@ -310,11 +310,7 @@ class ProjectTeamForm {
     if (this.team_members.length === 0) this.addMember();
   }
 
-  getTeamMembers = () => {
-    let teamMembers = [...this.team_members];
-    teamMembers.forEach(t => delete t.member_id);
-    return teamMembers;
-  } 
+  getTeamMembers = () => this.team_members.map(t => { const o = {...t}; delete o.id; return o; });
 
   setTeamMembers = (data) => {
     if (!(data && data.length)) return;
@@ -621,7 +617,7 @@ class TargetGroupsForm {
   constructor(selector = `[data-form="targetGroups"]`) {
     this.tbl = $(selector);
 
-    this.targetGroups = [];
+    this.target_groups = [];
 
     // {
     //   target_group_id: uuid(),
@@ -638,14 +634,19 @@ class TargetGroupsForm {
       cell: `${dataPrefix}cell`,
       input: `${dataPrefix}input`,
       btn: `${dataPrefix}btn`,
+      modal: `${dataPrefix}modal`,
     }
 
-    this.initializations();
+    this.#initializations();
   }
+
+  // * Constants
+  
+  #MAX_TARGET_NUMBER = 9999999;
 
   // * Template Literals
 
-  targetGroupRow = (target_group_id) => `
+  #targetGroupRow = (target_group_id) => `
     <tr ${ this.data.target_group_id }="${ target_group_id }">
       <td>
         <div class="form-group mb-0">
@@ -669,25 +670,31 @@ class TargetGroupsForm {
           />
         </div>
       </td>
-      <td class="text-right">
+      <td>
         <div class="form-group mb-0">
           <input 
             type="text" 
-            class="form-control form-control-border"
+            class="form-control form-control-border text-right"
             ${ this.data.input }="targetNumber"
             name="target_number-${ target_group_id }"
           />
         </div>
       </td>
       <td class="text-center">
-        <button class="btn btn-sm btn-negative">
+        <button 
+          type="button"
+          class="btn btn-sm btn-negative"
+          ${ this.data.btn }="removeTargetGroup"
+          data-toggle="tooltip"
+          title="Remove target group"
+        >
           <i class="fas fa-times text-danger"></i>
         </button>
       </td>
     </tr>
   `
 
-  addButtonRow = () => `
+  #addButtonRow = () => `
     <tr ${ this.data.row }="addButton">
       <td class="text-center" colspan="4">
         <button 
@@ -702,28 +709,72 @@ class TargetGroupsForm {
     </tr>
   `
 
-  totalTargetBeneficiariesRow = () => `
-    <tr ${ this.data.row }="totalTargetBeneficiaries">
+  #totalTargetBeneficiariesRow = () => `
+    <tr 
+      ${ this.data.row }="totalTargetBeneficiaries" 
+      style="background-color: #f6f6f6"
+    >
       <td class="text-right" colspan="2">
         <span class="font-weight-bold">Total target beneficiaries</span>
       </td>
-      <td ${ this.data.cell }="totalTargetBeneficiaries">0</td>
+      <td 
+        class="text-right text-muted font-weight-bold"
+        ${ this.data.cell }="totalTargetBeneficiaries"
+      >0</td>
       <td></td>
     </tr>
+  `
+  
+  #removeTargetGroupModal = () => `
+    <div 
+      class="modal" 
+      ${ this.data.modal }="removeTargetGroup"
+      ${ this.data.target_group_id }=""
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Confirmation</h4>
+            <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex">
+              <h1 class="mr-3 display-4">
+                <i class="fas fa-exclamation-triangle text-warning"></i>
+              </h1>
+              <div>
+                <div class="font-weight-bold mb-2">Remove target group</div>
+                <p>You've already entered some data here!<br>Are you sure you want to remove this target group?<br>Your inputs will not be saved.</p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
+            <button 
+              type="button" 
+              class="btn btn-danger" 
+              ${ this.data.btn }="confirmRemove"
+            >Yes, I'm sure.</button>
+          </div>
+        </div>
+      </div>
+    </div>
   `
 
   // * Private Methods
   
-  initializations = () => {
+  #initializations = () => {
     const tbl_body = this.tbl.find('tbody');
 
     // * Add the rows in the table
 
     // Add the buttons row
-    tbl_body.append(this.addButtonRow());
+    tbl_body.append(this.#addButtonRow());
 
     // Add the Total Target Beneficiaries Row
-    tbl_body.append(this.totalTargetBeneficiariesRow());
+    tbl_body.append(this.#totalTargetBeneficiariesRow());
 
     // * Initialize the add button
     
@@ -732,10 +783,92 @@ class TargetGroupsForm {
       .find(`[${ this.data.btn }="addTargetGroup"]`)
 
     add_btn.on('click', () => this.addTargetGroupRow());
+    add_btn.attr('disabled', true);
+
+    // * Initialize remove modal
+    
+    if (!$(`[${ this.data.modal }="removeTargetGroup"]`).length) {
+      
+      // Append the modal in the body
+      $('body').append(this.#removeTargetGroupModal());
+
+      const remove_modal = $('body').find(`[${ this.data.modal }="removeTargetGroup"]`);
+
+      // Handle modal events
+
+      remove_modal.on('show.bs.modal', (e) => {
+        if (!remove_modal.attr(this.data.target_group_id)) e.preventDefault();
+      });
+
+      remove_modal.on('hide.bs.modal', () => {
+        remove_modal.attr(this.data.target_group_id, '');
+      });
+
+      // Initialize the remove button
+      const confirmRemove_btn = remove_modal.find(`[${ this.data.btn }="confirmRemove"]`);
+
+      confirmRemove_btn.on('click', () => {
+        
+        // Get the target_group_id on the modal
+        const target_group_id = remove_modal.attr(this.data.target_group_id);
+
+        // Call the remove member method
+        this.removeTargetGroup(target_group_id);
+
+        // Hide the modal after remove
+        remove_modal.modal('hide');
+      });
+    }
 
     // * By default, add a target group row
 
     this.addTargetGroupRow();
+  }
+
+  #setTotalTargetBeneficiaries = () => {
+    const total = this.target_groups.reduce((p, c) => {
+      const { target_number: n } = c;
+      return p + (n >= 0 ? n : 0)
+    }, 0);
+
+    this.tbl
+      .find(`[${ this.data.row }="totalTargetBeneficiaries"]`)
+      .find(`[${ this.data.cell }="totalTargetBeneficiaries"]`)
+      .removeClass('text-danger text-muted')
+      .addClass(() => {
+        if (total === 0) return 'text-muted'
+        if (total > this.#MAX_TARGET_NUMBER) return 'text-danger'
+      })
+      .html(() => total <= this.#MAX_TARGET_NUMBER 
+        ? total.toLocaleString(NUM_LOCALE_STRING) 
+        : `
+          <div>${ this.#MAX_TARGET_NUMBER.toLocaleString(NUM_LOCALE_STRING) }</div>
+          <div class="small">Too much.</div>
+        `
+      );
+  }
+
+  #checkInvalidFields = () => {
+    return this.target_groups.some(({ id }) => {
+      const row = this.tbl.find(`[${ this.data.target_group_id }="${ id }"]`);
+  
+      const beneficiaryName = row.find(`[${ this.data.input }="beneficiaryName"]`).val().trim();
+      const location = row.find(`[${ this.data.input }="location"]`).val().trim();
+      const targetNumber = parseInt(row.find(`[${ this.data.input }="targetNumber"]`).val()) || 0;
+  
+      if (beneficiaryName.replace(/\s+/g, '') === ''|| beneficiaryName.length < 3) return true;
+      if (location && location.length < 3) return true;
+      if (targetNumber <= 0 || targetNumber > this.#MAX_TARGET_NUMBER) return true;
+
+      return false;
+    })
+  }
+
+  #toggleAddButton = () => {
+    this.tbl
+      .find(`[${ this.data.row }="addButton"]`)
+      .find(`[${ this.data.btn }="addTargetGroup"]`)
+      .attr('disabled', this.#checkInvalidFields());
   }
 
   // * Public Methods
@@ -744,8 +877,8 @@ class TargetGroupsForm {
     const target_group_id = uuid();
 
     // Append a new object
-    this.targetGroups.push({
-      id: uuid(),
+    this.target_groups.push({
+      id: target_group_id,
       beneficiary_name: '',
       location: '',
       target_number: 0
@@ -756,21 +889,46 @@ class TargetGroupsForm {
     const tbl_body = this.tbl.find('tbody');
     
     // Append the row in the dom
-    tbl_body.find(`[${ this.data.row }="addButton"]`).before(this.targetGroupRow(target_group_id));
+    tbl_body.find(`[${ this.data.row }="addButton"]`).before(this.#targetGroupRow(target_group_id));
     
     const targetGroup_row = tbl_body.find(`[${ this.data.target_group_id }="${ target_group_id }"]`);
 
     // *** Initialize inputs
 
     const beneficiaryName_input = targetGroup_row.find(`[${ this.data.input }="beneficiaryName"]`);
-    const location = targetGroup_row.find(`[${ this.data.input }="location"]`);
+    const location_input = targetGroup_row.find(`[${ this.data.input }="location"]`);
     const targetNumber_input = targetGroup_row.find(`[${ this.data.input }="targetNumber"]`);
 
+    // *** Inputs on keyup/change
+
+    beneficiaryName_input.on('keyup change', () => {
+      this.target_groups = this.target_groups.map(x => x.id === target_group_id 
+        ? { ...x, beneficiary_name: beneficiaryName_input.val() } : x
+      );
+      this.#toggleAddButton();
+    });
+
+    location_input.on('keyup change', () => {
+      this.target_groups = this.target_groups.map(x => x.id === target_group_id 
+        ? { ...x, location: location_input.val() } : x
+      );
+      this.#toggleAddButton();
+    });
+
+    targetNumber_input.on('keyup change', () => {
+      this.target_groups = this.target_groups.map(x => x.id === target_group_id 
+        ? { ...x, target_number: parseInt(targetNumber_input.val()) || 0 } : x
+      );
+      this.#setTotalTargetBeneficiaries();
+      this.#toggleAddButton();
+    });
+
+    // *** Add validations
 
     beneficiaryName_input.rules('add', {
       required: true,
       minlength: 3,
-      callback: (i) => !this.targetGroups.some(o => 
+      callback: (i) => !this.target_groups.some(o => 
         o.id !== target_group_id
         && $(i).val().toUpperCase() === o.beneficiary_name.toUpperCase()
       ),
@@ -780,8 +938,81 @@ class TargetGroupsForm {
         callback: 'This name is already existed.'
       }
     });
+    
+    location_input.rules('add', {
+      minlength: 3,
+      messages: {
+        minlength: 'Make sure you type the full location of the target beneficiary'
+      },
+    });
+
+    targetNumber_input.rules('add', {
+      required: true,
+      number: true,
+      digits: true,
+      min: 1,
+      max: this.#MAX_TARGET_NUMBER,
+      messages: {
+        required: 'Required.',
+        number: 'Invalid value.',
+        digits: 'Invalid value.',
+        min: 'Must be greater than 0.',
+        max: 'Too much.'
+      }
+    });
+
+    initInputs();
+
+    beneficiaryName_input.focus();
+
+    this.#toggleAddButton();
+
+    // *** Initialize remove button
+
+    const remove_btn = targetGroup_row.find(`[${ this.data.btn }="removeTargetGroup"]`);
+
+    remove_btn.on('click', () => {
+      if ( beneficiaryName_input.val() || location_input.val() || targetNumber_input.val() ) {
+        remove_btn.tooltip('hide');
+        const removeTargetGroup_modal = $('body').find(`[${ this.data.modal }="removeTargetGroup"]`);
+        removeTargetGroup_modal.attr(this.data.target_group_id, target_group_id);
+        removeTargetGroup_modal.modal('show');
+      } else if (this.target_groups.length === 1) {
+        toastr.warning('Please include at least one target group.')
+      } else {
+        remove_btn.tooltip('hide');
+        this.removeTargetGroup(target_group_id);
+      }
+    });
+
+    // *** If has data
+    if (data) {
+      beneficiaryName_input.val(data.beneficiary_name).trigger('change');
+      location_input.val(data.location).trigger('change');
+      targetNumber_input.val(data.target_number).trigger('change');
+    }
   }
 
+  removeTargetGroup = (id) => {
+    this.target_groups = this.target_groups.filter(t => t.id !== id);
+    this.tbl.find(`[${ this.data.target_group_id }="${ id }"]`).remove();
+    
+    if (this.target_groups.length === 0) this.addTargetGroupRow();
+    
+    this.#toggleAddButton();
+    this.#setTotalTargetBeneficiaries();
+  }
+
+  getTargetGroups = () => this.target_groups.map(t => { const o = {...t}; delete o.id; return o; });
+
+  setTargetGroups = (data) => {
+    if (!(data && data.length)) return;
+
+    this.target_groups = [];
+    this.tbl.find(`[${ this.data.target_group_id }]`).remove();
+
+    data.forEach(d => this.addTargetGroupRow(d));
+  }
 }
 
 
@@ -862,8 +1093,10 @@ class CooperatingAgenciesForm {
 	// * Public Methods
 
 	selectCooperatingAgency = (id) => {
-		const selected = id || this.selectElem.val();
-		this.CA_list = this.CA_list.map(c => c.id == selected ? {...c, selected: true} : c);
+    const selected = id || this.selectElem.val();
+
+    this.CA_list = this.CA_list.map(c => c.id == selected ? {...c, selected: true} : c);
+
 
 		this.#resetEmptyTemplate();
 		this.#resetSelect();
@@ -885,7 +1118,8 @@ class CooperatingAgenciesForm {
 	}
 
 	setSelectedCooperatingAgencies = (data = []) => {
-		data.forEach(d => this.selectCooperatingAgency(d.id))
+    if (!(data && data.length)) return;
+		data.forEach(d => this.selectCooperatingAgency(d.id));
 	}
 
 	setCooperatingAgenciesList = (data = [], method = 'reset') => {
@@ -894,18 +1128,16 @@ class CooperatingAgenciesForm {
 				if(data.length) {
 					this.CA_list = data.map(ca => ca = {...ca, selected: false });
 					this.#resetSelect();
-				} else {
-          this.#resetEmptyTemplate();
-        }
+				}
 			}
 		}
 		fn[method]();
 	}
 
-	getSelectedCooperatingAgencies = () => [...this.CA_list].filter(x => x.selected).map(x => {
-		let y = {...x}
-		delete y.selected;
-		return y;
+  getList = () => this.CA_list;
+
+	getSelectedCooperatingAgencies = () => this.CA_list.filter(x => x.selected).map(x => {
+		const y = {...x}; delete y.selected; return y;
 	});
 }
 
@@ -1036,7 +1268,7 @@ class FinancialRequirementsForm {
         <div class="form-group mb-0">
           <input 
             type="text" 
-            class="form-control form-control-border"
+            class="form-control form-control-border text-right"
             ${this.data.budgetItemQtyInput}="${lineItemBudgetRowId}"
             name="quantity-${lineItemBudgetRowId}"
           >
@@ -1046,7 +1278,7 @@ class FinancialRequirementsForm {
         <div class="form-group mb-0">
           <input 
             type="text" 
-            class="form-control form-control-border"
+            class="form-control form-control-border text-right"
             ${this.data.budgetItemCostInput}="${lineItemBudgetRowId}"
             name="cost-${lineItemBudgetRowId}"
           />
@@ -1776,6 +2008,7 @@ class EvaluationPlanForm {
             type="button"
             class="btn btn-sm btn-negative text-danger"
             ${removePlanBtn}="${planId}"
+            data-toggle="tooltip"
             title="Remove plan row"
           >
             <i class="fas fa-times"></i>
@@ -2648,7 +2881,7 @@ class ProjectEvaluationForm {
         <div class="form-group mb-0">
           <input 
             type="text" 
-            class="form-control form-control-border"
+            class="form-control form-control-border text-right"
             name="points-${ rowId }"
             ${ this.data.input }="points"
             placeholder="%"

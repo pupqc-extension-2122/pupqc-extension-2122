@@ -20,7 +20,7 @@
   // * Private Methods
 
   const initializations = () => {
-    
+
     // *** For Date Inputs *** //
 
     // Initialize Notary Signed Date

@@ -72,14 +72,14 @@ const ProjectProposals = (() => {
           searchable: false,
           sortable: false,
 					render: data => {
-            const { target_groups } = data;
-						if(target_groups.length > 1) {
+            const { target_groups: tg } = data;
+						if (tg.length > 1) {
 							return `
-								<div>${ target_groups[0] }</div> 
-								<div class="small text-muted">and ${ target_groups.length - 1 } more.</div>
+								<div>${ tg[0].beneficiary_name }</div> 
+								<div class="small text-muted">and ${ tg.length - 1 } more.</div>
 							`
-						} else if(target_groups.length === 1) {
-							return target_groups[0];
+						} else if(tg.length === 1) {
+							return tg[0].beneficiary_name;
 						} else {
 							return `<div class="font-italic text-muted">No target groups have been set.</div>`
 						}
@@ -106,7 +106,7 @@ const ProjectProposals = (() => {
 						const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[status];
 						return `
 							<div class="text-center">
-								<div class="badge badge-subtle-${ theme } px-2 py-1">
+								<div class="badge badge-subtle-${ theme } px-2 py-1 user-select-none">
 									<i class="${ icon } fa-fw mr-1"></i>
 									<span>${ status }</span>
 								</div>
@@ -130,7 +130,7 @@ const ProjectProposals = (() => {
                 : ''
 
 						return `
-							<div class="dropdown text-center">
+							<div class="dropdown text-center user-select-none">
 
 								<div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
 									<i class="fas fa-ellipsis-h"></i>
