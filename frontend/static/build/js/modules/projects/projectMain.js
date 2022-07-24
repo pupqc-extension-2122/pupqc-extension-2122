@@ -197,7 +197,7 @@ const ProjectDetails = (() => {
           if (tg.length) {
             let rows = '', total = 0;
             tg.forEach(t => {
-              const { beneficiary_name: b, location: l, target_number: n } = t;
+              const { beneficiary_name: b, location: l, target: n } = t;
               rows += `
                 <tr>
                   <td>${ b ? b : noContentTemplate('Missing beneficiary name.') }</td>

@@ -827,7 +827,7 @@ class TargetGroupsForm {
 
   #setTotalTargetBeneficiaries = () => {
     const total = this.target_groups.reduce((p, c) => {
-      const { target_number: n } = c;
+      const { target: n } = c;
       return p + (n >= 0 ? n : 0)
     }, 0);
 
@@ -881,7 +881,7 @@ class TargetGroupsForm {
       id: target_group_id,
       beneficiary_name: '',
       location: '',
-      target_number: 0
+      target: 0
     });
 
     // *** Add elements in the DOM
@@ -917,7 +917,7 @@ class TargetGroupsForm {
 
     targetNumber_input.on('keyup change', () => {
       this.target_groups = this.target_groups.map(x => x.id === target_group_id 
-        ? { ...x, target_number: parseInt(targetNumber_input.val()) || 0 } : x
+        ? { ...x, target: parseInt(targetNumber_input.val()) || 0 } : x
       );
       this.#setTotalTargetBeneficiaries();
       this.#toggleAddButton();
@@ -989,7 +989,7 @@ class TargetGroupsForm {
     if (data) {
       beneficiaryName_input.val(data.beneficiary_name).trigger('change');
       location_input.val(data.location).trigger('change');
-      targetNumber_input.val(data.target_number).trigger('change');
+      targetNumber_input.val(data.target).trigger('change');
     }
   }
 
