@@ -685,6 +685,7 @@
             // '#projectProposal_startDate', 
             // '#projectProposal_endDate',
             '#projectProposal_monitoringFrequency',
+            '#projectProposal_monitoringMethod',
           ].forEach(async s => await $(s).trigger('change'));
 
           await getPartners({
