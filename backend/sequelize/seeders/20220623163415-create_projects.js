@@ -19,7 +19,7 @@ module.exports = {
         implementer: 'PUPQC',
         target_groups: JSON.stringify([
           {
-            name: 'Out of School Youth',
+            beneficiary_name: 'Out of School Youth',
             location: 'Commonwealth',
             target: 50
           }
