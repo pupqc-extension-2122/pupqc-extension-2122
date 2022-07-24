@@ -119,7 +119,7 @@ exports.datatableApprovedProposal = async (req, res) => {
 
     let data = await datatable(Projects, req.query, {
       where: { status: 'Approved' },
-      include: ['memos', 'partners', 'activities']
+      include: ['memos', 'partners', 'activities', 'evaluation']
     })
     res.send(data)
 
