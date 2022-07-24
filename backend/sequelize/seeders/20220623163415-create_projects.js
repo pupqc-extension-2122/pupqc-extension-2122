@@ -14,20 +14,26 @@ module.exports = {
     await queryInterface.bulkInsert('Projects', [
       {
         id: '05b02fae-98bc-445b-895f-2164bc9a20ec',
-        title: 'New Project',
+        title: 'Entrepreneurship Crash Course',
         project_type: 'Knowledge Transfer',
-        implementer: 'Grace Lopez',
-        target_groups: ['Project 1', 'Group 2'].join(';'),
+        implementer: 'PUPQC',
+        target_groups: JSON.stringify([
+          {
+            beneficiary_name: 'Out of School Youth',
+            location: 'Commonwealth',
+            target: 50
+          }
+        ]),
         team_members: JSON.stringify([
           {
-            name: 'Member 1',
-            role: 'Role 1',
+            name: 'King Turner',
+            role: 'Leader',
           }, {
-            name: 'Member 2',
-            role: 'Role 2',
+            name: 'Jason Meadows',
+            role: 'Member',
           }, {
-            name: 'Member No Role',
-            role: '',
+            name: 'Rafael Ray',
+            role: 'Member',
           }
         ]),
         start_date: '2022-05-01',
