@@ -14,11 +14,13 @@ const Report1 = (() => {
   const dtElem = $('#report1_dt');
   let initialized = false;
 
+  const noContentTemplate = message => `<div class="font-italic text-muted">${ message }</div>`;
+
   const initDataTable = async () => {
     dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
       ajax: {
-        url: `${ BASE_URL_API }projects/datatables`,
+        url: `${ BASE_URL_API }/projects/approved/datatables`,
         // success: res => {
         //   console.log(res)
         // },
@@ -34,16 +36,15 @@ const Report1 = (() => {
             created_at: 'date',
             title:'string',
             implementer: 'string',
-            technical_evaluation_date: 'date',
-            eppec_evaluation_date: 'date',
-            release_date: 'date',
-            average_points: 'float',
+            // technical_evaluation_date: 'date',
+            // eppec_evaluation_date: 'date',
+            // release_date: 'date',
+            // average_points: 'float',
             funding_approval_date: 'date',
-            recommendations: 'string',
+            // recommendations: 'string',
             SO_release_date: 'date',
             cash_release_date: 'date',
             notice_release_date: 'date'
-
           }
         },
         beforeSend: () => {
@@ -55,22 +56,40 @@ const Report1 = (() => {
         },
       },
       columns: [
+
+        // [0] Created at (Invisible)
         { 
           data: 'created_at',
           visible: false,
-        }, {
+        }, 
+        
+        // [1] Project Title
+        {
 					data: 'title',
+          width: '20%',
           render: (data, type, row) => {
             const displayTitle = data.length > 100
               ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
               : data
             return `<a href="${ BASE_URL_WEB }/p/proposals/${ row.id }">${ displayTitle }</a>`
           }
-				}, {
+				}, 
+        
+        // [2] Project Proponent
+        {
           data: 'implementer',
-        }, {
+          width: '20%',
+          render: (data, type, row) => {
+            return data.length > 100
+              ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
+              : data
+          }
+        }, 
+        
+        // [3] Date Submitted
+        {
           data: 'created_at',
-          width: '25%',
+          width: '20%',
           render: data => {
             const created_at = data.created_at
             return `
@@ -78,72 +97,150 @@ const Report1 = (() => {
               <div class="small text-muted">${ fromNow(created_at) }</div>
             `
           }
-        }, {
-          data: 'technical_evaluation_date',
+        }, 
+        
+        // [4] Date of conducted technical evaluation
+        {
+          data: null,
+          width: '20%',
+          sortable: false,
           render: data => {
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small ${ getClass() }">${ fromNow(data) }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
-        }, {
-          data: 'eppec_evaluation_date',
+        }, 
+        
+        // [5] Date of EPPEC evaluation
+        {
+          data: null,
+          sortable: false,
+          searchable: false,
           render: data => {
-            return `
-              <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small ${ getClass() }">${ fromNow(data) }</div>
-            `
+            const { evaluation: e } = data;
+            return e 
+              ? `
+                <div>${ formatDateTime(e.eppec_evaluation_date, 'Date') }</div>
+                <div class="small text-muted">${ fromNow(e.eppec_evaluation_date) }</div>
+              `
+              : noContentTemplate('Evaluation is missing.')
+            
           }
-        }, {
-          data: 'release_date',
+        }, 
+        
+        // [6] Release Date of EPPEC evaluation result
+        {
+          data: null,
+          sortable: false,
+          searchable: false,
           render: data => {
-            return `
-              <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small ${ getClass() }">${ fromNow(data) }</div>
-            `
+            const { evaluation: e } = data;
+            return e 
+              ? `
+                <div>${ formatDateTime(e.release_date, 'Date') }</div>
+                <div class="small text-muted">${ fromNow(e.release_date) }</div>
+              `
+              : noContentTemplate('Evaluation is missing.')
+            
           }
-        }, {
-          data: 'average_points',
-        }, {
-					data: 'recommendations',
+        }, 
+        
+        // [7] Final Rating of EPPEC on Extension Project
+        {
+          data: null,
+          searchable: false,
+          sortable: false,
           render: (data, type, row) => {
-            return data.length > 100
-              ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
-              : data
-          }
-				},  {
+            const { evaluation: e } = data;
+            if (e) {
+              const { average_points: a } = e;
+
+              if (a) {
+                const { theme, remarks } = (() => {
+                  return a >= 70 
+                    ? { theme: 'success', remarks : 'PASSED' } 
+                    : { theme: 'danger', remarks: 'FAILED' } 
+                })();
+  
+                return `
+                  <div class="font-weight-bold">${ a }%</div>
+                  <div class="small font-weight-bold text-${ theme }">${ remarks }</div>
+                `
+              }
+              return noContentTemplate('Average point is missing.')
+            }
+            return noContentTemplate('Evaluation is missing.')
+          },
+        }, 
+        
+        // [8] Recommendations
+        {
+          data: null,
+          searchable: false,
+          sortable: false,
+          render: (data, type, row) => {
+            const { evaluation: e } = data;
+            return e
+              ? `${ e.recommendations }`
+              : noContentTemplate('Evaluation is missing.')
+          },
+        },
+
+        // [9] Date of Endorsement of Project Proposal for Funding
+        {
           data: 'funding_approval_date',
           render: data => {
-            return `
-              <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small ${ getClass() }">${ fromNow(data) }</div>
-            `
+            return data
+              ? `
+                <div>${ formatDateTime(data, 'Date') }</div>
+                <div class="small text-muted">${ fromNow(data) }</div>
+              `
+              : noContentTemplate('Date of Endorsement for Funding is missing.')
           }
-        }, {
+        }, 
+        
+        // [10] Release date of Special Order
+        {
           data: 'SO_release_date',
           render: data => {
-            return `
-              <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small ${ getClass() }">${ fromNow(data) }</div>
-            `
+            return data
+              ? `
+                <div>${ formatDateTime(data, 'Date') }</div>
+                <div class="small text-muted">${ fromNow(data) }</div>
+              `
+              : noContentTemplate('Release date of SO is missing.')
           }
-        }, {
+        }, 
+        
+        // [10] Release date of Cash Advance
+        {
           data: 'cash_release_date',
           render: data => {
-            return `
-              <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small ${ getClass() }">${ fromNow(data) }</div>
-            `
+            return data
+              ? `
+                <div>${ formatDateTime(data, 'Date') }</div>
+                <div class="small text-muted">${ fromNow(data) }</div>
+              `
+              : noContentTemplate('Release date of Cash Advance is missing.')
           }
-        }, {
+        }, 
+        
+        // [11] Release date of Notice to Proceed
+        {
           data: 'notice_release_date',
           render: data => {
-            return `
-              <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small ${ getClass() }">${ fromNow(data) }</div>
-            `
+            return data
+              ? `
+                <div>${ formatDateTime(data, 'Date') }</div>
+                <div class="small text-muted">${ fromNow(data) }</div>
+              `
+              : noContentTemplate('Release date of Notice to Proceed is missing.')
           }
-        }, {
+        }, 
+        
+        // [12] Options
+        {
           data: null,
           width: '5%',
           render: data => {
@@ -154,7 +251,7 @@ const Report1 = (() => {
                   <i class="fas fa-ellipsis-h"></i>
                 </div>
               
-                <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-menu dropdown-menu-right fade">
                   <div class="dropdown-header">Options</div>
                   <a href="${ BASE_URL_WEB }/m/memo/${ data.id }" class="dropdown-item">
                       <span>View details</span>
