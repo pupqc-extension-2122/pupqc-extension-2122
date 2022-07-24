@@ -20,8 +20,16 @@ const ProjectMonitoring = (() => {
  */
 
   const initDataTable = () => {
+    let exportConfigs = {...DT_CONFIG_EXPORTS};
+
+    exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+      title: 'Project Monitoring - PUPQC-EPMS',
+      messageTop: 'List of approved projects to be monitored',
+    });
+
     dt = dtElem.DataTable({
       ...DT_CONFIG_DEFAULTS,
+      ...exportConfigs,
       ajax: {
         url: `${ BASE_URL_API }/projects/approved/datatables`,
         // success: result => {
@@ -66,56 +74,86 @@ const ProjectMonitoring = (() => {
             return `<a href="${ BASE_URL_WEB }/p/monitoring/${ row.id }">${ displayTitle }</a>`
           }
 				}, {
-          data: null,
+					data: null,
           width: '25%',
+          searchable: false,
           sortable: false,
-          render: data => {
-            const target_groups = data.target_groups;
-            const length = target_groups.length;
-            if (length > 1) {
-              return `
-                <div>${ target_groups[0]}</div>
-                <div class="small text-muted">and ${ length - 1 } more.</div>
-              `
-            } else if (length == 1) {
-              return target_groups[0]
-            } else {
-              return `<div class="text-muted font-italic">No target groups.</div>`
+					render: (data, type, row) => {
+            const { target_groups: tg } = data;
+
+            // For Export
+            if (type === 'export') {
+              if (tg.length) {
+                let list = '';
+                tg.forEach((t, i) => {
+                  list += t.beneficiary_name;
+                  if (i < tg.length-1) list += ', ';
+                });
+                return list
+              } else return '';
             }
+
+            // For display
+						if (tg.length > 1) {
+							return `
+								<div>${ tg[0].beneficiary_name }</div> 
+								<div class="small text-muted">and ${ tg.length - 1 } more.</div>
+							`
+						} else if(tg.length === 1) {
+							return tg[0].beneficiary_name;
+						} else {
+							return `<div class="font-italic text-muted">No target groups have been set.</div>`
+						}
+					}
+				}, {
+          data: 'start_date',
+          render: (data, type, row) => {
+
+            // For Export
+            if (type === 'export') return formatDateTime(data, 'Date');
+
+            // For display
+            return `
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
+            `
           }
         }, {
-          data: null,
-          render: data => {
-            const start_date = data.start_date
+          data: 'end_date',
+          render: (data, type, row) => {
+
+            // For Export
+            if (type === 'export') return formatDateTime(data, 'Date');
+
+            // For display
             return `
-              <div>${ formatDateTime(start_date, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(start_date) }</div>
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, {
           data: null,
-          render: data => {
-            const end_date = data.end_date
-            return `
-              <div>${ formatDateTime(end_date, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(end_date) }</div>
-            `
-          }
-        }, {
-          data: null,
-          render: data => {
+          sortable: false,
+          searchable: false,
+          render: (data, type, row) => {
             const { start_date, end_date } = data;
             const today = moment();
-            let status;
-            if (today.isBefore(start_date) && today.isBefore(end_date)) {
-              status = 'Upcoming';
-            } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
-              status = 'Concluded';
-            } else if (today.isBetween(start_date, end_date)) {
-              status = 'On going';
-            } else {
-              status = 'No data';
-            }
+            const status = (() => {
+              if (today.isBefore(start_date) && today.isBefore(end_date)) {
+                return 'Upcoming';
+              } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
+                return 'Concluded';
+              } else if (today.isBetween(start_date, end_date)) {
+                return 'On going';
+              } else {
+                return 'No data';
+              }
+            })();
+
+            // For export
+            if (type === 'export') return status;
+
+            // For display
             const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
             return `
               <div class="text-sm-center">

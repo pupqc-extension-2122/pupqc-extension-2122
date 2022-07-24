@@ -98,10 +98,11 @@
 
     // Monitoring Frequency
     const monitoring_frequencies = [
+      // {
+      //   id: 'Weekly',
+      //   name: 'Weekly',
+      // }, 
       {
-        id: 'Weekly',
-        name: 'Weekly',
-      }, {
         id: 'Quarterly',
         name: 'Quarterly',
       }, {
@@ -116,21 +117,29 @@
       }, 
     ];
     
-    // Monitoring Method
-    $('#projectProposal_monitoringMethod').autocomplete({
-      source: [
-        'Site Visit',
-        'Telephone Logs',
-        'Interview',
-        'Observation',
-        'Survey'
-      ],
-    });
-
     const monitoringFrequency_input = $('#projectProposal_monitoringFrequency');
     monitoringFrequency_input.empty();
     monitoringFrequency_input.append(`<option></option>`);
     monitoring_frequencies.forEach(f => monitoringFrequency_input.append(`<option value="${ f.id }">${ f.name }</option>`));
+
+
+    // Monitoring Method
+    const monitoring_methods = [
+      'Site Visit',
+      'Telephone Logs',
+      'Interview',
+      'Observation',
+      'Survey'
+    ]
+
+    const monitoringMethod_input = $('#projectProposal_monitoringMethod');
+    monitoringMethod_input.empty();
+    monitoringMethod_input.append(`<option></option>`);
+    monitoring_methods.forEach(m => monitoringMethod_input.append(`<option value="${ m }">${ m }</option>`));
+
+    // $('#projectProposal_monitoringMethod').autocomplete({
+    //   source: monitoring_methods,
+    // });
 
     // If user not select coop agency
 

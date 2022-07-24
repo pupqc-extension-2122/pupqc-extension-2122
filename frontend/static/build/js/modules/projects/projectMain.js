@@ -2417,12 +2417,19 @@ const ProjectActivities = (() => {
   }
 
   const initDataTable = async () => {
+    let exportConfigs = {/*...DT_CONFIG_EXPORTS*/};
+
+    // exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+    //   title: 'Project Monitoring - PUPQC-EPMS',
+    //   messageTop: 'List of approved projects to be monitored',
+    // });
 
     let dtOptions;
 
     if (mode === 'Proposal') {
       dtOptions = {
         ...DT_CONFIG_DEFAULTS,
+        ...exportConfigs,
         ajax: {
           url: `${ BASE_URL_API }/projects/${ project.id }/activities`,
           // success: result => {
@@ -2582,6 +2589,7 @@ const ProjectActivities = (() => {
     } else if (mode === 'Monitoring') {
       dtOptions = {
         ...DT_CONFIG_DEFAULTS,
+        ...exportConfigs,
         ajax: {
           url: `${ BASE_URL_API }/projects/${ project.id }/activities`,
           // success: result => {
@@ -2751,6 +2759,7 @@ const ProjectActivities = (() => {
     } else if (mode === 'Activity Evaluation') {
       dtOptions = {
         ...DT_CONFIG_DEFAULTS,
+        ...exportConfigs,
         ajax: {
           url: `${ BASE_URL_API }/projects/${ project.id }/activities`,
           // success: result => {

@@ -112,9 +112,9 @@ Object.freeze(DT_CONFIG_DEFAULTS);
 const DT_CONFIG_EXPORTS = {
   dom: `
 			<"row w-100"
-				<"col-lg-4" l>
-				<"col-lg-4" B>
-				<"col-lg-4" f>
+				<"col-xl-3" l>
+				<"col-lg-6" B>
+				<"col-md-6 col-xl-3" f>
 			>
 			<t>
 			<"row"
@@ -126,11 +126,12 @@ const DT_CONFIG_EXPORTS = {
   buttons: [
     {
       extend: "copy",
-      text: TEMPLATE.LABEL_ICON("Copy", "copy"),
+      text: TEMPLATE.LABEL_ICON(`Copy <span class="badge badge-light">Ctrl+Alt+C</span>`, "copy"),
       className: "btn-sm btn-negative",
       key: {
         key: 'c',
-        ctrlKey: true
+        ctrlKey: true,
+        altKey: true,
       }
       // exportOptions: { columns: visibleCols },
     }, {
@@ -160,8 +161,13 @@ const DT_CONFIG_EXPORTS = {
       },
     }, {
       extend: "print",
-      text: TEMPLATE.LABEL_ICON("Print", "print"),
+      text: TEMPLATE.LABEL_ICON(`Print <span class="badge badge-light">Ctrl+Alt+P</span>`, "print"),
       className: "btn-sm btn-negative",
+      key: {
+        key: 'p',
+        ctrlKey: true,
+        altKey: true,
+      },
       exportOptions: {
         orthogonal: "export",
         columns: ':visible th:not(:last-child)'

@@ -8,25 +8,21 @@
 
 const ProjectProposals = (() => {
   
-  /**
-   * * Local Variables
-	 */
+  // * Local Variables
   
   const user_roles = JSON.parse(getCookie('roles'));
   const dtElem = $('#projectProposals_dt');
   let dt;
   let initialized = 0;
 
-	/**
-	 * * Private Methods
-	 */
+	// * Private Methods
 
 	const initDataTable = async () => {
     let exportConfigs = {...DT_CONFIG_EXPORTS};
 
     exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
       title: 'Project Proposals - PUPQC-EPMS',
-      message: 'List of project extension proposal',
+      messageTop: 'List of project extension proposal',
     });
 
 		dt = await dtElem.DataTable({
@@ -65,12 +61,6 @@ const ProjectProposals = (() => {
         {
           data: 'created_at',
           visible: false,
-          render: (data, type, row) => {
-            if (type === 'export') {
-              return formatDateTime(data, 'Date'); 
-            }
-            return data;
-          }
         }, {
 					data: 'title',
           width: '25%',
@@ -98,7 +88,7 @@ const ProjectProposals = (() => {
               if (tg.length) {
                 let list = '';
                 tg.forEach((t, i) => {
-                  list += `<li>${ t.beneficiary_name }</li>`;
+                  list += t.beneficiary_name;
                   if (i < tg.length-1) list += ', ';
                 });
                 return list
@@ -209,15 +199,11 @@ const ProjectProposals = (() => {
 		});
 	}
 
-	/**
-	 * * Public Methods
-	 */
+	// * Public Methods
 
   const reloadDataTable = async () => await dt.ajax.reload();
 
-	/**
-	 * * Init
-	 */
+	// * Init
 
   const init = async () => {
     if (!initialized) {
@@ -226,9 +212,7 @@ const ProjectProposals = (() => {
     }
   }
 
-	/**
-	 * * Return Public Methods
-	 */
+	// * Return Public Methods
 	
   return {
 		init,

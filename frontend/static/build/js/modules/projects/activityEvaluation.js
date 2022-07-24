@@ -17,8 +17,16 @@ const ActivityEvaluation = (() => {
   // * Private Methods
 
   const initDataTable = async () => {
+    let exportConfigs = {...DT_CONFIG_EXPORTS};
+
+    exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+      title: 'Activity Evaluation - PUPQC-EPMS',
+      messageTop: 'List of projects for evaluation',
+    });
+
     dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
+      ...exportConfigs,
       ajax: {
         url: `${ BASE_URL_API }/projects/approved/datatables`,
         // success: result => {
@@ -63,26 +71,45 @@ const ActivityEvaluation = (() => {
             return `<a href="${ BASE_URL_WEB }/p/evaluation/${ row.id }/activities">${ displayTitle }</a>`
           }
 				}, {
-          data: null,
+					data: null,
           width: '25%',
+          searchable: false,
           sortable: false,
-          render: data => {
-            const target_groups = data.target_groups;
-            const length = target_groups.length;
-            if (length > 1) {
-              return `
-                <div>${ target_groups[0]}</div>
-                <div class="small text-muted">and ${ length - 1 } more.</div>
-              `
-            } else if (length == 1) {
-              return target_groups[0]
-            } else {
-              return `<div class="text-muted font-italic">No target groups.</div>`
+					render: (data, type, row) => {
+            const { target_groups: tg } = data;
+
+            // For Export
+            if (type === 'export') {
+              if (tg.length) {
+                let list = '';
+                tg.forEach((t, i) => {
+                  list += t.beneficiary_name;
+                  if (i < tg.length-1) list += ', ';
+                });
+                return list
+              } else return '';
             }
-          }
-        }, {
+
+            // For display
+						if (tg.length > 1) {
+							return `
+								<div>${ tg[0].beneficiary_name }</div> 
+								<div class="small text-muted">and ${ tg.length - 1 } more.</div>
+							`
+						} else if(tg.length === 1) {
+							return tg[0].beneficiary_name;
+						} else {
+							return `<div class="font-italic text-muted">No target groups have been set.</div>`
+						}
+					}
+				}, {
           data: 'start_date',
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For Export
+            if (type === 'export') return formatDateTime(data, 'Date');
+
+            // For display
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
@@ -90,7 +117,12 @@ const ActivityEvaluation = (() => {
           }
         }, {
           data: 'end_date',
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For Export
+            if (type === 'export') return formatDateTime(data, 'Date');
+
+            // For display
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
@@ -101,7 +133,7 @@ const ActivityEvaluation = (() => {
           width: '15%',
           searchable: false,
           sortable: false,
-          render: data => {
+          render: (data, type, row) => {
             const project_activities = data.activities;
             const total_project_activities = project_activities.length;
             
@@ -118,6 +150,10 @@ const ActivityEvaluation = (() => {
               else if(percent === 100) return 'bg-success';
             })()
 
+            // For export
+            if (type === 'export') return `Evaluated: ${ evaluated_activities }/${ total_project_activities }`;
+
+            // For display
             if (percent === 100) {
               return `
                 <div>
