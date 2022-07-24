@@ -22,8 +22,16 @@ const ProjectProposals = (() => {
 	 */
 
 	const initDataTable = async () => {
+    let exportConfigs = {...DT_CONFIG_EXPORTS};
+
+    exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+      title: 'Project Proposals - PUPQC-EPMS',
+      message: 'List of project extension proposal',
+    });
+
 		dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
+      ...exportConfigs,
       ajax: {
         url: `${ BASE_URL_API }/projects/datatables`,
         // success: res => {
@@ -57,10 +65,21 @@ const ProjectProposals = (() => {
         {
           data: 'created_at',
           visible: false,
+          render: (data, type, row) => {
+            if (type === 'export') {
+              return formatDateTime(data, 'Date'); 
+            }
+            return data;
+          }
         }, {
 					data: 'title',
           width: '25%',
           render: (data, type, row) => {
+
+            // For Export
+            if (type === 'export') return data;
+
+            // For Display
             const displayTitle = data.length > 100
               ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
               : data
@@ -71,8 +90,22 @@ const ProjectProposals = (() => {
           width: '25%',
           searchable: false,
           sortable: false,
-					render: data => {
+					render: (data, type, row) => {
             const { target_groups: tg } = data;
+
+            // For Export
+            if (type === 'export') {
+              if (tg.length) {
+                let list = '';
+                tg.forEach((t, i) => {
+                  list += `<li>${ t.beneficiary_name }</li>`;
+                  if (i < tg.length-1) list += ', ';
+                });
+                return list
+              } else return '';
+            }
+
+            // For display
 						if (tg.length > 1) {
 							return `
 								<div>${ tg[0].beneficiary_name }</div> 
@@ -87,6 +120,11 @@ const ProjectProposals = (() => {
 				}, {
 					data: 'start_date',
 					render: (data, type, row) => {
+
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date')
+
+            // For display
 						return `
               <div class="text-nowrap">${ formatDateTime(data, 'Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
@@ -94,21 +132,31 @@ const ProjectProposals = (() => {
 					}
 				}, {
 					data: 'end_date',
-					render: end_date => {
+					render: (data, type, row) => {
+
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date')
+
+            // For display
             return `
-              <div class="text-nowrap">${ formatDateTime(end_date, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(end_date) }</div>
+              <div class="text-nowrap">${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
 					}
 				}, {
 					data: 'status',
-					render: status => {
-						const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[status];
+					render: (data, type, row) => {
+
+            // For export
+            if (type === 'export') return data;
+
+            // For display
+						const { theme, icon } = PROJECT_PROPOSAL_STATUS_STYLES[data];
 						return `
 							<div class="text-center">
 								<div class="badge badge-subtle-${ theme } px-2 py-1 user-select-none">
 									<i class="${ icon } fa-fw mr-1"></i>
-									<span>${ status }</span>
+									<span>${ data }</span>
 								</div>
 							</div>
 						`;

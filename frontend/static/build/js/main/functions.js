@@ -446,3 +446,27 @@ const $app = (selector) => {
 	 */
 	return app;
 }
+
+
+/**
+ * ? Data Table Configurations
+ * =================================
+ */
+
+const DT = (() => {
+  let dt = {};
+  const exports = ['csv', 'excel', 'pdf', 'print'];
+
+  dt.setExportButtonsObject = (BUTTONS, configs) => {
+    return BUTTONS.map(o => {
+      if (exports.includes(o.extend)) {
+        Object.entries(configs).forEach(([key, val]) => {
+          o[key] = val
+        })
+      }
+      return o;
+    })
+  }
+
+  return dt;
+})();
