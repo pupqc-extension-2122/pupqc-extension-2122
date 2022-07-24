@@ -17,8 +17,16 @@ const Report1 = (() => {
   const noContentTemplate = message => `<div class="font-italic text-muted">${ message }</div>`;
 
   const initDataTable = async () => {
+    let exportConfigs = {...DT_CONFIG_EXPORTS};
+
+    exportConfigs.buttons.buttons = DT.setExportButtonsObject(exportConfigs.buttons.buttons, {
+      title: 'Report on Status of Submitted Extension Project Proposal for Institutional Funding - PUPQC-EPMS',
+      message: 'List of reports generated',
+    });
+
     dt = await dtElem.DataTable({
-			...DT_CONFIG_DEFAULTS,
+      ...DT_CONFIG_DEFAULTS,
+      ...exportConfigs,
       ajax: {
         url: `${ BASE_URL_API }/projects/approved/datatables`,
         // success: res => {
@@ -65,21 +73,31 @@ const Report1 = (() => {
         
         // [1] Project Title
         {
-					data: 'title',
+          data: 'title',
           width: '20%',
           render: (data, type, row) => {
+
+            // For Export
+            if (type === 'export') return data;
+
+            // For display
             const displayTitle = data.length > 100
               ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
               : data
             return `<a href="${ BASE_URL_WEB }/p/proposals/${ row.id }">${ displayTitle }</a>`
           }
-				}, 
+        }, 
         
         // [2] Project Proponent
         {
           data: 'implementer',
           width: '20%',
           render: (data, type, row) => {
+
+            // For Export
+            if (type === 'export') return data;
+            
+            // For display
             return data.length > 100
               ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
               : data
@@ -90,7 +108,12 @@ const Report1 = (() => {
         {
           data: 'created_at',
           width: '20%',
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date')
+            
+            // For display
             const created_at = data.created_at
             return `
               <div>${ formatDateTime(created_at, 'Date') }</div>
@@ -104,7 +127,12 @@ const Report1 = (() => {
           data: null,
           width: '20%',
           sortable: false,
-          render: data => {
+          render: (data, type, row) => {
+
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date')
+
+            // For display
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
@@ -117,7 +145,12 @@ const Report1 = (() => {
           data: null,
           sortable: false,
           searchable: false,
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date')
+
+            // For display
             const { evaluation: e } = data;
             return e 
               ? `
@@ -134,7 +167,12 @@ const Report1 = (() => {
           data: null,
           sortable: false,
           searchable: false,
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date')
+
+            // For display
             const { evaluation: e } = data;
             return e 
               ? `
@@ -152,11 +190,16 @@ const Report1 = (() => {
           searchable: false,
           sortable: false,
           render: (data, type, row) => {
+
+            // For display
             const { evaluation: e } = data;
             if (e) {
               const { average_points: a } = e;
-
+            
               if (a) {
+                // For Export
+                if (type === 'export') return `${a}%`;
+
                 const { theme, remarks } = (() => {
                   return a >= 70 
                     ? { theme: 'success', remarks : 'PASSED' } 
@@ -168,8 +211,12 @@ const Report1 = (() => {
                   <div class="small font-weight-bold text-${ theme }">${ remarks }</div>
                 `
               }
+              // For Export
+              if (type === 'export') return '';
               return noContentTemplate('Average point is missing.')
             }
+            // For Export
+            if (type === 'export') return '';
             return noContentTemplate('Evaluation is missing.')
           },
         }, 
@@ -180,17 +227,29 @@ const Report1 = (() => {
           searchable: false,
           sortable: false,
           render: (data, type, row) => {
+
+            // For display
             const { evaluation: e } = data;
-            return e
-              ? `${ e.recommendations }`
-              : noContentTemplate('Evaluation is missing.')
+
+            // For Export
+            if (type === 'export') return e ? `${e.recommendations}` : '';
+
+            return e ? `${ e.recommendations }` : noContentTemplate('Evaluation is missing.');
           },
         },
 
         // [9] Date of Endorsement of Project Proposal for Funding
         {
           data: 'funding_approval_date',
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') 
+              return data
+                ? formatDateTime(data, 'Date')
+                : ''
+
+            // For display
             return data
               ? `
                 <div>${ formatDateTime(data, 'Date') }</div>
@@ -203,7 +262,15 @@ const Report1 = (() => {
         // [10] Release date of Special Order
         {
           data: 'SO_release_date',
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') 
+              return data
+                ? formatDateTime(data, 'Date')
+                : ''
+
+            // For display
             return data
               ? `
                 <div>${ formatDateTime(data, 'Date') }</div>
@@ -216,7 +283,15 @@ const Report1 = (() => {
         // [10] Release date of Cash Advance
         {
           data: 'cash_release_date',
-          render: data => {
+          render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') 
+              return data
+                ? formatDateTime(data, 'Date')
+                : ''
+
+            //For display
             return data
               ? `
                 <div>${ formatDateTime(data, 'Date') }</div>
@@ -229,7 +304,15 @@ const Report1 = (() => {
         // [11] Release date of Notice to Proceed
         {
           data: 'notice_release_date',
-          render: data => {
+          render:(data, type, row) => {
+            
+            // For export
+            if (type === 'export') 
+              return data
+                ? formatDateTime(data, 'Date')
+                : ''
+
+            // For display
             return data
               ? `
                 <div>${ formatDateTime(data, 'Date') }</div>
@@ -253,7 +336,7 @@ const Report1 = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right fade">
                   <div class="dropdown-header">Options</div>
-                  <a href="${ BASE_URL_WEB }/m/memo/${ data.id }" class="dropdown-item">
+                  <a href="${ BASE_URL_WEB }/r/report1/${ data.id }" class="dropdown-item">
                       <span>View details</span>
                   </a>
                 </div>

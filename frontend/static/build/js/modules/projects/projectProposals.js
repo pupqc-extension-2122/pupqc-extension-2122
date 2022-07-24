@@ -20,7 +20,7 @@ const ProjectProposals = (() => {
 	const initDataTable = async () => {
     let exportConfigs = {...DT_CONFIG_EXPORTS};
 
-    exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+    exportConfigs.buttons.buttons = DT.setExportButtonsObject(exportConfigs.buttons.buttons, {
       title: 'Project Proposals - PUPQC-EPMS',
       messageTop: 'List of project extension proposal',
     });

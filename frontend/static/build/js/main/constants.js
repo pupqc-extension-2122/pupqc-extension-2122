@@ -111,75 +111,83 @@ Object.freeze(DT_CONFIG_DEFAULTS);
 
 const DT_CONFIG_EXPORTS = {
   dom: `
-			<"row w-100"
-				<"col-xl-3" l>
-				<"col-lg-6" B>
-				<"col-md-6 col-xl-3" f>
-			>
-			<t>
-			<"row"
-				<"col-md-6" i>
-				<"col-md-6" p>
-			>
+    <"row w-100"
+      <"col-xl-3" l>
+      <"col-lg-6" B>
+      <"col-md-6 col-xl-3" f>
+    >
+    <t>
+    <"row"
+      <"col-md-6" i>
+      <"col-md-6" p>
+    >
   `,
   // dom: 'Bfrtip',
-  buttons: [
-    {
-      extend: "copy",
-      text: TEMPLATE.LABEL_ICON(`Copy <span class="badge badge-light">Ctrl+Alt+C</span>`, "copy"),
-      className: "btn-sm btn-negative",
-      key: {
-        key: 'c',
-        ctrlKey: true,
-        altKey: true,
-      }
-      // exportOptions: { columns: visibleCols },
-    }, {
-      extend: "csv",
-      orthogonal: "export",
-      text: TEMPLATE.LABEL_ICON("CSV", "file-csv"),
-      className: "btn-sm btn-negative",
-      exportOptions: {
+  buttons: {
+    dom: {
+      button: {
+        tag: 'button',
+        className: 'btn btn-light'
+      },
+    },
+    buttons: [
+      {
+        extend: "copy",
+        text: TEMPLATE.LABEL_ICON(`Copy <span class="badge badge-light">Ctrl+Alt+C</span>`, "copy"),
+        className: "btn-sm btn-negative",
+        key: {
+          key: 'c',
+          ctrlKey: true,
+          altKey: true,
+        }
+        // exportOptions: { columns: visibleCols },
+      }, {
+        extend: "csv",
         orthogonal: "export",
-        columns: ':visible th:not(:last-child)'
-      },
-    }, {
-      extend: "excel",
-      text: TEMPLATE.LABEL_ICON("Excel", "file-excel"),
-      className: "btn-sm btn-negative",
-      exportOptions: {
-        orthogonal: "export",
-        columns: ':visible th:not(:last-child)'
-      },
-    }, {
-      extend: "pdf",
-      text: TEMPLATE.LABEL_ICON("PDF", "file-pdf"),
-      className: "btn-sm btn-negative",
-      exportOptions: {
-        orthogonal: "export",
-        columns: ':visible th:not(:last-child)'
-      },
-    }, {
-      extend: "print",
-      text: TEMPLATE.LABEL_ICON(`Print <span class="badge badge-light">Ctrl+Alt+P</span>`, "print"),
-      className: "btn-sm btn-negative",
-      key: {
-        key: 'p',
-        ctrlKey: true,
-        altKey: true,
-      },
-      exportOptions: {
-        orthogonal: "export",
-        columns: ':visible th:not(:last-child)'
-      },
-    }, 
-    // {
-    //   extend: "colvis",
-    //   text: TEMPLATE.LABEL_ICON("Columns", "eye"),
-    //   className: "btn-sm btn-negative",
-    //   // columns: columnOpts
-    // }
-  ],
+        text: TEMPLATE.LABEL_ICON("CSV", "file-csv"),
+        className: "btn-sm btn-negative",
+        exportOptions: {
+          orthogonal: "export",
+          columns: ':visible th:not(:last-child)'
+        },
+      }, {
+        extend: "excel",
+        text: TEMPLATE.LABEL_ICON("Excel", "file-excel"),
+        className: "btn-sm btn-negative",
+        exportOptions: {
+          orthogonal: "export",
+          columns: ':visible th:not(:last-child)'
+        },
+      }, {
+        extend: "pdf",
+        text: TEMPLATE.LABEL_ICON("PDF", "file-pdf"),
+        className: "btn-sm btn-negative",
+        exportOptions: {
+          orthogonal: "export",
+          columns: ':visible th:not(:last-child)'
+        },
+      }, {
+        extend: "print",
+        text: TEMPLATE.LABEL_ICON(`Print <span class="badge badge-light">Ctrl+Alt+P</span>`, "print"),
+        className: "btn-sm btn-negative",
+        key: {
+          key: 'p',
+          ctrlKey: true,
+          altKey: true,
+        },
+        exportOptions: {
+          orthogonal: "export",
+          columns: ':visible th:not(:last-child)'
+        },
+      }, 
+      // {
+      //   extend: "colvis",
+      //   text: TEMPLATE.LABEL_ICON("Columns", "eye"),
+      //   className: "btn-sm btn-negative",
+      //   // columns: columnOpts
+      // }
+    ],
+  } 
 }
 Object.freeze(DT_CONFIG_EXPORTS);
 

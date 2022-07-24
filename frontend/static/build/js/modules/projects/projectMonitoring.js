@@ -22,7 +22,7 @@ const ProjectMonitoring = (() => {
   const initDataTable = () => {
     let exportConfigs = {...DT_CONFIG_EXPORTS};
 
-    exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+    exportConfigs.buttons.buttons = DT.setExportButtonsObject(exportConfigs.buttons.buttons, {
       title: 'Project Monitoring - PUPQC-EPMS',
       messageTop: 'List of approved projects to be monitored',
     });

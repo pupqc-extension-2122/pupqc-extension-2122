@@ -19,7 +19,7 @@ const ActivityEvaluation = (() => {
   const initDataTable = async () => {
     let exportConfigs = {...DT_CONFIG_EXPORTS};
 
-    exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+    exportConfigs.buttons.buttons = DT.setExportButtonsObject(exportConfigs.buttons.buttons, {
       title: 'Activity Evaluation - PUPQC-EPMS',
       messageTop: 'List of projects for evaluation',
     });

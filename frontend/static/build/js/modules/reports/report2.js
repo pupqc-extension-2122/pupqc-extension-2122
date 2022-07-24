@@ -19,7 +19,7 @@ const Report2 = (() => {
   const initDataTable = async () => {
     let exportConfigs = {...DT_CONFIG_EXPORTS};
 
-    exportConfigs.buttons = DT.setExportButtonsObject(exportConfigs.buttons, {
+    exportConfigs.buttons.buttons = DT.setExportButtonsObject(exportConfigs.buttons.buttons, {
       title: 'Report on Status of University Extension Projects - PUPQC-EPMS',
       messageTop: 'Report outputs',
     });

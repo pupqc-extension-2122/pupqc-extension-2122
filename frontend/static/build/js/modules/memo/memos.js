@@ -15,8 +15,16 @@ const Memos = (() => {
   let initialized = false;
 
   const initDataTable = async () => {
+    let exportConfigs = {...DT_CONFIG_EXPORTS};
+
+    exportConfigs.buttons.buttons = DT.setExportButtonsObject(exportConfigs.buttons.buttons, {
+      title: 'List of MOA/MOU - PUPQC-EPMS',
+      messageTop: 'List of Memorandum of Agreement/Understanding',
+    });
+
     dt = await dtElem.DataTable({
 			...DT_CONFIG_DEFAULTS,
+      ...exportConfigs,
       ajax: {
         url: `${ BASE_URL_API }/memos/datatables`,
         // success: res => {
@@ -54,6 +62,11 @@ const Memos = (() => {
 					data: 'partner_name',
           width: '30%',
           render: (data, type, row) => {
+
+            // For export
+            if (type === 'export') return data || '';
+            
+            // For display
             const partnerName = data.length > 100
               ? `<span title="${ data }" data-toggle="tooltip">${ data.substring(0, 100) } ...</span>`
               : data
@@ -66,6 +79,11 @@ const Memos = (() => {
           data: 'validity_date',
           width: '20%',
           render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date') || '';
+            
+            // For display
             const getClass = () => 
               moment().isAfter(data) && moment().isAfter(row.end_date)
                 ? 'text-danger' : 'text-muted';
@@ -78,6 +96,11 @@ const Memos = (() => {
           data: 'end_date',
           width: '20%',
           render: (data, type, row) => {
+            
+            // For export
+            if (type === 'export') return formatDateTime(data, 'Date') || '';
+            
+            // For display
             const getClass = () =>
               moment().isAfter(data) && moment().isAfter(row.validity_date)
                 ? 'text-danger' : 'text-muted';
@@ -89,8 +112,13 @@ const Memos = (() => {
         }, {
           data: null, 
           sortable: false,
-          render: (data) => {
+          render: (data, type, row) => {
             const status = moment().isBetween(moment(data.validity_date), moment(data.end_date)) ? 'Active' : 'Inactive';
+            
+            // For export
+            if (type === 'export') return status;
+            
+            // For display
             const { theme, icon } = MEMO_STATUS_STYLES[status];
             return `
               <div class="text-center">
