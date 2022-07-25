@@ -182,19 +182,27 @@ const Report3 = (() => {
         
         // [6] Date of Effectivity of MOU/MOA
         {
-          data: 'validity_date',
+          data: null,
           render: (data, type, row) => {
+
+            if (type === 'export') return ''
+            return noContentTemplate('Date of Effectivity of MOU/MOA is missing.');
             
+            // TODO: Date of Effectivity of MOU/MOA
+
             // For export
-            if (type === 'export') return formatDateTime(data, 'Date')
+            // if (type === 'export') 
+            //   return data 
+            //     ? formatDateTime(data, 'Date')
+            //     : ''
 
             //For display
-            return data
-              ? `
-                <div>${ formatDateTime(data, 'Date') }</div>
-                <div class="small text-muted">${ fromNow(data) }</div>
-              `
-              : noContentTemplate('Date of Effectivity of MOU/MOA is missing.')
+            // return data
+            //   ? `
+            //     <div>${ formatDateTime(data, 'Date') }</div>
+            //     <div class="small text-muted">${ fromNow(data) }</div>
+            //   `
+            //   : noContentTemplate('Date of Effectivity of MOU/MOA is missing.')
           }
         },
 
