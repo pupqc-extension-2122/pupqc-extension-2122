@@ -95,14 +95,15 @@ const ProjectDetails = (() => {
 
         // * For evaluation mode * //
         else if (mode === 'Activity Evaluation') {
-          const status = 'Not yet graded';
-          const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
-          return `
-            <div class="badge badge-subtle-${theme} user-select-none py-1 px-2">
-              <i class="${icon} fa-fw mr-1"></i>
-              <span>${status}</span>
-            </div>
-          `
+          return '';
+          // const status = 'Not yet graded';
+          // const { theme, icon } = PROJECT_EVALUATION_STATUS_STYLES[status];
+          // return `
+          //   <div class="badge badge-subtle-${theme} user-select-none py-1 px-2">
+          //     <i class="${icon} fa-fw mr-1"></i>
+          //     <span>${status}</span>
+          //   </div>
+          // `
         }
 
         else {
