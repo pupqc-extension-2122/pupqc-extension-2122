@@ -2357,7 +2357,7 @@ class ProjectActivityForm {
 							class="form-control" 
 							name="topic-${formGroupId}" 
 							${input}="${formGroupId}"
-							placeholder="Enter the topic here ..."
+							placeholder="Enter the topic here"
 						/>
 					</div>
 					<div>
@@ -2388,7 +2388,7 @@ class ProjectActivityForm {
 							class="form-control" 
 							name="outcome-${formGroupId}" 
 							${input}="${formGroupId}"
-							placeholder="Enter the outcome here ..."
+							placeholder="Enter the outcome here"
 						/>
 					</div>
 					<div>
@@ -2873,7 +2873,7 @@ class ProjectEvaluationForm {
             class="form-control form-control-border"
             name="name-${ rowId }"
             ${ this.data.input }="name"
-            placeholder="Enter the name of the evaluator here ..."
+            placeholder="Enter the name of the evaluator here"
           />
         </div>
       </td>

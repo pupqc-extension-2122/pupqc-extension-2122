@@ -503,7 +503,6 @@ const ProjectDetails = (() => {
     if (!initialized) {
       initialized = true;
       project = data.project;
-      console.log(project);
       mode = data.mode;
       loadDetails();
       removeLoaders();
@@ -2987,7 +2986,7 @@ const ProjectActivities = (() => {
           }
         },
         end_date: {
-          required: 'Please select a end date', 
+          required: 'Please select an end date', 
           dateISO: 'Your input is an invalid date',
           sameOrAfterDateTime: {
             rule: () => project.start_date,
@@ -3459,9 +3458,8 @@ const ProjectActivities = (() => {
 
 const AddProjectActivity = (() => {
 
-  /**
-   * * Local Variables
-   */
+  // * Local Variables
+
   const formSelector = '#addProjectActivity_form';
   const form = $(formSelector)[0];
   const addActivityModal = $('#addProjectActivity_modal');
@@ -3471,9 +3469,7 @@ const AddProjectActivity = (() => {
   let processing = false;
   let project;
 
-  /**
-   * * Private Functions
-   */
+  // * Private Functions
 
   const initProjectActivityForm = () => {
     
@@ -3555,7 +3551,7 @@ const AddProjectActivity = (() => {
           }
         },
         end_date: {
-          required: 'Please select a end date',
+          required: 'Please select an end date',
           dateISO: 'Your input is not a valid date',
           sameOrAfterDateTime: {
             rule: () => project.start_date,
