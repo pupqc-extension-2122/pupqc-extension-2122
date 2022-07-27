@@ -2513,7 +2513,7 @@ const ProjectActivities = (() => {
                   ` : ''
               }
               return `
-                <div>${ needEdit() }${formatDateTime(start_date, 'Date')}</div>
+                <div>${ needEdit() }${formatDateTime(start_date, 'Short Date')}</div>
                 <div class="small text-muted">${ fromNow(start_date) }</div>
               `
             }
@@ -2539,7 +2539,7 @@ const ProjectActivities = (() => {
                   ` : ''
               }
               return `
-                <div>${ needEdit() }${formatDateTime(end_date, 'Date')}</div>
+                <div>${ needEdit() }${formatDateTime(end_date, 'Short Date')}</div>
                 <div class="small text-muted">${ fromNow(end_date) }</div>
               `
             }
@@ -2672,7 +2672,7 @@ const ProjectActivities = (() => {
                   ` : ''
               }
               return `
-                <div>${ needEdit() }${formatDateTime(start_date, 'Date')}</div>
+                <div>${ needEdit() }${formatDateTime(start_date, 'Short Date')}</div>
                 <div class="small text-muted">${ fromNow(start_date) }</div>
               `
             }
@@ -2698,7 +2698,7 @@ const ProjectActivities = (() => {
                   ` : ''
               }
               return `
-                <div>${ needEdit() }${formatDateTime(end_date, 'Date')}</div>
+                <div>${ needEdit() }${formatDateTime(end_date, 'Short Date')}</div>
                 <div class="small text-muted">${ fromNow(end_date) }</div>
               `
             }
@@ -2842,7 +2842,7 @@ const ProjectActivities = (() => {
                   ` : ''
               }
               return `
-                <div>${ needEdit() }${formatDateTime(start_date, 'Date')}</div>
+                <div>${ needEdit() }${formatDateTime(start_date, 'Short Date')}</div>
                 <div class="small text-muted">${ fromNow(start_date) }</div>
               `
             }
@@ -2868,7 +2868,7 @@ const ProjectActivities = (() => {
                   ` : ''
               }
               return `
-                <div>${ needEdit() }${formatDateTime(end_date, 'Date')}</div>
+                <div>${ needEdit() }${formatDateTime(end_date, 'Short Date')}</div>
                 <div class="small text-muted">${ fromNow(end_date) }</div>
               `
             }

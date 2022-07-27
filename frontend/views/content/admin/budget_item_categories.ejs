@@ -31,17 +31,15 @@
 
       <%# Buttons %>
       <div>
-        <% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
-          <button 
-            type="button" 
-            class="btn btn-primary" 
-            data-toggle="modal"
-            data-target="#addBudgetItemCategory_modal"
-          >
-            <i class="fas fa-plus mr-1"></i>
-            <span>Add new category</span>
-          </>
-        <% } %>
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          data-toggle="modal"
+          data-target="#addBudgetItemCategory_modal"
+        >
+          <i class="fas fa-plus mr-1"></i>
+          <span>Add new category</span>
+        </>
       </div>
       
     </div>
@@ -126,7 +124,7 @@
               class="btn btn-sm btn-negative" 
               data-toggle="tooltip"
               title="Reload table"
-              onclick=""
+              onclick="BudgetItemCategories.reloadDataTable()"
             >
               <i class="fas fa-sync-alt"></i>
             </button>

@@ -236,9 +236,16 @@ const isAfterOrToday = (datetime) => moment(datetime).isSameOrAfter(moment());
  * @param {string} format Type of format
  * @returns String of readable datetime format
  */
-const formatDateTime = (datetime, format = "") => format
-	? moment(datetime).format(format in DATETIME_FORMATS ? DATETIME_FORMATS[format] : format)
-	: moment(datetime).format();
+const formatDateTime = (datetime, format = "") => {
+  const dt = moment(datetime);
+  if (dt.isValid() && format) {
+    if ([4, 5, 6].includes(dt.month()) && ['Short DateTime', 'Short Date'].some(f => f == format))
+      return dt.format('MMMM D, YYYY')
+    else 
+      return dt.format(format in DATETIME_FORMATS ? DATETIME_FORMATS[format] : format)
+  }
+  return dt.format();
+}
 
 
 /** 

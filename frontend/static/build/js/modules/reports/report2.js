@@ -119,7 +119,10 @@ const Report2 = (() => {
           render: (data, type, row) => {
             const { start_date, end_date } = data;
             if (start_date && end_date) {
-              const start_end = `${ formatDateTime(start_date, 'Date') } - ${ formatDateTime(end_date, 'Date') }`;
+              const start_end = `
+                <span class="text-nowrap">${ formatDateTime(start_date, 'Short Date') }</span>
+                <span class="text-nowrap">- ${ formatDateTime(end_date, 'Short Date') }</span>
+              `;
 
               if (type === 'export') return start_end;
 

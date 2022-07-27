@@ -114,7 +114,7 @@ const ProjectMonitoring = (() => {
 
             // For display
             return `
-              <div>${ formatDateTime(data, 'Date') }</div>
+              <div>${ formatDateTime(data, 'Short Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
@@ -127,7 +127,7 @@ const ProjectMonitoring = (() => {
 
             // For display
             return `
-              <div>${ formatDateTime(data, 'Date') }</div>
+              <div>${ formatDateTime(data, 'Short Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
             `
           }

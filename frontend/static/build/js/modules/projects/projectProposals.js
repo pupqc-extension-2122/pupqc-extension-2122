@@ -116,7 +116,7 @@ const ProjectProposals = (() => {
 
             // For display
 						return `
-              <div class="text-nowrap">${ formatDateTime(data, 'Date') }</div>
+              <div class="text-nowrap">${ formatDateTime(data, 'Short Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
             `
 					}
@@ -129,7 +129,7 @@ const ProjectProposals = (() => {
 
             // For display
             return `
-              <div class="text-nowrap">${ formatDateTime(data, 'Date') }</div>
+              <div class="text-nowrap">${ formatDateTime(data, 'Short Date') }</div>
               <div class="small text-muted">${ fromNow(data) }</div>
             `
 					}

@@ -4,12 +4,11 @@
  * ==============================================
  */
 
-  'use strict';
+'use strict';
 
-  const BranchesCampuses = (() => {
-  /**
-    * * Local Variables
-    */
+const BranchesCampuses = (() => {
+
+  // * Local Variables
   
   const dtElem_selector = '#branches_campuses_dt';
   const dtElem = $(dtElem_selector);
@@ -22,9 +21,7 @@
   let processing = false;
 
 
-  /**
-   * * Private Methods
-   */
+  // * Private Methods
 
   const initializations = () => {
     const branchCampusType_select = $('#editBranchCampus_type_select');
@@ -108,11 +105,10 @@
         }, {
           data: 'created_at',
           width: '25%',
-          render: data => {
-            const created_at = data.created_at
+          render: (data, type, row) => {
             return `
-              <div>${ formatDateTime(created_at, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(created_at) }</div>
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, {
@@ -258,11 +254,10 @@
 
   }
 
-  /**
-   * * Public Methods
-   */
+  // * Public Methods
 
   const reloadDataTable = async () =>  await dt.ajax.reload();
+
   const initEditMode = async (data) => {
 
     // Show the modal
@@ -288,9 +283,9 @@
           .val(() => type)
           .trigger('change');
   }
-  /**
-   * * Init
-   */
+
+  // * Init
+
   const init = () => {
     if (!initialized) {
       initialized = true;
@@ -304,7 +299,6 @@
     init,
     reloadDataTable
   }
-
 })();
 
 BranchesCampuses.init();

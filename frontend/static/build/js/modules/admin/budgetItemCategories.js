@@ -4,9 +4,9 @@
  * ==============================================
  */
 
-  'use strict';
+'use strict';
 
-  const BudgetItemCategories = (() => {
+const BudgetItemCategories = (() => {
   
   // * Local Variables
 
@@ -79,11 +79,10 @@
         }, {
           data: 'created_at',
           width: '25%',
-          render: data => {
-            const created_at = data.created_at
+          render: (data, type, row) => {
             return `
-              <div>${ formatDateTime(created_at, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(created_at) }</div>
+              <div>${ formatDateTime(data, 'Date') }</div>
+              <div class="small text-muted">${ fromNow(data) }</div>
             `
           }
         }, {

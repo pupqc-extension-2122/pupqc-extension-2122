@@ -88,7 +88,7 @@ const Memos = (() => {
               moment().isAfter(data) && moment().isAfter(row.end_date)
                 ? 'text-danger' : 'text-muted';
             return `
-              <div>${ formatDateTime(data, 'Date') }</div>
+              <div>${ formatDateTime(data, 'Short Date') }</div>
               <div class="small ${ getClass() }">${ fromNow(data) }</div>
             `
           }
@@ -105,7 +105,7 @@ const Memos = (() => {
               moment().isAfter(data) && moment().isAfter(row.validity_date)
                 ? 'text-danger' : 'text-muted';
             return `
-              <div>${ formatDateTime(data, 'Date') }</div>
+              <div>${ formatDateTime(data, 'Short Date') }</div>
               <div class="small ${ getClass() }">${ fromNow(data) }</div>
             `
           }

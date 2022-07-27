@@ -112,9 +112,9 @@ Object.freeze(DT_CONFIG_DEFAULTS);
 const DT_CONFIG_EXPORTS = {
   dom: `
     <"row w-100"
-      <"col-xl-3" l>
-      <"col-lg-6" B>
-      <"col-md-6 col-xl-3" f>
+      <"col-lg-12 col-xl-3" l>
+      <"col-md-9 col-lg-6" B>
+      <"col-md-3" f>
     >
     <t>
     <"row"

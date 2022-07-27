@@ -24,6 +24,11 @@ const Report1 = (() => {
       message: 'List of reports generated',
     });
 
+    const dateTemplate = date => `
+      <div class="text-nowrap">${ formatDateTime(date, 'Short Date') }</div>
+      <div class="text-nowrap small text-muted">${ fromNow(date) }</div>
+    `
+
     dt = await dtElem.DataTable({
       ...DT_CONFIG_DEFAULTS,
       ...exportConfigs,
@@ -114,11 +119,7 @@ const Report1 = (() => {
             if (type === 'export') return formatDateTime(data, 'Date')
             
             // For display
-            const created_at = data.created_at
-            return `
-              <div>${ formatDateTime(created_at, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(created_at) }</div>
-            `
+            return dateTemplate(data);
           }
         }, 
         
@@ -133,10 +134,7 @@ const Report1 = (() => {
             if (type === 'export') return formatDateTime(data, 'Date')
 
             // For display
-            return `
-              <div>${ formatDateTime(data, 'Date') }</div>
-              <div class="small text-muted">${ fromNow(data) }</div>
-            `
+            return dateTemplate(data);
           }
         }, 
         
@@ -153,10 +151,7 @@ const Report1 = (() => {
             // For display
             const { evaluation: e } = data;
             return e 
-              ? `
-                <div>${ formatDateTime(e.eppec_evaluation_date, 'Date') }</div>
-                <div class="small text-muted">${ fromNow(e.eppec_evaluation_date) }</div>
-              `
+              ? dateTemplate(e.eppec_evaluation_date)
               : noContentTemplate('Evaluation is missing.')
             
           }
@@ -175,10 +170,7 @@ const Report1 = (() => {
             // For display
             const { evaluation: e } = data;
             return e 
-              ? `
-                <div>${ formatDateTime(e.release_date, 'Date') }</div>
-                <div class="small text-muted">${ fromNow(e.release_date) }</div>
-              `
+              ? dateTemplate(e.release_date)
               : noContentTemplate('Evaluation is missing.')
             
           }
@@ -245,16 +237,11 @@ const Report1 = (() => {
             
             // For export
             if (type === 'export') 
-              return data
-                ? formatDateTime(data, 'Date')
-                : ''
+              return data ? formatDateTime(data, 'Date') : '';
 
             // For display
             return data
-              ? `
-                <div>${ formatDateTime(data, 'Date') }</div>
-                <div class="small text-muted">${ fromNow(data) }</div>
-              `
+              ? dateTemplate(data)
               : noContentTemplate('Date of Endorsement for Funding is missing.')
           }
         }, 
@@ -266,16 +253,11 @@ const Report1 = (() => {
             
             // For export
             if (type === 'export') 
-              return data
-                ? formatDateTime(data, 'Date')
-                : ''
+              return data ? formatDateTime(data, 'Date') : '';
 
             // For display
             return data
-              ? `
-                <div>${ formatDateTime(data, 'Date') }</div>
-                <div class="small text-muted">${ fromNow(data) }</div>
-              `
+              ? dateTemplate(data)
               : noContentTemplate('Release date of SO is missing.')
           }
         }, 
@@ -287,16 +269,11 @@ const Report1 = (() => {
             
             // For export
             if (type === 'export') 
-              return data
-                ? formatDateTime(data, 'Date')
-                : ''
+              return data ? formatDateTime(data, 'Date') : '';
 
             //For display
             return data
-              ? `
-                <div>${ formatDateTime(data, 'Date') }</div>
-                <div class="small text-muted">${ fromNow(data) }</div>
-              `
+              ? dateTemplate(data)
               : noContentTemplate('Release date of Cash Advance is missing.')
           }
         }, 
