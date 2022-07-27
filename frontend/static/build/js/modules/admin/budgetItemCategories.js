@@ -1,15 +1,15 @@
 /**
  * ==============================================
- * * Budget Item Categories
+ * * BUDGET ITEM CATEGORIES
  * ==============================================
  */
 
   'use strict';
 
   const BudgetItemCategories = (() => {
-  /**
-    * * Local Variables
-    */
+  
+  // * Local Variables
+
   const dtElem_selector = '#budget_item_categories_dt';
   const dtElem = $(dtElem_selector);
   const editModal = $('#editBudgetItemCategory_modal');
@@ -20,9 +20,7 @@
   let initialized = false;
   let processing = false;
 
-  /**
-   * * Private Methods
-   */
+  // * Private Methods
     
   const initializations = () => {
 
@@ -93,7 +91,7 @@
           sortable: false,
           width: '15%',
           render: (data) => {
-            return data.active 
+            return !data.deleted_at 
               ? `
                 <div class="text-sm-center">
                   <div class="badge badge-subtle-success px-2 py-1">
@@ -124,13 +122,20 @@
               
                 <div class="dropdown-menu dropdown-menu-right">
                   <div class="dropdown-header">Options</div>
-                  <button
-                    type="button"
+                  <div
+                    role="button"
                     class="dropdown-item"
                     data-dt-btn="initEditMode"
                   >
                     <span>Edit details</span>
-                  </button>
+                  </div>
+                  <div
+                    role="button"
+                    class="dropdown-item"
+                    data-dt-btn="initDeactivateMode"
+                  >
+                    <span>Deactivate</span>
+                  </div>
                 </div>
               </div>
             `
@@ -227,10 +232,7 @@
     // Show the modal
     editModal.modal('show');
 
-    const { 
-      id,
-      name
-    } = data;
+    const { id, name } = data;
   
     // Set the input values
     setInputValue({
@@ -242,9 +244,8 @@
     $('#editBudgetItemCategory_saveBtn').attr('disabled', false);
   }
   
-  /**
-   * * Init
-   */
+  // * Init
+
   const init = () => {
     if (!initialized) {
       initialized = true;

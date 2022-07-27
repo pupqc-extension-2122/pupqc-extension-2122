@@ -82,6 +82,22 @@ router.get('/budget-item-categories', jwtMiddleware, (req, res) => {
     : render404(res)
 });
 
+// Programs
+router.get('/programs', jwtMiddleware, (req, res) => {
+  const { roles, first_name, last_name } = req.auth;
+
+  roles.includes('Admin')
+    ? res.render(PATH + 'programs', {
+      document_title: 'Programs',
+      active_sidebar_tab: 'Programs',
+      name: `${ first_name } ${ last_name }`,
+      role: renderRoles(roles),
+      roles: roles,
+      ...RENDER_OPTION_DEFAULTS
+    })
+    : render404(res)
+});
+
 // Branches/Campuses
 router.get('/branches-campuses', jwtMiddleware, (req, res) => {
   const { roles, first_name, last_name } = req.auth;

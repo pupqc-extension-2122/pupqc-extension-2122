@@ -1,17 +1,18 @@
-<%# Add Branch/Campus Modal %>
-<div class="modal fade" id="addBranchCampus_modal" data-backdrop="static">
+<%# Add Program Modal %>
+<div class="modal fade" id="addProgram_modal" data-backdrop="static">
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-    <form class="modal-content" id="addBranchCampus_form">
+    <form class="modal-content" id="addProgram_form">
       <div class="modal-header">
-        <h4 class="modal-title">Add a Branch/Campus</h4>
+        <h4 class="modal-title">Add a program</h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
           <i class="fas fa-times"></i>
         </button>
       </div>
       
       <div class="modal-body">
+        
         <%# Form Group Loader %>
-        <div id="addBranchCampus_formGroups_loader">
+        <div id="addProgram_formGroups_loader">
           <div class="form-group">
             <div class="skeleton text" style="width: 8rem"></div>
             <div class="skeleton input"></div>
@@ -27,47 +28,39 @@
         </div>
 
         <%# Form Groups %>
-        <div class="row" id="addBranchCampus_formGroups" style="display: none">
+        <div class="row" id="addProgram_formGroups" style="display: none">
 
-          <%# Branch/Campus Name %>
+          <%# Name %>
           <div class="col-12">
             <div class="form-group">
-              <label for="addBranchCampus_branchCampusName">
-                <span>Branch/Campus Name</span>
+              <label for="addProgram_name">
+                <span>Name</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="addBranchCampus_branchCampusName" 
-                name="branchCampus_name"
-                placeholder="Enter the branch/campus name here"
+                id="addProgram_name" 
+                name="name"
+                placeholder="Enter the name here"
               />
             </div>
           </div>
 
-          <%# Type %>
+          <%# Abbreviation %>
           <div class="col-12">
-            <div class="form-group" id="addBranchCampus_type_grp">
-              <label for="addBranchCampus_type">
-                <span>Type</span>
+            <div class="form-group">
+              <label for="addProgram_abbreviation">
+                <span>Abbreviation</span>
                 <span class="text-danger">*</span>
               </label>
-  
-              <div class="form-group">
-                <div class="form-row">
-                  <div class="col-12">
-                    <select 
-                      name="addBranchCampus_type" 
-                      id="addBranchCampus_type_select" 
-                      class="form-control select2"
-                      style="width: 100%;"
-                    > 
-                    <option disabled>Select a branch/campus type.</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="addProgram_abbreviation" 
+                name="abbreviation"
+                placeholder="Enter the abbreviation here"
+              />
             </div>
           </div>
 
@@ -75,7 +68,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="submitBranchCampus_btn">Submit</button>
+        <button type="submit" class="btn btn-primary" id="submitProgram_btn">Submit</button>
       </div>
     </form>
   </div>

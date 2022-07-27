@@ -26,9 +26,8 @@ const Users = (() => {
 
     // *** For Edit User Modal *** //
 
-    editModal.on('show.bs.modal', async () => {
-      await getRoles();
-    });
+    // editModal.on('show.bs.modal', async () => {
+    // });
 
     editModal.on('hidden.bs.modal', () => {
       editForm.reset();
@@ -167,7 +166,8 @@ const Users = (() => {
       ]
     });
 
-    $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, (e) => {
+    $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, async (e) => {
+      await getRoles();
       const row = $(e.currentTarget).closest('tr');
       const data = dt.row(row).data();
       initEditMode(data);
@@ -284,7 +284,13 @@ const Users = (() => {
           data.forEach(role => {
             rolesList.append(`
               <div class="icheck-primary">
-                <input type="checkbox" name="roles" value="${ role.id }" id="role-${ role.id }">
+                <input 
+                  type="checkbox" 
+                  name="roles" 
+                  value="${ role.id }" 
+                  disabled
+                  readonly
+                >
                 <label for="role-${ role.id }">${ role.name }</label>
               </div>
             `);
@@ -317,10 +323,6 @@ const Users = (() => {
   const reloadDataTable = async () =>  await dt.ajax.reload();
 
   const initEditMode = async (data) => {
-
-    // Show the modal
-    editModal.modal('show');
-
     const { 
       id,
       first_name, 
@@ -339,14 +341,20 @@ const Users = (() => {
       '#editUser_lastName': last_name,
       '#editUser_suffixName': suffix_name,
       '#editUser_email': email,
-      '#editUser_rolesList': roles
+    });
+
+    roles.forEach(role => {
+      $('#editUser_rolesList')
+        .find(`input[type="checkbox"][value="${ role.id }"]`)
+        .prop('checked', true);
     });
     
     // Enable buttons
     $('#editUser_saveBtn').attr('disabled', false);
-  }
 
-  
+    // Show the modal
+    editModal.modal('show');
+  }
 
   // * Init
 

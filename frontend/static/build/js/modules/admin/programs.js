@@ -1,96 +1,70 @@
 /**
  * ==============================================
- * * Budget Item Categories
+ * * PROGRAMS
  * ==============================================
  */
 
-  'use strict';
+'use strict';
 
-  const BranchesCampuses = (() => {
-  /**
-    * * Local Variables
-    */
-  
-  const dtElem_selector = '#branches_campuses_dt';
+const Programs = (() => {
+
+  // * Local Variables
+
+  const dtElem_selector = '#progams_dt';
   const dtElem = $(dtElem_selector);
-  const editModal = $('#editBranchCampus_modal');
-  const editFormSelector = '#editBranchCampus_form';
+  const editModal = $('#editPrograms_modal');
+  const editFormSelector = '#editPrograms_form';
   const editForm = $(editFormSelector)[0];
   let dt;
   let editValidator;
   let initialized = false;
   let processing = false;
 
-
-  /**
-   * * Private Methods
-   */
-
+  // * Private Methods
+    
   const initializations = () => {
-    const branchCampusType_select = $('#editBranchCampus_type_select');
-    const editBranchCampus_types = [
-      {
-        id: 'Branches',
-        name: 'Branches',
-      },{
-        id: 'Campuses',
-        name: 'Campuses',
-      },{
-        id: 'Colleges',
-        name: 'Colleges',
-      }
-    ]
 
-    branchCampusType_select.empty();
-    branchCampusType_select.append(`<option></option>`);
-    editBranchCampus_types.forEach(t => {
-      branchCampusType_select.append(`
-        <option value="${ t.id }">${ t.name }</option>
-      `);
-    });
-
-    // *** For Add Branch/Campus Modal *** //
+    // *** For Add Budget Item Category Modal *** //
 
     editModal.on('show.bs.modal', () => {
-      $('#editBranchCampus_formGroups_loader').remove();
-      $('#editBranchCampus_formGroups').show();
-
-      editModal.on('hide.bs.modal', (e) => {
-        if (processing) e.preventDefault();
-      });
+      $('#editPrograms_formGroups_loader').remove();
+      $('#editPrograms_formGroups').show();
     });
 
     editModal.on('hidden.bs.modal', () => {
       editForm.reset();
     });
+
+    editModal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
   }
 
   const initDataTable = async () => {
     dt = await dtElem.DataTable({
-			...DT_CONFIG_DEFAULTS,
+      ...DT_CONFIG_DEFAULTS,
       ajax: {
-        url: `${ BASE_URL_API }/organizations/datatables`,
+        url: `${ BASE_URL_API }/budget_categories/datatables`,
         // success: result => {
         //   console.log(result);
         // },
         error: (xhr, status, error) => {
           ajaxErrorHandler({
-            file: 'admin/branchesCampuses.js',
-            fn: 'BranchesCampuses.initDataTable()',
+            file: 'admin/budgetItemCategories.js',
+            fn: 'BudgetItemCategories.initDataTable()',
             details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
           }, 1);
         },
         data: {
           types: {
             created_at: 'date',
-            name: 'string',
-            type: 'string'
+            name: 'string'
           }
         },
         beforeSend: () => {
           dtElem.find('tbody').html(`
             <tr>
-              <td colspan="6">${ DT_LANGUAGE.loadingRecords }</td>
+              <td colspan="5">${ DT_LANGUAGE.loadingRecords }</td>
             </tr>
           `);
         },
@@ -101,10 +75,7 @@
           visible: false,
         }, {
           data: 'name',
-          width: '30%',
-        },  {
-          data: 'type',
-          width: '25%',
+          width: '55%',
         }, {
           data: 'created_at',
           width: '25%',
@@ -119,8 +90,8 @@
           data: null,
           sortable: false,
           width: '15%',
-          render: (data, type, row) => {
-            return !row.deleted_at 
+          render: (data) => {
+            return !data.deleted_at 
               ? `
                 <div class="text-sm-center">
                   <div class="badge badge-subtle-success px-2 py-1">
@@ -144,13 +115,13 @@
           render: data => {
             return `
               <div class="dropdown text-center">
-                  
-              <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
-                <i class="fas fa-ellipsis-h"></i>
-              </div>
-            
-              <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">Options</div>
+                
+                <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
+                  <i class="fas fa-ellipsis-h"></i>
+                </div>
+              
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-header">Options</div>
                   <div
                     role="button"
                     class="dropdown-item"
@@ -183,12 +154,8 @@
   const handleEditForm = () => {
     editValidator = $app(editFormSelector).handleForm({
       validators: {
-        branchCampus_name: {
-          required: "Branch/Campus name is required.",
-          notEmpty: "This field cannot be blank.",
-        },
-        type: {
-          required: "Type is required.",
+        category_name: {
+          required: "The budget item category name is required.",
           notEmpty: "This field cannot be blank.",
         }
       },
@@ -201,8 +168,8 @@
     processing = true;
 
     // Disable the elements
-    const saveBtn = $('#editBranchCampus_saveBtn');
-    const cancelBtn = $('#editBranchCampus_cancelBtn');
+    const saveBtn = $('#editProgram_saveBtn');
+    const cancelBtn = $('#editProgram_cancelBtn');
     
     cancelBtn.attr('disabled', true);
     saveBtn.attr('disabled', true);
@@ -226,12 +193,11 @@
     // Get the data
     const fd = new FormData(editForm);
     const data = {
-      name: fd.get('branchCampus_name'),
-      type: fd.get('editBranchCampus_type')
+      name: fd.get('category_name'),
     }
 
     await $.ajax({
-      url: `${ BASE_URL_API }/organizations/${ fd.get('branch_campus_id') }`,
+      url: `${ BASE_URL_API }/budget_categories/${ fd.get('category_id') }`,
       type: 'PUT',
       data: data,
       success: async res => {
@@ -242,14 +208,14 @@
           await reloadDataTable();
           enableElements();
           editModal.modal('hide');
-          toastr.success('A branch/campus has been successfully updated');
+          toastr.success('A budget item category has been successfully updated');
         }
       }, 
       error: (xhr, status, error) => {
         enableElements();
         ajaxErrorHandler({
-          file: 'admin/branchesCampuses.js',
-          fn: 'BranchesCampuses.onEditFormSubmit()',
+          file: 'admin/budgetItemCategories.js',
+          fn: 'BudgetItemCategories.onEditFormSubmit()',
           data: data,
           xhr: xhr
         });
@@ -258,9 +224,7 @@
 
   }
 
-  /**
-   * * Public Methods
-   */
+  // * Public Methods
 
   const reloadDataTable = async () =>  await dt.ajax.reload();
   const initEditMode = async (data) => {
@@ -268,29 +232,20 @@
     // Show the modal
     editModal.modal('show');
 
-    const { 
-      id,
-      name,
-      type
-    } = data;
-  
+    const { id, name } = data;
+
     // Set the input values
     setInputValue({
-      '#editBranchCampus_branchCampusId': id,
-      '#editBranchCampus_branchCampusName': name,
-      'editBranchCampus_type_select':type
+      '#editBudgetItemCategory_categoryId': id,
+      '#editBudgetItemCategory_categoryName': name,
     });
     
     // Enable buttons
-    $('#editBranchCampus_saveBtn').attr('disabled', false);
-
-    $('#editBranchCampus_type_select')
-          .val(() => type)
-          .trigger('change');
+    $('#editBudgetItemCategory_saveBtn').attr('disabled', false);
   }
-  /**
-   * * Init
-   */
+
+  // * Init
+
   const init = () => {
     if (!initialized) {
       initialized = true;
@@ -302,9 +257,8 @@
 
   return {
     init,
-    reloadDataTable
+    reloadDataTable,
   }
-
 })();
 
-BranchesCampuses.init();
+Programs.init();
