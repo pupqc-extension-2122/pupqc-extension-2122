@@ -6,6 +6,7 @@ exports.getCards = async (req, res) => {
 
     let data = {
       total: 0,
+      upcoming: 0,
       ongoing: 0,
       concluded: 0,
       created: 0,
@@ -27,6 +28,15 @@ exports.getCards = async (req, res) => {
 
       if (el.evaluation)
         data['evaluated']++
+
+      if (status == 'approved') {
+        if (el.start_date > new Date())
+          data['upcoming']++
+        else if (el.start_date <= new Date() && el.end_date >= new Date())
+          data['ongoing']++
+        else
+          data['concluded']++
+      }
     });
 
     data['memos'] = await Memos.count({
