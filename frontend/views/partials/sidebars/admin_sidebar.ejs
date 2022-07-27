@@ -27,6 +27,8 @@
           </a>
         </li>
 
+        <li class="dropdown-divider"></li>
+
         <%# ADMIN %>
         <li class="nav-header">ADMIN</li>
         <li class="nav-item">
@@ -39,6 +41,8 @@
           </a>
         </li>
 
+        <li class="dropdown-divider"></li>
+
         <%# Configurations %>
         <li class="nav-header">CONFIGURATIONS</li>
         <li class="nav-item">
@@ -46,8 +50,18 @@
             href="<%=BASE_URL%>/a/budget-item-categories" 
             class="nav-link<% if (active_sidebar_tab == "Budget Item Categories") { %> active<% } %>"
           >
-            <i class="nav-icon fas fa-money-bill-alt"></i>
+            <i class="nav-icon fas fa-money-bill-wave"></i>
             <p class="text">Budget Item Categories</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a 
+            href="<%=BASE_URL%>/a/programs" 
+            class="nav-link<% if (active_sidebar_tab == "Programs") { %> active<% } %>"
+          >
+            <i class="nav-icon fas fa-university"></i>
+            <p class="text">Programs</p>
           </a>
         </li>
 

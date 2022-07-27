@@ -248,23 +248,17 @@ const formatDateTime = (datetime, format = "") => format
 
 const $app = (selector) => {
 
-	/**
-	 * * App Object
-	 */
-	let app = {}
+	// * App Object
 
-	/**
-	 * * Private Variables
-	 */
+  let app = {}
 
-	/**
-	 * * App Properties
-	 */
-	app.element = $(selector)
+	// * Private Variables
 
-	/**
-	 * * App Methods
-	 */
+	// * App Properties
+
+  app.element = $(selector)
+
+	// * App Methods
 
 	// Handle Form
 	app.handleForm = ({ validators, onSubmit }) => {
@@ -355,9 +349,7 @@ const $app = (selector) => {
     const DATE_FORMAT = 'yyyy-mm-dd';
     const MOMENT_DATE_FORMAT = 'YYYY-MM-DD';
 
-		/**
-		 * For Date Range Picker
-		 */
+		// --- For Date Range Picker ---
 
 		// Initialize default options
 		let _daterangepicker = {
@@ -381,9 +373,7 @@ const $app = (selector) => {
 		// Reconfigure the options if set
 		Object.entries(daterangepicker)?.forEach(([key, value]) => _daterangepicker[key] = value);
 
-		/**
-		 * For Input Mask
-		 */
+    // --- For Input Mask ---
 
 		// Initialize default options
 		let _inputmask = {
@@ -393,9 +383,7 @@ const $app = (selector) => {
 		// Reconfigure the options if set
 		Object.entries(inputmask)?.forEach(([key, value]) => _inputmask[key] = value);
 
-		/**
-		 * Overall Setup
-		 */
+		// --- Overall Setup ---
 
 		if (button !== null) {
 			const btn = $(button), input = $(selector);
@@ -429,15 +417,25 @@ const $app = (selector) => {
 				const value = input.val();
 				const element = btn.data('daterangepicker');
 				if (value) {
-          const val = moment(value).toDate();
-					element.setStartDate(val);
-					element.setEndDate(val);
+          const moment_val = moment(value);
+          if (moment_val.isValid()) {
+            const val = moment_val.toDate();
+            element.setStartDate(val);
+            element.setEndDate(val);
+          }
 				} else {
 					const dateToday = moment().toDate();
 					element.setStartDate(dateToday);
 					element.setEndDate(dateToday);
 				}
 			});
+
+      input.rules('add', {
+        validMomentRange: true,
+        messages: {
+          validMomentRange: `Please select a date between ${ moment().subtract(99, 'years').startOf('year').format('MMM. D, YYYY') } and ${ moment().add(99, 'years').endOf('year').format('MMM. D, YYYY') }.`
+        }
+      });
 		}
 	}
 

@@ -526,6 +526,7 @@ const ProjectOptions = (() => {
   const activitiesDT = $('#activities_dt');
   const options = '#projectDetails_options';
   const user_roles = JSON.parse(getCookie('roles'));
+  let validator;
   let initialized = 0;
   let processing = false; // For submissions
 
@@ -724,27 +725,6 @@ const ProjectOptions = (() => {
     const form = $(formSelector);
     let validator;
 
-    // Initialize Date Input
-    $app('#setPresentation_date').initDateInput({
-      button: '#setPresentation_date_pickerBtn'
-    });
-
-    // Prevent showing the modal if status is not "For Review"
-    setPresentationSchedule_modal.on('show.bs.modal', (e) => {
-      if (isBadAction()) e.preventDefault();
-    });
-
-    // Prevent hiding the modal if still processing
-    setPresentationSchedule_modal.on('hide.bs.modal', (e) => {
-      if (processing) e.preventDefault();
-    });
-
-    // Reset the form if modal has been hidden
-    setPresentationSchedule_modal.on('hidden.bs.modal', () => {
-      validator.resetForm();
-      form.trigger('reset');
-    });
-
     validator = $app(formSelector).handleForm({
       validators: {
         presentation_date: {
@@ -816,6 +796,27 @@ const ProjectOptions = (() => {
         });
       }
     });
+
+    // Initialize Date Input
+    $app('#setPresentation_date').initDateInput({
+      button: '#setPresentation_date_pickerBtn'
+    });
+
+    // Prevent showing the modal if status is not "For Review"
+    setPresentationSchedule_modal.on('show.bs.modal', (e) => {
+      if (isBadAction()) e.preventDefault();
+    });
+
+    // Prevent hiding the modal if still processing
+    setPresentationSchedule_modal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
+
+    // Reset the form if modal has been hidden
+    setPresentationSchedule_modal.on('hidden.bs.modal', () => {
+      validator.resetForm();
+      form.trigger('reset');
+    });
   }
 
   const initReschedulePresentation = () => {
@@ -824,11 +825,6 @@ const ProjectOptions = (() => {
     const formSelector = '#reschedPresentationSchedule_form';
     const form = $(formSelector);
     let validator;
-
-    // Initialize Date Input
-    $app('#reschedPresentation_date').initDateInput({
-      button: '#reschedPresentation_date_pickerBtn'
-    });
 
     validator = $app(formSelector).handleForm({
       validators: {
@@ -915,6 +911,11 @@ const ProjectOptions = (() => {
       }
     });
 
+    // Initialize Date Input
+    $app('#reschedPresentation_date').initDateInput({
+      button: '#reschedPresentation_date_pickerBtn'
+    });
+
     // Handle show modal
     reschedPresentationSchedule_modal.on('show.bs.modal', (e) => {
       
@@ -937,29 +938,6 @@ const ProjectOptions = (() => {
   const initProjectEvaluation = () => {
     const isBadAction = () => project.status !== 'For Evaluation';
     let PE_form;
-    
-    // Initialize Technical Evaluation Date
-    $app('#setProjectEvaluation_technicalEvaluationDate').initDateInput({
-      button: '#setProjectEvaluation_technicalEvaluationDate_pickerBtn'
-    });
-
-    // Initialize Evaluation Date
-    $app('#setProjectEvaluation_evaluationDate').initDateInput({
-      button: '#setProjectEvaluation_evaluationDate_pickerBtn'
-    });
-
-    // Initialize Release Date
-    $app('#setProjectEvaluation_releaseDate').initDateInput({
-      button: '#setProjectEvaluation_releaseDate_pickerBtn'
-    });
-
-    setProjectEvaluation_modal.on('show.bs.modal', (e) => {
-      if (isBadAction()) e.preventDefault();
-    });
-
-    setProjectEvaluation_modal.on('hide.bs.modal', (e) => {
-      if (processing) e.preventDefault();
-    });
 
     // Handle Form
     $app('#setProjectEvaluation_form').handleForm({
@@ -1077,6 +1055,29 @@ const ProjectOptions = (() => {
         });
       }
     });
+    
+    // Initialize Technical Evaluation Date
+    $app('#setProjectEvaluation_technicalEvaluationDate').initDateInput({
+      button: '#setProjectEvaluation_technicalEvaluationDate_pickerBtn'
+    });
+
+    // Initialize Evaluation Date
+    $app('#setProjectEvaluation_evaluationDate').initDateInput({
+      button: '#setProjectEvaluation_evaluationDate_pickerBtn'
+    });
+
+    // Initialize Release Date
+    $app('#setProjectEvaluation_releaseDate').initDateInput({
+      button: '#setProjectEvaluation_releaseDate_pickerBtn'
+    });
+
+    setProjectEvaluation_modal.on('show.bs.modal', (e) => {
+      if (isBadAction()) e.preventDefault();
+    });
+
+    setProjectEvaluation_modal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
 
     // Create an instance of project evaluation form
     PE_form = new ProjectEvaluationForm($('#setProjectEvaluation_evaluatorsForm'));
@@ -1087,14 +1088,6 @@ const ProjectOptions = (() => {
     const formSelector = '#approveProject_form';
     const form = $(formSelector)[0];
     const confirmBtn = $('#confirmApproveTheProject_btn');
-
-    // Initialize Date Inputs
-    [
-      '#approveProject_fundingApprovalDate',
-      '#approveProject_SOReleaseDate',
-      '#approveProject_cashReleaseDate',
-      '#approveProject_noticeReleaseDate',
-    ].forEach(s => $app(s).initDateInput({ button: `${s}_pickerBtn` }));
 
     $app(formSelector).handleForm({
       validators: {
@@ -1195,6 +1188,14 @@ const ProjectOptions = (() => {
         });
       }
     });
+
+    // Initialize Date Inputs
+    [
+      '#approveProject_fundingApprovalDate',
+      '#approveProject_SOReleaseDate',
+      '#approveProject_cashReleaseDate',
+      '#approveProject_noticeReleaseDate',
+    ].forEach(s => $app(s).initDateInput({ button: `${s}_pickerBtn` }));
 
     approveProject_modal.on('show.bs.modal', (e) => {
       if (isBadAction()) e.preventDefault();
@@ -1324,61 +1325,6 @@ const ProjectOptions = (() => {
     const formSelector = '#changeTimeFrame_form';
     const form = $(formSelector)[0];
     
-    let validator;
-
-    changeTimeFrame_modal.on('show.bs.modal', () => {
-      startDate_input.val(project.start_date).trigger('change');
-      endDate_input.val(project.end_date).trigger('change');
-    });
-
-    changeTimeFrame_modal.on('hidden.bs.modal', () => {
-      form.reset();
-    });
-    
-    // Initialize Start Date Input
-    $app(startDate_selector).initDateInput({
-      button: '#changeTimeFrame_startDate_pickerBtn'
-    });
-    
-    // Initialize End Date Input
-    $app(endDate_selector).initDateInput({
-      button: '#changeTimeFrame_endDate_pickerBtn'
-    });
-
-    $(`${ startDate_selector }, ${ endDate_selector }`).on('change', () => {
-      $('#changeTimeFrame_status').html(() => {
-        const start_date = startDate_input.val();
-        const end_date = endDate_input.val();
-
-        if (moment(start_date).isSameOrBefore(moment(end_date))) {
-          const today = moment();
-            let status;
-            if (today.isBefore(start_date) && today.isBefore(end_date)) {
-              status = 'Upcoming';
-            } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
-              status = 'Concluded';
-            } else if (today.isBetween(start_date, end_date)) {
-              status = 'On going';
-            } else {
-              status = 'No data';
-            }
-            const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
-            return `
-              <span class="badge badge-subtle-${ theme } px-2 py-1">
-                <i class="${ icon } fa-fw mr-1"></i>
-                <span>${ status }</span>
-              </span>
-            `;
-        } else {
-          return `
-            <span class="text-muted font-italic">Please select a valid start and end date</span>
-          `
-        }
-      });
-      startDate_input.valid();
-      endDate_input.valid();
-    });
-
     const checkInputForTimeFrame = () => {
       const selectedStartDate = startDate_input.val();
       const selectedEndDate = endDate_input.val();
@@ -1480,7 +1426,59 @@ const ProjectOptions = (() => {
         });
       }
     });
+
+    changeTimeFrame_modal.on('show.bs.modal', () => {
+      startDate_input.val(project.start_date).trigger('change');
+      endDate_input.val(project.end_date).trigger('change');
+    });
+
+    changeTimeFrame_modal.on('hidden.bs.modal', () => {
+      form.reset();
+    });
     
+    // Initialize Start Date Input
+    $app(startDate_selector).initDateInput({
+      button: '#changeTimeFrame_startDate_pickerBtn'
+    });
+    
+    // Initialize End Date Input
+    $app(endDate_selector).initDateInput({
+      button: '#changeTimeFrame_endDate_pickerBtn'
+    });
+
+    $(`${ startDate_selector }, ${ endDate_selector }`).on('change', () => {
+      $('#changeTimeFrame_status').html(() => {
+        const start_date = startDate_input.val();
+        const end_date = endDate_input.val();
+
+        if (moment(start_date).isSameOrBefore(moment(end_date))) {
+          const today = moment();
+            let status;
+            if (today.isBefore(start_date) && today.isBefore(end_date)) {
+              status = 'Upcoming';
+            } else if (today.isAfter(start_date) && today.isAfter(end_date)) {
+              status = 'Concluded';
+            } else if (today.isBetween(start_date, end_date)) {
+              status = 'On going';
+            } else {
+              status = 'No data';
+            }
+            const { theme, icon } = PROJECT_MONITORING_STATUS_STYLES[status];
+            return `
+              <span class="badge badge-subtle-${ theme } px-2 py-1">
+                <i class="${ icon } fa-fw mr-1"></i>
+                <span>${ status }</span>
+              </span>
+            `;
+        } else {
+          return `
+            <span class="text-muted font-italic">Please select a valid start and end date</span>
+          `
+        }
+      });
+      startDate_input.valid();
+      endDate_input.valid();
+    });
   }
 
   const initMonitoringOptions = () => {
@@ -3658,9 +3656,7 @@ const AddProjectActivity = (() => {
     });
   }
 
-  /**
-   * * Init
-   */
+  // * Init
 
   const init = (data) => {
     if (!initiated) {
@@ -3675,9 +3671,7 @@ const AddProjectActivity = (() => {
     }
   }
   
-  /**
-   * * Return Public Functions
-   */
+  // * Return Public Functions
 
   return {
     init,

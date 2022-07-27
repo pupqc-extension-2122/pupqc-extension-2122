@@ -4,6 +4,8 @@
  * ==============================================
  */
 
+'use strict';
+
 const EditMemo = (() => {
 
   // * Local Variables
@@ -259,9 +261,8 @@ const EditMemo = (() => {
     if (user_roles.includes('Extensionist') && !initialized) {
       initialized = true;
       memo = memoData;
-      console.log(memo);
-      initializations();
       handleForm();
+      initializations();
     }
   }
 

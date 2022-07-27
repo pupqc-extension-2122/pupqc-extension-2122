@@ -4,6 +4,8 @@
  * ==============================================
  */
 
+'use strict';
+
 (() => {
 
   // * Local Variables
@@ -263,8 +265,8 @@
     init: () => {
       if (user_roles.includes('Extensionist') && !initialized) {
         initialized = true;
+        handleForm(); 
         initializations();
-        handleForm();
       }
     }
   }

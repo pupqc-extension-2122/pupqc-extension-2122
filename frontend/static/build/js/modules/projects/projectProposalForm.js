@@ -723,9 +723,9 @@
   return {
     init: async () => {
       if ($(formSelector).length) {
+        handleForm();
         initializations();
         handleStepper();
-        handleForm();
         await initProjectTeamForm();
         await initTargetGroupForm();
         await initCooperatingAgenciesGroupForm();

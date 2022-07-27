@@ -25,7 +25,7 @@
         }
       },
       onSubmit: () => onLoginFormSubmit()
-    })
+    });
   }
 
   const disableElements = () => {

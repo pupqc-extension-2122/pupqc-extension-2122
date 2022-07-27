@@ -117,8 +117,10 @@
   //   "ui-menu-item": "dropdown-item"
 	// });
   
-  $.extend( $.ui.autocomplete.prototype.options.classes, {
-    "ui-autocomplete": "dropdown-menu",
-  });
+  if ($.ui.autocomplete) {
+    $.extend( $.ui.autocomplete.prototype.options.classes, {
+      "ui-autocomplete": "dropdown-menu",
+    });
+  }
 
 })(jQuery);

@@ -8,9 +8,7 @@
 
 const PartnerDetails = (() => {
 
-  /**
-   * * Local Variables
-   */
+  // * Local Variables
   
   const formSelector = '#editPartnership_form';
   let dt;
@@ -20,9 +18,7 @@ const PartnerDetails = (() => {
   // Data Container
   let partner;
 
-  /**
-   * * Private Methods
-   */
+  // * Private Methods
 
   const noContentTemplate = (message) => `<div class="text-muted font-italic">${message}</div>`;
 
@@ -192,9 +188,7 @@ const PartnerDetails = (() => {
     $('#options').removeAttr('id');
   }
 
-  /**
-   * * Public Methods
-   */
+  // * Public Methods
 
   const reloadDataTable = async () => dt.ajax.reload();
 
@@ -217,9 +211,7 @@ const PartnerDetails = (() => {
     loadHeaderDetails();
   }
 
-  /**
-   * * Init
-   */
+  // * Init
 
   const init = async (partnerData) => {
     if (!initialized) {
@@ -233,9 +225,7 @@ const PartnerDetails = (() => {
     }
   }
 
-  /**
-   * * Return public methods
-   */
+  // * Return public methods
 
   return {
     init,

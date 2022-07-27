@@ -383,10 +383,22 @@ const CUSTOM_VALIDATIONS = [
       return params;
 		},
 		defaultMessage: 'It must not be equal to a value'
+	}, {
+		ruleName: "validMomentRange",
+		handler: (value, element, params) => {
+      const v = moment(value);
+      if (value && v.isValid()) {
+        const r = 99;
+        const s = moment().subtract(r, 'years').startOf('year');
+        const e = moment().add(r, 'years').endOf('year');
+        return v.isBetween(s, e, undefined, '[]');
+      }
+      return false;
+		},
+		defaultMessage: `Please select a date between ${ moment().subtract(99, 'years').startOf('year').format('MMM. D, YYYY') } and ${ moment().add(99, 'years').endOf('year').format('MMM. D, YYYY') }.`
 	}
 ]
 
-// Tooltip Options
 const TOOLTIP_OPTIONS = {
 	container: '.content-wrapper',
 	delay: {
