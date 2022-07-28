@@ -2,8 +2,10 @@ const {
   Comments,
   Documents,
   Memos,
+  Programs,
   Projects,
   Project_Partners,
+  Project_Programs,
   Project_Activities,
   Project_Evaluations,
   Project_History,
@@ -198,6 +200,22 @@ exports.createProject = async (req, res) => {
       ))
     }
 
+    let project_programs = []
+    if (body.programs) {
+      let programs = await Programs.findAll({
+        where: {
+          id: body.program_id
+        }
+      })
+
+      project_programs = programs.map(el => (
+        {
+          full_name: el.full_name,
+          short_name: el.short_name
+        }
+      ))
+    }
+
     let data = await Projects.create({
       title: body.title,
       project_type: body.project_type,
@@ -216,6 +234,7 @@ exports.createProject = async (req, res) => {
       monitoring_frequency: body.monitoring_frequency,
       monitoring_method: body.monitoring_method,
       created_by: req.auth.id,
+      projects: project_programs,
       documents: documents,
       history: [
         {
@@ -236,6 +255,10 @@ exports.createProject = async (req, res) => {
         {
           model: Documents,
           as: 'documents'
+        },
+        {
+          model: Project_Programs,
+          as: 'project_programs'
         }
       ]
     })
@@ -279,15 +302,15 @@ exports.updateProject = async (req, res) => {
           [Op.in]: allowed_status
         }
       },
-      include: ['project_partners'],
+      include: ['project_partners', 'project_programs'],
     })
 
     if (!current_project)
       return res.status(404).send({ error: true, message: 'Project is either not found or not available for updates' })
 
-    let current_partners = current_project.project_partners.map(el => {
-      return ({ id: el.id, partner_id: el.partner_id })
-    })
+    let current_partners = current_project.project_partners.map(el => (
+      { id: el.id, partner_id: el.partner_id }
+    ))
 
     let retained_partners = []
 
@@ -336,6 +359,41 @@ exports.updateProject = async (req, res) => {
       ))
 
       await Project_Partners.bulkCreate(project_partners)
+    }
+
+    let programs = body.program_id || []
+
+    let current_programs = current_project.project_programs.map(el => (
+      { id: el.id, program_id: el.program_id }
+    ))
+
+    let retained_programs = []
+
+    current_programs.forEach(el => {
+      if (!programs.includes(el.program_id)) {
+        Project_Programs.findOne({ where: { id: el.id } })
+          .then(async (result) => await result.destroy())
+      } else {
+        retained_programs.push(el.program_id)
+      }
+    })
+
+    programs = programs.filter(el => !retained_programs.includes(el))
+
+    if (programs.length) {
+      let new_programs = await Programs.findAll({ where: { id: programs } })
+
+      if (!new_programs.length)
+        return res.status(404).send({ error: true, message: 'Program not found' })
+
+      let project_programs = new_programs.map(el => (
+        {
+          project_id: id,
+          program_id: el.id,
+        }
+      ))
+
+      await Project_Programs.bulkCreate(project_programs)
     }
 
 
