@@ -98,13 +98,13 @@ const BranchesCampuses = (() => {
           visible: false,
         }, {
           data: 'name',
-          width: '30%',
+          width: '50%',
         },  {
           data: 'type',
-          width: '25%',
+          width: '15%',
         }, {
           data: 'created_at',
-          width: '25%',
+          width: '15%',
           render: (data, type, row) => {
             return `
               <div>${ formatDateTime(data, 'Date') }</div>
@@ -222,8 +222,8 @@ const BranchesCampuses = (() => {
     // Get the data
     const fd = new FormData(editForm);
     const data = {
-      name: fd.get('branchCampus_name'),
-      type: fd.get('editBranchCampus_type')
+      name: fd.get('name'),
+      type: fd.get('type')
     }
 
     await $.ajax({

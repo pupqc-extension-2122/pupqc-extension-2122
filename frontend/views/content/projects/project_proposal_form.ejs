@@ -165,21 +165,24 @@
                   </div>
                 </div>
 
-                <%# Program %>
+                <%# Programs %>
                 <div class="col-12">
-                  <div class="form-group">
-                    <label for="projectProposal_program">
-                      <span>Program</span>
+                  <div class="form-group" id="projectProposal_programs_grp">
+                    <label for="projectProposal_programs_select">
+                      <span>Program(s)</span>
                       <span class="text-danger">*</span>
                     </label>
-                    <select 
-                      name="program" 
-                      id="projectProposal_program" 
-                      class="form-control select2"
-                      style="width: 100%" 
-                    >
-                      <option disabled>Loading... Please wait.</option>
-                    </select>
+    
+                    <div class="form-group">
+                      <select 
+                        name="programs" 
+                        id="projectProposal_programs_select" 
+                        class="form-control select2"
+                        style="width: 100%;"
+                      >
+                        <option disabled>Loading... Please wait.</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
     
@@ -299,7 +302,7 @@
                 <%# Cooperating Agencies %>
                 <div class="col-12">
                   <div class="form-group" id="projectProposal_cooperatingAgencies_grp">
-                    <label for="projectProposal_cooperatingAgencies">
+                    <label for="projectProposal_cooperatingAgencies_select">
                       <span>Cooperating Agencies</span>
                     </label>
     
@@ -558,6 +561,16 @@
                 </dt>
                 <dd class="col-md-9">
                   <div class="mx-2" id="projectDetailsConfirm_extensionType"></div>
+                </dd>
+
+                <div class="col-12"><hr class="my-2"></div>
+    
+                <%# Programs %>
+                <dt class="col-md-3">
+                  <div class="mx-2">Programs</div>
+                </dt>
+                <dd class="col-md-9">
+                  <div class="mx-2" id="projectDetailsConfirm_programs"></div>
                 </dd>
     
                 <div class="col-12"><hr class="my-2"></div>

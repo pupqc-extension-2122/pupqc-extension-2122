@@ -99,7 +99,7 @@
 
       <div class="card-header">
         <div class="d-flex align-items-center justify-content-between">
-          <h3 class="card-title">List of budget item categories</h3>
+          <h3 class="card-title">List of programs</h3>
           <div class="card-tools">
             <button 
               type="button" 
@@ -124,7 +124,7 @@
               class="btn btn-sm btn-negative" 
               data-toggle="tooltip"
               title="Reload table"
-              onclick=""
+              onclick="Programs.reloadDataTable()"
             >
               <i class="fas fa-sync-alt"></i>
             </button>
@@ -134,7 +134,7 @@
 
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table w-100" id="branches_campuses_dt">
+          <table class="table w-100" id="programs_dt">
             <thead>
               <th class="sr-only">Date Created</th>
               <th class="align-middle">Name</th>
@@ -164,6 +164,7 @@
 <%# Modals %>
 <%- include('../../partials/admin/modals/add_program') %>
 <%- include('../../partials/admin/modals/edit_program') %>
+<%- include('../../partials/admin/modals/deactivate_program') %>
 
 <%# ***** Scripts ***** %>
 

@@ -30,18 +30,20 @@
         <%# Form Groups %>
         <div class="row" id="editProgram_formGroups" style="display: none">
 
+          <input type="hidden" id="editProgram_id" name="id">
+
           <%# Name %>
           <div class="col-12">
             <div class="form-group">
               <label for="editProgram_name">
-                <span>Name</span>
+                <span>Full Name</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="editProgram_name" 
-                name="name"
+                id="editProgram_fullName" 
+                name="full_name"
                 placeholder="Enter the name here"
               />
             </div>
@@ -51,14 +53,14 @@
           <div class="col-12">
             <div class="form-group">
               <label for="editProgram_abbreviation">
-                <span>Abbreviation</span>
+                <span>Abbreviation/Short Name</span>
                 <span class="text-danger">*</span>
               </label>
               <input 
                 type="text" 
                 class="form-control" 
-                id="editProgram_abbreviation" 
-                name="abbreviation"
+                id="editProgram_shortName" 
+                name="short_name"
                 placeholder="Enter the abbreviation here"
               />
             </div>
@@ -67,8 +69,17 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="submitProgram_btn">Save</button>
+        <button 
+          type="button" 
+          class="btn btn-negative" 
+          id="editProgram_cancelBtn"
+          data-dismiss="modal"
+        >Cancel</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          id="editProgram_saveBtn"
+        >Save</button>
       </div>
     </form>
   </div>

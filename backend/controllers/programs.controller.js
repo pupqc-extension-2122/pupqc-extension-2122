@@ -1,15 +1,15 @@
 const { Programs } = require('../sequelize/models')
-const { datatable } = require('../../utils/datatableResponse')
+const datatable = require('../../utils/datatableResponse')
 
 exports.datatablePrograms = async (req, res) => {
   try {
 
-    let data = await datatable(Progrmas, req.query, { paranoid: false })
+    let data = await datatable(Programs, req.query, { paranoid: false })
 
     res.send(data)
 
   } catch (error) {
-
+    console.error(error);
   }
 }
 
@@ -69,7 +69,7 @@ exports.updatePrograms = async (req, res) => {
     const data = await Programs.findByPk(id)
 
     if (!data)
-      return res.statu(404).send({ error: true, message: 'Program not found' })
+      return res.status(404).send({ error: true, message: 'Program not found' })
 
     data.full_name = body.full_name
     data.short_name = body.short_name

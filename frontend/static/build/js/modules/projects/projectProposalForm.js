@@ -25,6 +25,7 @@
   })();
   
   let stepper;
+  let P_form; // Programs Form
   let PT_form; // Project Team Form
   let TG_form; // Target Group Form
   let CA_form; // Cooperating Agencies form
@@ -220,6 +221,35 @@
     });
   }
 
+  const initProgramsForm = async () => {
+    let programs_list;
+    await $.ajax({
+      url: `${ BASE_URL_API }/programs`,
+      type: 'GET',
+      success: res => {
+        if (res.error) {
+          ajaxErrorHandler(res.message);
+        } else {
+          programs_list = res.data;
+        }
+      },
+      error: () => {
+        ajaxErrorHandler({
+          file: 'projects/createPropsal.js',
+          fn: 'onDOMLoad.initProgramsForm()',
+          xhr: xhr
+        });
+      }
+    });
+
+    P_form = await new ProjectProgramsForm(
+      '#projectProposal_programs_grp',
+      '#projectProposal_programs_select'
+    );
+
+    P_form.setProgramsList(programs_list);
+  }
+
   const initProjectTeamForm = async () => {
     PT_form = new ProjectTeamForm();
   }
@@ -334,6 +364,12 @@
         extension_type: {
           required: "Please select an extension project type.",
         },
+        programs: {
+          callback: {
+            rule: () => P_form.getSelectedPrograms().length > 0,
+            message: 'Please select at least one program.'
+          }
+        },
         implementer: {
           required: "The implementer is required.",
           notEmpty: "This field cannot be empty.",
@@ -410,6 +446,8 @@
 
         if (data.partner_id.length === 0) data.partner_id = [].toString();
 
+        console.log(data);
+
         await $.ajax({
           ...(() => {
             if (form_type === 'create') return {
@@ -464,6 +502,7 @@
     return {
       title: fd.get('title'),
       project_type: fd.get('extension_type'),
+      programs: P_form.getSelectedPrograms(),
       implementer: fd.get('implementer'),
       team_members: PT_form.getTeamMembers(),
       target_groups: TG_form.getTargetGroups(),
@@ -483,6 +522,7 @@
     const {
       title,
       project_type,
+      programs,
       implementer,
       team_members: pt,
       target_groups: tg,
@@ -502,6 +542,15 @@
     setHTMLContent({
       '#projectDetailsConfirm_title': title || noContentTemplate('No title has been set up'),
       '#projectDetailsConfirm_extensionType': project_type || noContentTemplate('No project extension type has been set up.</div>'),
+      '#projectDetailsConfirm_programs': () => {
+        if (programs.length) {
+          let list = '<ul class="mb-0">';
+          programs.forEach(p => list += `<li>${p.full_name} (${p.short_name})</li>`);
+          list += '</ul>';
+          return list;
+        }
+        return noContentTemplate('No programs have been set up.');
+      },
       '#projectDetailsConfirm_implementer': implementer || noContentTemplate('No implementer has been set up.'),
       '#projectDetailsConfirm_projectTeam': () => {
         if (pt.length) {
@@ -726,6 +775,7 @@
         handleForm();
         initializations();
         handleStepper();
+        await initProgramsForm();
         await initProjectTeamForm();
         await initTargetGroupForm();
         await initCooperatingAgenciesGroupForm();

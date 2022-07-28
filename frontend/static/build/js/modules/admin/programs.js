@@ -10,10 +10,10 @@ const Programs = (() => {
 
   // * Local Variables
 
-  const dtElem_selector = '#progams_dt';
+  const dtElem_selector = '#programs_dt';
   const dtElem = $(dtElem_selector);
-  const editModal = $('#editPrograms_modal');
-  const editFormSelector = '#editPrograms_form';
+  const editModal = $('#editProgram_modal');
+  const editFormSelector = '#editProgram_form';
   const editForm = $(editFormSelector)[0];
   let dt;
   let editValidator;
@@ -27,8 +27,8 @@ const Programs = (() => {
     // *** For Add Budget Item Category Modal *** //
 
     editModal.on('show.bs.modal', () => {
-      $('#editPrograms_formGroups_loader').remove();
-      $('#editPrograms_formGroups').show();
+      $('#editProgram_formGroups_loader').remove();
+      $('#editProgram_formGroups').show();
     });
 
     editModal.on('hidden.bs.modal', () => {
@@ -44,21 +44,23 @@ const Programs = (() => {
     dt = await dtElem.DataTable({
       ...DT_CONFIG_DEFAULTS,
       ajax: {
-        url: `${ BASE_URL_API }/budget_categories/datatables`,
+        url: `${ BASE_URL_API }/programs/datatables`,
         // success: result => {
+        //   alert('TEST');
         //   console.log(result);
         // },
         error: (xhr, status, error) => {
           ajaxErrorHandler({
-            file: 'admin/budgetItemCategories.js',
-            fn: 'BudgetItemCategories.initDataTable()',
+            file: 'admin/programs.js',
+            fn: 'Programs.initDataTable()',
             details: xhr.status + ': ' + xhr.statusText + "\n\n" + xhr.responseText,
           }, 1);
         },
         data: {
           types: {
             created_at: 'date',
-            name: 'string'
+            full_name: 'string',
+            short_name: 'string',
           }
         },
         beforeSend: () => {
@@ -74,11 +76,14 @@ const Programs = (() => {
           data: 'created_at',
           visible: false,
         }, {
-          data: 'name',
+          data: 'full_name',
           width: '55%',
         }, {
+          data: 'short_name',
+          width: '10%',
+        }, {
           data: 'created_at',
-          width: '25%',
+          width: '15%',
           render: data => {
             const created_at = data.created_at
             return `
@@ -90,24 +95,19 @@ const Programs = (() => {
           data: null,
           sortable: false,
           width: '15%',
-          render: (data) => {
-            return !data.deleted_at 
-              ? `
-                <div class="text-sm-center">
-                  <div class="badge badge-subtle-success px-2 py-1">
-                    <i class="fas fa-check fa-fw mr-1"></i>
-                    <span>Active</span>
-                  </div>
+          render: (data, type, row) => {
+            const { theme, icon, label } = (() => !data.deleted_at 
+              ? { theme: 'success', icon: 'fas fa-check', label: 'Active' }
+              : { theme: 'danger', icon: 'fas fa-ban', label: 'Inactive' }
+            )();
+            return `
+              <div class="text-sm-center">
+                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                  <i class="${ icon } fa-fw mr-1"></i>
+                  <span>${ label }</span>
                 </div>
-              `
-              : `
-                <div class="text-center">
-                  <div class="badge badge-subtle-danger px-2 py-1">
-                    <i class="fas fa-ban fa-fw mr-1"></i>
-                    <span>Inactive</span>
-                  </div>
-                </div>
-              ` 
+              </div>
+            `;
           }
         }, {
           data: null,
@@ -149,6 +149,30 @@ const Programs = (() => {
       const data = dt.row(row).data();
       initEditMode(data);
     });
+
+    $(dtElem_selector).on('click', `[data-dt-btn="initDeactivateMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initDeactivateMode(data);
+    });
+  }
+
+  const initEditMode = async (data) => {
+
+    const { id, full_name, short_name } = data;
+
+    // Set the input values
+    setInputValue({
+      '#editProgram_id': id,
+      '#editProgram_fullName': full_name,
+      '#editProgram_shortName': short_name,
+    });
+    
+    // Enable buttons
+    $('#editProgram_saveBtn').attr('disabled', false);
+
+    // Show the modal
+    editModal.modal('show');
   }
 
   const handleEditForm = () => {
@@ -192,12 +216,14 @@ const Programs = (() => {
 
     // Get the data
     const fd = new FormData(editForm);
+    
     const data = {
-      name: fd.get('category_name'),
+      full_name: fd.get('full_name'),
+      short_name: fd.get('short_name'),
     }
 
     await $.ajax({
-      url: `${ BASE_URL_API }/budget_categories/${ fd.get('category_id') }`,
+      url: `${ BASE_URL_API }/programs/${ fd.get('id') }`,
       type: 'PUT',
       data: data,
       success: async res => {
@@ -208,14 +234,14 @@ const Programs = (() => {
           await reloadDataTable();
           enableElements();
           editModal.modal('hide');
-          toastr.success('A budget item category has been successfully updated');
+          toastr.success('A program has been successfully updated');
         }
       }, 
       error: (xhr, status, error) => {
         enableElements();
         ajaxErrorHandler({
-          file: 'admin/budgetItemCategories.js',
-          fn: 'BudgetItemCategories.onEditFormSubmit()',
+          file: 'admin/programs.js',
+          fn: 'Programs.onEditFormSubmit()',
           data: data,
           xhr: xhr
         });
@@ -224,25 +250,18 @@ const Programs = (() => {
 
   }
 
+  const initDeactivateMode = async (data) => {
+    
+    const { id } = data;
+
+    alert(id);
+
+  }
+
   // * Public Methods
 
-  const reloadDataTable = async () =>  await dt.ajax.reload();
-  const initEditMode = async (data) => {
-
-    // Show the modal
-    editModal.modal('show');
-
-    const { id, name } = data;
-
-    // Set the input values
-    setInputValue({
-      '#editBudgetItemCategory_categoryId': id,
-      '#editBudgetItemCategory_categoryName': name,
-    });
-    
-    // Enable buttons
-    $('#editBudgetItemCategory_saveBtn').attr('disabled', false);
-  }
+  const reloadDataTable = async () => await dt.ajax.reload();
+  
 
   // * Init
 

@@ -613,6 +613,131 @@ class ProjectTeamForm {
 // }
 
 
+class ProjectProgramsForm {
+	constructor(formGroup, selectElem) {
+		this.formGroup = $(formGroup);
+		this.selectElem = $(selectElem);
+
+		this.programs_list = [];
+		this.programs_selected = [];
+
+		this.data = {
+			formGroup: 'data-programs-selected',
+			removeBtn: 'data-remove-programs',
+			formElem: 'data-programs-form'
+		}
+
+		this.#initializations();
+	}
+
+	// * Template Literals
+
+	#empty = () => `
+		<div class="py-5 text-muted text-center" ${ this.data.formElem }="emptyTemplate">
+			Please select at least one program. We are going to display them here.
+		</div>
+	`
+
+	#selected = obj => `
+		<div class="form-group mb-2" ${ this.data.formGroup }="${ obj.id }">
+			<div class="d-flex align-items-center">
+				<div class="px-2 mr-2">●</div>
+				<div class="w-100 mr-2">
+					<div class="border rounded user-select-none" style="padding: .375rem .75rem; background: #e9ecef">${ obj.full_name } (${ obj.short_name })</div>
+				</div>
+				<div>
+					<button 
+						type="button" 
+						class="btn btn-sm btn-negative text-danger" 
+            data-toggle="tooltip"
+						title="Remove cooperating agency"
+						${ this.data.removeBtn }="${ obj.id }"
+					>
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>	
+		</div>
+	`
+
+	 // * Private Methods
+
+	#dataElement = (dataAttr, value) => this.formGroup.find(`[${this.data[dataAttr]}="${value}"]`);
+
+	#initializations = () => {
+
+		// Initialize empty selection
+		this.formGroup.append(this.#empty);
+
+		// Initialize on select
+		this.selectElem.on('select2:select', () => this.selectProgram());
+	}
+
+	#resetSelect = () => {
+		this.selectElem.empty();
+		this.selectElem.append(`<option value=""></option>`);
+		this.programs_list.forEach(({ id, full_name, short_name, selected }) =>
+			this.selectElem.append(`<option value="${ id }"${ selected ? ' disabled' : '' }>${ full_name } (${ short_name })</option>`)
+		);
+	}
+
+	#resetEmptyTemplate = () => {
+		[...this.programs_list].filter(x => x.selected).length === 0
+			? this.formGroup.append(this.#empty)
+			:	this.#dataElement('formElem', 'emptyTemplate').remove()
+	}
+
+	// * Public Methods
+
+	selectProgram = (id) => {
+    const selected = id || this.selectElem.val();
+
+    this.programs_list = this.programs_list.map(c => c.id == selected ? {...c, selected: true} : c);
+
+		this.#resetEmptyTemplate();
+		this.#resetSelect();
+		
+		this.formGroup.children().last().after(this.#selected(this.programs_list.find(c => c.id == selected)));
+
+		const removeBtn = this.#dataElement('removeBtn', selected);
+
+		removeBtn.on('click', () => {
+			removeBtn.tooltip('hide');
+			this.#dataElement('formGroup', selected).remove();
+			this.programs_list = this.programs_list.map(c => c.id == selected ? {...c, selected: false} : c);
+			this.#resetEmptyTemplate();
+			this.#resetSelect();
+		});
+		// removeBtn.tooltip(TOOLTIP_OPTIONS);
+		
+		this.selectElem.val('').trigger('change');
+	}
+
+	setSelectedCooperatingAgencies = (data = []) => {
+    if (!(data && data.length)) return;
+		data.forEach(d => this.selectProgram(d.id));
+	}
+
+	setProgramsList = (data = [], method = 'reset') => {
+		const fn = {
+			'reset': () => {
+				if(data.length) {
+					this.programs_list = data.map(ca => ca = {...ca, selected: false });
+					this.#resetSelect();
+				}
+			}
+		}
+		fn[method]();
+	}
+
+  getList = () => this.programs_list;
+
+	getSelectedPrograms = () => this.programs_list.filter(x => x.selected).map(x => {
+		const y = {...x}; delete y.selected; return y;
+	});
+}
+
+
 class TargetGroupsForm {
   constructor(selector = `[data-form="targetGroups"]`) {
     this.tbl = $(selector);

@@ -1,8 +1,10 @@
 /**
  * ==============================================
- * * BRANCH/CAMPUS
+ * * ADD PROGRAM
  * ==============================================
  */
+
+'use strict';
 
 (() => {
 
@@ -10,15 +12,15 @@
 
   let initialized = false;
   const user_roles = JSON.parse(getCookie('roles'));
-  const modal = $('#addBranchCampus_modal')
-  const formSelector = '#addBranchCampus_form';
+  const modal = $('#addProgram_modal')
+  const formSelector = '#addProgram_form';
   const form = $(formSelector)[0];
   let processing = false;
 
   // * Private Methods
 
   const initializations = () => {
-    const branchCampusType_select = $('#addBranchCampus_type_select');
+    const branchCampusType_select = $('#addProgram_type_select');
     const addBranchCampus_types = [
       {
         id: 'Branches',
@@ -43,8 +45,8 @@
     // *** For Add Branch/Campus Modal *** //
 
     modal.on('show.bs.modal', () => {
-      $('#addBranchCampus_formGroups_loader').remove();
-      $('#addBranchCampus_formGroups').show();
+      $('#addProgram_formGroups_loader').remove();
+      $('#addProgram_formGroups').show();
     });
 
     modal.on('hidden.bs.modal', () => {
@@ -57,14 +59,18 @@
   }
 
   const handleForm = () => {
-    $app('#addBranchCampus_form').handleForm({
+    $app('#addProgram_form').handleForm({
       validators: {
-        branchCampus_name: {
-          required: "Branch/Campus name is required.",
+        full_name: {
+          required: "The full name of the program is required.",
           notEmpty: "This field cannot be blank.",
+          minlength: {
+            rule: 3,
+            message: 'Make sure you type the full name of the program.'
+          }
         },
-        type: {
-          required: "Type is required.",
+        short_name: {
+          required: "The abbreviation/short name is required.",
           notEmpty: "This field cannot be blank.",
         }
       },
@@ -76,7 +82,7 @@
     processing = true;
 
     const fd = new FormData(form);
-    const submitBtn = $('#submitBranchCampus_btn'); 
+    const submitBtn = $('#submitProgram_btn'); 
 
     // Set elements to loading state
     submitBtn.attr('disabled', true);
@@ -92,12 +98,12 @@
     }
     
     const data = {
-      name: fd.get('name'),
-      type: fd.get('type')
+      full_name: fd.get('full_name'),
+      short_name: fd.get('short_name')
     }
 
     await $.ajax({
-      url: `${ BASE_URL_API }/organizations/create`,
+      url: `${ BASE_URL_API }/programs/create`,
       type: 'POST',
       data: data,
       // success: result => {
@@ -109,17 +115,17 @@
           ajaxErrorHandler(result.message);
           enableElements();
         } else {
-          await BranchesCampuses.reloadDataTable();
+          await Programs.reloadDataTable();
           enableElements();
           modal.modal('hide');
-          toastr.success('A new branch/campus has been successfully added.');
+          toastr.success('A new program has been successfully added.');
         }
       },
       error: (xhr, status, error) => {
         processing = false;
         enableElements();
         ajaxErrorHandler({
-          file: 'admin/addBranchCampus.js',
+          file: 'admin/addProgram.js',
           fn: onFormSubmit().$.ajax,
           xhr: xhr
         });
