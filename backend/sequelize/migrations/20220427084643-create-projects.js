@@ -16,15 +16,6 @@ module.exports = {
           key: 'id'
         }
       },
-      program_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: {
-            tableName: 'Programs'
-          },
-          key: 'id'
-        }
-      },
       title: {
         type: Sequelize.STRING,
         allowNull: false
