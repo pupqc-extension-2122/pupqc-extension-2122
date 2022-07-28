@@ -5,7 +5,7 @@ exports.datatableOrganizations = async (req, res) => {
   if (!req.auth.roles.includes('Admin'))
     return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
-  let data = await datatable(Organizations, req.query, {})
+  let data = await datatable(Organizations, req.query, { paranoid: false })
 
   res.send(data)
 }
@@ -107,7 +107,7 @@ exports.deleteOrganizations = async (req, res) => {
 
     const id = req.params.id
 
-    let data = await Organizations.findByPk(id, { paranoid: false })
+    let data = await Organizations.findByPk(id)
 
     if (!data)
       return res.status(404).send({ error: true, message: 'Record not found' })
