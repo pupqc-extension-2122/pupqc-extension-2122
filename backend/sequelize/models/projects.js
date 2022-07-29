@@ -39,10 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false, validate: { notEmpty: true }
     },
-    program_id: {
-      type: DataTypes.UUID,
-      validate: { notEmpty: true }
-    },
     project_type: {
       type: DataTypes.STRING,
       allowNull: false,
