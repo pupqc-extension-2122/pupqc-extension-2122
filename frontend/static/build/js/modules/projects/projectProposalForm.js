@@ -446,7 +446,8 @@
 
         if (data.partner_id.length === 0) data.partner_id = [].toString();
 
-        console.log(data);
+        // Modify the programs
+        data.programs = data.programs.map(p => p.id);
 
         await $.ajax({
           ...(() => {

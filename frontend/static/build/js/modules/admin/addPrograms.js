@@ -10,11 +10,13 @@
 
   // * Local Variables
 
-  let initialized = false;
   const user_roles = JSON.parse(getCookie('roles'));
   const modal = $('#addProgram_modal')
   const formSelector = '#addProgram_form';
   const form = $(formSelector)[0];
+  
+  let validator;
+  let initialized = false;
   let processing = false;
 
   // * Private Methods
@@ -59,19 +61,42 @@
   }
 
   const handleForm = () => {
-    $app('#addProgram_form').handleForm({
+    const isFullNameLonger = () => {
+      const full_name = $('#editProgram_fullName').val();
+      const short_name = $('#editProgram_shortName').val();
+
+      return full_name.length > short_name.length;
+    }
+
+    validator = $app('#addProgram_form').handleForm({
       validators: {
         full_name: {
           required: "The full name of the program is required.",
           notEmpty: "This field cannot be blank.",
+          notEqualTo: {
+            rule: () => $('#addProgram_shortName').val(),
+            message: 'The full name must not be the same as the short name.'
+          },
           minlength: {
             rule: 3,
             message: 'Make sure you type the full name of the program.'
+          },
+          callback: {
+            rule: () => isFullNameLonger(),
+            message: 'The full name should be longer than the short name.'
           }
         },
         short_name: {
           required: "The abbreviation/short name is required.",
           notEmpty: "This field cannot be blank.",
+          notEqualTo: {
+            rule: () => $('#addProgram_fullName').val(),
+            message: 'The short name must not be the same as the full name.'
+          },
+          callback: {
+            rule: () => isFullNameLonger(),
+            message: 'The short name should be shorter than the full name.'
+          }
         }
       },
       onSubmit: () => onFormSubmit()

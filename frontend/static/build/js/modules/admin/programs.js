@@ -12,11 +12,23 @@ const Programs = (() => {
 
   const dtElem_selector = '#programs_dt';
   const dtElem = $(dtElem_selector);
+  
   const editModal = $('#editProgram_modal');
   const editFormSelector = '#editProgram_form';
   const editForm = $(editFormSelector)[0];
+
+  const deactivateModal = $('#deactivateProgram_modal');
+  const deactivateFormSelector = '#deactivateProgram_form';
+  const deactivateForm = $(deactivateFormSelector)[0];
+
+  const reactivateModal = $('#reactivateProgram_modal');
+  const reactivateFormSelector = '#reactivateProgram_form';
+  const reactivateForm = $(reactivateFormSelector)[0];
+
   let dt;
   let editValidator;
+  let deactivateValidator;
+  let reactivateValidator;
   let initialized = false;
   let processing = false;
 
@@ -24,7 +36,7 @@ const Programs = (() => {
     
   const initializations = () => {
 
-    // *** For Add Budget Item Category Modal *** //
+    // *** For Add Program Modal *** //
 
     editModal.on('show.bs.modal', () => {
       $('#editProgram_formGroups_loader').remove();
@@ -38,6 +50,30 @@ const Programs = (() => {
     editModal.on('hide.bs.modal', (e) => {
       if (processing) e.preventDefault();
     });
+
+    // *** For Deactivate Program Modal *** //
+
+    deactivateModal.on('show.bs.modal', (e) => {
+      if (!$('#deactivateProgram_id').val()) e.preventDefault();
+    });
+
+    deactivateModal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
+
+    deactivateModal.on('hidden.bs.modal', () => deactivateForm.reset());
+
+    // *** For Re-activate Program Modal *** //
+
+    reactivateModal.on('show.bs.modal', (e) => {
+      if (!$('#reactivateProgram_id').val()) e.preventDefault();
+    });
+
+    reactivateModal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
+
+    reactivateModal.on('hidden.bs.modal', () => reactivateForm.reset());
   }
 
   const initDataTable = async () => {
@@ -101,7 +137,7 @@ const Programs = (() => {
               : { theme: 'danger', icon: 'fas fa-ban', label: 'Inactive' }
             )();
             return `
-              <div class="text-sm-center">
+              <div class="text-sm-center user-select-none">
                 <div class="badge badge-subtle-${ theme } px-2 py-1">
                   <i class="${ icon } fa-fw mr-1"></i>
                   <span>${ label }</span>
@@ -113,6 +149,23 @@ const Programs = (() => {
           data: null,
           width: '5%',
           render: data => {
+            const reActivateDeactivateOption = (() => {
+                const { mode, label } = (() => {
+                  return !data.deleted_at
+                    ? { mode: 'initDeactivateMode', label: 'Deactivate' }
+                    : { mode: 'initReactivateMode', label: 'Reactivate' }
+                })();
+                return `
+                  <div
+                    role="button"
+                    class="dropdown-item"
+                    data-dt-btn="${ mode }"
+                  >
+                    <span>${ label }</span>
+                  </div>
+                `
+            })();
+
             return `
               <div class="dropdown text-center">
                 
@@ -129,13 +182,7 @@ const Programs = (() => {
                   >
                     <span>Edit details</span>
                   </div>
-                  <div
-                    role="button"
-                    class="dropdown-item"
-                    data-dt-btn="initDeactivateMode"
-                  >
-                    <span>Deactivate</span>
-                  </div>
+                  ${ reActivateDeactivateOption }
                 </div>
               </div>
             `
@@ -144,16 +191,25 @@ const Programs = (() => {
       ]
     });
 
+    // For edit option
     $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, (e) => {
       const row = $(e.currentTarget).closest('tr');
       const data = dt.row(row).data();
       initEditMode(data);
     });
 
+    // For deactivate option
     $(dtElem_selector).on('click', `[data-dt-btn="initDeactivateMode"]`, (e) => {
       const row = $(e.currentTarget).closest('tr');
       const data = dt.row(row).data();
       initDeactivateMode(data);
+    });
+    
+    // For reactivate option
+    $(dtElem_selector).on('click', `[data-dt-btn="initReactivateMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initReactivateMode(data);
     });
   }
 
@@ -176,11 +232,45 @@ const Programs = (() => {
   }
 
   const handleEditForm = () => {
+    const isFullNameLonger = () => {
+      const full_name = $('#editProgram_fullName').val();
+      const short_name = $('#editProgram_shortName').val();
+
+      return full_name.length > short_name.length;
+    }
+
     editValidator = $app(editFormSelector).handleForm({
       validators: {
-        category_name: {
-          required: "The budget item category name is required.",
+        id: {
+          required: "The ID of the program must exist."
+        },
+        full_name: {
+          required: "The full name of the program is required.",
           notEmpty: "This field cannot be blank.",
+          notEqualTo: {
+            rule: () => $('#editProgram_shortName').val(),
+            message: 'The full name must not be the same as the short name.'
+          },
+          minlength: {
+            rule: 3,
+            message: 'Make sure you type the full name of the program.'
+          },
+          callback: {
+            rule: () => isFullNameLonger(),
+            message: 'The full name should be longer than the short name.'
+          }
+        },
+        short_name: {
+          required: "The abbreviation/short name is required.",
+          notEmpty: "This field cannot be blank.",
+          notEqualTo: {
+            rule: () => $('#editProgram_fullName').val(),
+            message: 'The short name must not be the same as the full name.'
+          },
+          callback: {
+            rule: () => isFullNameLonger(),
+            message: 'The short name should be shorter than the full name.'
+          }
         }
       },
       onSubmit: () => onEditFormSubmit()
@@ -251,17 +341,148 @@ const Programs = (() => {
   }
 
   const initDeactivateMode = async (data) => {
-    
-    const { id } = data;
+    const { id, full_name, short_name } = data;
+    setInputValue('#deactivateProgram_id', id);
+    setHTMLContent('#deactiveProgram_program', `${ full_name } (${ short_name })`);
+    deactivateModal.modal('show');
+  }
 
-    alert(id);
+  const handleDeactivateForm = () => {
+    deactivateValidator = $app(deactivateFormSelector).handleForm({
+      validators: {
+        id: {
+          required: 'Program ID must exist here.'
+        }
+      },
+      onSubmit: () => {
+        processing = true;
 
+        // Disable the elements
+        const submitBtn = $('#deactivateProgram_submitBtn');
+        const cancelBtn = $('#deactivateProgram_cancelBtn');
+        
+        cancelBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+
+         // For enabling elements
+        const enableElements = () => {
+
+          // Enable buttons
+          cancelBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html(`Deactivate`);
+        }
+
+        // Get the id
+        const fd = new FormData(deactivateForm);
+
+        $.ajax({
+          url: `${ BASE_URL_API }/programs/${ fd.get('id') }`,
+          type: 'DELETE',
+          success: async (res) => {
+            processing = false;
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              await Programs.reloadDataTable();
+              deactivateModal.modal('hide');
+              enableElements();
+              toastr.info('A program has been successfully deactivated.');
+            }
+          },
+          error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
+            ajaxErrorHandler({
+              file: 'admin/programs.js',
+              fn: 'Programs.onEditFormSubmit()',
+              data: data,
+              xhr: xhr
+            });
+          }
+        })
+      }
+    });
+  }
+
+  const initReactivateMode = async (data) => {
+    const { id, full_name, short_name } = data;
+    setInputValue('#reactivateProgram_id', id);
+    setHTMLContent('#reactivateProgram_program', `${ full_name } (${ short_name })`);
+    reactivateModal.modal('show');
+  }
+
+  const handleReActivateMode = () => {
+    reactivateValidator = $app(reactivateFormSelector).handleForm({
+      validators: {
+        id: {
+          required: 'Program ID must exist here.'
+        }
+      },
+      onSubmit: () => {
+        processing = true;
+
+        // Disable the elements
+        const submitBtn = $('#reactivateProgram_submitBtn');
+        const cancelBtn = $('#reactivateProgram_cancelBtn');
+        
+        cancelBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+
+         // For enabling elements
+        const enableElements = () => {
+
+          // Enable buttons
+          cancelBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html(`Reactivate`);
+        }
+
+        // Get the id
+        const fd = new FormData(reactivateForm);
+
+        $.ajax({
+          url: `${ BASE_URL_API }/programs/${ fd.get('id') }/restore`,
+          type: 'PUT',
+          success: async (res) => {
+            processing = false;
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              await Programs.reloadDataTable();
+              reactivateModal.modal('hide');
+              enableElements();
+              toastr.success('A program has been successfully re-activated.');
+            }
+          },
+          error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
+            ajaxErrorHandler({
+              file: 'admin/programs.js',
+              fn: 'Programs.onEditFormSubmit()',
+              data: data,
+              xhr: xhr
+            });
+          }
+        })
+      }
+    });
   }
 
   // * Public Methods
 
   const reloadDataTable = async () => await dt.ajax.reload();
-  
 
   // * Init
 
@@ -271,6 +492,8 @@ const Programs = (() => {
       initializations();
       initDataTable();
       handleEditForm();
+      handleDeactivateForm();
+      handleReActivateMode();
     }
   }
 

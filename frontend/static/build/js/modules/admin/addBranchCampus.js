@@ -59,7 +59,7 @@
   const handleForm = () => {
     $app('#addBranchCampus_form').handleForm({
       validators: {
-        branchCampus_name: {
+        name: {
           required: "Branch/Campus name is required.",
           notEmpty: "This field cannot be blank.",
         },

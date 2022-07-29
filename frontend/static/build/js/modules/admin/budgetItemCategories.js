@@ -12,11 +12,23 @@ const BudgetItemCategories = (() => {
 
   const dtElem_selector = '#budget_item_categories_dt';
   const dtElem = $(dtElem_selector);
+  
   const editModal = $('#editBudgetItemCategory_modal');
   const editFormSelector = '#editBudgetItemCategory_form';
   const editForm = $(editFormSelector)[0];
+
+  const deactivateModal = $('#deactivateBudgetItemCategory_modal');
+  const deactivateFormSelector = '#deactivateBudgetItemCategory_form';
+  const deactivateForm = $(deactivateFormSelector)[0];
+
+  const reactivateModal = $('#reactivateBudgetItemCategory_modal');
+  const reactivateFormSelector = '#reactivateBudgetItemCategory_form';
+  const reactivateForm = $(reactivateFormSelector)[0];
+
   let dt;
   let editValidator;
+  let deactivateValidator;
+  let reactivateValidator;
   let initialized = false;
   let processing = false;
 
@@ -90,28 +102,40 @@ const BudgetItemCategories = (() => {
           sortable: false,
           width: '15%',
           render: (data) => {
-            return !data.deleted_at 
-              ? `
-                <div class="text-sm-center">
-                  <div class="badge badge-subtle-success px-2 py-1">
-                    <i class="fas fa-check fa-fw mr-1"></i>
-                    <span>Active</span>
-                  </div>
+            const { theme, icon, label } = (() => !data.deleted_at 
+              ? { theme: 'success', icon: 'fas fa-check', label: 'Active' }
+              : { theme: 'danger', icon: 'fas fa-ban', label: 'Inactive' }
+            )();
+            return `
+              <div class="text-sm-center user-select-none">
+                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                  <i class="${ icon } fa-fw mr-1"></i>
+                  <span>${ label }</span>
                 </div>
-              `
-              : `
-                <div class="text-center">
-                  <div class="badge badge-subtle-danger px-2 py-1">
-                    <i class="fas fa-ban fa-fw mr-1"></i>
-                    <span>Inactive</span>
-                  </div>
-                </div>
-              ` 
+              </div>
+            `;
           }
         }, {
           data: null,
           width: '5%',
           render: data => {
+            const reActivateDeactivateOption = (() => {
+              const { mode, label } = (() => {
+                return !data.deleted_at
+                  ? { mode: 'initDeactivateMode', label: 'Deactivate' }
+                  : { mode: 'initReactivateMode', label: 'Reactivate' }
+              })();
+              return `
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  data-dt-btn="${ mode }"
+                >
+                  <span>${ label }</span>
+                </div>
+              `
+            })();
+
             return `
               <div class="dropdown text-center">
                 
@@ -128,13 +152,7 @@ const BudgetItemCategories = (() => {
                   >
                     <span>Edit details</span>
                   </div>
-                  <div
-                    role="button"
-                    class="dropdown-item"
-                    data-dt-btn="initDeactivateMode"
-                  >
-                    <span>Deactivate</span>
-                  </div>
+                  ${ reActivateDeactivateOption }
                 </div>
               </div>
             `
@@ -143,10 +161,25 @@ const BudgetItemCategories = (() => {
       ]
     });
 
+    // For edit option
     $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, (e) => {
       const row = $(e.currentTarget).closest('tr');
       const data = dt.row(row).data();
       initEditMode(data);
+    });
+
+    // For deactivate option
+    $(dtElem_selector).on('click', `[data-dt-btn="initDeactivateMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initDeactivateMode(data);
+    });
+
+    // For reactivate option
+    $(dtElem_selector).on('click', `[data-dt-btn="initReactivateMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initReactivateMode(data);
     });
   }
 
@@ -223,6 +256,146 @@ const BudgetItemCategories = (() => {
 
   }
 
+  const initDeactivateMode = async (data) => {
+    const { id, name } = data;
+    setInputValue('#deactivateBudgetItemCategory_id', id);
+    setHTMLContent('#deactivateBudgetItemCategory_category', name);
+    deactivateModal.modal('show');
+  }
+
+  const handleDeactivateForm = () => {
+    deactivateValidator = $app(deactivateFormSelector).handleForm({
+      validators: {
+        id: {
+          required: 'Budget Item Category ID must exist here.'
+        }
+      },
+      onSubmit: () => {
+        processing = true;
+
+        // Disable the elements
+        const submitBtn = $('#deactivateBudgetItemCategory_submitBtn');
+        const cancelBtn = $('#deactivateBudgetItemCategory_cancelBtn');
+        
+        cancelBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+
+         // For enabling elements
+        const enableElements = () => {
+
+          // Enable buttons
+          cancelBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html(`Deactivate`);
+        }
+
+        // Get the id
+        const fd = new FormData(deactivateForm);
+
+        $.ajax({
+          url: `${ BASE_URL_API }/budget_categories/${ fd.get('id') }`,
+          type: 'DELETE',
+          success: async (res) => {
+            processing = false;
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              await BudgetItemCategories.reloadDataTable();
+              deactivateModal.modal('hide');
+              enableElements();
+              toastr.info('A budget item category has been successfully deactivated.');
+            }
+          },
+          error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
+            ajaxErrorHandler({
+              file: 'admin/programs.js',
+              fn: 'Programs.onEditFormSubmit()',
+              data: data,
+              xhr: xhr
+            });
+          }
+        })
+      }
+    });
+  }
+
+  const initReactivateMode = async (data) => {
+    const { id, name } = data;
+    setInputValue('#reactivateBudgetItemCategory_id', id);
+    setHTMLContent('#reactivateBudgetItemCategory_category', name);
+    reactivateModal.modal('show');
+  }
+
+  const handleReActivateMode = () => {
+    reactivateValidator = $app(reactivateFormSelector).handleForm({
+      validators: {
+        id: {
+          required: 'Budget Item Category ID must exist here.'
+        }
+      },
+      onSubmit: () => {
+        processing = true;
+
+        // Disable the elements
+        const submitBtn = $('#reactivateBudgetItemCategory_submitBtn');
+        const cancelBtn = $('#reactivateBudgetItemCategory_cancelBtn');
+        
+        cancelBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+
+         // For enabling elements
+        const enableElements = () => {
+
+          // Enable buttons
+          cancelBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html(`Reactivate`);
+        }
+
+        // Get the id
+        const fd = new FormData(reactivateForm);
+
+        $.ajax({
+          url: `${ BASE_URL_API }/budget_categories/${ fd.get('id') }/restore`,
+          type: 'PUT',
+          success: async (res) => {
+            processing = false;
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              await BudgetItemCategories.reloadDataTable();
+              reactivateModal.modal('hide');
+              enableElements();
+              toastr.success('A budget item category has been successfully re-activated.');
+            }
+          },
+          error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
+            ajaxErrorHandler({
+              file: 'admin/budgetItemCategories.js',
+              fn: 'BudgetItemCategories.onEditFormSubmit()',
+              data: data,
+              xhr: xhr
+            });
+          }
+        })
+      }
+    });
+  }
+
   // * Public Methods
   
   const reloadDataTable = async () =>  await dt.ajax.reload();
@@ -251,6 +424,8 @@ const BudgetItemCategories = (() => {
       initializations();
       initDataTable();
       handleEditForm();
+      handleDeactivateForm();
+      handleReActivateMode();
     }
   }
 
@@ -258,7 +433,6 @@ const BudgetItemCategories = (() => {
     init,
     reloadDataTable,
   }
-
 })();
 
 BudgetItemCategories.init();

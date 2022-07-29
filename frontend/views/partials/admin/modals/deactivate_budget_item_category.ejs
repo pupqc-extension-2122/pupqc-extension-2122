@@ -1,6 +1,6 @@
-<div class="modal" id="deactivateProgram_modal">
+<div class="modal" id="deactivateBudgetItemCategory_modal">
   <div class="modal-dialog modal-dialog-centered">
-    <form class="modal-content" id="deactivateProgram_form">
+    <form class="modal-content" id="deactivateBudgetItemCategory_form">
       <div class="modal-header">
         <h4 class="modal-title">Confirmation</h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
@@ -9,16 +9,16 @@
       </div>
       <div class="modal-body">
 
-        <input type="hidden" id="deactivateProgram_id" name="id">
+        <input type="hidden" id="deactivateBudgetItemCategory_id" name="id">
 
         <div class="d-flex">
           <h1 class="mr-3 display-4">
             <i class="fas fa-exclamation-circle text-info"></i>
           </h1>
           <div class="pb-3">
-            <div class="font-weight-bold mb-2">Deactivate Program</div>
-            <div>Are you sure you want to deactivate this program?</div>
-            <p class="font-weight-bold" id="deactivateProgram_program"></p>
+            <div class="font-weight-bold mb-2">Deactivate Budget Item Category</div>
+            <div>Are you sure you want to deactivate this budget item category?</div>
+            <p class="font-weight-bold" id="deactivateBudgetItemCategory_category"></p>
             <div>You can still reactivate them later.</div>
           </div>
         </div>
@@ -28,13 +28,13 @@
           type="button" 
           class="btn btn-negative" 
           data-dismiss="modal"
-          id="deactivateProgram_cancelBtn"
+          id="deactivateBudgetItemCategory_cancelBtn"
         >Cancel</button>
         <button 
           type="submit" 
           class="btn btn-primary" 
           data-cooperating-agency-btn="addLater"
-          id="deactivateProgram_submitBtn"
+          id="deactivateBudgetItemCategory_submitBtn"
         >Deactivate</button>
       </div>
     </form>

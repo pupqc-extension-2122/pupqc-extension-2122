@@ -12,14 +12,25 @@ const BranchesCampuses = (() => {
   
   const dtElem_selector = '#branches_campuses_dt';
   const dtElem = $(dtElem_selector);
+  
   const editModal = $('#editBranchCampus_modal');
   const editFormSelector = '#editBranchCampus_form';
   const editForm = $(editFormSelector)[0];
+  
+  const deactivateModal = $('#deactivateBranchCampus_modal');
+  const deactivateFormSelector = '#deactivateBranchCampus_form';
+  const deactivateForm = $(deactivateFormSelector)[0];
+
+  const reactivateModal = $('#reactivateBranchCampus_modal');
+  const reactivateFormSelector = '#reactivateBranchCampus_form';
+  const reactivateForm = $(reactivateFormSelector)[0];
+
   let dt;
   let editValidator;
+  let deactivateValidator;
+  let reactivateValidator;
   let initialized = false;
   let processing = false;
-
 
   // * Private Methods
 
@@ -116,28 +127,39 @@ const BranchesCampuses = (() => {
           sortable: false,
           width: '15%',
           render: (data, type, row) => {
-            return !row.deleted_at 
-              ? `
-                <div class="text-sm-center">
-                  <div class="badge badge-subtle-success px-2 py-1">
-                    <i class="fas fa-check fa-fw mr-1"></i>
-                    <span>Active</span>
-                  </div>
+            const { theme, icon, label } = (() => !data.deleted_at 
+              ? { theme: 'success', icon: 'fas fa-check', label: 'Active' }
+              : { theme: 'danger', icon: 'fas fa-ban', label: 'Inactive' }
+            )();
+            return `
+              <div class="text-sm-center user-select-none">
+                <div class="badge badge-subtle-${ theme } px-2 py-1">
+                  <i class="${ icon } fa-fw mr-1"></i>
+                  <span>${ label }</span>
                 </div>
-              `
-              : `
-                <div class="text-center">
-                  <div class="badge badge-subtle-danger px-2 py-1">
-                    <i class="fas fa-ban fa-fw mr-1"></i>
-                    <span>Inactive</span>
-                  </div>
-                </div>
-              ` 
+              </div>
+            `;
           }
         }, {
           data: null,
           width: '5%',
           render: data => {
+            const reActivateDeactivateOption = (() => {
+              const { mode, label } = (() => {
+                return !data.deleted_at
+                  ? { mode: 'initDeactivateMode', label: 'Deactivate' }
+                  : { mode: 'initReactivateMode', label: 'Reactivate' }
+              })();
+              return `
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  data-dt-btn="${ mode }"
+                >
+                  <span>${ label }</span>
+                </div>
+              `
+            })();
             return `
               <div class="dropdown text-center">
                   
@@ -154,13 +176,7 @@ const BranchesCampuses = (() => {
                   >
                     <span>Edit details</span>
                   </div>
-                  <div
-                    role="button"
-                    class="dropdown-item"
-                    data-dt-btn="initDeactivateMode"
-                  >
-                    <span>Deactivate</span>
-                  </div>
+                  ${ reActivateDeactivateOption }
                 </div>
               </div>
             `
@@ -169,10 +185,25 @@ const BranchesCampuses = (() => {
       ]
     });
 
+    // For edit option
     $(dtElem_selector).on('click', `[data-dt-btn="initEditMode"]`, (e) => {
       const row = $(e.currentTarget).closest('tr');
       const data = dt.row(row).data();
       initEditMode(data);
+    });
+    
+    // For deactivate option
+    $(dtElem_selector).on('click', `[data-dt-btn="initDeactivateMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initDeactivateMode(data);
+    });
+    
+    // For reactivate option
+    $(dtElem_selector).on('click', `[data-dt-btn="initReactivateMode"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      initReactivateMode(data);
     });
   }
 
@@ -254,6 +285,146 @@ const BranchesCampuses = (() => {
 
   }
 
+  const initDeactivateMode = async (data) => {
+    const { id, name } = data;
+    setInputValue('#deactivateBranchCampus_id', id);
+    setHTMLContent('#deactivateBranchCampus_name', name);
+    deactivateModal.modal('show');
+  }
+
+  const handleDeactivateForm = () => {
+    deactivateValidator = $app(deactivateFormSelector).handleForm({
+      validators: {
+        id: {
+          required: 'Program ID must exist here.'
+        }
+      },
+      onSubmit: () => {
+        processing = true;
+
+        // Disable the elements
+        const submitBtn = $('#deactivateBranchCampus_submitBtn');
+        const cancelBtn = $('#deactivateBranchCampus_cancelBtn');
+        
+        cancelBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+
+         // For enabling elements
+        const enableElements = () => {
+
+          // Enable buttons
+          cancelBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html(`Deactivate`);
+        }
+
+        // Get the id
+        const fd = new FormData(deactivateForm);
+
+        $.ajax({
+          url: `${ BASE_URL_API }/organizations/${ fd.get('id') }`,
+          type: 'DELETE',
+          success: async (res) => {
+            processing = false;
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              await BranchesCampuses.reloadDataTable();
+              deactivateModal.modal('hide');
+              enableElements();
+              toastr.info('A branch/campus  has been successfully deactivated.');
+            }
+          },
+          error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
+            ajaxErrorHandler({
+              file: 'admin/programs.js',
+              fn: 'Programs.onEditFormSubmit()',
+              data: data,
+              xhr: xhr
+            });
+          }
+        })
+      }
+    });
+  }
+
+  const initReactivateMode = async (data) => {
+    const { id, name } = data;
+    setInputValue('#reactivateBranchCampus_id', id);
+    setHTMLContent('#reactivateBranchCampus_name', name);
+    reactivateModal.modal('show');
+  }
+
+  const handleReactivateForm = () => {
+    reactivateValidator = $app(reactivateFormSelector).handleForm({
+      validators: {
+        id: {
+          required: 'Branch/Campus ID must exist here.'
+        }
+      },
+      onSubmit: () => {
+        processing = true;
+
+        // Disable the elements
+        const submitBtn = $('#reactivateBranchCampus_submitBtn');
+        const cancelBtn = $('#reactivateBranchCampus_cancelBtn');
+        
+        cancelBtn.attr('disabled', true);
+        submitBtn.attr('disabled', true);
+        submitBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+
+         // For enabling elements
+        const enableElements = () => {
+
+          // Enable buttons
+          cancelBtn.attr('disabled', false);
+          submitBtn.attr('disabled', false);
+          submitBtn.html(`Reactivate`);
+        }
+
+        // Get the id
+        const fd = new FormData(reactivateForm);
+
+        $.ajax({
+          url: `${ BASE_URL_API }/organzations/${ fd.get('id') }/restore`,
+          type: 'PUT',
+          success: async (res) => {
+            processing = false;
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              await BranchesCampuses.reloadDataTable();
+              reactivateModal.modal('hide');
+              enableElements();
+              toastr.success('A budget item category has been successfully re-activated.');
+            }
+          },
+          error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
+            ajaxErrorHandler({
+              file: 'admin/budgetItemCategories.js',
+              fn: 'BudgetItemCategories.onEditFormSubmit()',
+              data: data,
+              xhr: xhr
+            });
+          }
+        })
+      }
+    });
+  }
+
   // * Public Methods
 
   const reloadDataTable = async () =>  await dt.ajax.reload();
@@ -292,6 +463,8 @@ const BranchesCampuses = (() => {
       initializations();
       initDataTable();
       handleEditForm();
+      handleDeactivateForm();
+      handleReactivateForm();
     }
   }
 

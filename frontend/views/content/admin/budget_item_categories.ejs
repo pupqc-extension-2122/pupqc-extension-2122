@@ -39,7 +39,7 @@
         >
           <i class="fas fa-plus mr-1"></i>
           <span>Add new category</span>
-        </>
+        </button>
       </div>
       
     </div>
@@ -163,6 +163,9 @@
 <%# Modals %>
 <%- include('../../partials/admin/modals/add_budget_item_category') %>
 <%- include('../../partials/admin/modals/edit_budget_item_category') %>
+<%- include('../../partials/admin/modals/deactivate_budget_item_category') %>
+<%- include('../../partials/admin/modals/reactivate_budget_item_category') %>
+
 
 <%# ***** Scripts ***** %>
 
@@ -185,7 +188,4 @@
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
 <script src="<%=BASE_URL%>/js/modules/admin/budgetItemCategories.js"></script>
-
-<% if (JSON.parse(JSON.stringify(roles)).includes('Admin')) { %>
-  <script src="<%=BASE_URL%>/js/modules/admin/addBudgetItemCategory.js"></script>
-<% } %>
+<script src="<%=BASE_URL%>/js/modules/admin/addBudgetItemCategory.js"></script>
