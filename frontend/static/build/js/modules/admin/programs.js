@@ -149,6 +149,18 @@ const Programs = (() => {
           data: null,
           width: '5%',
           render: data => {
+            
+            const editDetailsOption = !data.deleted_at
+              ? `
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  data-dt-btn="initEditMode"
+                >
+                  <span>Edit details</span>
+                </div>
+              ` : '';
+
             const reActivateDeactivateOption = (() => {
                 const { mode, label } = (() => {
                   return !data.deleted_at
@@ -175,13 +187,7 @@ const Programs = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right">
                   <div class="dropdown-header">Options</div>
-                  <div
-                    role="button"
-                    class="dropdown-item"
-                    data-dt-btn="initEditMode"
-                  >
-                    <span>Edit details</span>
-                  </div>
+                  ${ editDetailsOption }
                   ${ reActivateDeactivateOption }
                 </div>
               </div>

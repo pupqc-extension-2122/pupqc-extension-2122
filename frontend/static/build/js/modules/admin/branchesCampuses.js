@@ -144,6 +144,18 @@ const BranchesCampuses = (() => {
           data: null,
           width: '5%',
           render: data => {
+
+            const editDetailsOption = !data.deleted_at
+              ? `
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  data-dt-btn="initEditMode"
+                >
+                  <span>Edit details</span>
+                </div>
+              ` : '';
+
             const reActivateDeactivateOption = (() => {
               const { mode, label } = (() => {
                 return !data.deleted_at
@@ -162,21 +174,20 @@ const BranchesCampuses = (() => {
             })();
             return `
               <div class="dropdown text-center">
-                  
-              <div class="btn btn-sm btn-negative" data-toggle="dropdown" data-dt-btn="options" title="Options">
-                <i class="fas fa-ellipsis-h"></i>
-              </div>
-            
-              <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">Options</div>
-                  <div
-                    role="button"
-                    class="dropdown-item"
-                    data-dt-btn="initEditMode"
-                  >
-                    <span>Edit details</span>
+                <div 
+                  class="btn btn-sm btn-negative" 
+                  data-toggle="dropdown" 
+                  data-dt-btn="options" 
+                  title="Options"
+                >
+                  <i class="fas fa-ellipsis-h"></i>
+                </div>
+              
+                <div class="dropdown-menu dropdown-menu-right">
+                  <div class="dropdown-header">Options</div>
+                    ${ editDetailsOption }
+                    ${ reActivateDeactivateOption }
                   </div>
-                  ${ reActivateDeactivateOption }
                 </div>
               </div>
             `
@@ -397,7 +408,7 @@ const BranchesCampuses = (() => {
         const fd = new FormData(reactivateForm);
 
         $.ajax({
-          url: `${ BASE_URL_API }/organzations/${ fd.get('id') }/restore`,
+          url: `${ BASE_URL_API }/organizations/${ fd.get('id') }/restore`,
           type: 'PUT',
           success: async (res) => {
             processing = false;
@@ -416,7 +427,6 @@ const BranchesCampuses = (() => {
             ajaxErrorHandler({
               file: 'admin/budgetItemCategories.js',
               fn: 'BudgetItemCategories.onEditFormSubmit()',
-              data: data,
               xhr: xhr
             });
           }

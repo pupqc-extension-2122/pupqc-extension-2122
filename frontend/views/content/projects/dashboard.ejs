@@ -18,6 +18,12 @@
         <h1 class="m-0">Dashboard</h1>
         <div class="text-secondary">View reports and manage activities here</div>
       </div>
+      <div>
+        <div class="text-right">
+          <h3 class="m-0 user-select-none" id="dashboard_dateTime_timeDisplay"></h3>
+          <h6 class="m-0 user-select-none" id="dashboard_dateTime_dateDisplay"></h6>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -28,67 +34,114 @@
 
     <%#- include('../../partials/maintenance') %>
 
+    <%# Main Cards %>
     <div class="row">
-      <div class="col-lg-3 col-6">
 
-        <div class="small-box bg-info">
+      <%# Total Project Proposals %>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
           <div class="inner">
-            <h3>150</h3>
-            <p>New Orders</p>
+            <h3 id="dashboard_mainCard_totalProjectProposals">
+              <span class="fas fa-spinner fa-fw fa-spin-pulse"></span>
+            </h3>
+            <p>Total Project Proposals</p>
           </div>
           <div class="icon">
-            <i class="fas fa-arrow-right"></i>
+            <i class="fas fa-file-pen"></i>
           </div>
-          <a href="#" class="small-box-footer">
+          <a href="<%=BASE_URL%>/p/proposals" class="small-box-footer">
             <span>More info</span>
             <i class="fas fa-arrow-circle-right fa-beat-fade ml-1"></i>
           </a>
         </div>
       </div>
       
+      <%# Total Created %>
       <div class="col-lg-3 col-6">
-        <!-- small box -->
-        <div class="small-box bg-success">
+        <div class="small-box bg-info">
           <div class="inner">
-            <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-            <p>Bounce Rate</p>
+            <h3 id="dashboard_mainCard_totalCreatedProjects">
+              <span class="fas fa-spinner fa-fw fa-spin-pulse"></span>
+            </h3>
+            <p>Created Proposals</p>
           </div>
           <div class="icon">
-            <i class="ion ion-stats-bars"></i>
+            <i class="fas fa-pen"></i>
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="<%=BASE_URL%>/p/proposals" class="small-box-footer">
+            <span>More info</span>
+            <i class="fas fa-arrow-circle-right fa-beat-fade ml-1"></i>
+          </a>
         </div>
       </div>
       
+      <%# On-going Projects %>
       <div class="col-lg-3 col-6">
-        <!-- small box -->
         <div class="small-box bg-warning">
           <div class="inner">
-            <h3>44</h3>
-
-            <p>User Registrations</p>
+            <h3 id="dashboard_mainCard_totalOnGoingProjects">
+              <span class="fas fa-spinner fa-fw fa-spin-pulse"></span>
+            </h3>
+            <p>On-going projects</p>
           </div>
           <div class="icon">
-            <i class="ion ion-person-add"></i>
+            <i class="fas fa-hourglass"></i>
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="<%=BASE_URL%>/p/monitoring" class="small-box-footer">
+            <span>More info</span>
+            <i class="fas fa-arrow-circle-right fa-beat-fade ml-1"></i>
+          </a>
         </div>
       </div>
       
+      <%# Concluded Projects %>
       <div class="col-lg-3 col-6">
-        <!-- small box -->
-        <div class="small-box bg-primary">
+        <div class="small-box bg-danger">
           <div class="inner">
-            <h3>65</h3>
-
-            <p>Unique Visitors</p>
+            <h3 id="dashboard_mainCard_totalConcludedProjects">
+              <span class="fas fa-spinner fa-fw fa-spin-pulse"></span>
+            </h3>
+            <p>Concluded projects</p>
           </div>
           <div class="icon">
-            <i class="ion ion-pie-graph"></i>
+            <i class="fas fa-calendar-check"></i>
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="<%=BASE_URL%>/p/monitoring" class="small-box-footer">
+            <span>More info</span>
+            <i class="fas fa-arrow-circle-right fa-beat-fade ml-1"></i>
+          </a>
         </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-outline-primary">
+          <div class="card-header">
+            <h3 class="card-title">Project Proposals for Approval</h3>
+          </div>
+          <div class="card-body">
+            <div>
+              <canvas 
+                id="donutChart" 
+                style="
+                  min-height: 250px; 
+                  height: 250px; 
+                  max-height: 250px; 
+                  max-width: 100%; 
+                  display: block; 
+                  width: 599px;
+                " 
+                width="599" 
+                height="250" 
+                class="chartjs-render-monitor"
+              ></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+
       </div>
     </div>
 
@@ -99,5 +152,8 @@
 
 <%# ***** Scripts ***** %>
 
+<%# Chart JS %> 
+<script src="<%=BASE_URL%>/plugins/chart.js/Chart.min.js"></script>
 <%# Main %> 
 <script src="<%=BASE_URL%>/js/main.js"></script>
+<script src="<%=BASE_URL%>/js/modules/projects/dashboard.js"></script>

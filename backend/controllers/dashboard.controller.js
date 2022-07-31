@@ -22,6 +22,8 @@ exports.getCards = async (req, res) => {
 
     let projects = await Projects.findAll({ include: 'evaluation' })
 
+    data.total = projects.length;
+
     projects.forEach(el => {
       let status = el.status.toLowerCase()
       data[status]++

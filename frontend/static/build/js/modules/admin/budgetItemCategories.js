@@ -119,6 +119,17 @@ const BudgetItemCategories = (() => {
           data: null,
           width: '5%',
           render: data => {
+            const editDetailsOption = !data.deleted_at
+              ? `
+                <div
+                  role="button"
+                  class="dropdown-item"
+                  data-dt-btn="initEditMode"
+                >
+                  <span>Edit details</span>
+                </div>
+              ` : '';
+
             const reActivateDeactivateOption = (() => {
               const { mode, label } = (() => {
                 return !data.deleted_at
@@ -145,13 +156,7 @@ const BudgetItemCategories = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right">
                   <div class="dropdown-header">Options</div>
-                  <div
-                    role="button"
-                    class="dropdown-item"
-                    data-dt-btn="initEditMode"
-                  >
-                    <span>Edit details</span>
-                  </div>
+                  ${ editDetailsOption }
                   ${ reActivateDeactivateOption }
                 </div>
               </div>
@@ -399,6 +404,7 @@ const BudgetItemCategories = (() => {
   // * Public Methods
   
   const reloadDataTable = async () =>  await dt.ajax.reload();
+
   const initEditMode = async (data) => {
 
     // Show the modal
