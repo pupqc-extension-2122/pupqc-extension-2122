@@ -165,6 +165,7 @@ const ProjectDetails = (() => {
       const {
         title,
         project_type,
+        programs,
         implementer,
         team_members: pt,
         target_groups: tg,
@@ -185,6 +186,14 @@ const ProjectDetails = (() => {
         '#projectDetails_body_title': title || noContentTemplate('No title has been set up'),
         '#projectDetails_body_extensionType': project_type || noContentTemplate('No extension project type has been set up.'),
         '#projectDetails_body_implementer': implementer || noContentTemplate('No implementer has been set up.'),
+        '#projectDetails_body_programs': () => {
+          if (programs && programs.length) {
+            let list = '<ul class="mb-0">';
+            programs.forEach(p => list += `<li>${ p.full_name } (${ p.short_name })</li>`);
+            return list;
+          }
+          return noContentTemplate('No programs has been set up.');
+        },
         '#projectDetails_body_projectTeam': () => {
           if (pt.length) {
             let list = '<ul class="mb-0">';
@@ -192,7 +201,7 @@ const ProjectDetails = (() => {
             list += '</ul>';
             return list;
           }
-          return noContentTemplate('No project team been set up.');
+          return noContentTemplate('No project team has been set up.');
         },
         '#projectDetails_body_targetGroups': () => {
           if (tg.length) {
@@ -503,6 +512,7 @@ const ProjectDetails = (() => {
     if (!initialized) {
       initialized = true;
       project = data.project;
+      console.log(project);
       mode = data.mode;
       loadDetails();
       removeLoaders();

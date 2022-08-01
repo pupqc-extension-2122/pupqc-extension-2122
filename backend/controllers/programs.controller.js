@@ -16,7 +16,7 @@ exports.datatablePrograms = async (req, res) => {
 exports.listPrograms = async (req, res) => {
   try {
 
-    if (!req.auth.roles.includes('Admin'))
+    if (!req.auth.roles.includes('Extensionist'))
       return res.status(403).send({ error: true, message: 'Forbidden Action' })
 
     let programs = await Programs.findAll()
