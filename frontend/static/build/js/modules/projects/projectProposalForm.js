@@ -452,51 +452,51 @@
 
         console.log(data);
 
-        // await $.ajax({
-        //   ...(() => {
-        //     if (form_type === 'create') return {
-        //       url: `${ BASE_URL_API }/projects/create`,
-        //       type: 'POST'
-        //     }
+        await $.ajax({
+          ...(() => {
+            if (form_type === 'create') return {
+              url: `${ BASE_URL_API }/projects/create`,
+              type: 'POST'
+            }
 
-        //     if (form_type === 'edit') return {
-        //       url: `${ BASE_URL_API }/projects/${ project_id }`,
-        //       type: 'PUT'
-        //     }
-        //   })(),
-        //   data: data,
-        //   success: res => {
-        //     if (res.error) {
-        //       ajaxErrorHandler(res.message);
-        //       enableElements();
-        //     } else {
+            if (form_type === 'edit') return {
+              url: `${ BASE_URL_API }/projects/${ project_id }`,
+              type: 'PUT'
+            }
+          })(),
+          data: data,
+          success: res => {
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+              enableElements();
+            } else {
 
-        //       // Set session alert
+              // Set session alert
               
-        //       if (form_type === 'create') {
-        //         setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ res.data.id }`, {
-        //           theme: 'success',
-        //           message: 'A new proposal has been successfully created.'
-        //         });
-        //       }
+              if (form_type === 'create') {
+                setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ res.data.id }`, {
+                  theme: 'success',
+                  message: 'A new proposal has been successfully created.'
+                });
+              }
 
-        //       if (form_type === 'edit') {
-        //         setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ project_id }`, {
-        //           theme: 'success',
-        //           message: `The project proposal has been successfully updated.`
-        //         });
-        //       }
-        //     }
-        //   },
-        //   error: (xhr, status, error) => {
-        //     enableElements();
-        //     ajaxErrorHandler({
-        //       file: 'projects/projectProposalForm.js',
-        //       fn: 'onDOMLoad.handleForm()',
-        //       xhr: xhr
-        //     });
-        //   }
-        // });
+              if (form_type === 'edit') {
+                setSessionAlert(`${ BASE_URL_WEB }/p/proposals/${ project_id }`, {
+                  theme: 'success',
+                  message: `The project proposal has been successfully updated.`
+                });
+              }
+            }
+          },
+          error: (xhr, status, error) => {
+            enableElements();
+            ajaxErrorHandler({
+              file: 'projects/projectProposalForm.js',
+              fn: 'onDOMLoad.handleForm()',
+              xhr: xhr
+            });
+          }
+        });
       }
     });
   }
