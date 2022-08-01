@@ -201,7 +201,7 @@ exports.createProject = async (req, res) => {
     }
 
     let project_programs = []
-    if (body.programs) {
+    if (body.program_id) {
       let programs = await Programs.findAll({
         where: {
           id: body.program_id
