@@ -71,6 +71,13 @@ exports.viewProposal = async (req, res) => {
             }
           }
         ]
+      },
+      {
+        model: Programs,
+        as: 'programs',
+        through: {
+          attributes: []
+        }
       }
     ],
     order: [
