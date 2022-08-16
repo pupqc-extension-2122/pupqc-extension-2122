@@ -1,4 +1,5 @@
 'use strict';
+require('dotenv').config()
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -11,15 +12,17 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Partners', [
-      {
-        id: 'e6c7d6b8-7a72-4761-b8d1-2a3bc9f95594',
-        name: 'MASAGANA MARKETING MGT. & CONSULTANCY, INC.',
-        address: '152-C West Ave., Brgy. Philam, Quezon City',
-        created_at: new Date(),
-        updated_at: new Date()
-      }
-    ])
+    if (process.env.NODE_ENV != 'production') {
+      await queryInterface.bulkInsert('Partners', [
+        {
+          id: 'e6c7d6b8-7a72-4761-b8d1-2a3bc9f95594',
+          name: 'MASAGANA MARKETING MGT. & CONSULTANCY, INC.',
+          address: '152-C West Ave., Brgy. Philam, Quezon City',
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ])
+    }
   },
 
   async down(queryInterface, Sequelize) {
