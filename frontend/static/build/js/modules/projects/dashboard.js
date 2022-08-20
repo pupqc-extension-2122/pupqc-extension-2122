@@ -72,13 +72,19 @@
       created,
       ongoing,
       concluded,
+      memos
     } = data;
 
     setHTMLContent({
+
+      // Projects
       '#dashboard_mainCard_totalProjectProposals': total,
       '#dashboard_mainCard_totalCreatedProjects': created,
       '#dashboard_mainCard_totalOnGoingProjects': ongoing,
       '#dashboard_mainCard_totalConcludedProjects': concluded,
+
+      // MOA/MOU
+      '#dashboard_mainCard_totalMemos': memos,
     });
   }
 

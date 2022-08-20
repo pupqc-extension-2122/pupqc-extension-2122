@@ -29,25 +29,25 @@ const render404 = (res) => {
 
 
 // Redirect
-router.get('/', jwtMiddleware, (req, res) => res.redirect(`/r/dashboard`));
+router.get('/', jwtMiddleware, (req, res) => res.redirect(`/r/report1`));
 
 
 
 // Dashboard
-router.get('/dashboard', jwtMiddleware, (req, res) => {
-  const { roles, first_name, last_name } = req.auth;
+// router.get('/dashboard', jwtMiddleware, (req, res) => {
+//   const { roles, first_name, last_name } = req.auth;
 
-  ['Extensionist','Chief','Director'].some(r => roles.includes(r))
-    ? res.render(PATH + 'dashboard', {
-        document_title: 'Dashboard',
-        active_sidebar_tab: 'Dashboard',
-        name: `${ first_name } ${ last_name }`,
-        role: renderRoles(roles),
-        roles: roles,
-        ...RENDER_OPTION_DEFAULTS
-      })
-    : render404(res)
-});
+//   ['Extensionist','Chief','Director'].some(r => roles.includes(r))
+//     ? res.render(PATH + 'dashboard', {
+//         document_title: 'Dashboard',
+//         active_sidebar_tab: 'Dashboard',
+//         name: `${ first_name } ${ last_name }`,
+//         role: renderRoles(roles),
+//         roles: roles,
+//         ...RENDER_OPTION_DEFAULTS
+//       })
+//     : render404(res)
+// });
 
 // Report 1
 router.get('/report1', jwtMiddleware, (req, res) => {

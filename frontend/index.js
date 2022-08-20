@@ -55,11 +55,18 @@ app.use(async (req, res, next) => {
   next();
 });
 
+
+// Modules
 app.use(`/p/`, require('./routers/projects.route'));
 app.use(`/m/`, require('./routers/memo.route'));
 app.use(`/r/`, require('./routers/reports.route'));
 app.use(`/a/`, require('./routers/admin.route'));
+
+// User Info
 app.use(`/me/`, require('./routers/user_info.route'));
+app.use(`/profile/`, require('./routers/user_info.route'));
+
+// For Testing
 // app.use(`/t/`, require('./routers/test.route'));
 
 // For 404

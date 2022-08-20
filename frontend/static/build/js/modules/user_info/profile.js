@@ -15,6 +15,16 @@
 
     const data = await User.getData();
 
+    const hiddenEmail = (() => {
+      const [username, server_domain] = data.email.split('@');
+      
+      return username.charAt(0) 
+        + username.substr(1, username.length - 2).replace(/[\S]/g, "*")
+        + username.charAt(username.length - 1)
+        + '@'
+        + server_domain;
+    })();
+    
     // For User Profile Card
     await setHTMLContent({
       '#userProfile_name': formatName('F M. L, S', {
@@ -32,7 +42,7 @@
         });
         return roles;
       },
-      '#userProfile_email': data.email,
+      '#userProfile_email': hiddenEmail,
     });
 
     // For Edit form
@@ -41,7 +51,7 @@
       '#editUserInfo_middleName': data.middle_name,
       '#editUserInfo_lastName': data.last_name,
       '#editUserInfo_suffixName': data.suffix_name,
-      '#editUserInfo_email': data.email,
+      '#editUserInfo_email': hiddenEmail,
     });
   }
 

@@ -6,7 +6,8 @@ const { Projects } = require('../../backend/sequelize/models');
 const PATH = 'content/projects/';
 const RENDER_OPTION_DEFAULTS = {
   active_topbar_tab: 'Projects',
-  sidebar: 'sidebars/projects_sidebar',
+  // sidebar: 'sidebars/projects_sidebar',
+  sidebar: 'sidebars/main_sidebar',
 }
 
 

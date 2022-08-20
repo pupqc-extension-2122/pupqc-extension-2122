@@ -53,16 +53,23 @@
           </div>
 
           <%# Profile Card %>
-          <div class="card card-widget widget-user">
+          <div class="card card-widget widget-user user-select-none">
             <div 
-              class="widget-user-header bg-light"
-              style="background: url('../dist/img/photo1.png') center center;"
+              class="widget-user-header"
+              style="
+                background: url('<%=BASE_URL%>/img/app/profile_bg.jpg') center center; 
+                background-size: 100%;
+              "
             >
             </div>
             <div class="widget-user-image">
+              <!-- <div 
+                class="d-inline-block bg-light border rounded-circle" 
+                style="width: 100px; height: 100px"
+              ></div> -->
               <img 
                 class="profile-user-img img-fluid img-circle border-success"
-                src="<%=BASE_URL%>/img/PUPLogo.png"
+                src="<%=BASE_URL%>/img/app/no_profile_pic.png"
                 alt="Profile Picture"
                 draggable="false"
                 style="width: 100px; height: 100px;"
@@ -261,7 +268,10 @@
                   </div>
 
                   <div class="form-group text-right">
-                    <a href="#">Forgot your password?</a>
+                    <a 
+                      href=""
+                      id="settings_forgotPassword"
+                    >Forgot your password?</a>
                   </div>
 
                   <%# New Password %>
@@ -341,6 +351,9 @@
     </div>
   </div>
 </section>
+
+
+<%- include('../../partials/user_info/modals/forgot_password_send_email') %> 
 
 
 <%# ***** Scripts ***** %>

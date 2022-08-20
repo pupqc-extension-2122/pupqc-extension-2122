@@ -91,7 +91,7 @@
       
       passwordStrength_progressBar
         .css({ width: `${ percent }%` })
-        .removeClass('bg-danger bg-warning bg-info bg-success')
+        .removeClass('bg-danger bg-warning bg-info bg-success bg-primary')
         .addClass(`bg-${ theme }`);
       
       passwordStrength_label.html(() => {
@@ -278,6 +278,125 @@
     init: () => {
       initializations();
       handleForm();
+    }
+  }
+})().init();
+
+
+// FORGOT PASSWORD AND MAGIC LINK
+
+(() => {
+  const link = $('#settings_forgotPassword');
+  const modal = $('#forgotPasswordSendEmail_modal');
+  const email = User.getData().email;
+
+  let processing = false;
+  let sent = false;
+  
+  const initForgotPassword = () => {
+    const hiddenEmail = (() => {
+      const [username, server_domain] = email.split('@');
+      
+      return username.charAt(0) 
+        + username.substr(1, username.length - 2).replace(/[\S]/g, "*")
+        + username.charAt(username.length - 1)
+        + '@'
+        + server_domain;
+    })();
+
+    $('#forgotPasswordSendEmail_email').text(hiddenEmail);
+
+    // When link has been clicked
+    link.on('click', (e) => {
+      e.preventDefault();
+      !sent 
+        ? modal.modal('show')
+        : toastr.info('Magic link has already been sent, please check your email.');
+    });
+
+    // When form has been submitted
+    $app('#sendMagicLink_form').handleForm({
+      validators: {},
+      onSubmit: () => sendMagicLink(),
+    });
+
+    // When modal is gonna show
+    modal.on('show.bs.modal', (e) => {
+      if (sent) e.preventDefault();
+    });
+
+    // When modal is gonna hidden
+    modal.on('hide.bs.modal', (e) => {
+      if (processing || sent) e.preventDefault();
+    });
+  }
+
+  const sendMagicLink = async () => {
+    if (processing || sent) return;
+
+    processing = true;
+
+    const submit_btn = $('#confirmSubmit_btn');
+    const cancel_btn = $('#cancelSubmit_btn');
+
+    const setElementsOnLoadingState = () => {
+      submit_btn.attr('disabled', true);
+      submit_btn.html(`<i class="fas fa-spinner fa-spin-pulse mx-3"></i>`);
+
+      cancel_btn.attr('disabled', true);
+    }
+
+    const setElementsToUnloadState = () => {
+      submit_btn.attr('disabled', false);
+      submit_btn.html('Continue');
+
+      cancel_btn.attr('disabled', false);
+    }
+
+    setElementsOnLoadingState();
+
+    await $.ajax({
+      url: `${ BASE_URL_API }/auth/magic`,
+      type: 'POST',
+      data: { email: email },
+      success: res => {
+        processing = false;
+        setElementsToUnloadState();
+        if (res.error) {
+          toastr.warning('Email does not exist');
+        } else {
+          modal.modal('hide');
+          sent = true;
+          toastr.success('Magic link has been successfully sent! Please check your email.');
+        }
+      },
+      error: (xhr, status, error) => {
+        processing = false;
+        setElementsToUnloadState();
+        if (xhr.status === 500) {
+          toastr.error('Something went wrong. Please reload the page.', null, {
+            "timeOut": "0",
+            "extendedTimeOut": "0",
+          });
+          console.error({
+            file: 'auth/forgot_password.js',
+            fn: 'onFormSubmit().$.ajax',
+            data: data,
+            xhr: xhr,
+          });
+        } else {
+          toastr.warning(xhr.responseJSON.message, null, {
+            "timeOut": "0",
+            "extendedTimeOut": "0",
+          });
+        }
+      }
+    });
+  }
+
+  return {
+    init: () => {
+      initForgotPassword();
     }
   }
 })().init();

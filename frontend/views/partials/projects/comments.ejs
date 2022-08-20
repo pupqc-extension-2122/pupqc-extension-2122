@@ -19,8 +19,14 @@
     <%# Comments Form %>
     <form class="d-flex" id="projectComment_form">
       <div class="user-block mr-3">
-        <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
-        <!-- <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image"> -->
+        <!-- <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div> -->
+        <img 
+          class="img-circle user-select-none" 
+          style="width: 34px; height: 34px"
+          src="<%=BASE_URL%>/img/app/no_profile_pic.png" 
+          alt="User Profile"
+          draggable="false"
+        />
       </div>
       <div class="flex-grow-1 d-flex">
         <div class="form-group mr-3 mb-0 flex-grow-1">

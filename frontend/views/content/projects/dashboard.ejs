@@ -18,7 +18,7 @@
         <h1 class="m-0">Dashboard</h1>
         <div class="text-secondary">View reports and manage activities here</div>
       </div>
-      <div>
+      <div class="d-sm-block d-none">
         <div class="text-right">
           <h3 class="m-0 user-select-none" id="dashboard_dateTime_timeDisplay"></h3>
           <h6 class="m-0 user-select-none" id="dashboard_dateTime_dateDisplay"></h6>
@@ -33,6 +33,8 @@
   <div class="container-fluid">
 
     <% if (roles.includes('Extensionist')) { %>
+
+      <h5 class="font-weight-bold">Extension Projects</h5>
 
       <%# Main Cards %>
       <div class="row">
@@ -114,7 +116,10 @@
         </div>
       </div>
 
+      <%# Charts %>
       <div class="row">
+
+        <%# Project Proposals for Approval %>
         <div class="col-12">
           <div class="card card-outline-primary">
             <div class="card-header">
@@ -140,10 +145,39 @@
             </div>
           </div>
         </div>
+
         <div class="col-md-6">
 
         </div>
       </div>
+
+      <h5 class="font-weight-bold">Memorandum of Agreement/Understanding</h5>
+      
+      <%# Main Cards %>
+      <div class="row">
+
+        <%# Total Memos %>
+        <div class="col-lg-4 col-6">
+          <div class="small-box bg-primary">
+            <div class="inner">
+              <h3 id="dashboard_mainCard_totalMemos">
+                <span class="fas fa-spinner fa-fw fa-spin-pulse"></span>
+              </h3>
+              <p>Total MOA/MOU</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-copy"></i>
+            </div>
+            <a href="<%=BASE_URL%>/m/memo" class="small-box-footer">
+              <span>More info</span>
+              <i class="fas fa-arrow-circle-right fa-beat-fade ml-1"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+
     <% } %>
 
     <% if (roles.includes('Chief') || roles.includes('Director')) { %>

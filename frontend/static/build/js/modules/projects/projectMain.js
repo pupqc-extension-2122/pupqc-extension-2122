@@ -2239,11 +2239,17 @@ const ProjectComments = (() => {
     }
 
     // Create the comment template
+    // <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
     const comment = `
       <div class="d-flex mt-3 mb-2" data-comment-block="${ blockId }">
         <div class="user-block mr-3">
-          <div class="d-inline-block bg-light border rounded-circle" style="width: 34px; height: 34px"></div>
-          <!-- <img class="img-circle" src="../../dist/img/user1-128x128.jpg" alt="user image"> -->
+          <img 
+            class="img-circle user-select-none" 
+            src="${BASE_URL_WEB}/img/app/no_profile_pic.png" 
+            style="width: 34px; height: 34px"
+            alt="user image"
+            draggable="false"
+          />
         </div>
         <div class="flex-grow-1" data-comment-section="body">
           <a href="${ BASE_URL_WEB }/profile/${ user.id }" class="font-weight-bold text-dark">${ user.first_name } ${ user.last_name }</a>
@@ -3820,8 +3826,22 @@ const ProjectDocuments = (() => {
     let previewTemplate = previewNode.parentNode.innerHTML;
     previewNode.parentNode.removeChild(previewNode);
 
+    const accepted_files_arr = [
+      '.pdf',
+      '.doc',
+      '.docx',
+      '.xls',
+      '.xlsx',
+      '.ppt',
+      '.pptx',
+      '.epub',
+      '.csv',
+      'image/*',
+    ]
+    
     dz = await new Dropzone(document.querySelector('#dropFiles_container'), {
       url: `${ BASE_URL_API }/documents/project/${ project.id }`, // Set the url
+      acceptedFiles: accepted_files_arr.join(','),
       thumbnailWidth: 80,
       thumbnailHeight: 80,
       parallelUploads: 20,

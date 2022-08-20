@@ -62,9 +62,8 @@
 
   const handleForm = () => {
     const isFullNameLonger = () => {
-      const full_name = $('#editProgram_fullName').val();
-      const short_name = $('#editProgram_shortName').val();
-
+      const full_name = $('#addProgram_fullName').val();
+      const short_name = $('#addProgram_shortName').val();
       return full_name.length > short_name.length;
     }
 

@@ -247,8 +247,22 @@ const MemoDocuments = (() => {
     let previewTemplate = previewNode.parentNode.innerHTML;
     previewNode.parentNode.removeChild(previewNode);
 
+    const accepted_files_arr = [
+      '.pdf',
+      '.doc',
+      '.docx',
+      '.xls',
+      '.xlsx',
+      '.ppt',
+      '.pptx',
+      '.epub',
+      '.csv',
+      'image/*',
+    ]
+
     dz = await new Dropzone(document.querySelector('#dropFiles_container'), {
       url: `${ BASE_URL_API }/documents/memo/${ memo.id }`, // Set the url
+      acceptedFiles: accepted_files_arr.join(','),
       thumbnailWidth: 80,
       thumbnailHeight: 80,
       parallelUploads: 20,

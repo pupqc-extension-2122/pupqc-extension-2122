@@ -93,6 +93,15 @@ const Users = (() => {
 				}, {
           data: 'email',
           width: '25%',
+          render: data => {
+            const [username, server_domain] = data.split('@');
+            
+            return username.charAt(0) 
+              + username.substr(1, username.length - 2).replace(/[\S]/g, "*")
+              + username.charAt(username.length - 1)
+              + '@'
+              + server_domain;
+          },
         }, {
           data: null,
           width: '15%',

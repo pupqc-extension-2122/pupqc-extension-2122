@@ -12,30 +12,16 @@
 
     <%# Sidebar Menu %>
     <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu"
-        data-accordion="false">
-
-        <%# Core %>
-        <li class="nav-header">CORE</li>
-        <li class="nav-item">
-          <a 
-            href="<%=BASE_URL%>/r/dashboard" 
-            class="nav-link<% if (active_sidebar_tab == "Dashboard") { %> active<% } %>"
-          >
-            <i class="nav-icon fas fa-chart-pie"></i>
-            <p class="text">Dashboard</p>
-          </a>
-        </li>
-
-        <li class="dropdown-divider"></li>
+      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
 
         <%# Reports %>
-        <li class="nav-header">Report Outputs</li>
+        <li class="nav-header">Reports</li>
         <li class="nav-item">
           <a 
             href="<%=BASE_URL%>/r/report1" 
             class="nav-link<% if (active_sidebar_tab == "Status of Submitted Extension Project Proposal for Institutional Funding") { %> active<% } %>"
           >
+            <i class="nav-icon fas fa-file-lines fa-fw mr-2"></i>
             <p class="text">Status of Submitted Extension Project Proposal for Institutional Funding</p>
           </a>
         </li>
@@ -44,6 +30,7 @@
             href="<%=BASE_URL%>/r/report2" 
             class="nav-link<% if (active_sidebar_tab == "Status of University Extension Projects") { %> active<% } %>"
           >
+            <i class="nav-icon fas fa-file-lines fa-fw mr-2"></i>
             <p class="text">Status of University Extension Projects</p>
           </a>
         </li>
@@ -52,6 +39,7 @@
             href="<%=BASE_URL%>/r/report3" 
             class="nav-link<% if (active_sidebar_tab == "University Active Extension Partners and Adopted Communities") { %> active<% } %>"
           >
+            <i class="nav-icon fas fa-file-lines fa-fw mr-2"></i>
             <p class="text">University Active Extension Partners and Adopted Communities</p>
           </a>
         </li>
@@ -60,6 +48,7 @@
             href="<%=BASE_URL%>/r/report4" 
             class="nav-link<% if (active_sidebar_tab == "Inventory of University Faculty Experts on Extension Projects") { %> active<% } %>"
           >
+            <i class="nav-icon fas fa-file-lines fa-fw mr-2"></i>
             <p class="text">Inventory of University Faculty Experts on Extension Projects</p>
           </a>
         </li>
@@ -68,9 +57,11 @@
             href="<%=BASE_URL%>/r/report5" 
             class="nav-link<% if (active_sidebar_tab == "Project Monitoring") { %> active<% } %>"
           >
+            <i class="nav-icon fas fa-file-lines fa-fw mr-2"></i>
             <p class="text">Project Monitoring</p>
           </a>
         </li>
+
       </ul>
     </nav>
 
