@@ -56,5 +56,16 @@
     "gulp-terser": "^2.1.0",
     "nodemon": "^2.0.15",
     "sequelize-cli": "^6.4.1"
+  },
+  "pkg": {
+    "assets": [
+      "frontend/**/*.*",
+      "!frontend/static/build/*.*",
+      "backend/**/*.*",
+      "uploads/**/*.*",
+      "utils/**/*.*"
+    ],
+    "targets": ["node16-linux-x64", "node16-win-x64"],
+    "outputPath": "dist"
   }
 }
