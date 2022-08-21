@@ -17,8 +17,7 @@ const ProjectDetails = (() => {
   let initialized = false;
 
   // Data Container
-  let project;
-  let mode;
+  let project, mode;
 
   // * Private Methods
 
@@ -512,7 +511,6 @@ const ProjectDetails = (() => {
     if (!initialized) {
       initialized = true;
       project = data.project;
-      console.log(project);
       mode = data.mode;
       loadDetails();
       removeLoaders();
@@ -536,13 +534,11 @@ const ProjectOptions = (() => {
   const activitiesDT = $('#activities_dt');
   const options = '#projectDetails_options';
   const user_roles = JSON.parse(getCookie('roles'));
-  let validator;
   let initialized = 0;
   let processing = false; // For submissions
 
   // Data Container
-  let project;
-  let mode;
+  let project, mode;
 
   // Proposal Option Modals
   const forApproval_modal = $('#confirmSubmitForApproval_modal');
@@ -928,7 +924,7 @@ const ProjectOptions = (() => {
 
     // Handle show modal
     reschedPresentationSchedule_modal.on('show.bs.modal', (e) => {
-      
+
       // Prevent showing the modal if status is not "For Evaluation"
       if (isBadAction()) e.preventDefault();
       
@@ -1099,13 +1095,17 @@ const ProjectOptions = (() => {
     const form = $(formSelector)[0];
     const confirmBtn = $('#confirmApproveTheProject_btn');
 
+    setHTMLContent({
+      '#approveProject_SOReleaseDate_display': 'Today, ' + moment().format('MMMM D, YYYY (dddd)')
+    });
+
     $app(formSelector).handleForm({
       validators: {
         SO_number: {
           required: 'The SO number is required.'
         },
         funding_approval_date: {
-          required: 'The date of endorsement for funding is required.',
+          // required: 'The date of endorsement for funding is required.',
           dateISO: 'Your input is not a valid date.',
           beforeDateTime: {
             rule: () => project.end_date,
@@ -1113,7 +1113,7 @@ const ProjectOptions = (() => {
           }
         },
         SO_release_date: {
-          required: 'The release date of SO is required.',
+          // required: 'The release date of SO is required.',
           dateISO: 'Your input is not a valid date.',
           beforeDateTime: {
             rule: () => project.end_date,
@@ -1121,7 +1121,7 @@ const ProjectOptions = (() => {
           }
         },
         cash_release_date: {
-          required: 'The release date of cash advance is required.',
+          // required: 'The release date of cash advance is required.',
           dateISO: 'Your input is not a valid date.',
           beforeDateTime: {
             rule: () => project.end_date,
@@ -1129,7 +1129,7 @@ const ProjectOptions = (() => {
           }
         },
         notice_release_date: {
-          required: 'The release date of notice to proceed is required.',
+          // required: 'The release date of notice to proceed is required.',
           dateISO: 'Your input is not a valid date.',
           beforeDateTime: {
             rule: () => project.end_date,
@@ -1160,10 +1160,10 @@ const ProjectOptions = (() => {
 
         const data = {
           SO_number: fd.get('SO_number'),
-          funding_approval_date: fd.get('funding_approval_date'),
-          SO_release_date: fd.get('SO_release_date'),
-          cash_release_date: fd.get('cash_release_date'),
-          notice_release_date: fd.get('notice_release_date'),
+          funding_endorsement_date: fd.get('funding_approval_date') || null,
+          // SO_release_date: fd.get('SO_release_date'),
+          cash_release_date: fd.get('cash_release_date') || null,
+          notice_release_date: fd.get('notice_release_date') || null,
         }
         
         await $.ajax({
@@ -2332,23 +2332,27 @@ const ProjectActivities = (() => {
   const viewModal = $('#projectActivityDetails_modal');
   const editModal = $('#editProjectActivity_modal');
   const submitActivityEvaluation_modal = $('#submitActivityEvaluation_modal');
+  const editActivityEvaluation_modal = $('#editActivityEvaluation_modal');
   const editFormSelector = '#editProjectActivity_form';
   const editForm = $(editFormSelector)[0];
   const user_roles = JSON.parse(getCookie('roles'));
   let dt;
   let editValidator;
   let PA_form;
-  let AE_form;
+  let AE_submitForm;
+  let AE_editForm;
   let initialized = false;
   let processing = false; // For edit
 
   // Data Containers
-  let project;
-  let mode;
+  let project, mode;
+
+  // Pre-defined Values for Activity Eval
+  let pd_ae;
 
   // * Private Methods
 
-  const initializations = () => {
+  const initializations = async () => {
 
     // *** For View *** //
 
@@ -2426,7 +2430,9 @@ const ProjectActivities = (() => {
     // *** For Activity Evaluation *** //
 
     if (mode === 'Activity Evaluation') {
+      await getPredefinedActivityEval();
       initActivityEvaluation();
+      initEditActivityEvaluation();
     }
   }
 
@@ -2921,7 +2927,15 @@ const ProjectActivities = (() => {
                       <span>Submit post evaluation</span>
                     </div>
                   `
-                  : ''
+                  : `
+                    <div
+                      role="button"
+                      class="dropdown-item"
+                      data-dt-btn="viewPostEvaluation"
+                    >
+                      <span>View post evaluation</span>
+                    </div>
+                  `
                   // `
                   //   <div
                   //     role="button"
@@ -2962,6 +2976,16 @@ const ProjectActivities = (() => {
     $(dtElem_selector).on('click', `[data-dt-btn="initViewMode"]`, (e) => {
       const row = $(e.currentTarget).closest('tr');
       const data = dt.row(row).data();
+      initViewMode(data);
+    });
+
+    $(dtElem_selector).on('click', `[data-dt-btn="viewPostEvaluation"]`, (e) => {
+      const row = $(e.currentTarget).closest('tr');
+      const data = dt.row(row).data();
+      
+      // Set the default tab
+      if (mode === 'Activity Evaluation') $('#projectActivityDetails_postEvaluation_tab').tab('show');
+
       initViewMode(data);
     });
 
@@ -3094,8 +3118,31 @@ const ProjectActivities = (() => {
 
   }
 
+  const getPredefinedActivityEval = async () => {
+    await $.ajax({
+      url: `${ BASE_URL_API }/activities_evaluation/read`,
+      type: 'GET',
+      success: res => {
+        pd_ae = res.data;
+      },
+      error: (xhr, status, error) => {
+        processing = false;
+        enableElements();
+        ajaxErrorHandler({
+          file: 'admin/postEvaluation.js',
+          fn: 'ProjectActivities.getPredefinedActivityEval()',
+          xhr: xhr
+        }, 1);
+      }
+    });
+  }
+
   const initActivityEvaluation = () => {
-    $app('#activityEvaluation_form').handleForm({
+    const formSelector = '#submitActivityEvaluation_form';
+    const form = $(formSelector);
+    let validator;
+
+    validator = $app(formSelector).handleForm({
       validators: {},
       onSubmit: async () => {
 
@@ -3103,7 +3150,7 @@ const ProjectActivities = (() => {
 
         // Get data
         const data = { 
-          evaluation: AE_form.getEvaluation()
+          evaluation: AE_submitForm.getEvaluation()
         }
 
         const confirmBtn = $('#activityEvaluation_submitBtn');
@@ -3122,7 +3169,7 @@ const ProjectActivities = (() => {
           confirmBtn.html('Submit');
         }
 
-        const fd = new FormData($('#activityEvaluation_form')[0]);
+        const fd = new FormData(form[0]);
 
         await $.ajax({
           url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ fd.get('activity_id') }/evaluate`,
@@ -3152,22 +3199,99 @@ const ProjectActivities = (() => {
       }
     });
 
-    AE_form = new ActivityEvaluationForm($('#activityEvaluation_form'));
+    AE_submitForm = new ActivityEvaluationForm($('#activityEvaluation_form'));
+
+    submitActivityEvaluation_modal.on('show.bs.modal', () => {
+      AE_submitForm.setEvaluation(pd_ae);
+    });
 
     submitActivityEvaluation_modal.on('hide.bs.modal', (e) => {
       if (processing) e.preventDefault();
     });
 
     submitActivityEvaluation_modal.on('hidden.bs.modal', () => {
-      AE_form.resetForm();
+      AE_submitForm.resetForm();
+      validator.reset();
+    });
+  }
+
+  const initEditActivityEvaluation = () => {
+    const formSelector = '#editActivityEvaluation_form';
+    const form = $(formSelector);
+    let validator;
+
+    validator = $app(formSelector).handleForm({
+      validators: {},
+      onSubmit: async () => {
+
+        processing = true;
+
+        // Get data
+        const data = { 
+          evaluation: AE_editForm.getEvaluation()
+        }
+
+        const confirmBtn = $('#activityEvaluation_forEdit_submitBtn');
+
+        // Disable elements
+        confirmBtn.attr('disabled', true);
+        confirmBtn.html(`
+          <span class="px-3">
+            <i class="fas fa-spinner fa-spin-pulse"></i>
+          </span>
+        `);
+        
+        // Enable elements function
+        const enableElements = () => {
+          confirmBtn.attr('disabled', false);
+          confirmBtn.html('Submit');
+        }
+
+        const fd = new FormData(form[0]);
+
+        await $.ajax({
+          url: `${ BASE_URL_API }/projects/${ project.id }/activities/${ fd.get('activity_id') }/evaluate`,
+          type: 'POST',
+          data: data,
+          success: async (res) => {
+            processing = false;
+            if (res.error) {
+              ajaxErrorHandler(res.message);
+            } else {
+              enableElements();
+              await ProjectActivities.reloadDataTable();
+              editActivityEvaluation_modal.modal('hide');
+              toastr.info('The evaluation for an activity has been successfully updated');
+            }
+          },
+          error: (xhr, status, error) => {
+            processing = false;
+            enableElements();
+            ajaxErrorHandler({
+              file: 'projects/projectMain.js',
+              fn: 'ProjectActivities.initActivityEvaluation()',
+              xhr: xhr
+            });
+          }
+        });
+      }
+    });
+
+    AE_editForm = new ActivityEvaluationForm($('#activityEvaluation_forEdit_form'));
+
+    editActivityEvaluation_modal.on('hide.bs.modal', (e) => {
+      if (processing) e.preventDefault();
+    });
+
+    editActivityEvaluation_modal.on('hidden.bs.modal', () => {
+      AE_editForm.resetForm();
+      validator.reset();
     });
   }
 
   // * Public Methods
 
-  const reloadDataTable = async () => {
-    await dt.ajax.reload();
-  }
+  const reloadDataTable = async () => await dt.ajax.reload();
 
   const initViewMode = async (data) => {
 
@@ -3340,7 +3464,7 @@ const ProjectActivities = (() => {
                 </tr>
               `
             });
-          })
+          });
           return `
             <div class="table-responsive">
               <table class="table table-bordered">
@@ -3352,6 +3476,13 @@ const ProjectActivities = (() => {
                   ${ rows }
                 </tbody>
               </table>
+            </div>
+
+            <div>
+              <button class="btn btn-info" data-btn="editEvaluation">
+                <span>Edit evaluation</span>
+                <i class="fas fa-edit ml-1"></i>
+              </button>
             </div>
           `
         } else {
@@ -3385,6 +3516,22 @@ const ProjectActivities = (() => {
           }
         }
       });
+
+      if (evaluation) {
+        $(`[data-btn="editEvaluation"]`).on('click', () => {
+                
+          // Set the activity id
+          $('#activityEvaluation_forEdit_activityId').val(id);
+          
+          // Hide the view modal if shown
+          viewModal.modal('hide');
+
+          AE_editForm.setEvaluation(evaluation);
+
+          // Show the activity evaluation modal
+          editActivityEvaluation_modal.modal('show');
+        });
+      }
     }
 
     if (mode === 'Activity Evaluation') $('#projectActivityDetails_tabs').show();
@@ -3450,14 +3597,13 @@ const ProjectActivities = (() => {
   // * Init
 
   const init = (data) => {
-    if (!initialized) {
-      initialized = true;
-      project = data.project;
-      mode = data.mode;
-      handleEditForm();
-      initializations();
-      initDataTable();
-    };
+    if (initialized) return;
+    initialized = true;
+    project = data.project;
+    mode = data.mode;
+    handleEditForm();
+    initializations();
+    initDataTable();
   }
 
   // * Return Public Functions

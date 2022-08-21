@@ -18,8 +18,7 @@
     secondary: '#b8b3ae'
   }
 
-  let date;
-  let time;
+  let date, time;
   let data;
 
   // * Private Methods

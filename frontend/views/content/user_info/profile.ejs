@@ -161,188 +161,197 @@
 
               <%# Personal Information %>
               <div class="tab-pane fade active show" id="information">
-                <h3 class="mb-3">Update your Personal Information</h3>
+                <div class="row justify-content-center">
+                  <div class="col-lg-10">
+                    <h3 class="mb-3">Update your Personal Information</h3>
+    
+                    <form class="form-horizontal" id="editUser_form">
+    
+                      <input type="hidden" id="editUser_userId" name="user_id">
+                      
+                      <div class="form-group">
+                        <label for="editUserInfo_firstName">
+                          <span>First Name</span>
+                          <span class="text-danger">*</span>
+                        </label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="editUserInfo_firstName" 
+                          name="first_name"
+                          placeholder="Enter the first name here"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="editUserInfo_middleName">
+                          <span>Middle Name</span>
+                        </label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="editUserInfo_middleName" 
+                          name="middle_name"
+                          placeholder="Enter the middle name here"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="editUserInfo_lastName">
+                          <span>Last Name</span>
+                          <span class="text-danger">*</span>
+                        </label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="editUserInfo_lastName" 
+                          name="last_name"
+                          placeholder="Enter the last name here"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="editUserInfo_suffixName">
+                          <span>Suffix Name</span>
+                        </label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="editUserInfo_suffixName" 
+                          name="suffix_name"
+                          placeholder="Enter the suffix name here"
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="editUserInfo_email">
+                          <span>Email</span>
+                          <span class="text-danger">*</span>
+                        </label>
+                        <input 
+                          type="email" 
+                          class="form-control" 
+                          id="editUserInfo_email" 
+                          name="email"
+                          placeholder="Enter the email address here"
+                          disabled
+                          readonly
+                        />
+                      </div>
+                      <div class="form-group">
+                        <div class="float-right">
+                          <button type="submit" class="btn btn-primary" id="editUser_saveBtn" >
+                            <span>Save</span>
+                            <i class="fas fa-check ml-1"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
 
-                <form class="form-horizontal" id="editUser_form">
-
-                  <input type="hidden" id="editUser_userId" name="user_id">
-                  
-                  <div class="form-group">
-                    <label for="editUserInfo_firstName">
-                      <span>First Name</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="editUserInfo_firstName" 
-                      name="first_name"
-                      placeholder="Enter the first name here"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="editUserInfo_middleName">
-                      <span>Middle Name</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="editUserInfo_middleName" 
-                      name="middle_name"
-                      placeholder="Enter the middle name here"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="editUserInfo_lastName">
-                      <span>Last Name</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="editUserInfo_lastName" 
-                      name="last_name"
-                      placeholder="Enter the last name here"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="editUserInfo_suffixName">
-                      <span>Suffix Name</span>
-                    </label>
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      id="editUserInfo_suffixName" 
-                      name="suffix_name"
-                      placeholder="Enter the suffix name here"
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label for="editUserInfo_email">
-                      <span>Email</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <input 
-                      type="email" 
-                      class="form-control" 
-                      id="editUserInfo_email" 
-                      name="email"
-                      placeholder="Enter the email address here"
-                      disabled
-                      readonly
-                    />
-                  </div>
-                  <div class="form-group">
-                    <div class="float-right">
-                      <button type="submit" class="btn btn-primary" id="editUser_saveBtn" >
-                        <span>Save</span>
-                        <i class="fas fa-check ml-1"></i>
-                      </button>
-                    </div>
-                  </div>
-                </form>
               </div>
 
               <%# Account Settings %>
               <div class="tab-pane fade" id="settings">
-                <h3 class="mb-3">Update your password</h3>
+                <div class="row justify-content-center">
+                  <div class="col-lg-10">
+                    <h3 class="mb-3">Update your password</h3>
 
-                <form class="form-horizontal" id="accountSettings_form">
+                    <form class="form-horizontal" id="accountSettings_form">
 
-                  <%# Old Password %>
-                  <div class="form-group">
-                    <label for="accountSetting_oldPassword">
-                      <span>Old Password</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group">
-                      <input 
-                        type="password" 
-                        class="form-control" 
-                        id="accountSetting_oldPassword" 
-                        name="old_password"
-                        placeholder="Enter your password here" 
-                        autocomplete="false"
-                      >
-                    </div>
-                  </div>
-
-                  <div class="form-group text-right">
-                    <a 
-                      href=""
-                      id="settings_forgotPassword"
-                    >Forgot your password?</a>
-                  </div>
-
-                  <%# New Password %>
-                  <div class="form-group mb-2">
-                    <label for="accountSetting_newPassword">
-                      <span>New Password</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group">
-                      <input 
-                        type="password" 
-                        class="form-control" 
-                        id="accountSetting_newPassword" 
-                        name="new_password"
-                        placeholder="Enter your password here" 
-                        autocomplete="false"
-                      />
-                    </div>
-                  </div>
-
-                  <%# Password Strength %>
-                  <div class="form-group">
-                    <div class="progress progress-sm">
-                      <div 
-                        class="progress-bar bg-success" 
-                        id="passwordStrength_progressBar"
-                        role="progressbar" 
-                        aria-valuenow="0" 
-                        aria-valuemin="0" 
-                        aria-valuemax="100" 
-                        style="width: 0%"
-                      >
+                      <%# Old Password %>
+                      <div class="form-group">
+                        <label for="accountSetting_oldPassword">
+                          <span>Old Password</span>
+                          <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                          <input 
+                            type="password" 
+                            class="form-control" 
+                            id="accountSetting_oldPassword" 
+                            name="old_password"
+                            placeholder="Enter your password here" 
+                            autocomplete="false"
+                          >
+                        </div>
                       </div>
-                    </div>
-                    <div class="small" id="passwordStrength_label">
-                      <div class="text-muted font-italic">We will check how strong your password is</div>
-                    </div>
-                  </div>
 
-                  <%# Confirm New Password %>
-                  <div class="form-group">
-                    <label for="accountSetting_confirmNewPassword">
-                      <span>Confirm New Password</span>
-                      <span class="text-danger">*</span>
-                    </label>
-                    <div class="input-group">
-                      <input 
-                        type="password" 
-                        class="form-control" 
-                        id="accountSetting_confirmNewPassword" 
-                        name="confirm_password"
-                        placeholder="Re-enter your password here" 
-                        autocomplete="false"
-                      />
-                    </div>
+                      <div class="form-group text-right">
+                        <a 
+                          href=""
+                          id="settings_forgotPassword"
+                        >Forgot your password?</a>
+                      </div>
+
+                      <%# New Password %>
+                      <div class="form-group mb-2">
+                        <label for="accountSetting_newPassword">
+                          <span>New Password</span>
+                          <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                          <input 
+                            type="password" 
+                            class="form-control" 
+                            id="accountSetting_newPassword" 
+                            name="new_password"
+                            placeholder="Enter your password here" 
+                            autocomplete="false"
+                          />
+                        </div>
+                      </div>
+
+                      <%# Password Strength %>
+                      <div class="form-group">
+                        <div class="progress progress-sm">
+                          <div 
+                            class="progress-bar bg-success" 
+                            id="passwordStrength_progressBar"
+                            role="progressbar" 
+                            aria-valuenow="0" 
+                            aria-valuemin="0" 
+                            aria-valuemax="100" 
+                            style="width: 0%"
+                          >
+                          </div>
+                        </div>
+                        <div class="small" id="passwordStrength_label">
+                          <div class="text-muted font-italic">We will check how strong your password is</div>
+                        </div>
+                      </div>
+
+                      <%# Confirm New Password %>
+                      <div class="form-group">
+                        <label for="accountSetting_confirmNewPassword">
+                          <span>Confirm New Password</span>
+                          <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                          <input 
+                            type="password" 
+                            class="form-control" 
+                            id="accountSetting_confirmNewPassword" 
+                            name="confirm_password"
+                            placeholder="Re-enter your password here" 
+                            autocomplete="false"
+                          />
+                        </div>
+                      </div>
+                      
+                      <%# Buttons %>
+                      <div class="form-group">
+                        <div class="float-right">
+                          <button 
+                            type="submit" 
+                            class="btn btn-primary" 
+                            id="accountSettings_saveBtn" 
+                          >
+                            <span>Save</span>
+                            <i class="fas fa-check ml-1"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                  
-                  <%# Buttons %>
-                  <div class="form-group">
-                    <div class="float-right">
-                      <button 
-                        type="submit" 
-                        class="btn btn-primary" 
-                        id="accountSettings_saveBtn" 
-                      >
-                        <span>Save</span>
-                        <i class="fas fa-check ml-1"></i>
-                      </button>
-                    </div>
-                  </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>

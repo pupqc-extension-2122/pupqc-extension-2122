@@ -334,53 +334,50 @@ const CUSTOM_VALIDATIONS = [
 	}, {
 		ruleName: "beforeDateTime",
 		handler: (value, element, params) => {
-			return !params
-				? true
-				: moment(value).isBefore(moment(params));
+      if (value && params) return moment(value).isBefore(moment(params));
+      return true;
 		},
 		defaultMessage: 'It must after an indicated date and time'
 	}, {
 		ruleName: "sameOrBeforeDateTime",
 		handler: (value, element, params) => {
-			return !params
-				? true
-				: moment(value).isSameOrBefore(moment(params));
+      if (value && params) return moment(value).isSameOrBefore(moment(params));
+			return true;
 		},
 		defaultMessage: 'It must after an indicated date and time'
 	}, {
 		ruleName: "afterDateTime",
 		handler: (value, element, params) => {
-			return !params
-				? true
-				: moment(value).isAfter(moment(params));
+      if (value && params) return moment(value).isAfter(moment(params));
+			return true;
 		},
 		defaultMessage: 'It must after an indicated date and time'
 	}, {
 		ruleName: "sameOrAfterDateTime",
 		handler: (value, element, params) => {
-			return !params
-				? true
-				: moment(value).isSameOrAfter(moment(params));
+      if (value && params) return moment(value).isSameOrAfter(moment(params));
+			return true;
 		},
 		defaultMessage: 'It must after an indicated date and time'
 	}, {
 		ruleName: "notSameDate",
 		handler: (value, element, params) => {
-			return !params
-				? true
-				: !moment(value).isSame(moment(params));
+      if (value && params) return !moment(value).isSame(moment(params));
+			return true;
 		},
 		defaultMessage: 'It must not be equal to a value'
 	}, {
 		ruleName: "notEqualTo",
 		handler: (value, element, params) => {
-      return value != params;
+      if (value && params) return value != params;
+      return true;
 		},
 		defaultMessage: 'It must not be equal to a value'
 	}, {
 		ruleName: "callback",
 		handler: (value, element, params) => {
-      return params;
+      if (typeof params === 'boolean') return params;
+      return true;
 		},
 		defaultMessage: 'It must not be equal to a value'
 	}, {
@@ -393,7 +390,7 @@ const CUSTOM_VALIDATIONS = [
         const e = moment().add(r, 'years').endOf('year');
         return v.isBetween(s, e, undefined, '[]');
       }
-      return false;
+      return true;
 		},
 		defaultMessage: `Please select a date between ${ moment().subtract(99, 'years').startOf('year').format('MMM. D, YYYY') } and ${ moment().add(99, 'years').endOf('year').format('MMM. D, YYYY') }.`
 	}

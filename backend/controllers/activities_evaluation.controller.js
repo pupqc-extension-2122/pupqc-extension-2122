@@ -6,7 +6,7 @@ exports.storeConfig = async (req, res) => {
 
     const body = req.body
 
-    writeFile('../activity_post_eval.json', JSON.stringify(body.config), (err) => { if (err) throw err })
+    writeFile('./backend/activity_post_eval.json', JSON.stringify(body.config), (err) => { if (err) throw err })
 
     res.send({ error: false, message: 'Configuration Successful' })
 
@@ -19,7 +19,7 @@ exports.storeConfig = async (req, res) => {
 exports.readConfig = async (req, res) => {
   try {
 
-    readFile('../activity_post_eval.json', (err, data) => {
+    readFile('./backend/activity_post_eval.json', (err, data) => {
       if (err) throw err
 
       let config = JSON.parse(data)

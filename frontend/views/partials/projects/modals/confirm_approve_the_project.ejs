@@ -1,5 +1,5 @@
 <%# Confirm Approve the Project Modal %>
-<div class="modal fade" id="confirmApproveTheProject_modal">
+<div class="modal fade" id="confirmApproveTheProject_modal" data-backdrop="static">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <form class="modal-content" id="approveProject_form">
       <div class="modal-header">
@@ -21,7 +21,7 @@
         <div class="form-group">
           <label for="approveProject_fundingApprovalDate">
             <span>Date of Endorsement for Funding</span>
-            <span class="text-danger">*</span>
+            <%# <span class="text-danger">*</span> %>
           </label>
           <div class="input-group date">
             <input 
@@ -67,9 +67,12 @@
         <div class="form-group">
           <label for="approveProject_SOReleaseDate">
             <span>Release Date of Special Order</span>
-            <span class="text-danger">*</span>
+            <%# <span class="text-danger">*</span> %>
           </label>
-          <div class="input-group date">
+          <div id="approveProject_SOReleaseDate_display">
+            <span class="font-italic text-muted">No date has been set.</span>
+          </div>
+          <%# <div class="input-group date">
             <input 
               type="text" 
               class="form-control" 
@@ -91,14 +94,14 @@
                 <i class="fa fa-calendar-day fa-fw"></i>
               </button>
             </div>
-          </div>
+          </div> %>
         </div>
 
         <%# Release Date of Cash Advance %>
         <div class="form-group">
           <label for="approveProject_cashReleaseDate">
             <span>Release Date of Cash Advance</span>
-            <span class="text-danger">*</span>
+            <%# <span class="text-danger">*</span> %>
           </label>
           <div class="input-group date">
             <input 
@@ -129,7 +132,7 @@
         <div class="form-group">
           <label for="approveProject_noticeReleaseDate">
             <span>Release Date of Notice to Proceed</span>
-            <span class="text-danger">*</span>
+            <%# <span class="text-danger">*</span> %>
           </label>
           <div class="input-group date">
             <input 
@@ -173,3 +176,4 @@
     </form>
   </div>
 </div>
+

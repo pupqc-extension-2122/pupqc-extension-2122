@@ -53,7 +53,7 @@ const Report1 = (() => {
             // eppec_evaluation_date: 'date',
             // release_date: 'date',
             // average_points: 'float',
-            funding_approval_date: 'date',
+            funding_endorsement_date: 'date',
             // recommendations: 'string',
             SO_release_date: 'date',
             cash_release_date: 'date',
@@ -232,7 +232,7 @@ const Report1 = (() => {
 
         // [9] Date of Endorsement of Project Proposal for Funding
         {
-          data: 'funding_approval_date',
+          data: 'funding_endorsement_date',
           render: (data, type, row) => {
             
             // For export

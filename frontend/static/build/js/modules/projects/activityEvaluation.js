@@ -220,10 +220,9 @@ const ActivityEvaluation = (() => {
   // * Init
 
   const init = () => {
-    if (!initialized) {
-      initialized = 1;
-      initDataTable();
-    }
+    if (initialized) return;
+    initialized = 1;
+    initDataTable();
   }
 
   // * Return Public Methods

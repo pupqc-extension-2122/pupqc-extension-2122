@@ -450,8 +450,6 @@
         data['program_id'] = data.programs.map(p => p.id);
         delete data.programs;
 
-        console.log(data);
-
         await $.ajax({
           ...(() => {
             if (form_type === 'create') return {

@@ -22,6 +22,16 @@ const Users = (() => {
 
   // * Private Methods 
 
+  const hideEmail = (email) => {
+    const [username, server_domain] = email.split('@');
+
+    return username.charAt(0) 
+      + username.substr(1, username.length - 2).replace(/[\S]/g, "*")
+      + username.charAt(username.length - 1)
+      + '@'
+      + server_domain;
+  }
+
   const initializations = () => {
 
     // *** For Edit User Modal *** //
@@ -93,15 +103,7 @@ const Users = (() => {
 				}, {
           data: 'email',
           width: '25%',
-          render: data => {
-            const [username, server_domain] = data.split('@');
-            
-            return username.charAt(0) 
-              + username.substr(1, username.length - 2).replace(/[\S]/g, "*")
-              + username.charAt(username.length - 1)
-              + '@'
-              + server_domain;
-          },
+          render: data => hideEmail(data),
         }, {
           data: null,
           width: '15%',
@@ -241,8 +243,8 @@ const Users = (() => {
       last_name: fd.get('last_name'),
       middle_name: fd.get('middle_name'),
       suffix_name: fd.get('suffix_name'),
-      email: fd.get('email'),
-      user_roles: fd.getAll('roles').map(r => r = { role_id: r }),
+      // email: fd.get('email'),
+      // user_roles: fd.getAll('roles').map(r => r = { role_id: r }),
     }
 
     await $.ajax({
@@ -348,7 +350,7 @@ const Users = (() => {
       '#editUser_middleName': middle_name,
       '#editUser_lastName': last_name,
       '#editUser_suffixName': suffix_name,
-      '#editUser_email': email,
+      '#editUser_email': hideEmail(email),
     });
 
     roles.forEach(role => {

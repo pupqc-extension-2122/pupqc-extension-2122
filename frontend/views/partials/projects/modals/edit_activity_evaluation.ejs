@@ -1,11 +1,11 @@
-<%# Submit Activity Evaluation Modal %>
-<div class="modal fade" data-backdrop="static" id="submitActivityEvaluation_modal">
+<%# Edit Activity Evaluation Modal %>
+<div class="modal fade" data-backdrop="static" id="editActivityEvaluation_modal">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <form class="modal-content" id="submitActivityEvaluation_form">
+    <form class="modal-content" id="editActivityEvaluation_form">
       <div class="modal-header">
         <h4 class="modal-title">
-          <i class="fas fa-list fa-fw mr-1"></i>
-          <span>Submit Activity Evaluation</span>
+          <i class="fas fa-edit fa-fw mr-1"></i>
+          <span>Edit Activity Evaluation</span>
         </h4>
         <button type="button" class="btn btn-sm btn-negative" data-dismiss="modal" aria-label="Close">
           <i class="fas fa-times"></i>
@@ -13,10 +13,10 @@
       </div>
       <div class="modal-body">
 
-        <input type="hidden" name="activity_id" id="activityEvaluation_activityId">
+        <input type="hidden" name="activity_id" id="activityEvaluation_forEdit_activityId">
         
         <div class="table-responsive">
-          <table class="table table-bordered" id="activityEvaluation_form">
+          <table class="table table-bordered" id="activityEvaluation_forEdit_form">
             <thead>
               <th class="align-middle" style="width: 80%">
                 <span>Criteria</span>
@@ -35,7 +35,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-negative" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="activityEvaluation_submitBtn">Submit</button>
+        <button type="submit" class="btn btn-primary" id="activityEvaluation_forEdit_submitBtn">Submit</button>
       </div>
     </form>
   </div>
