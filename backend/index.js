@@ -16,5 +16,6 @@ app.use('/roles', require('./routers/roles.router'))
 app.use('/budget_categories', require('./routers/budget_categories.router'))
 app.use('/dashboard', require('./routers/dashboard.router'))
 app.use('/programs', require('./routers/programs.router'))
+app.use('/activities_evaluation', require('./routers/activities_evaluation.router'))
 
 module.exports = app
