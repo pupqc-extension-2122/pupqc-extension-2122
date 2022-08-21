@@ -174,7 +174,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    funding_approval_date: {
+    funding_endorsement_date: {
       type: DataTypes.DATEONLY,
       validate: { notEmpty: true }
     },

@@ -76,7 +76,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      funding_approval_date: {
+      funding_endorsement_date: {
         type: Sequelize.DATEONLY
       },
       SO_number: {
