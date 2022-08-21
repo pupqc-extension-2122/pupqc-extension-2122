@@ -7,3 +7,5 @@ router.use(jwtMiddleWare)
 
 router.get('/read', readConfig)
 router.post('/store', storeConfig)
+
+module.exports = router
