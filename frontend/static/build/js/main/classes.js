@@ -780,7 +780,7 @@ class TargetGroupsForm {
             class="form-control form-control-border"
             name="beneficiary_name-${ target_group_id }"
             ${ this.data.input }="beneficiaryName"
-            placeholder="Type the name of beneficiary here"
+            placeholder="Enter the name of beneficiary here"
           />
         </div>
       </td>
@@ -791,7 +791,7 @@ class TargetGroupsForm {
             class="form-control form-control-border"
             ${ this.data.input }="location"
             name="location-${ target_group_id }"
-            placeholder="Type the location of beneficiary here"
+            placeholder="Enter the location of beneficiary here"
           />
         </div>
       </td>

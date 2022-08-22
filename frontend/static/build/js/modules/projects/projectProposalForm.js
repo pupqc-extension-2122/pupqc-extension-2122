@@ -110,8 +110,8 @@
         id: 'Monthly',
         name: 'Monthly',
       }, {
-        id: 'Semi-annually',
-        name: 'Semi-annually',
+        id: 'Semi-Annually',
+        name: 'Semi-Annually',
       }, {
         id: 'Annually',
         name: 'Annually',
