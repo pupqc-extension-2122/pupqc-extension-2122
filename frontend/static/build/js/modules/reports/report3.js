@@ -241,9 +241,13 @@ const Report3 = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right fade">
                   <div class="dropdown-header">Options</div>
-                  <a href="${ BASE_URL_WEB }/r/report/${ data.id }" class="dropdown-item">
-                      <span>View details</span>
-                  </a>
+                  <div
+                    class="dropdown-item"
+                    role="button"
+                    
+                  >
+                    <span>View details</span>
+                  </div>
                 </div>
               </div>
             `

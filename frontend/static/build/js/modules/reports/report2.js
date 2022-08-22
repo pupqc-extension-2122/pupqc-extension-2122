@@ -267,7 +267,7 @@ const Report2 = (() => {
           }
         },
 
-        // [14] Number of Technology Transfer of Knowledge training Adopted by the Partner Bneficiaries
+        // [14] Number of Technology Transfer of Knowledge training Adopted by the Partner Beneficiaries
         {
           data: null,
           render: (data, type, row) => {
@@ -326,9 +326,13 @@ const Report2 = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right fade">
                   <div class="dropdown-header">Options</div>
-                  <a href="${ BASE_URL_WEB }/m/memo/${ data.id }" class="dropdown-item">
-                      <span>View details</span>
-                  </a>
+                  <div
+                    role="button"
+                    class="dropdown-item"
+                    data-dt-btn="viewDetails" 
+                  >
+                    <span>Update fields</span>
+                  </div>
                 </div>
               </div>
             `

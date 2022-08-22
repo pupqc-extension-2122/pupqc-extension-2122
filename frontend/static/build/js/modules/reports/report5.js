@@ -161,9 +161,13 @@ const Report5 = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right fade">
                   <div class="dropdown-header">Options</div>
-                  <a href="${ BASE_URL_WEB }/m/memo/${ data.id }" class="dropdown-item">
-                      <span>View details</span>
-                  </a>
+                  <div 
+                    class="dropdown-item"
+                    role="button"
+                    data-dt-btn="updateFields"
+                  >
+                    <span>Update Fields</span>
+                  </div>
                 </div>
               </div>
             `

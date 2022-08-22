@@ -242,7 +242,7 @@ const Report1 = (() => {
             // For display
             return data
               ? dateTemplate(data)
-              : noContentTemplate('Date of Endorsement for Funding is missing.')
+              : noContentTemplate('The Date of Endorsement for Funding has not been set up yet.')
           }
         }, 
         
@@ -274,7 +274,7 @@ const Report1 = (() => {
             //For display
             return data
               ? dateTemplate(data)
-              : noContentTemplate('Release date of Cash Advance is missing.')
+              : noContentTemplate('The release date of Cash Advance has not been set up yet.')
           }
         }, 
         
@@ -295,7 +295,7 @@ const Report1 = (() => {
                 <div>${ formatDateTime(data, 'Date') }</div>
                 <div class="small text-muted">${ fromNow(data) }</div>
               `
-              : noContentTemplate('Release date of Notice to Proceed is missing.')
+              : noContentTemplate('The release date of Notice to Proceed has not been set up yet.')
           }
         }, 
         
@@ -313,9 +313,13 @@ const Report1 = (() => {
               
                 <div class="dropdown-menu dropdown-menu-right fade">
                   <div class="dropdown-header">Options</div>
-                  <a href="${ BASE_URL_WEB }/r/report1/${ data.id }" class="dropdown-item">
-                      <span>View details</span>
-                  </a>
+                  <div 
+                    class="dropdown-item"
+                    role="button"
+                    data-dt-btn="updateFields"
+                  >
+                    <span>Update Fields</span>
+                  </div>
                 </div>
               </div>
             `

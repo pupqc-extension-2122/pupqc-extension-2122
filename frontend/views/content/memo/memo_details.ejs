@@ -49,8 +49,8 @@
 <section class="content">
   <div class="container-fluid">
 
-    <div class="row">
-      <div class="col-lg-8 col-xl-9">
+    <div class="row<% if (!roles.includes('Extensionist')) { %> justify-content-center<% } %>">
+      <div class="col-md-8 col-lg-9">
 
         <%# Memo Details Header loader %>
         <div class="card card-primary card-outline" id="memoDetails_header_loader">
@@ -383,41 +383,43 @@
 
       </div>
       
-      <div class="col-lg-4 col-xl-3">
-        <div class="sticky-top">
+      <% if (roles.includes('Extensionist')) { %>
+        <div class="col-md-4 col-lg-3">
+          <div class="sticky-top">
 
-          <%- include('../../partials/loaders/options') %>
-          
-          <%# Options %>
-          <div class="card" id="options" style="display: none;">
-            <div class="card-header">
-              <div class="d-flex justify-content-between align-items-center">
-                <h3 class="card-title">Options</h3>
-                <div class="card-tools">
-                  <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
+            <%- include('../../partials/loaders/options') %>
+            
+            <%# Options %>
+            <div class="card" id="options" style="display: none;">
+              <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h3 class="card-title">Options</h3>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-sm btn-negative" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div class="card-body p-2">
-              <div class="dropdown-header">MOA/MOU details</div>
-              <div
-                type="button" 
-                class="btn btn-negative btn-block text-left" 
-                data-toggle="modal"
-                data-target="#editMemo_modal"
-              >
-                <i class="fas fa-edit text-info fa-fw mr-1"></i>
-                <span>Edit details</span>
+              
+              <div class="card-body p-2">
+                <div class="dropdown-header">MOA/MOU details</div>
+                <div
+                  type="button" 
+                  class="btn btn-negative btn-block text-left" 
+                  data-toggle="modal"
+                  data-target="#editMemo_modal"
+                >
+                  <i class="fas fa-edit text-info fa-fw mr-1"></i>
+                  <span>Edit details</span>
+                </div>
               </div>
+              
             </div>
-            
-          </div>
 
+          </div>
         </div>
-      </div>
+      <% } %>
     </div>
 
   </div>
